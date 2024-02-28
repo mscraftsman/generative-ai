@@ -1,0 +1,26 @@
+name: MsccGenerativeAI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        dotnet-version: ['8.x']
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    # - name: Test 
+    #   run: |
+    #     dotnet test ./tests/Test.Mscc.Google.csproj -c Release --logger "console;verbosity=detailed"
