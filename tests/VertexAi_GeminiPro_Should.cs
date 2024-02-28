@@ -114,7 +114,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -161,7 +161,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -192,7 +192,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -219,7 +219,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -281,7 +281,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
-            var request = new GeminiRequest
+            var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
                 Tools = new List<Tool> { }

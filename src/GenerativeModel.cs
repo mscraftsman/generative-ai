@@ -121,7 +121,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<GenerateContentResponse> GenerateContent(GeminiRequest? request)
+        public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -145,7 +145,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GeminiRequest(prompt);
+            var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = "user";
             return await GenerateContent(request);
         }
@@ -155,7 +155,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GeminiRequest(parts);
+            var request = new GenerateContentRequest(parts);
             request.Contents[0].Role = "user";
             return await GenerateContent(request);
         }
@@ -165,7 +165,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<GenerateContentResponse>> GenerateContentStream(GeminiRequest? request)
+        public async Task<List<GenerateContentResponse>> GenerateContentStream(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -184,7 +184,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GeminiRequest(prompt);
+            var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = "user";
             return await GenerateContentStream(request);
         }
@@ -194,7 +194,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GeminiRequest(parts);
+            var request = new GenerateContentRequest(parts);
             request.Contents[0].Role = "user";
             return await GenerateContentStream(request);
         }
@@ -204,7 +204,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>
-        public async Task<CountTokensResponse> CountTokens(GeminiRequest? request)
+        public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -223,7 +223,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GeminiRequest(prompt);
+            var request = new GenerateContentRequest(prompt);
             return await CountTokens(request);
         }
 
@@ -232,7 +232,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GeminiRequest(parts);
+            var request = new GenerateContentRequest(parts);
             return await CountTokens(request);
         }
 
@@ -294,7 +294,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        private string Serialize(GeminiRequest? request)
+        private string Serialize(GenerateContentRequest? request)
         {
             request.Synchronize();
             var options = DefaultJsonSerializerOptions();

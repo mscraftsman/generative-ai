@@ -4,16 +4,17 @@ using System.Linq;
 namespace Mscc.GenerativeAI
 {
     // Todo: Integrate GenerationConfig, SafetySettings, and Tools.
-    public class GeminiRequest
+    public class GenerateContentRequest
+
     {
         public List<Content>? Contents { get; set; }
         public List<SafetySetting>? SafetySettings { get; set; }
         public GenerationConfig? GenerationConfig { get; set; }
         public List<Tool>? Tools { get; set; }
 
-        public GeminiRequest() { }
+        public GenerateContentRequest() { }
 
-        public GeminiRequest(string prompt)
+        public GenerateContentRequest(string prompt)
         {
             Contents = new List<Content> { new Content
             {
@@ -24,7 +25,7 @@ namespace Mscc.GenerativeAI
             }};
         }
 
-        public GeminiRequest(List<IPart> parts)
+        public GenerateContentRequest(List<IPart> parts)
         {
             Contents = new List<Content> { new Content
             {
@@ -32,7 +33,7 @@ namespace Mscc.GenerativeAI
             }};
         }
 
-        public GeminiRequest(List<Part> parts)
+        public GenerateContentRequest(List<Part> parts)
         {
             Contents = new List<Content> { new Content
             {

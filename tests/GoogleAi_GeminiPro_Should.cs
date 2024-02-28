@@ -92,7 +92,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var model = new GenerativeModel(apiKey: apiKey, model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -115,7 +115,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var model = new GenerativeModel(apiKey: apiKey, model: this.model);
-            var request = new GeminiRequest(prompt);
+            var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = "user";
 
             // Act
@@ -154,7 +154,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "How are you doing today?";
             var model = new GenerativeModel(apiKey: apiKey, model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -202,7 +202,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var model = new GenerativeModel(apiKey: apiKey, model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -265,7 +265,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var model = new GenerativeModel(apiKey: apiKey, model: this.model);
-            var request = new GeminiRequest
+            var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
                 Tools = new List<Tool> { }

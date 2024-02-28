@@ -42,7 +42,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var model = new GenerativeModel(apiKey: apiKey, model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             var base64image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
             {

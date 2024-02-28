@@ -56,7 +56,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
@@ -81,7 +81,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             var parts = new List<IPart>
             {
                 new TextData { Text = "How are you doing today?" }
@@ -126,7 +126,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             var parts = new List<IPart>
             {
                 new TextData { Text = "Is it a cat?" },
@@ -151,7 +151,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is this picture about?" },
@@ -172,7 +172,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             var base64image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
             {
@@ -198,7 +198,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             var parts = new List<IPart>
             {
                 new FileData { FileUri = "gs://cloud-samples-data/video/animals.mp4", MimeType = "video/mp4" },
@@ -239,7 +239,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertex = new VertexAI(projectId: projectId, region: region);
             var model = vertex.GenerativeModel(model: this.model);
-            var request = new GeminiRequest { Contents = new List<Content>() };
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
                 Role = "user",
