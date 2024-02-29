@@ -3,12 +3,11 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net472;net6.0;net7.0;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
-		<RootNamespace>SimpleResults</RootNamespace>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<NoWarn>$(NoWarn);1591</NoWarn>
-		<PackageId>MSCC.GenerativeAI</PackageId>
+		<PackageId>Mscc.GenerativeAI</PackageId>
 		<Description>Gemini AI Client for .NET</Description>
 		<PackageTags>Gemini;Google AI;Vertex AI;GenAI;Generative AI</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -16,12 +15,12 @@
 		<Copyright>Copyright (c) Jochen Kirstätter</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>MsccGenerativeAi-icon-nuget.png</PackageIcon>
-		<PackageProjectUrl>https://mscraftsman.github.io/GenerativeAI</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/mscraftsman/GenerativeAI</RepositoryUrl>
+		<PackageProjectUrl>https://mscraftsman.github.io/generative-ai</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-		<PackageReleaseNotes>- Update README.md</PackageReleaseNotes>
-		<Version>0.1.2</Version>
+		<PackageReleaseNotes>- Initial Release</PackageReleaseNotes>
+		<Version>0.2.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
