@@ -18,9 +18,50 @@ PM> Install-Package Mscc.GenerativeAI
 
 You can then add this code to your sources whenever you need to access any Gemini API provided by Google. This package works for Google AI (Google AI Studio) and Google Cloud Vertex AI.
 
+## Authentication use cases
+
+The package supports the following use cases to authenticate.
+
+- Google AI: [Authentication with an API key](https://ai.google.dev/tutorials/setup)
+- Google AI: [Authentication with OAuth](https://ai.google.dev/docs/oauth_quickstart)
+- Vertex AI: [Authentication with Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev)
+
+This applies mainly to the instantiation procedure.
+
 ## Examples
 
 Use of Gemini API in either Google AI or Vertex AI is almost identical. The major difference is the way to instantiate the model handling your prompt.
+
+### Choose an API and authentication mode
+
+Google AI with an API key
+
+```
+using Mscc.GenerativeAI;
+// Google AI with an API key
+var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
+```
+
+Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
+
+```
+using Mscc.GenerativeAI;
+// Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
+var model = new GenerativeModel(model: Model.GeminiPro);
+model.AccessToken = accessToken;
+```
+
+Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
+
+```
+using Mscc.GenerativeAI;
+// Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
+var vertex = new VertexAI(projectId: projectId, region: region);
+var model = vertex.GenerativeModel(model: Model.GeminiPro);
+model.AccessToken = accessToken;
+```
+
+The `ConfigurationFixture` type in the test project implements multiple options to retrieve sensitive information, ie. API key or access token.
 
 ### Using Google AI Gemini API
 
