@@ -8,10 +8,12 @@
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<PackageId>Mscc.GenerativeAI</PackageId>
+		<Title>MSCC GenerativeAI</Title>
+		<Product>MSCC GenerativeAI</Product>
 		<Description>Gemini AI Client for .NET</Description>
 		<PackageTags>Gemini;Google AI;Vertex AI;GenAI;Generative AI</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Authors>Jochen Kirstätter</Authors>
+		<Authors>jkirstaetter</Authors>
 		<Copyright>Copyright (c) Jochen Kirstätter</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>MsccGenerativeAi-icon-nuget.png</PackageIcon>
@@ -19,8 +21,8 @@
 		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-		<PackageReleaseNotes>- Add methods ListModels and GetModel</PackageReleaseNotes>
-		<Version>0.3.1</Version>
+		<PackageReleaseNotes>- Improve package attributes</PackageReleaseNotes>
+		<Version>0.3.2</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
