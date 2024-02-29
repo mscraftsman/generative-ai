@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using Xunit;
 
 namespace Test.Mscc.GenerativeAI
@@ -39,23 +40,71 @@ namespace Test.Mscc.GenerativeAI
             if (string.IsNullOrEmpty(AccessToken))
                 AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
             if (string.IsNullOrEmpty(AccessToken))
-                AccessToken = ReadAccessToken().TrimEnd();
+            {
+                AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token").TrimEnd();
+            }
         }
 
-        private string ReadAccessToken()
+        private string RunExternalExe(string filename, string arguments = null)
         {
-            Process p = new Process();
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.Arguments = "/c gcloud auth application-default print-access-token";
-            p.Start();
-            var output = p.StandardOutput.ReadToEnd();
-            p.WaitForExit();
+            var process = new Process();
 
-            return output;
+            process.StartInfo.FileName = filename;
+            if (!string.IsNullOrEmpty(arguments))
+            {
+                process.StartInfo.Arguments = arguments;
+            }
+
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.UseShellExecute = false;
+
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            var stdOutput = new StringBuilder();
+            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+
+            string stdError = null;
+            try
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                stdError = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+            }
+
+            if (process.ExitCode == 0)
+            {
+                return stdOutput.ToString();
+            }
+            else
+            {
+                var message = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(stdError))
+                {
+                    message.AppendLine(stdError);
+                }
+
+                if (stdOutput.Length != 0)
+                {
+                    message.AppendLine("Std output:");
+                    message.AppendLine(stdOutput.ToString());
+                }
+
+                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode + ": " + message);
+            }
+        }
+
+        private string Format(string filename, string arguments)
+        {
+            return "'" + filename + 
+                ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
+                "'";
         }
     }
 }
