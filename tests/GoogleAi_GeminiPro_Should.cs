@@ -65,6 +65,26 @@ namespace Test.Mscc.GenerativeAI
             });
         }
 
+        [Fact]
+        public async void List_Models_Using_OAuth()
+        {
+            // Arrange
+            var model = new GenerativeModel();
+            model.AccessToken = fixture.AccessToken;
+
+            // Act
+            var sut = await model.ListModels();
+
+            // Assert
+            sut.Should().NotBeNull();
+            sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            sut.ForEach(x =>
+            {
+                output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
+                x.SupportedGenerationMethods.ForEach(m => output.WriteLine($"  Method: {m}"));
+            });
+        }
+
         [Theory]
         [InlineData(Model.GeminiPro)]
         [InlineData(Model.GeminiProVision)]
@@ -74,6 +94,27 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var model = new GenerativeModel(apiKey: fixture.ApiKey);
+
+            // Act
+            var sut = await model.GetModel(model: modelName);
+
+            // Assert
+            sut.Should().NotBeNull();
+            sut.Name.Should().Be($"models/{modelName}");
+            output.WriteLine($"Model: {sut.DisplayName} ({sut.Name})");
+            sut.SupportedGenerationMethods.ForEach(m => output.WriteLine($"  Method: {m}"));
+        }
+
+        [Theory]
+        [InlineData(Model.GeminiPro)]
+        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.BisonText)]
+        [InlineData(Model.BisonChat)]
+        public async void Get_Model_Information_Using_OAuth(string modelName)
+        {
+            // Arrange
+            var model = new GenerativeModel();
+            model.AccessToken = fixture.AccessToken;
 
             // Act
             var sut = await model.GetModel(model: modelName);

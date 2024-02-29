@@ -6,16 +6,17 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 #endif
-using System.Text.RegularExpressions;
 using System.Linq;
-using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Mscc.GenerativeAI
 {
     public class GenerativeModel
     {
+        private readonly bool useVertexAI = false;
         private readonly string endpointGoogleAI = "generativelanguage.googleapis.com";
-        private readonly string urlGoogleAI = "https://{endpointGoogleAI}/{version}/models/{model}:{method}?key={apiKey}";
+        private readonly string urlGoogleAI = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
+        private readonly string urlParameterKey = "?key={apiKey}";
         private readonly string urlVertexAI = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
         private readonly string model;
         private readonly string apiKey = default;
@@ -32,9 +33,18 @@ namespace Mscc.GenerativeAI
         {
             get
             {
+                var url = urlGoogleAI;
                 if (!string.IsNullOrEmpty(apiKey))
-                    return urlGoogleAI;
-                return urlVertexAI;
+                {
+                    url += urlParameterKey;
+                }
+
+                if (useVertexAI)
+                {
+                    url = urlVertexAI;
+                }
+
+                return url;
             }
         }
 
@@ -42,9 +52,12 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                if (!string.IsNullOrEmpty(apiKey))
-                    return ApiVersion.V1Beta;
-                return ApiVersion.V1;
+                if (useVertexAI)
+                {
+                    return ApiVersion.V1;
+                }
+
+                return ApiVersion.V1Beta;
             }
         }
 
@@ -52,9 +65,12 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                if (!string.IsNullOrEmpty(apiKey))
-                    return "generateContent";
-                return "streamGenerateContent";
+                if (useVertexAI)
+                {
+                    return "streamGenerateContent";
+                }
+
+                return "generateContent";
             }
         }
 
@@ -91,7 +107,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-pro")</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        public GenerativeModel(string apiKey, string model = Model.GeminiPro, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
+        public GenerativeModel(string apiKey = "", string model = Model.GeminiPro, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
         {
             this.apiKey = apiKey;
             this.model = model;
@@ -109,8 +125,9 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        public GenerativeModel(string projectId, string region, string model, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
+        internal GenerativeModel(string projectId, string region, string model, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
         {
+            this.useVertexAI = true;
             this.projectId = projectId;
             this.region = region;
             this.model = model;
@@ -124,10 +141,18 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         public async Task<List<ModelResponse>> ListModels()
         {
-            if (string.IsNullOrEmpty(apiKey))
+            if (useVertexAI)
+            {
                 throw new NotSupportedException();
+            }
 
-            var url = $"https://{endpointGoogleAI}/{Version}/models?key={apiKey}";
+            var url = "https://{endpointGoogleAI}/{Version}/models";
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                url += urlParameterKey;
+            }
+
+            url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var models = await Deserialize<ListModelsResponse>(response);
@@ -141,10 +166,18 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         public async Task<ModelResponse> GetModel(string model = Model.GeminiPro)
         {
-            if (string.IsNullOrEmpty(apiKey))
+            if (useVertexAI)
+            {
                 throw new NotSupportedException();
+            }
 
-            var url = $"https://{endpointGoogleAI}/{Version}/models/{model}?key={apiKey}";
+            var url = $"https://{endpointGoogleAI}/{Version}/models/{model}";
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                url += urlParameterKey;
+            }
+
+            url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return await Deserialize<ModelResponse>(response);
