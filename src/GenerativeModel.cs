@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 #endif
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Net;
 
 namespace Mscc.GenerativeAI
 {
     public class GenerativeModel
     {
-        private readonly string urlGoogleAI = "https://generativelanguage.googleapis.com/{version}/models/{model}:{method}?key={apiKey}";
+        private readonly string endpointGoogleAI = "generativelanguage.googleapis.com";
+        private readonly string urlGoogleAI = "https://{endpointGoogleAI}/{version}/models/{model}:{method}?key={apiKey}";
         private readonly string urlVertexAI = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
         private readonly string model;
         private readonly string apiKey = default;
@@ -114,6 +116,38 @@ namespace Mscc.GenerativeAI
             this.model = model;
             this.generationConfig = generationConfig;
             this.safetySettings = safetySettings;
+        }
+
+        /// <summary>
+        /// Get a list of available models and description.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ModelResponse>> ListModels()
+        {
+            if (string.IsNullOrEmpty(apiKey))
+                throw new NotSupportedException();
+
+            var url = $"https://{endpointGoogleAI}/{Version}/models?key={apiKey}";
+            var response = await Client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var models = await Deserialize<ListModelsResponse>(response);
+            return models?.Models!;
+        }
+
+        /// <summary>
+        /// Get information about the model, including default values.
+        /// </summary>
+        /// <param name="model">The model to query</param>
+        /// <returns></returns>
+        public async Task<ModelResponse> GetModel(string model = Model.GeminiPro)
+        {
+            if (string.IsNullOrEmpty(apiKey))
+                throw new NotSupportedException();
+
+            var url = $"https://{endpointGoogleAI}/{Version}/models/{model}?key={apiKey}";
+            var response = await Client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<ModelResponse>(response);
         }
 
         /// <summary>
@@ -264,7 +298,7 @@ namespace Mscc.GenerativeAI
         /// <param name="url"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private string ParseUrl(string url, string? method)
+        private string ParseUrl(string url, string? method = default)
         {
             var replacements = GetReplacements();
             replacements.Add("method", method);
@@ -278,6 +312,7 @@ namespace Mscc.GenerativeAI
             {
                 return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
+                    { "endpointGoogleAI", endpointGoogleAI },
                     { "version", Version },
                     { "model", model },
                     { "apikey", apiKey },

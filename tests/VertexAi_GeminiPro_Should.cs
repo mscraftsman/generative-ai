@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Mscc.GenerativeAI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -58,6 +59,34 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             model.Should().NotBeNull();
             model.Name().Should().Be(Model.Gemini10Pro);
+        }
+
+        [Fact]
+        public async void List_Models()
+        {
+            // Arrange
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model);
+            model.AccessToken = fixture.AccessToken;
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotSupportedException>(() => model.ListModels());
+        }
+
+        [Theory]
+        [InlineData(Model.GeminiPro)]
+        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.BisonText)]
+        [InlineData(Model.BisonChat)]
+        public async void Get_Model_Information(string modelName)
+        {
+            // Arrange
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model);
+            model.AccessToken = fixture.AccessToken;
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NotSupportedException>(() => model.GetModel(model: modelName));
         }
 
         [Fact]
