@@ -37,6 +37,8 @@ namespace Test.Mscc.GenerativeAI
                 Region = Environment.GetEnvironmentVariable("GOOGLE_REGION");
             AccessToken = Configuration["access_token"];
             if (string.IsNullOrEmpty(AccessToken))
+                AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+            if (string.IsNullOrEmpty(AccessToken))
                 AccessToken = ReadAccessToken().TrimEnd();
         }
 
