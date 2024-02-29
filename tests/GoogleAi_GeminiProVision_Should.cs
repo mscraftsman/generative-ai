@@ -9,19 +9,17 @@ using Xunit.Abstractions;
 
 namespace Test.Mscc.GenerativeAI
 {
-    [Collection("Configuration")]
+    [Collection(nameof(ConfigurationFixture))]
     public class GoogleAi_GeminiProVision_Should
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string apiKey;
         private readonly string model = Model.GeminiProVision;
 
         public GoogleAi_GeminiProVision_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             this.output = output;
             this.fixture = fixture;
-            apiKey = fixture.ApiKey;
         }
 
         [Fact]
@@ -30,7 +28,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model   );
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Assert
             model.Should().NotBeNull();
@@ -41,7 +39,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Generate_Text_From_Image()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var base64image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
@@ -70,7 +68,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var base64image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
             var parts = new List<IPart>
             {

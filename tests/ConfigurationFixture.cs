@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
+using System.Diagnostics;
 using System.IO;
 using Xunit;
 
 namespace Test.Mscc.GenerativeAI
 {
-    public class ConfigurationFixture : IDisposable
+    [CollectionDefinition(nameof(ConfigurationFixture))]
+    public class ConfigurationFixture : ICollectionFixture<ConfigurationFixture>
     {
         private IConfiguration Configuration { get; }
 
@@ -25,21 +27,33 @@ namespace Test.Mscc.GenerativeAI
                .Build();
 
             ApiKey = Configuration["api_key"];
+            if (string.IsNullOrEmpty(ApiKey))
+                ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             ProjectId = Configuration["project_id"];
+            if (string.IsNullOrEmpty(ProjectId))
+                ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
             Region = Configuration["region"];
+            if (string.IsNullOrEmpty(Region))
+                Region = Environment.GetEnvironmentVariable("GOOGLE_REGION");
             AccessToken = Configuration["access_token"];
+            if (string.IsNullOrEmpty(AccessToken))
+                AccessToken = ReadAccessToken().TrimEnd();
         }
 
-        public void Dispose()
+        private string ReadAccessToken()
         {
-        }
-    }
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.FileName = "cmd.exe";
+            p.StartInfo.Arguments = "/c gcloud auth application-default print-access-token";
+            p.Start();
+            var output = p.StandardOutput.ReadToEnd();
+            p.WaitForExit();
 
-    [CollectionDefinition("Configuration")]
-    public class ConfigurationCollection : ICollectionFixture<ConfigurationFixture>
-    {
-        // This class has no code, and is never created. Its purpose is simply
-        // to be the place to apply [CollectionDefinition] and all the
-        // ICollectionFixture<> interfaces.
+            return output;
+        }
     }
 }

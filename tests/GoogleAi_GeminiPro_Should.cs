@@ -7,19 +7,17 @@ using Xunit.Abstractions;
 
 namespace Test.Mscc.GenerativeAI
 {
-    [Collection("Configuration")]
+    [Collection(nameof(ConfigurationFixture))]
     public class GoogleAi_GeminiPro_Should
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string apiKey;
         private readonly string model = Model.GeminiPro;
 
         public GoogleAi_GeminiPro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             this.output = output;
             this.fixture = fixture;
-            apiKey = fixture.ApiKey;
         }
 
         [Fact]
@@ -28,7 +26,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var model = new GenerativeModel(apiKey: apiKey);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             // Assert
             model.Should().NotBeNull();
@@ -41,7 +39,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Assert
             model.Should().NotBeNull();
@@ -53,7 +51,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -69,7 +67,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Generate_Content_MultiplePrompt()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is x multiplied by 2?" },
@@ -91,7 +89,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -114,7 +112,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = "user";
 
@@ -133,7 +131,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Act
             var response = await model.GenerateContentStream(prompt);
@@ -153,7 +151,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -182,7 +180,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Count_Tokens(string prompt, int expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Act
             var response = await model.CountTokens(prompt);
@@ -201,7 +199,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -222,7 +220,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Start_Chat_Streaming()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var chat = model.StartChat();
             var chatInput1 = "How can I learn more about C#?";
 
@@ -243,7 +241,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Function_Calling_Chat()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var chat = model.StartChat(tools: new List<Tool>());
             var chatInput1 = "What is the weather in Boston?";
 
@@ -264,7 +262,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Function_Calling_ContentStream()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: apiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),

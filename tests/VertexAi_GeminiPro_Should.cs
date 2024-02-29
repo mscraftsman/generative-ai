@@ -7,21 +7,17 @@ using Xunit.Abstractions;
 
 namespace Test.Mscc.GenerativeAI
 {
-    [Collection("Configuration")]
+    [Collection(nameof(ConfigurationFixture))]
     public class VertexAi_GeminiPro_Should
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string projectId;
-        private readonly string region;
         private readonly string model = Model.Gemini10Pro;
 
         public VertexAi_GeminiPro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             this.output = output;
             this.fixture = fixture;
-            projectId = fixture.ProjectId;
-            region = fixture.Region;
         }
 
         [Fact]
@@ -30,7 +26,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Assert
             vertex.Should().NotBeNull();
@@ -40,7 +36,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Act
             var model = vertex.GenerativeModel();
@@ -54,7 +50,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Act
             var model = vertex.GenerativeModel(model: this.model);
@@ -69,7 +65,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
 
@@ -87,7 +83,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Generate_Content_MultiplePrompt()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var parts = new List<IPart>
@@ -111,7 +107,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
@@ -136,7 +132,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
 
@@ -158,7 +154,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
@@ -189,7 +185,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Count_Tokens(string prompt, int expected)
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
@@ -216,7 +212,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
@@ -239,7 +235,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Start_Chat_Streaming()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var chat = model.StartChat();
@@ -256,7 +252,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Function_Calling_Chat()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var chat = model.StartChat(tools: new List<Tool>());
@@ -278,7 +274,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Function_Calling_ContentStream()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: projectId, region: region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest
