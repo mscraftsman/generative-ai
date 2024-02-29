@@ -7,7 +7,7 @@ Access the Gemini API in Google AI Studio and Google Cloud Vertex AI.
 Run the following at a command line in your .NET project folder.
 
 ```
-dotnet add package Mscc.GenerativeAI
+dotnet add package MSCC.GenerativeAI
 ```
 
 Alternatively, if you are working with Visual Studio use the NuGet package manager to add a reference to Mscc.GenerativeAI.
