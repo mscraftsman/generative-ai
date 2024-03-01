@@ -65,6 +65,21 @@ namespace Mscc.GenerativeAI
         {
             get
             {
+                switch (model)
+                {
+                    case Model.BisonChat:
+                        return "generateMessage";
+                    case Model.BisonText:
+                        return "generateText";
+                    case Model.GeckoEmbedding:
+                        return "embedText";
+                    case Model.Embedding:
+                        return "embedContent";
+                    case Model.AttributedQuestionAnswering:
+                        return "generateAnswer";
+                    default:
+                        break;
+                }
                 if (useVertexAI)
                 {
                     return "streamGenerateContent";

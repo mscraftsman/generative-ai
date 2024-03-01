@@ -21,8 +21,8 @@
 		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-		<PackageReleaseNotes>- Add OAuth to Google AI</PackageReleaseNotes>
-		<Version>0.4.1</Version>
+		<PackageReleaseNotes>- minor correction</PackageReleaseNotes>
+		<Version>0.4.2</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
