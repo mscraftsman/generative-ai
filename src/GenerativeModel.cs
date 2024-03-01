@@ -14,8 +14,10 @@ namespace Mscc.GenerativeAI
     public class GenerativeModel
     {
         private readonly bool useVertexAI = false;
+        private readonly bool useApiKeyHeader = false;
         private readonly string endpointGoogleAI = "generativelanguage.googleapis.com";
         private readonly string urlGoogleAI = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
+        // Or in the x-goog-api-key header
         private readonly string urlParameterKey = "?key={apiKey}";
         private readonly string urlVertexAI = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
         private readonly string model;
@@ -34,7 +36,7 @@ namespace Mscc.GenerativeAI
             get
             {
                 var url = urlGoogleAI;
-                if (!string.IsNullOrEmpty(apiKey))
+                if (!string.IsNullOrEmpty(apiKey) && !useApiKeyHeader)
                 {
                     url += urlParameterKey;
                 }
@@ -129,6 +131,11 @@ namespace Mscc.GenerativeAI
             this.generationConfig = generationConfig;
             this.safetySettings = safetySettings;
 
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                Client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
+                useApiKeyHeader = true;
+            }
         }
 
         // Todo: Add parameters for GenerationConfig, SafetySettings, Transport? and Tools
@@ -162,7 +169,7 @@ namespace Mscc.GenerativeAI
             }
 
             var url = "https://{endpointGoogleAI}/{Version}/models";
-            if (!string.IsNullOrEmpty(apiKey))
+            if (!string.IsNullOrEmpty(apiKey) && !useApiKeyHeader)
             {
                 url += urlParameterKey;
             }
@@ -187,7 +194,7 @@ namespace Mscc.GenerativeAI
             }
 
             var url = $"https://{endpointGoogleAI}/{Version}/models/{model}";
-            if (!string.IsNullOrEmpty(apiKey))
+            if (!string.IsNullOrEmpty(apiKey) && !useApiKeyHeader)
             {
                 url += urlParameterKey;
             }
@@ -214,7 +221,7 @@ namespace Mscc.GenerativeAI
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
 
-            if (string.IsNullOrEmpty(apiKey))
+            if (useVertexAI)
             {
                 var contentResponseVertex = await Deserialize<List<GenerateContentResponse>>(response);
                 return contentResponseVertex.FirstOrDefault();

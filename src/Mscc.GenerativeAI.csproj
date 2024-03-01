@@ -21,8 +21,8 @@
 		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-		<PackageReleaseNotes>- minor correction</PackageReleaseNotes>
-		<Version>0.4.2</Version>
+		<PackageReleaseNotes>- add x-goog-api-key header</PackageReleaseNotes>
+		<Version>0.4.3</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
