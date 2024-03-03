@@ -13,10 +13,11 @@ if (string.IsNullOrEmpty(apiKey))
     apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
 }
 
-var model = new GenerativeModel(apiKey);
 Console.Write("Enter a prompt: ");
 string request = Console.ReadLine();
 
+// Send the prompt to Gemini (using Google AI with API key)
+var model = new GenerativeModel(apiKey);
 var response = await model.GenerateContent(request);
 
 Console.WriteLine($"Prompt: {request}");

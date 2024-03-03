@@ -116,7 +116,9 @@ Console.WriteLine(response.Text);
 
 ## More examples
 
-The [tests](./tests/) folder contains more examples.
+The folders [samples](./samples/) and [tests](./tests/) contain more examples.
+
+- [Simple console application](./samples/Console.Chat/)
 
 ## Troubleshooting
 
