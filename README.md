@@ -1,18 +1,23 @@
 # Gemini AI Client for .NET
 
+[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
+[![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
+
 Access the Gemini API in Google AI Studio and Google Cloud Vertex AI.
 
 ## Getting Started
 
 Add the package using the `dotnet` command line tool in your .NET project folder.
 
-```
+```text
 > dotnet add package Mscc.GenerativeAI
 ```
 
 Alternatively, if you are working with Visual Studio use the NuGet package manager to add a reference to Mscc.GenerativeAI.
 
-```
+```text
 PM> Install-Package Mscc.GenerativeAI
 ```
 
@@ -36,7 +41,7 @@ Use of Gemini API in either Google AI or Vertex AI is almost identical. The majo
 
 Google AI with an API key
 
-```
+```csharp
 using Mscc.GenerativeAI;
 // Google AI with an API key
 var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
@@ -44,7 +49,7 @@ var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
 
 Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 
-```
+```csharp
 using Mscc.GenerativeAI;
 // Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var model = new GenerativeModel(model: Model.GeminiPro);
@@ -53,7 +58,7 @@ model.AccessToken = accessToken;
 
 Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 
-```
+```csharp
 using Mscc.GenerativeAI;
 // Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var vertex = new VertexAI(projectId: projectId, region: region);
@@ -67,7 +72,7 @@ The `ConfigurationFixture` type in the test project implements multiple options 
 
 Working with Google AI in your application requires an API key. Get an API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-```
+```csharp
 using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
@@ -83,11 +88,11 @@ Console.WriteLine(response.Text);
 
 Use of [Vertex AI](https://console.cloud.google.com/vertex-ai) requires an account on [Google Cloud](https://console.cloud.google.com/), a project with billing and Vertex AI API enabled.
 
-```
+```csharp
 using Mscc.GenerativeAI;
 
-var projectId = "your_google_project_id";	// the ID of a project, not its name.
-var region = "us-central1";					// see documentation for available regions.
+var projectId = "your_google_project_id"; // the ID of a project, not its name.
+var region = "us-central1";     // see documentation for available regions.
 var accessToken = "your_access_token";      // use `gcloud auth application-default print-access-token` to get it.
 
 var prompt = "Write a story about a magic backpack.";
@@ -113,4 +118,4 @@ The test cases should provide more insights and use cases on how to use the [Msc
 
 ## Feedback
 
-You can create issues at the https://github.com/mscraftsman/generative-ai repository.
+You can create issues at the <https://github.com/mscraftsman/generative-ai> repository.
