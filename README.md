@@ -7,7 +7,9 @@
 
 Access the Gemini API in Google AI Studio and Google Cloud Vertex AI.
 
-## Getting Started
+## Install the package
+
+Install the package [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/) from NuGet. You can install the package from the command line using either the command line or the NuGet Package Manager Console. Or you add it directly to your .NET project.
 
 Add the package using the `dotnet` command line tool in your .NET project folder.
 
@@ -15,10 +17,18 @@ Add the package using the `dotnet` command line tool in your .NET project folder
 > dotnet add package Mscc.GenerativeAI
 ```
 
-Alternatively, if you are working with Visual Studio use the NuGet package manager to add a reference to Mscc.GenerativeAI.
+Working with Visual Studio use the NuGet Package Manager to install the package Mscc.GenerativeAI.
 
 ```text
 PM> Install-Package Mscc.GenerativeAI
+```
+
+Alternatively, add the following line to your `.csproj` file.
+
+```text
+  <ItemGroup>
+    <PackageReference Include="Mscc.GenerativeAI" Version="0.4.5" />
+  </ItemGroup>
 ```
 
 You can then add this code to your sources whenever you need to access any Gemini API provided by Google. This package works for Google AI (Google AI Studio) and Google Cloud Vertex AI.
@@ -33,7 +43,7 @@ The package supports the following use cases to authenticate.
 
 This applies mainly to the instantiation procedure.
 
-## Examples
+## Getting Started
 
 Use of Gemini API in either Google AI or Vertex AI is almost identical. The major difference is the way to instantiate the model handling your prompt.
 
@@ -103,6 +113,14 @@ model.AccessToken = accessToken;
 var response = model.GenerateContent(prompt).Result;
 Console.WriteLine(response.Text);
 ```
+
+## More examples
+
+The [tests](./tests/) folder contains more examples.
+
+## Troubleshooting
+
+tba
 
 ## Using the tests
 
