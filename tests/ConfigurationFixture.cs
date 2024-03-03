@@ -18,6 +18,8 @@ namespace Test.Mscc.GenerativeAI
         public string AccessToken { get; set; } = default;
 
 
+        // Todo: Handle envVar GOOGLE_APPLICATION_CREDENTIALS
+        // Ref: https://cloud.google.com/vertex-ai/docs/start/client-libraries
         public ConfigurationFixture()
         {
             Configuration = new ConfigurationBuilder()
