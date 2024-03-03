@@ -288,6 +288,36 @@ namespace Mscc.GenerativeAI
             return await GenerateContentStream(request);
         }
 
+        /// <remarks/>
+        public async Task<GenerateContentResponse> GenerateMessage(GenerateContentRequest? request)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <remarks/>
+        public async Task<GenerateContentResponse> GenerateText(GenerateContentRequest? request)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <remarks/>
+        public async Task<GenerateContentResponse> GenerateAnswer(GenerateContentRequest? request)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <remarks/>
+        public async Task<GenerateContentResponse> EmbedText(GenerateContentRequest? request)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <remarks/>
+        public async Task<GenerateContentResponse> EmbedContent(GenerateContentRequest? request)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Counts the number of tokens in the content. 
         /// </summary>
