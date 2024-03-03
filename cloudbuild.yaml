@@ -1,16 +1,25 @@
 # outline the steps to build a .NET project, pack it as Nuget package and push it to Nuget source feed
 steps:
 # Build the project
-- name: 'gcr.io/cloud-builders/dotnet'
-  args: ['build', '-c', 'Release', 'GenerativeAI.sln']
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Build
+  entrypoint: 'dotnet'
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.csproj']
 # Pack the NuGet package
-- name: 'gcr.io/cloud-builders/dotnet'
-  args: ['pack', '-c', 'Release', 'GenerativeAI.sln', '-o', 'output/']
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Pack
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.csproj', '-o', 'output/']
 # Push the package to NuGet source feed
-- name: 'gcr.io/cloud-builders/dotnet'
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Push
+  entrypoint: 'dotnet'
   args: ['nuget', 'push', 'output/*.nupkg', '-k', '${_NUGET_API_KEY}', '-s', 'https://api.nuget.org/v3/index.json']
 
 options:
   substitutionOption: 'ALLOW_LOOSE'
+  env:
+  - 'DOTNET_CLI_TELEMETRY_OPTOUT=true'
+  - 'DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true'
 substitutions:
   _NUGET_API_KEY: YOUR_NUGET_API_KEY
