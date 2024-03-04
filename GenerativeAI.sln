@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mscc.GenerativeAI", "src\Mscc.GenerativeAI.csproj", "{C87DC6AE-3F5E-4499-9070-D7B905AF27B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mscc.GenerativeAI", "src\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj", "{C87DC6AE-3F5E-4499-9070-D7B905AF27B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Mscc.GenerativeAI", "tests\Test.Mscc.GenerativeAI.csproj", "{0EE48658-C084-4F39-87EE-C2F852BA30F3}"
 EndProject
@@ -11,11 +11,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		cloudbuild.yaml = cloudbuild.yaml
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		LICENSE = LICENSE
 		MsccGenerativeAi-icon-nuget.png = MsccGenerativeAi-icon-nuget.png
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mscc.GenerativeAI.Web", "src\Mscc.GenerativeAI.Web\Mscc.GenerativeAI.Web.csproj", "{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +34,10 @@ Global
 		{0EE48658-C084-4F39-87EE-C2F852BA30F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EE48658-C084-4F39-87EE-C2F852BA30F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EE48658-C084-4F39-87EE-C2F852BA30F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

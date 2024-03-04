@@ -3,16 +3,16 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net472;net6.0;net7.0;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-		<NoWarn>$(NoWarn);1591</NoWarn>
+		<NoWarn>$(NoWarn);CS1591</NoWarn>
 		<PackageId>Mscc.GenerativeAI</PackageId>
 		<Title>MSCC GenerativeAI</Title>
 		<Product>MSCC GenerativeAI</Product>
 		<Description>Gemini AI Client for .NET</Description>
-		<PackageTags>Gemini;Google AI;Vertex AI;GenAI;Generative AI</PackageTags>
+		<PackageTags>Gemini;GeminiAI;GoogleAI;VertexAI;GenAI;GenerativeAI</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Authors>jkirstaetter</Authors>
 		<Copyright>Copyright (c) Jochen Kirstätter</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
@@ -22,7 +22,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>- extend methods</PackageReleaseNotes>
-		<Version>0.4.5</Version>
+		<Version>0.5.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
@@ -35,9 +35,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
-		<None Include="..\README.md" Pack="True" PackagePath="" />
-		<None Include="..\LICENSE" Pack="True" PackagePath="" />
+		<None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
+		<None Include="..\..\README.md" Pack="True" PackagePath="" />
+		<None Include="..\..\LICENSE" Pack="True" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
