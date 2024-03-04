@@ -1,16 +1,26 @@
 # outline the steps to build a .NET project, pack it as Nuget package and push it to Nuget source feed
 steps:
-# Build the project
+# Build the projects
 - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
-  id: Build
+  id: Build for .NET
   entrypoint: 'dotnet'
-  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.csproj']
-# Pack the NuGet package
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj']
 - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
-  id: Pack
+  id: Build for ASP.NET Core
   entrypoint: 'dotnet'
-  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.csproj', '-o', 'output/']
-# Push the package to NuGet source feed
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj']
+
+# Pack the NuGet packages
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Pack for .NET
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj', '-o', 'output/']
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Pack for ASP.NET Core
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', '-o', 'output/']
+
+# Push the packages to NuGet source feed
 - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
   id: Push
   entrypoint: 'dotnet'
