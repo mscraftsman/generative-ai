@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 #endif
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -227,8 +228,15 @@ namespace Mscc.GenerativeAI
 
             if (useVertexAI)
             {
+                StringBuilder fullText = new();
                 var contentResponseVertex = await Deserialize<List<GenerateContentResponse>>(response);
-                return contentResponseVertex.FirstOrDefault();
+                foreach (var item in contentResponseVertex)
+                {
+                    fullText.Append(item.Text);
+                }
+                var result = contentResponseVertex.LastOrDefault();
+                result.Candidates[0].Content.Parts[0].Text = fullText.ToString();
+                return result;
             }
             return await Deserialize<GenerateContentResponse>(response);
         }
@@ -238,7 +246,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt);
+            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
             request.Contents[0].Role = "user";
             return await GenerateContent(request);
         }
@@ -248,7 +256,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts);
+            var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
             request.Contents[0].Role = "user";
             return await GenerateContent(request);
         }
@@ -277,7 +285,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt);
+            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
             request.Contents[0].Role = "user";
             return await GenerateContentStream(request);
         }
@@ -287,7 +295,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts);
+            var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
             request.Contents[0].Role = "user";
             return await GenerateContentStream(request);
         }
@@ -346,7 +354,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt);
+            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
             return await CountTokens(request);
         }
 
@@ -355,7 +363,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts);
+            var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
             return await CountTokens(request);
         }
 
