@@ -8,13 +8,13 @@ namespace Mscc.GenerativeAI
 
     {
         public List<Content>? Contents { get; set; }
-        public List<SafetySetting>? SafetySettings { get; set; }
         public GenerationConfig? GenerationConfig { get; set; }
+        public List<SafetySetting>? SafetySettings { get; set; }
         public List<Tool>? Tools { get; set; }
 
         public GenerateContentRequest() { }
 
-        public GenerateContentRequest(string prompt)
+        public GenerateContentRequest(string prompt, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
         {
             Contents = new List<Content> { new Content
             {
@@ -23,22 +23,31 @@ namespace Mscc.GenerativeAI
                     Text = prompt
                 }}
             }};
+            if (generationConfig != null) GenerationConfig = generationConfig;
+            if (safetySettings != null) SafetySettings = safetySettings;
+            if (tools != null) Tools = tools;
         }
 
-        public GenerateContentRequest(List<IPart> parts)
+        public GenerateContentRequest(List<IPart> parts, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
         {
             Contents = new List<Content> { new Content
             {
                 Parts = parts
             }};
+            if (generationConfig != null) GenerationConfig = generationConfig;
+            if (safetySettings != null) SafetySettings = safetySettings;
+            if (tools != null) Tools = tools;
         }
 
-        public GenerateContentRequest(List<Part> parts)
+        public GenerateContentRequest(List<Part> parts, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
         {
             Contents = new List<Content> { new Content
             {
                 Parts = parts.Select(p => (IPart)p).ToList()
             }};
+            if (generationConfig != null) GenerationConfig = generationConfig;
+            if (safetySettings != null) SafetySettings = safetySettings;
+            if (tools != null) Tools = tools;
         }
 
         internal void Synchronize()
