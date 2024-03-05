@@ -22,10 +22,9 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
-			- Initial implementation
-			- Improve GenerativeModelService with Options
+			- Update package reference
 		</PackageReleaseNotes>
-		<Version>0.5.0</Version>
+		<Version>0.5.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
@@ -48,7 +47,7 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-		<PackageReference Include="Mscc.GenerativeAI" Version="0.4.5" />
+		<PackageReference Include="Mscc.GenerativeAI" Version="0.5.*" />
 	</ItemGroup>
 
 	<ItemGroup>

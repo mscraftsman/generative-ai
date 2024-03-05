@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.5.1
+
+- Handle GenerationConfig, SafetySeetings and Tools
+- Append streamGenerateContent
+
 ## 0.5.0
 
 - Refactor folder structure

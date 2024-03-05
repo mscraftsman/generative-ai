@@ -21,8 +21,11 @@
 		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-		<PackageReleaseNotes>- extend methods</PackageReleaseNotes>
-		<Version>0.5.0</Version>
+		<PackageReleaseNotes>
+			- Handle GenerationConfig, SafetySeetings and Tools
+			- Append streamGenerateContent
+		</PackageReleaseNotes>
+		<Version>0.5.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
