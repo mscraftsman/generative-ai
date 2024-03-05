@@ -1,5 +1,3 @@
-using Mscc.GenerativeAI.Web;
-
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.Configure<GenerativeAIOptions>(builder.Configuration.GetSection("Gemini"));
