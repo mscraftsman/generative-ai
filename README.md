@@ -1,10 +1,10 @@
 # Gemini AI Client for .NET and ASP.NET Core
+[![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
 
 Client for .NET: 
 [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
-[![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/LICENSE)
-![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
 
 Client for ASP.NET Core: 
 [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)
