@@ -3,7 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddGenerativeAI(options =>
 {
-    options.Credentials.ApiKey = "AIzaSyAyDwhvXGZybRCL7xrzj6EpA8BytCO_u6Y";
+    options.Credentials.ApiKey = "YOUR_API_KEY";
 });
 builder.Services.AddControllersWithViews();
 
