@@ -1,4 +1,6 @@
-﻿namespace Mscc.GenerativeAI.Web
+﻿using System;
+
+namespace Mscc.GenerativeAI.Web
 {
     public interface IGenerativeAIOptions
     {
@@ -6,19 +8,21 @@
         GenerativeAICredentials Credentials { get; set; }
         string ProjectId { get; set; }
         string Region { get; set; }
+        string Model { get; set; }
     }
 
-    public class GenerativeAIOptions : IGenerativeAIOptions
+    public sealed class GenerativeAIOptions : IGenerativeAIOptions
     {
-        public string Scheme { get; internal set; }
+        private string model;
 
-        public GenerativeAIOptions()
+        public string Scheme { get; internal set; } = "x-goog-api-key";
+        public GenerativeAICredentials? Credentials { get; set; } // = new GenerativeAICredentials();
+        public string? ProjectId { get; set; } // = string.Empty;
+        public string? Region { get; set; } // = string.Empty;
+        public string? Model
         {
-            Scheme = "x-goog-api-key";
+            get => !string.IsNullOrEmpty(model) ? model : GenerativeAI.Model.Gemini10Pro;
+            set => model = value;
         }
-
-        public GenerativeAICredentials Credentials { get; set; } = new GenerativeAICredentials();
-        public string ProjectId { get; set; } = default;
-        public string Region { get; set; } = default;
     }
 }

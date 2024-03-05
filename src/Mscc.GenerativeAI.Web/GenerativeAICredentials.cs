@@ -2,6 +2,6 @@
 {
     public class GenerativeAICredentials
     {
-        public string ApiKey { get; internal set; }
+        public string? ApiKey { get; set; }
     }
 }

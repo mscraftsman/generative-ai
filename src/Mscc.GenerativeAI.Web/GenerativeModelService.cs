@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI.Web
@@ -17,14 +18,31 @@ namespace Mscc.GenerativeAI.Web
     {
         private readonly GenerativeModel model;
 
-        public GenerativeModelService()
+        public GenerativeModelService(IOptions<GenerativeAIOptions> options)
         {
-            this.model = new GenerativeModel(model: Model.GeminiPro);
+            var model = options?.Value?.Model ?? Model.Gemini10Pro;
+            if (!string.IsNullOrEmpty(options?.Value.ProjectId))
+            {
+                var vertex = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
+                this.model = vertex.GenerativeModel(model: model);
+            }
+            else
+            {
+                this.model = new GenerativeModel(apiKey: options?.Value.Credentials.ApiKey, model: model);
+            }
         }
 
-        public GenerativeModelService(string model)
+        public GenerativeModelService(IOptions<GenerativeAIOptions> options, string model) : base()
         {
-            this.model = new GenerativeModel(model: model);
+            if (!string.IsNullOrEmpty(options?.Value?.ProjectId))
+            {
+                var vertex = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
+                this.model = vertex.GenerativeModel(model: model);
+            }
+            else
+            {
+                this.model = new GenerativeModel(apiKey: options?.Value.Credentials.ApiKey, model: model);
+            }
         }
 
         public async Task<List<ModelResponse>> ListModels()
