@@ -133,8 +133,12 @@ namespace Mscc.GenerativeAI
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                Client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
-                useApiKeyHeader = true;
+                useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                if (!useApiKeyHeader)
+                {
+                    Client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
+                }
+                useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
             }
         }
 
