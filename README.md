@@ -2,6 +2,8 @@
 [![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/blob/main/LICENSE)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
 
+Access the Gemini API in Google AI Studio and Google Cloud Vertex AI.
+
 Client for .NET: 
 [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
@@ -10,7 +12,7 @@ Client for ASP.NET Core:
 [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)
 
-Access the Gemini API in Google AI Studio and Google Cloud Vertex AI.
+Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET web applications.
 
 ## Install the package
 
@@ -123,7 +125,9 @@ Console.WriteLine(response.Text);
 
 The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 
-- [Simple console application](./samples/Console.Chat/)
+- [Simple console application](./samples/Console.Minimal.Prompt/)
+- [ASP.NET Core Minimal web application](./samples/Web.Minimal.Api)
+- [ASP.NET Core MVP web application](./samples/Web.Mvp) (work in progress!)
 
 ## Troubleshooting
 
