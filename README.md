@@ -131,7 +131,21 @@ The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 
 ## Troubleshooting
 
-tba
+Sometimes you might have authentication warnings (partiocularly with the text-to-speech API). You can fix it by re-authenticating through ADC:
+
+```bash
+gcloud config set project "$PROJECT_ID"
+
+gcloud auth application-default set-quota-project "$PROJECT_ID"
+gcloud auth application-default login
+```
+
+Make sure that the required API have been enabled.
+
+```bash
+# ENABLE APIs
+gcloud services enable aiplatform.googleapis.com
+```
 
 ## Using the tests
 
