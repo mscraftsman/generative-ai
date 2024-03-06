@@ -24,7 +24,7 @@ steps:
 - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
   id: Push
   entrypoint: 'dotnet'
-  args: ['nuget', 'push', 'output/*.nupkg', '-k', '${_NUGET_API_KEY}', '-s', 'https://api.nuget.org/v3/index.json']
+  args: ['nuget', 'push', 'output/*.nupkg', '--skip-duplicate', '-s', 'https://api.nuget.org/v3/index.json', '-k', '${_NUGET_API_KEY}']
 
 options:
   substitutionOption: 'ALLOW_LOOSE'
