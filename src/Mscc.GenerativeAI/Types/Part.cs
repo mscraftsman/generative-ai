@@ -23,6 +23,7 @@ namespace Mscc.GenerativeAI
             set { TextData = new TextData { Text = value }; } 
         }
         /// <remarks/>
+        [DebuggerHidden]
         internal TextData TextData { get; set; }
         /// <summary>
         /// Raw media bytes sent directly in the request. 

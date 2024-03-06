@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.5.2
+
+- Correct JSON conversion of SafetySettings
+- Use of enumerations
+
 ## 0.5.1
 
 - Handle GenerationConfig, SafetySeetings and Tools

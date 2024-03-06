@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI
 {
@@ -6,6 +7,7 @@ namespace Mscc.GenerativeAI
     /// Raw media bytes sent directly in the request. 
     /// Text should not be sent as raw bytes.
     /// </summary>
+    [DebuggerDisplay("{MimeType}")]
     public class InlineData : IPart
     {
         /// <summary>

@@ -22,10 +22,10 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
-			- Handle GenerationConfig, SafetySeetings and Tools
-			- Append streamGenerateContent
+			- Correct JSON conversion of SafetySettings
+			- Use of enum string values
 		</PackageReleaseNotes>
-		<Version>0.5.1</Version>
+		<Version>0.5.2</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">

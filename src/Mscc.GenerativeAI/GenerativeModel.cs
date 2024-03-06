@@ -1,12 +1,12 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-using System.Net.Http;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 #endif
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 
@@ -443,10 +443,10 @@ namespace Mscc.GenerativeAI
         {
             var options = DefaultJsonSerializerOptions();
 #if NET472_OR_GREATER || NETSTANDARD2_0
-            var responseJson = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(responseJson, options);
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<T>(json, options);
 #else
-            return await response.Content.ReadFromJsonAsync<T>();
+            return await response.Content.ReadFromJsonAsync<T>(options);
 #endif
         }
 
@@ -466,11 +466,9 @@ namespace Mscc.GenerativeAI
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 AllowTrailingCommas = true,
                 //WriteIndented = true,
-                Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper)
-                }
             };
+            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+
             return options;
         }
     }

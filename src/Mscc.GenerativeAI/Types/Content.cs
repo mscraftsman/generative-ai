@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI
 {
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class Content
     {
         [JsonIgnore]
         public List<IPart>? Parts { get; set; }
         public string? Role { get; set; }
 
+        [DebuggerHidden]
         [JsonPropertyName("parts")]
         public virtual List<Part>? PartTypes { get; set; }
 
@@ -40,11 +43,22 @@ namespace Mscc.GenerativeAI
             }
 
         }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"Role: {Role} - Parts: {Parts?.Count}";
+        }
     }
 
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class ContentResponse
     {
         public List<Part> Parts { get; set; }
         public string Role { get; set; }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"Role: {Role} - Parts: {Parts.Count}";
+        }
     }
 }

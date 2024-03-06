@@ -192,16 +192,16 @@ namespace Test.Mscc.GenerativeAI
             };
             var safetySettings = new List<SafetySetting>()
             {
-                //new SafetySetting()
-                //{
-                //    Category = HarmCategory.HarmCategoryHateSpeech,
-                //    Threshold = HarmBlockThreshold.HarmBlockThresholdBlockLowAndAbove
-                //},
-                //new SafetySetting()
-                //{
-                //    Category = HarmCategory.HarmCategoryDangerousContent,
-                //    Threshold = HarmBlockThreshold.HarmBlockThresholdBlockMediumAndAbove
-                //}
+                new SafetySetting()
+                {
+                    Category = HarmCategory.HarmCategoryHateSpeech,
+                    Threshold = HarmBlockThreshold.BlockLowAndAbove
+                },
+                new SafetySetting()
+                {
+                    Category = HarmCategory.HarmCategoryDangerousContent,
+                    Threshold = HarmBlockThreshold.BlockMediumAndAbove
+                }
             };
             var request = new GenerateContentRequest("Hello!", generationConfig, safetySettings);
             request.Contents[0].Role = "user";
@@ -213,7 +213,7 @@ namespace Test.Mscc.GenerativeAI
             //await foreach (var item in response)
             //{
             //            // Check if the content has been blocked for safety reasons.
-            //            bool blockForSafetyReason = responseItem.Candidates[0].FinishReason == FinishReason.FinishReasonSafety;
+            //bool blockForSafetyReason = responseItem.Candidates[0].FinishReason == FinishReason.FinishReasonSafety;
             //            if (blockForSafetyReason)
             //            {
             //                fullText.Append("Blocked for safety reasons");

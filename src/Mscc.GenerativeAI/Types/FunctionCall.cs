@@ -1,9 +1,12 @@
-﻿namespace Mscc.GenerativeAI
+﻿using System.Diagnostics;
+
+namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// A predicted FunctionCall returned from the model that contains a string 
     /// representating the FunctionDeclaration.name with the parameters and their values.
     /// </summary>
+    [DebuggerDisplay("{Name}")]
     public class FunctionCall : IPart
     {
         /// <summary>

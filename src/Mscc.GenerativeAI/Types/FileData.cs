@@ -1,10 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// URI based data.
     /// </summary>
+    [DebuggerDisplay("{MimeType} - {FileUri}")]
     public class FileData : IPart
     {
         /// <summary>

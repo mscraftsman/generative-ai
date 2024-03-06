@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
         /// If empty, the model has not stopped generating the tokens.
         /// </summary>
         //public FinishReason FinishReason { get; internal set; }
-        public string? FinishReason { get; set; }
+        public FinishReason? FinishReason { get; set; }
         /// <summary>
         /// Output only. Describes the reason the mode stopped generating tokens 
         /// in more detail. This is only filled when `finish_reason` is set.
@@ -36,5 +36,5 @@ namespace Mscc.GenerativeAI
         public FunctionCall? FunctionCall { get; set; }
 
         public GroundingMetadata? GroundingMetadata {  get; set; }
-}
+    }
 }

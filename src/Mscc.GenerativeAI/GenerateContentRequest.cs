@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Text.Json.Serialization;
+#endif
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Mscc.GenerativeAI
@@ -9,6 +12,7 @@ namespace Mscc.GenerativeAI
     {
         public List<Content>? Contents { get; set; }
         public GenerationConfig? GenerationConfig { get; set; }
+        [JsonPropertyName("safety_settings")]
         public List<SafetySetting>? SafetySettings { get; set; }
         public List<Tool>? Tools { get; set; }
 

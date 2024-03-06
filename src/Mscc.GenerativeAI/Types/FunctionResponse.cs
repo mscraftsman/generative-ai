@@ -1,4 +1,6 @@
-﻿namespace Mscc.GenerativeAI
+﻿using System.Diagnostics;
+
+namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// The result output of a FunctionCall that contains a string 
@@ -6,6 +8,7 @@
     /// JSON object containing any output from the function call. 
     /// It is used as context to the model.
     /// </summary>
+    [DebuggerDisplay("{Name}")]
     public class FunctionResponse : IPart
     {
         /// <summary>

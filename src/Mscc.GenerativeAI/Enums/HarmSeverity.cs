@@ -2,28 +2,28 @@
 
 namespace Mscc.GenerativeAI
 {
-    [JsonConverter(typeof(JsonStringEnumConverter<HarmProbability>))]
-    public enum HarmProbability
+    [JsonConverter(typeof(JsonStringEnumConverter<HarmSeverity>))]
+    public enum HarmSeverity
     {
         /// <summary>
         /// Unspecified means harm probability unspecified.
         /// </summary>
-        Unspecified = 0,
+        HarmSeverityUnspecified = 0,
         /// <summary>
         /// Negligible means negligible level of harm.
         /// </summary>
-        Negligible = 1,
+        HarmSeverityNegligible = 1,
         /// <summary>
         /// Low means low level of harm.
         /// </summary>
-        Low = 2,
+        HarmSeverityLow = 2,
         /// <summary>
         /// Medium means medium level of harm.
         /// </summary>
-        Medium = 3,
+        HarmSeverityMedium = 3,
         /// <summary>
         /// High means high level of harm.
         /// </summary>
-        High = 4
+        HarmSeverityHigh = 4
     }
 }
