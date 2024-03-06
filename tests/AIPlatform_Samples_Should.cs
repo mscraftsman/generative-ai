@@ -1,10 +1,7 @@
 ﻿using FluentAssertions;
-using Google.Protobuf;
 using Mscc.GenerativeAI;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -87,23 +84,23 @@ namespace Test.Mscc.GenerativeAI
             model.AccessToken = fixture.AccessToken;
 
             // Images
-            ByteString colosseum = await ReadImageFileAsync(
+            var colosseum = await TestExtensions.ReadImageFileBase64Async(
                 "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark1.png");
 
-            ByteString forbiddenCity = await ReadImageFileAsync(
+            var forbiddenCity = await TestExtensions.ReadImageFileBase64Async(
                 "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark2.png");
 
-            ByteString christRedeemer = await ReadImageFileAsync(
+            var christRedeemer = await TestExtensions.ReadImageFileBase64Async(
                 "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark3.png");
 
             // Initialize request argument(s)
             var parts = new List<IPart>
             {
-                new InlineData { MimeType = "image/png", Data = colosseum.ToBase64() },
+                new InlineData { MimeType = "image/png", Data = colosseum },
                 new TextData { Text = "city: Rome, Landmark: the Colosseum"},
-                new InlineData { MimeType = "image/png", Data = forbiddenCity.ToBase64() },
+                new InlineData { MimeType = "image/png", Data = forbiddenCity },
                 new TextData { Text = "city: Beijing, Landmark: Forbidden City"},
-                new InlineData { MimeType = "image/png", Data = christRedeemer.ToBase64() }
+                new InlineData { MimeType = "image/png", Data = christRedeemer }
             };
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content { Role = "user", Parts = parts });
@@ -252,18 +249,6 @@ namespace Test.Mscc.GenerativeAI
             //response.Text.Should().Contain("good");
             output.WriteLine(response?.Text);
             output.WriteLine(fullText.ToString());
-        }
-
-        private static async Task<ByteString> ReadImageFileAsync(string url)
-        {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync(url))
-                {
-                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-                    return ByteString.CopyFrom(imageBytes);
-                }
-            }
         }
     }
 }

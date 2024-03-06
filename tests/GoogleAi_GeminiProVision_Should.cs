@@ -61,10 +61,59 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async void Describe_Image_From_InlineData()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            // Images
+            var board = await TestExtensions.ReadImageFileBase64Async("https://ai.google.dev/static/docs/images/timetable.png");
+            var request = new GenerateContentRequest("Parse the time and city from the airport board shown in this image into a list.");
+            request.Contents[0].Role = "user";
+            request.Contents[0].Parts.Add(
+                new InlineData { MimeType = "image/png", Data = board }
+            );
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact(Skip = "Bad Request due to FileData part")]
+        public async void Describe_Image_From_FileData()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var request = new GenerateContentRequest("Parse the time and city from the airport board shown in this image into a list.");
+            request.Contents[0].Role = "user";
+            request.Contents[0].Parts.Add(new FileData
+            {
+                FileUri = "https://ai.google.dev/static/docs/images/timetable.png",
+                MimeType = "image/png"
+            });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
         [Theory]
         [InlineData("scones.jpg", "image/jpeg", "What is this picture?", "blueberries")]
         [InlineData("cat.jpg", "image/jpeg", "Describe this image", "snow")]
         [InlineData("cat.jpg", "image/jpeg", "Is it a cat?", "Yes")]
+        //[InlineData("animals.mp4", "video/mp4", "What's in the video?", "Zootopia")]
         public async void Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
         {
             // Arrange
@@ -85,6 +134,28 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain(expected);
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact(Skip = "URL scheme not supported")]
+        public async void Multimodal_Video_Input()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var video = await TestExtensions.ReadImageFileBase64Async("gs://cloud-samples-data/video/animals.mp4");
+            var request = new GenerateContentRequest("What's in the video?");
+            request.Contents[0].Role = "user";
+            request.Contents[0].Parts.Add(new InlineData { MimeType = "video/mp4", Data = video });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.Text.Should().Contain("Zootopia");
             output.WriteLine(response?.Text);
         }
     }
