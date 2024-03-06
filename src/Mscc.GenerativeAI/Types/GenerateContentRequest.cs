@@ -11,6 +11,7 @@ namespace Mscc.GenerativeAI
 
     {
         public List<Content>? Contents { get; set; }
+        [JsonPropertyName("generation_config")]
         public GenerationConfig? GenerationConfig { get; set; }
         [JsonPropertyName("safety_settings")]
         public List<SafetySetting>? SafetySettings { get; set; }
