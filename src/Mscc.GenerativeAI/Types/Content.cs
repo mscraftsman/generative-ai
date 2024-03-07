@@ -7,6 +7,8 @@ namespace Mscc.GenerativeAI
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class Content
     {
+        private List<Part>? partTypes;
+        
         [JsonIgnore]
         public List<IPart>? Parts { get; set; }
         public string? Role { get; set; }
@@ -18,43 +20,40 @@ namespace Mscc.GenerativeAI
             get
             {
                 SynchronizeParts();
-                return PartTypes;
+                return partTypes;
             }
-            set
-            {
-                PartTypes = value;
-            }
+            set => partTypes = value;
         }
 
         private void SynchronizeParts()
         {
+            partTypes = null;
             if (Parts == null) return;
 
-            PartTypes = new List<Part>();
+            partTypes = new List<Part>();
             foreach (var part in Parts)
             {
                 if (part is TextData text)
                 {
-                    PartTypes.Add(new Part { TextData = text });
+                    partTypes.Add(new Part { TextData = text });
                 }
                 if (part is InlineData inline)
                 {
-                    PartTypes.Add(new Part { InlineData = inline });
+                    partTypes.Add(new Part { InlineData = inline });
                 }
                 if (part is FileData file)
                 {
-                    PartTypes.Add(new Part { FileData = file });
+                    partTypes.Add(new Part { FileData = file });
                 }
                 if (part is FunctionResponse response)
                 {
-                    PartTypes.Add(new Part { FunctionResponse = response });
+                    partTypes.Add(new Part { FunctionResponse = response });
                 }
                 if (part is FunctionCall call)
                 {
-                    PartTypes.Add(new Part { FunctionCall = call });
+                    partTypes.Add(new Part { FunctionCall = call });
                 }
             }
-
         }
 
         private string GetDebuggerDisplay()

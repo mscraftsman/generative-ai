@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 #endif
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Mscc.GenerativeAI
 {

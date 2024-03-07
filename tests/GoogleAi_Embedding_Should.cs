@@ -1,7 +1,5 @@
 using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -25,6 +23,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Model.Embedding;
+            
             // Act
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
@@ -47,7 +46,10 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Embedding.Should().NotBeNull();
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            response.ForEach(x => output.WriteLine(x));
+            response.Embedding.Values.ForEach(x =>
+            {
+                output.WriteLine(x.ToString());
+            });
         }
     }
 }

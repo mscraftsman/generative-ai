@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Mscc.GenerativeAI.Web
+﻿namespace Mscc.GenerativeAI.Web
 {
     public interface IGenerativeAIOptions
     {
