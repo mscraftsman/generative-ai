@@ -1,4 +1,9 @@
-﻿namespace Mscc.GenerativeAI
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
+using System.Linq;
+#endif
+
+namespace Mscc.GenerativeAI
 {
     public static class Model
     {
@@ -13,5 +18,15 @@
         public const string GeckoEmbedding = "embedding-gecko-001";
         public const string Embedding = "embedding-001";
         public const string AttributedQuestionAnswering = "aqa";
+
+        public static string Sanitize(this string value)
+        {
+            if (value.StartsWith("model", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var parts = value.Split(new char[] { '/' }, System.StringSplitOptions.RemoveEmptyEntries);
+                value = parts.Last();
+            }
+            return value.ToLower();
+        }
     }
 }

@@ -128,7 +128,7 @@ namespace Mscc.GenerativeAI
         public GenerativeModel(string apiKey = "", string model = Model.GeminiPro, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
         {
             this.apiKey = apiKey;
-            this.model = model;
+            this.model = model.Sanitize();
             this.generationConfig = generationConfig;
             this.safetySettings = safetySettings;
 
@@ -157,7 +157,7 @@ namespace Mscc.GenerativeAI
             this.useVertexAI = true;
             this.projectId = projectId;
             this.region = region;
-            this.model = model;
+            this.model = model.Sanitize();
             this.generationConfig = generationConfig;
             this.safetySettings = safetySettings;
         }
@@ -220,7 +220,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = ParseUrl(Url, Method);
-            string json = Serialize(request);
+            string json = Serialize<GenerateContentRequest>(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
             var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
@@ -272,7 +272,7 @@ namespace Mscc.GenerativeAI
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
-            string json = Serialize(request);
+            string json = Serialize<GenerateContentRequest>(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
             var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
@@ -325,9 +325,23 @@ namespace Mscc.GenerativeAI
         }
 
         /// <remarks/>
-        public async Task<GenerateContentResponse> EmbedContent(GenerateContentRequest? request)
+        public async Task<EmbedContentResponse> EmbedContent(string? prompt)
         {
-            throw new NotImplementedException();
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+            if (model != (string)GenerativeAI.Model.Embedding)
+            {
+                throw new NotSupportedException();
+            }
+
+            var request = new EmbedContentRequest(prompt, generationConfig, safetySettings, tools);
+            var method = "embedContent";
+            var url = ParseUrl(Url, method);
+            string json = Serialize<EmbedContentRequest>(request);
+            var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
+            var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<EmbedContentResponse>(response);
         }
 
         /// <summary>
@@ -341,7 +355,7 @@ namespace Mscc.GenerativeAI
 
             var method = "countTokens";
             var url = ParseUrl(Url, method);
-            string json = Serialize(request);
+            string json = Serialize<GenerateContentRequest>(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
             var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
@@ -425,11 +439,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        private string Serialize(GenerateContentRequest? request)
+        private string Serialize<T>(T request)
         {
-            request.Synchronize();
             var options = DefaultJsonSerializerOptions();
-            return JsonSerializer.Serialize(request, options);
+            return JsonSerializer.Serialize<T>(request, options);
         }
 
         /// <summary>
