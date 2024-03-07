@@ -79,7 +79,7 @@ Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` t
 using Mscc.GenerativeAI;
 // Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.GeminiPro);
+var model = vertex.GenerativeModel(model: Model.Gemini10Pro);
 model.AccessToken = accessToken;
 ```
 
