@@ -22,10 +22,9 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
-			- Correct JSON conversion of SafetySettings
-			- Use of enum string values
+			- Implement Chat
 		</PackageReleaseNotes>
-		<Version>0.5.2</Version>
+		<Version>0.5.3</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">

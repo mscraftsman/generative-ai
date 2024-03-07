@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.5.3
+
+- Implement Chat
+
 ## 0.5.2
 
 - Correct JSON conversion of SafetySettings
