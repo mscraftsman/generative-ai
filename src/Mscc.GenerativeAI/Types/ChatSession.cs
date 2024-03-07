@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 #endif
 
@@ -10,20 +11,27 @@ namespace Mscc.GenerativeAI
     public class ChatSession
     {
         private readonly GenerativeModel model;
+        [JsonPropertyName("generation_config")]
+        public GenerationConfig? generationConfig;
+        [JsonPropertyName("safety_settings")]
+        public List<SafetySetting>? safetySettings;
+        public List<Tool>? tools;
 
         public List<ContentResponse> History { get; set; } = [];
-        public List<Tool>? Tools { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="model"></param>
         /// <param name="history"></param>
-        public ChatSession(GenerativeModel model, List<ContentResponse>? history = null)
+        public ChatSession(GenerativeModel model, List<ContentResponse>? history = null, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
         {
             this.model = model;
             history ??= [];
             History = history;
+            this.generationConfig = generationConfig;
+            this.safetySettings = safetySettings;
+            this.tools = tools;
         }
 
         /// <summary>
@@ -39,10 +47,10 @@ namespace Mscc.GenerativeAI
             History.Add(new ContentResponse { Role = "user", Parts = new List<Part> { new Part { Text = prompt } } });
             var request = new GenerateContentRequest
             {
-                Contents = History.Select(x => new Content { Role = x.Role, PartTypes = x.Parts }).ToList()
-                //GenerationConfig = model.GenerationConfig,
-                //SafetySettings = model.SafetySettings,
-                //Tools = model.Tools
+                Contents = History.Select(x => new Content { Role = x.Role, PartTypes = x.Parts }).ToList(),
+                GenerationConfig = generationConfig,
+                SafetySettings = safetySettings,
+                Tools = tools
             };
 
             var response = await model.GenerateContent(request);

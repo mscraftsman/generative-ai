@@ -385,10 +385,7 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         public ChatSession StartChat(List<ContentResponse>? history = null, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
         {
-            //this.generationConfig = generationConfig ?? new GenerationConfig();
-            //this.safetySettings = safetySettings ?? new List<SafetySetting>();
-            //this.tools = tools ?? new List<Tool>();
-            return new ChatSession(this, history);
+            return new ChatSession(this, history, generationConfig, safetySettings, tools);
         }
 
         /// <summary>
