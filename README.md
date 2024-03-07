@@ -123,6 +123,27 @@ Console.WriteLine(response.Text);
 
 ## More examples
 
+### Chat conversations
+
+Gemini enables you to have freeform conversations across multiple turns. You can interact with Gemini Pro using a single-turn prompt and response or chat with it in a multi-turn, continuous conversation, even for code understanding and generation.
+
+```csharp
+using Mscc.GenerativeAI;
+
+var apiKey = "your_api_key";
+var model = new GenerativeModel(apiKey: apiKey);    // using default model: gemini-pro
+var chat = model.StartChat();
+
+// Instead of discarding you could also use the response and access `response.Text`.
+_ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
+_ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
+_ = await chat.SendMessage("Okay, how about a more detailed explanation to a high schooler?");
+_ = await chat.SendMessage("Lastly, give a thorough definition for a CS graduate.");
+
+// A chat session keeps every response in its history.
+chat.History.ForEach(c => Console.WriteLine($"{c.Role}: {c.Parts[0].Text}"));
+```
+
 The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 
 - [Simple console application](./samples/Console.Minimal.Prompt/)
