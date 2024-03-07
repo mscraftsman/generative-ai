@@ -13,9 +13,20 @@ namespace Mscc.GenerativeAI
 
         [DebuggerHidden]
         [JsonPropertyName("parts")]
-        public virtual List<Part>? PartTypes { get; set; }
+        public virtual List<Part>? PartTypes 
+        { 
+            get
+            {
+                SynchronizeParts();
+                return PartTypes;
+            }
+            set
+            {
+                PartTypes = value;
+            }
+        }
 
-        internal void SynchronizeParts()
+        private void SynchronizeParts()
         {
             if (Parts == null) return;
 

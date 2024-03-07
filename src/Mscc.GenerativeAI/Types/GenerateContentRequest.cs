@@ -6,7 +6,9 @@ using System.Linq;
 
 namespace Mscc.GenerativeAI
 {
-    // Todo: Integrate GenerationConfig, SafetySettings, and Tools.
+    /// <summary>
+    /// 
+    /// </summary>
     public class GenerateContentRequest
 
     {
@@ -53,14 +55,6 @@ namespace Mscc.GenerativeAI
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
-        }
-
-        internal void Synchronize()
-        {
-            foreach (var content in Contents)
-            {
-                content.SynchronizeParts();
-            }
         }
     }
 }
