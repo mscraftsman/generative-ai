@@ -22,9 +22,12 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
-			- Implement Chat
+			- add embeddings
+			- refactor handling of parts
+			- brief sanity check on model selection
+			- ⛳ allow configuration, safety settings and tools for Chat
 		</PackageReleaseNotes>
-		<Version>0.5.3</Version>
+		<Version>0.5.4</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">

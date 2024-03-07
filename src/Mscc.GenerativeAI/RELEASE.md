@@ -1,5 +1,12 @@
 # Release Notes
 
+## 0.5.4
+
+- add embeddings
+- refactor handling of parts
+- brief sanity check on model selection
+- ⛳ allow configuration, safety settings and tools for Chat
+
 ## 0.5.3
 
 - Implement Chat
