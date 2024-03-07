@@ -297,17 +297,108 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async void Start_Chat()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var chat = model.StartChat();
+            var prompt = "How can I learn more about C#?";
+
+            // Act
+            var response = await chat.SendMessage(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void Start_Chat_With_History()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var history = new List<ContentResponse>
+            {
+                new ContentResponse { Role = "user", Parts = new List<Part> { new Part("Hello") } },
+                new ContentResponse { Role = "model", Parts = new List<Part> { new Part("Hello! How can I assist you today?") } }
+            };
+            var chat = model.StartChat(history);
+            var prompt = "How does electricity work?";
+
+            // Act
+            var response = await chat.SendMessage(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+            //output.WriteLine(response?.PromptFeedback);
+        }
+
+        [Fact]
+        // Refs:
+        // https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-chat-prompts-gemini
+        public async void Start_Chat_Multiple_Prompts()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var chat = model.StartChat();
+
+            // Act
+            var prompt = "Hello, let's talk a bit about nature.";
+            var response = await chat.SendMessage(prompt);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+            prompt = "What are all the colors in a rainbow?";
+            response = await chat.SendMessage(prompt);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+            prompt = "Why does it appear when it rains?";
+            response = await chat.SendMessage(prompt);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        // Refs:
+        // https://ai.google.dev/tutorials/python_quickstart#chat_conversations
+        public async void Start_Chat_Conversations()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var chat = model.StartChat();
+
+            // Act
+            _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
+            _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
+            _ = await chat.SendMessage("Okay, how about a more detailed explanation to a high schooler?");
+            _ = await chat.SendMessage("Lastly, give a thorough definition for a CS graduate.");
+
+            // Assert
+            chat.History.ForEach(c => output.WriteLine($"{c.Role}: {c.Parts[0].Text}"));
+        }
+
+        [Fact(Skip = "Incomplete")]
         public async void Start_Chat_Streaming()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var chat = model.StartChat();
-            var chatInput1 = "How can I learn more about C#?";
+            var prompt = "How can I learn more about C#?";
 
             // Act
-            //var response = await chat.SendMessageStream(chatInput1);
+            var response = await chat.SendMessageStream(prompt);
 
-            //// Assert
+            // Assert
             //response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             //response.FirstOrDefault().Should().NotBeNull();
             //response.ForEach(x => output.WriteLine(x.Text));
@@ -326,7 +417,7 @@ namespace Test.Mscc.GenerativeAI
             var chatInput1 = "What is the weather in Boston?";
 
             // Act
-            //var result1 = await chat.SendMessageStream(chatInput1);
+            //var result1 = await chat.SendMessageStream(prompt);
             //var response1 = await result1.Response;
             //var result2 = await chat.SendMessageStream(new List<IPart> { new FunctionResponse() });
             //var response2 = await result2.Response;

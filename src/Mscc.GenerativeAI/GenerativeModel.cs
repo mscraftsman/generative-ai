@@ -383,10 +383,12 @@ namespace Mscc.GenerativeAI
         /// <param name="history"></param>
         /// <param name="tools"></param>
         /// <returns></returns>
-        public ChatSession StartChat(List<Content>? history = null, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
+        public ChatSession StartChat(List<ContentResponse>? history = null, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
         {
-            this.tools = tools ?? new List<Tool>();
-            return new ChatSession();
+            //this.generationConfig = generationConfig ?? new GenerationConfig();
+            //this.safetySettings = safetySettings ?? new List<SafetySetting>();
+            //this.tools = tools ?? new List<Tool>();
+            return new ChatSession(this, history);
         }
 
         /// <summary>

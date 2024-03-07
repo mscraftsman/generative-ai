@@ -15,12 +15,24 @@ namespace Mscc.GenerativeAI
     [DebuggerDisplay("{Text}")]
     public class Part
     {
+        public Part() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        public Part(string text)
+        {
+            Text = text;
+        }
+
         /// <summary>
         /// A text part of a conversation with the model.
         /// </summary>
-        public string Text {
+        public string Text
+        {
             get { return TextData?.Text; }
-            set { TextData = new TextData { Text = value }; } 
+            set { TextData = new TextData { Text = value }; }
         }
         /// <remarks/>
         [DebuggerHidden]

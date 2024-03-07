@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+using System.Linq;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -9,7 +12,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
 		public string? Text
         {
-            get { return Candidates?[0].Content?.Parts?[0].Text; }
+            get { return Candidates?.FirstOrDefault().Content?.Parts?.FirstOrDefault().Text; }
         }
 
         /// <summary>

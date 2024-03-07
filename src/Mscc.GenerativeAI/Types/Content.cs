@@ -17,6 +17,8 @@ namespace Mscc.GenerativeAI
 
         internal void SynchronizeParts()
         {
+            if (Parts == null) return;
+
             PartTypes = new List<Part>();
             foreach (var part in Parts)
             {

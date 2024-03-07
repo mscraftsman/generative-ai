@@ -261,6 +261,57 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async void Start_Chat()
+        {
+            // Arrange
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model);
+            model.AccessToken = fixture.AccessToken;
+            var chat = model.StartChat();
+            var prompt = "How can I learn more about C#?";
+
+            // Act
+            var response = await chat.SendMessage(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        // Refs:
+        // https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-chat-prompts-gemini
+        public async void Start_Chat_Multiple_Prompts()
+        {
+            // Arrange
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model);
+            model.AccessToken = fixture.AccessToken;
+            var chat = model.StartChat();
+
+            // Act
+            var prompt = "Hello.";
+            var response = await chat.SendMessage(prompt);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+            prompt = "What are all the colors in a rainbow?";
+            response = await chat.SendMessage(prompt);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+            prompt = "Why does it appear when it rains?";
+            response = await chat.SendMessage(prompt);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+        }
+
+        [Fact]
         public async void Start_Chat_Streaming()
         {
             // Arrange
