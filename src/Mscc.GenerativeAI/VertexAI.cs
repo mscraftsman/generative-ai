@@ -25,7 +25,9 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
         /// <returns></returns>
-        public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
+        public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null)
         {
             return new GenerativeModel(projectId, region, model, generationConfig, safetySettings);
         }
