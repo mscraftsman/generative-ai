@@ -14,12 +14,12 @@ namespace Mscc.GenerativeAI
     {
         private readonly GenerativeModel model;
         // [JsonPropertyName("generation_config")]
-        private GenerationConfig? generationConfig;
+        private readonly GenerationConfig? generationConfig;
         // [JsonPropertyName("safety_settings")]
-        private List<SafetySetting>? safetySettings;
-        private List<Tool>? tools;
+        private readonly List<SafetySetting>? safetySettings;
+        private readonly List<Tool>? tools;
 
-        public List<ContentResponse> History { get; set; } = [];
+        public List<ContentResponse> History { get; set; }
 
         /// <summary>
         /// 
@@ -33,8 +33,7 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null)
         {
             this.model = model;
-            history ??= [];
-            History = history;
+            History = history ?? [];
             this.generationConfig = generationConfig;
             this.safetySettings = safetySettings;
             this.tools = tools;
