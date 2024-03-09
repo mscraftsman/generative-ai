@@ -8,9 +8,16 @@ var Configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 var apiKey = Configuration["Gemini:Credentials:ApiKey"];
-if (string.IsNullOrEmpty(apiKey))
+if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("YOUR_API_KEY"))
 {
     apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+}
+
+// Check if the API key is valid. If not, exit the program.
+if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("YOUR_API_KEY"))
+{
+    Console.WriteLine("No API key found. See file 'appsettings.json' for instructions or set the GOOGLE_API_KEY environment variable.");
+    return;
 }
 
 // Create a new instance of the GenerativeModel class.
