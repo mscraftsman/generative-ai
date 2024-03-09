@@ -49,7 +49,7 @@ namespace Test.Mscc.GenerativeAI
                 new TextData { Text = "What is this picture about?" },
                 new InlineData { MimeType = "image/jpeg", Data = base64image }
             };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
             // Act
             var response = await model.GenerateContent(request);
@@ -71,7 +71,7 @@ namespace Test.Mscc.GenerativeAI
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async("https://ai.google.dev/static/docs/images/timetable.png");
             var request = new GenerateContentRequest("Parse the time and city from the airport board shown in this image into a list.");
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(
                 new InlineData { MimeType = "image/png", Data = board }
             );
@@ -93,7 +93,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest("Parse the time and city from the airport board shown in this image into a list.");
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(new FileData
             {
                 FileUri = "https://ai.google.dev/static/docs/images/timetable.png",
@@ -146,7 +146,7 @@ namespace Test.Mscc.GenerativeAI
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var video = await TestExtensions.ReadImageFileBase64Async("gs://cloud-samples-data/video/animals.mp4");
             var request = new GenerateContentRequest("What's in the video?");
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(new InlineData { MimeType = "video/mp4", Data = video });
 
             // Act

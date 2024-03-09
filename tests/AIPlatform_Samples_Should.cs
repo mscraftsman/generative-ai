@@ -41,7 +41,7 @@ namespace Test.Mscc.GenerativeAI
                 MaxOutputTokens = 2048
             };
             var request = new GenerateContentRequest("What's in this photo?", generationConfig);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(new FileData
             {
                 FileUri = "gs://generativeai-downloads/images/scones.jpg",
@@ -105,7 +105,7 @@ namespace Test.Mscc.GenerativeAI
                 new InlineData { MimeType = "image/png", Data = christRedeemer }
             };
             var request = new GenerateContentRequest { Contents = new List<Content>() };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
             var fullText = new StringBuilder();
 
             // Act
@@ -144,7 +144,7 @@ namespace Test.Mscc.GenerativeAI
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest("What's in the video?");
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(new FileData
             {
                 FileUri = "gs://cloud-samples-data/video/animals.mp4",
@@ -206,7 +206,7 @@ namespace Test.Mscc.GenerativeAI
                 }
             };
             var request = new GenerateContentRequest("Hello!", generationConfig, safetySettings);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             var fullText = new StringBuilder();
 
             // Act

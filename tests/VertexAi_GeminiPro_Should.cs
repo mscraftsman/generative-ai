@@ -144,7 +144,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -191,7 +191,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -222,7 +222,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -249,7 +249,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -366,17 +366,17 @@ namespace Test.Mscc.GenerativeAI
             };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = "What is the weather in Boston?" } }
             });
             request.Contents.Add(new Content
             {
-                Role = "model",
+                Role = Role.Model,
                 Parts = new List<IPart> { new FunctionCall { Name = "get_current_weather", Args = new { location = "Boston" } } }
             });
             request.Contents.Add(new Content
             {
-                Role = "function",
+                Role = Role.Function,
                 Parts = new List<IPart> { new FunctionResponse() }
             });
 

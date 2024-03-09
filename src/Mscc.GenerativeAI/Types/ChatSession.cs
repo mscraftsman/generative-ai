@@ -1,23 +1,22 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 #endif
-using System.IO;
 
 namespace Mscc.GenerativeAI
 {
     public class ChatSession
     {
-        private readonly GenerativeModel model;
+        private readonly GenerativeModel _model;
         // [JsonPropertyName("generation_config")]
-        private readonly GenerationConfig? generationConfig;
+        private readonly GenerationConfig? _generationConfig;
         // [JsonPropertyName("safety_settings")]
-        private readonly List<SafetySetting>? safetySettings;
-        private readonly List<Tool>? tools;
+        private readonly List<SafetySetting>? _safetySettings;
+        private readonly List<Tool>? _tools;
 
         public List<ContentResponse> History { get; set; }
 
@@ -32,11 +31,11 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null)
         {
-            this.model = model;
+            _model = model;
             History = history ?? [];
-            this.generationConfig = generationConfig;
-            this.safetySettings = safetySettings;
-            this.tools = tools;
+            _generationConfig = generationConfig;
+            _safetySettings = safetySettings;
+            _tools = tools;
         }
 
         /// <summary>
@@ -49,18 +48,19 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (string.IsNullOrEmpty(prompt)) throw new ArgumentException(prompt, nameof(prompt));
 
-            History.Add(new ContentResponse { Role = "user", Parts = new List<Part> { new Part { Text = prompt } } });
+            History.Add(new ContentResponse { Role = Role.User, Parts = new List<Part> { new() { Text = prompt } } });
             var request = new GenerateContentRequest
             {
-                Contents = History.Select(x => new Content { Role = x.Role, PartTypes = x.Parts }).ToList(),
-                GenerationConfig = generationConfig,
-                SafetySettings = safetySettings,
-                Tools = tools
+                Contents = History.Select(x => 
+                    new Content { Role = x.Role, PartTypes = x.Parts }).ToList(),
+                GenerationConfig = _generationConfig,
+                SafetySettings = _safetySettings,
+                Tools = _tools
             };
 
             // ToDo: ?? => refactor to stream response.
-            var response = await model.GenerateContent(request);
-            History.Add(new ContentResponse { Role = "model", Parts = new List<Part> { new Part { Text = response.Text } } });
+            var response = await _model.GenerateContent(request);
+            History.Add(new ContentResponse { Role = Role.Model, Parts = new List<Part> { new() { Text = response.Text } } });
 
             return response;
         }
@@ -75,13 +75,14 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (string.IsNullOrEmpty(prompt)) throw new ArgumentException(prompt, nameof(prompt));
 
-            History.Add(new ContentResponse { Role = "user", Parts = new List<Part> { new Part { Text = prompt } } });
+            History.Add(new ContentResponse { Role = Role.User, Parts = new List<Part> { new Part { Text = prompt } } });
             var request = new GenerateContentRequest
             {
-                Contents = History.Select(x => new Content { Role = x.Role, PartTypes = x.Parts }).ToList(),
-                GenerationConfig = generationConfig,
-                SafetySettings = safetySettings,
-                Tools = tools
+                Contents = History.Select(x => 
+                    new Content { Role = x.Role, PartTypes = x.Parts }).ToList(),
+                GenerationConfig = _generationConfig,
+                SafetySettings = _safetySettings,
+                Tools = _tools
             };
 
             // ToDo: ?? => refactor to stream response.
@@ -90,9 +91,9 @@ namespace Mscc.GenerativeAI
             // {
             //     
             // }
-            var stream = await model.GenerateContentStream(request);
-            var response = await JsonSerializer.DeserializeAsync<GenerateContentResponse>(stream, model.DefaultJsonSerializerOptions());
-            History.Add(new ContentResponse { Role = "model", Parts = new List<Part> { new Part { Text = response.Text } } });
+            var stream = await _model.GenerateContentStream(request);
+            var response = await JsonSerializer.DeserializeAsync<GenerateContentResponse>(stream, _model.DefaultJsonSerializerOptions());
+            History.Add(new ContentResponse { Role = Role.Model, Parts = new List<Part> { new Part { Text = response.Text } } });
             return stream;
         }
     }

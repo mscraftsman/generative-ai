@@ -262,7 +262,7 @@ namespace Mscc.GenerativeAI
             var safety = safetySettings ?? this.safetySettings;
             var tool = tools ?? this.tools;
             var request = new GenerateContentRequest(prompt, config, safety, tool);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
         }
 
@@ -278,7 +278,7 @@ namespace Mscc.GenerativeAI
             var safety = safetySettings ?? this.safetySettings;
             var tool = tools ?? this.tools;
             var request = new GenerateContentRequest(parts, config, safety, tool);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
         }
 
@@ -335,7 +335,7 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
             var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             return await GenerateContentStream(request);
         }
 
@@ -345,7 +345,7 @@ namespace Mscc.GenerativeAI
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
             var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
             return await GenerateContentStream(request);
         }
 

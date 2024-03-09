@@ -57,7 +57,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = "How are you doing today?" } }
             });
 
@@ -84,7 +84,7 @@ namespace Test.Mscc.GenerativeAI
             {
                 new TextData { Text = "How are you doing today?" }
             };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
             // Act
             var response = await model.GenerateContentStream(request);
@@ -130,7 +130,7 @@ namespace Test.Mscc.GenerativeAI
                 new TextData { Text = "Is it a cat?" },
                 new FileData { MimeType = "image/jpeg", FileUri = "gs://cloud-samples-data/generative-ai/image/320px-Felis_catus-cat_on_snow.jpg" }
             };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
             // Act
             var response = await model.GenerateContentStream(request);
@@ -155,7 +155,7 @@ namespace Test.Mscc.GenerativeAI
                 new TextData { Text = "What is this picture about?" },
                 new FileData { MimeType = "image/jpeg", FileUri = "gs://generativeai-downloads/images/scones.jpg" }
             };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
             // Act
             var response = await model.GenerateContentStream(request);
@@ -177,7 +177,7 @@ namespace Test.Mscc.GenerativeAI
                 new InlineData { MimeType = "image/jpeg", Data = base64image },
                 new TextData { Text = "What is this picture about?" }
             };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
             // Act
             var response = await model.GenerateContentStream(request);
@@ -202,7 +202,7 @@ namespace Test.Mscc.GenerativeAI
                 new FileData { FileUri = "gs://cloud-samples-data/video/animals.mp4", MimeType = "video/mp4" },
                 new TextData { Text = "What is in the video?" }
             };
-            request.Contents.Add(new Content { Role = "user", Parts = parts });
+            request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
             // Act
             var response = await model.GenerateContentStream(request);
@@ -240,7 +240,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 

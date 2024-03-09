@@ -174,7 +174,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -195,7 +195,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Write a story about a magic backpack.";
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest(prompt);
-            request.Contents[0].Role = "user";
+            request.Contents[0].Role = Role.User;
 
             // Act
             var response = await model.GenerateContent(request);
@@ -238,7 +238,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -289,7 +289,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
@@ -327,8 +327,8 @@ namespace Test.Mscc.GenerativeAI
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var history = new List<ContentResponse>
             {
-                new ContentResponse { Role = "user", Parts = new List<Part> { new Part("Hello") } },
-                new ContentResponse { Role = "model", Parts = new List<Part> { new Part("Hello! How can I assist you today?") } }
+                new ContentResponse { Role = Role.User, Parts = new List<Part> { new Part("Hello") } },
+                new ContentResponse { Role = Role.Model, Parts = new List<Part> { new Part("Hello! How can I assist you today?") } }
             };
             var chat = model.StartChat(history);
             var prompt = "How does electricity work?";
@@ -449,17 +449,17 @@ namespace Test.Mscc.GenerativeAI
             };
             request.Contents.Add(new Content
             {
-                Role = "user",
+                Role = Role.User,
                 Parts = new List<IPart> { new TextData { Text = "What is the weather in Boston?" } }
             });
             request.Contents.Add(new Content
             {
-                Role = "model",
+                Role = Role.Model,
                 Parts = new List<IPart> { new FunctionCall { Name = "get_current_weather", Args = new { location = "Boston" } } }
             });
             request.Contents.Add(new Content
             {
-                Role = "function",
+                Role = Role.Function,
                 Parts = new List<IPart> { new FunctionResponse() }
             });
 
