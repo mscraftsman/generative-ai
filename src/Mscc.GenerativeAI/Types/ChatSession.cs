@@ -14,10 +14,10 @@ namespace Mscc.GenerativeAI
     {
         private readonly GenerativeModel model;
         // [JsonPropertyName("generation_config")]
-        public GenerationConfig? generationConfig;
+        private GenerationConfig? generationConfig;
         // [JsonPropertyName("safety_settings")]
-        public List<SafetySetting>? safetySettings;
-        public List<Tool>? tools;
+        private List<SafetySetting>? safetySettings;
+        private List<Tool>? tools;
 
         public List<ContentResponse> History { get; set; } = [];
 
