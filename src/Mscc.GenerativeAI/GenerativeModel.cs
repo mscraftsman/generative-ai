@@ -251,21 +251,33 @@ namespace Mscc.GenerativeAI
         }
 
         /// <remarks/>
-        public async Task<GenerateContentResponse> GenerateContent(string? prompt)
+        public async Task<GenerateContentResponse> GenerateContent(string? prompt,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
+            var config = generationConfig ?? this.generationConfig;
+            var safety = safetySettings ?? this.safetySettings;
+            var tool = tools ?? this.tools;
+            var request = new GenerateContentRequest(prompt, config, safety, tool);
             request.Contents[0].Role = "user";
             return await GenerateContent(request);
         }
 
         /// <remarks/>
-        public async Task<GenerateContentResponse> GenerateContent(List<IPart>? parts)
+        public async Task<GenerateContentResponse> GenerateContent(List<IPart>? parts,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
+            var config = generationConfig ?? this.generationConfig;
+            var safety = safetySettings ?? this.safetySettings;
+            var tool = tools ?? this.tools;
+            var request = new GenerateContentRequest(parts, config, safety, tool);
             request.Contents[0].Role = "user";
             return await GenerateContent(request);
         }
