@@ -13,15 +13,18 @@ namespace Mscc.GenerativeAI
 
     {
         public List<Content>? Contents { get; set; }
-        [JsonPropertyName("generation_config")]
+        // [JsonPropertyName("generation_config")]
         public GenerationConfig? GenerationConfig { get; set; }
-        [JsonPropertyName("safety_settings")]
+        // [JsonPropertyName("safety_settings")]
         public List<SafetySetting>? SafetySettings { get; set; }
         public List<Tool>? Tools { get; set; }
 
         public GenerateContentRequest() { }
 
-        public GenerateContentRequest(string prompt, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
+        public GenerateContentRequest(string prompt,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             Contents = new List<Content> { new Content
             {
@@ -35,7 +38,10 @@ namespace Mscc.GenerativeAI
             if (tools != null) Tools = tools;
         }
 
-        public GenerateContentRequest(List<IPart> parts, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
+        public GenerateContentRequest(List<IPart> parts,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             Contents = new List<Content> { new Content
             {
@@ -46,7 +52,10 @@ namespace Mscc.GenerativeAI
             if (tools != null) Tools = tools;
         }
 
-        public GenerateContentRequest(List<Part> parts, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
+        public GenerateContentRequest(List<Part> parts,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             Contents = new List<Content> { new Content
             {

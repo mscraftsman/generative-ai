@@ -1,12 +1,14 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 #endif
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Text;
 
@@ -26,6 +28,7 @@ namespace Mscc.GenerativeAI
         private readonly string projectId = default;
         private readonly string region = default;
         private readonly string publisher = "google";
+        private readonly JsonSerializerOptions options;
         private List<SafetySetting>? safetySettings;
         private GenerationConfig? generationConfig;
         private List<Tool>? tools;
@@ -110,6 +113,7 @@ namespace Mscc.GenerativeAI
         // Reference: https://cloud.google.com/docs/authentication 
         public GenerativeModel()
         {
+            options = DefaultJsonSerializerOptions();
             // GOOGLE_APPLICATION_CREDENTIALS
             // Linux, macOS: $HOME /.config / gcloud / application_default_credentials.json
             // Windows: % APPDATA %\gcloud\application_default_credentials.json
@@ -125,7 +129,10 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-pro")</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        public GenerativeModel(string apiKey = "", string model = Model.GeminiPro, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
+        public GenerativeModel(string apiKey = "", 
+            string model = Model.GeminiPro, 
+            GenerationConfig? generationConfig = null, 
+            List<SafetySetting>? safetySettings = null) : this()
         {
             this.apiKey = apiKey;
             this.model = model.Sanitize();
@@ -143,7 +150,6 @@ namespace Mscc.GenerativeAI
             }
         }
 
-        // Todo: Add parameters for GenerationConfig, SafetySettings, Transport? and Tools
         /// <summary>
         /// Constructor to initialize access to Vertex AI Gemini API.
         /// </summary>
@@ -152,7 +158,10 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        internal GenerativeModel(string projectId, string region, string model, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null)
+        internal GenerativeModel(string projectId, string region, 
+            string model = Model.Gemini10Pro, 
+            GenerationConfig? generationConfig = null, 
+            List<SafetySetting>? safetySettings = null) : this()
         {
             this.useVertexAI = true;
             this.projectId = projectId;
@@ -220,7 +229,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = ParseUrl(Url, Method);
-            string json = Serialize<GenerateContentRequest>(request);
+            string json = Serialize(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
             var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
@@ -266,22 +275,50 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public async Task<List<GenerateContentResponse>> GenerateContentStream(GenerateContentRequest? request)
+        // public async Task<List<GenerateContentResponse>> GenerateContentStream(GenerateContentRequest? request)
+        public async Task<Stream> GenerateContentStream(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
-            string json = Serialize<GenerateContentRequest>(request);
-            var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
-            var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
-            var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
-            return await Deserialize<List<GenerateContentResponse>>(response);
+            var mediaType = "application/json";
+
+            // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
+            // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
+            var ms = new MemoryStream();
+            await JsonSerializer.SerializeAsync(ms, request, options);
+            ms.Seek(0, SeekOrigin.Begin);
+            
+            var message = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(url),
+            };
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
+
+            using (var payload = new StreamContent(ms))
+            {
+                message.Content = payload;
+                payload.Headers.ContentType = new MediaTypeHeaderValue(mediaType);
+
+                using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                {
+                    response.EnsureSuccessStatusCode();
+                    if (response.Content is object)
+                    {
+                        return await response.Content.ReadAsStreamAsync();
+                        // var stream = await response.Content.ReadAsStreamAsync();
+                        // return await JsonSerializer.DeserializeAsync<List<GenerateContentResponse>>(stream, options);
+                    }
+                }
+            }
+
+            return null;
         }
 
         /// <remarks/>
-        public async Task<List<GenerateContentResponse>> GenerateContentStream(string? prompt)
+        public async Task<Stream> GenerateContentStream(string? prompt)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -291,7 +328,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <remarks/>
-        public async Task<List<GenerateContentResponse>> GenerateContentStream(List<IPart>? parts)
+        public async Task<Stream> GenerateContentStream(List<IPart>? parts)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
@@ -303,28 +340,38 @@ namespace Mscc.GenerativeAI
         /// <remarks/>
         public async Task<GenerateContentResponse> GenerateMessage(GenerateContentRequest? request)
         {
+            // ToDo: implement
             throw new NotImplementedException();
         }
 
         /// <remarks/>
         public async Task<GenerateContentResponse> GenerateText(GenerateContentRequest? request)
         {
+            // ToDo: implement
             throw new NotImplementedException();
         }
 
         /// <remarks/>
         public async Task<GenerateContentResponse> GenerateAnswer(GenerateContentRequest? request)
         {
+            // ToDo: implement
             throw new NotImplementedException();
         }
 
         /// <remarks/>
         public async Task<GenerateContentResponse> EmbedText(GenerateContentRequest? request)
         {
+            // ToDo: implement
             throw new NotImplementedException();
         }
 
-        /// <remarks/>
+        /// <summary>
+        /// Get embedding information of the content.
+        /// </summary>
+        /// <param name="prompt">String to process.</param>
+        /// <returns>Embeddings of the content as a list of floating numbers.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedContentResponse> EmbedContent(string? prompt)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
@@ -336,7 +383,7 @@ namespace Mscc.GenerativeAI
             var request = new EmbedContentRequest(prompt, generationConfig, safetySettings, tools);
             var method = "embedContent";
             var url = ParseUrl(Url, method);
-            string json = Serialize<EmbedContentRequest>(request);
+            string json = Serialize(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
             var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
@@ -355,7 +402,7 @@ namespace Mscc.GenerativeAI
 
             var method = "countTokens";
             var url = ParseUrl(Url, method);
-            string json = Serialize<GenerateContentRequest>(request);
+            string json = Serialize(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
             var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
@@ -397,9 +444,15 @@ namespace Mscc.GenerativeAI
         /// <param name="history"></param>
         /// <param name="tools"></param>
         /// <returns></returns>
-        public ChatSession StartChat(List<ContentResponse>? history = null, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
+        public ChatSession StartChat(List<ContentResponse>? history = null, 
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null, 
+            List<Tool>? tools = null)
         {
-            return new ChatSession(this, history, generationConfig, safetySettings, tools);
+            var config = generationConfig ?? this.generationConfig;
+            var safety = safetySettings ?? this.safetySettings;
+            var tool = tools ?? this.tools;
+            return new ChatSession(this, history, config, safety, tool);
         }
 
         /// <summary>
@@ -441,8 +494,7 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         private string Serialize<T>(T request)
         {
-            var options = DefaultJsonSerializerOptions();
-            return JsonSerializer.Serialize<T>(request, options);
+            return JsonSerializer.Serialize(request, options);
         }
 
         /// <summary>
@@ -453,7 +505,6 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         private async Task<T> Deserialize<T>(HttpResponseMessage? response)
         {
-            var options = DefaultJsonSerializerOptions();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(json, options);
@@ -466,7 +517,7 @@ namespace Mscc.GenerativeAI
         /// Get default options for JSON serialization.
         /// </summary>
         /// <returns></returns>
-        private static JsonSerializerOptions DefaultJsonSerializerOptions()
+        internal JsonSerializerOptions DefaultJsonSerializerOptions()
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
