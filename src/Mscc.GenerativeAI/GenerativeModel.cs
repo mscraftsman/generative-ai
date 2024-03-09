@@ -16,22 +16,22 @@ namespace Mscc.GenerativeAI
 {
     public class GenerativeModel
     {
-        private readonly bool useVertexAI = false;
-        private readonly bool useApiKeyHeader = false;
-        private readonly string endpointGoogleAI = "generativelanguage.googleapis.com";
-        private readonly string urlGoogleAI = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
-        // Or in the x-goog-api-key header
-        private readonly string urlParameterKey = "?key={apiKey}";
-        private readonly string urlVertexAI = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
-        private readonly string model;
-        private readonly string apiKey = default;
-        private readonly string projectId = default;
-        private readonly string region = default;
-        private readonly string publisher = "google";
-        private readonly JsonSerializerOptions options;
-        private List<SafetySetting>? safetySettings;
-        private GenerationConfig? generationConfig;
-        private List<Tool>? tools;
+        private const string _endpointGoogleAi = "generativelanguage.googleapis.com";
+        private const string _urlGoogleAi = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
+        private const string _urlParameterKey = "?key={apiKey}"; // Or in the x-goog-api-key header
+        private const string _urlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
+        
+        private readonly bool _useVertexAi = false;
+        private readonly bool _useApiKeyHeader = false;
+        private readonly string _model;
+        private readonly string _apiKey = default;
+        private readonly string _projectId = default;
+        private readonly string _region = default;
+        private readonly string _publisher = "google";
+        private readonly JsonSerializerOptions _options;
+        private List<SafetySetting>? _safetySettings;
+        private GenerationConfig? _generationConfig;
+        private List<Tool>? _tools;
 
         private static readonly HttpClient Client = new HttpClient();
 
@@ -39,15 +39,15 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                var url = urlGoogleAI;
-                if (!string.IsNullOrEmpty(apiKey) && !useApiKeyHeader)
+                var url = _urlGoogleAi;
+                if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
                 {
-                    url += urlParameterKey;
+                    url += _urlParameterKey;
                 }
 
-                if (useVertexAI)
+                if (_useVertexAi)
                 {
-                    url = urlVertexAI;
+                    url = _urlVertexAi;
                 }
 
                 return url;
@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                if (useVertexAI)
+                if (_useVertexAi)
                 {
                     return ApiVersion.V1;
                 }
@@ -71,7 +71,7 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                switch (model)
+                switch (_model)
                 {
                     case Model.BisonChat:
                         return "generateMessage";
@@ -86,7 +86,7 @@ namespace Mscc.GenerativeAI
                     default:
                         break;
                 }
-                if (useVertexAI)
+                if (_useVertexAi)
                 {
                     return "streamGenerateContent";
                 }
@@ -104,7 +104,7 @@ namespace Mscc.GenerativeAI
             set
             {
                 accessToken = value;
-                Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Mscc.GenerativeAI
         // Reference: https://cloud.google.com/docs/authentication 
         public GenerativeModel()
         {
-            options = DefaultJsonSerializerOptions();
+            _options = DefaultJsonSerializerOptions();
             // GOOGLE_APPLICATION_CREDENTIALS
             // Linux, macOS: $HOME /.config / gcloud / application_default_credentials.json
             // Windows: % APPDATA %\gcloud\application_default_credentials.json
@@ -134,19 +134,19 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
-            this.apiKey = apiKey;
-            this.model = model.Sanitize();
-            this.generationConfig = generationConfig;
-            this.safetySettings = safetySettings;
+            this._apiKey = apiKey;
+            this._model = model.Sanitize();
+            _generationConfig = generationConfig;
+            _safetySettings = safetySettings;
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-                if (!useApiKeyHeader)
+                _useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                if (!_useApiKeyHeader)
                 {
                     Client.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
                 }
-                useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                _useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
             }
         }
 
@@ -163,12 +163,12 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
-            this.useVertexAI = true;
-            this.projectId = projectId;
-            this.region = region;
-            this.model = model.Sanitize();
-            this.generationConfig = generationConfig;
-            this.safetySettings = safetySettings;
+            _useVertexAi = true;
+            this._projectId = projectId;
+            this._region = region;
+            this._model = model.Sanitize();
+            _generationConfig = generationConfig;
+            _safetySettings = safetySettings;
         }
 
         /// <summary>
@@ -177,15 +177,15 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         public async Task<List<ModelResponse>> ListModels()
         {
-            if (useVertexAI)
+            if (_useVertexAi)
             {
                 throw new NotSupportedException();
             }
 
             var url = "https://{endpointGoogleAI}/{Version}/models";
-            if (!string.IsNullOrEmpty(apiKey) && !useApiKeyHeader)
+            if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
             {
-                url += urlParameterKey;
+                url += _urlParameterKey;
             }
 
             url = ParseUrl(url);
@@ -202,15 +202,15 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         public async Task<ModelResponse> GetModel(string model = Model.GeminiPro)
         {
-            if (useVertexAI)
+            if (_useVertexAi)
             {
                 throw new NotSupportedException();
             }
 
-            var url = $"https://{endpointGoogleAI}/{Version}/models/{model}";
-            if (!string.IsNullOrEmpty(apiKey) && !useApiKeyHeader)
+            var url = $"https://{_endpointGoogleAi}/{Version}/models/{model}";
+            if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
             {
-                url += urlParameterKey;
+                url += _urlParameterKey;
             }
 
             url = ParseUrl(url);
@@ -231,11 +231,11 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
-            var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
+            var payload = new StringContent(json, Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
 
-            if (useVertexAI)
+            if (_useVertexAi)
             {
                 StringBuilder fullText = new();
                 var contentResponseVertex = await Deserialize<List<GenerateContentResponse>>(response);
@@ -258,9 +258,9 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var config = generationConfig ?? this.generationConfig;
-            var safety = safetySettings ?? this.safetySettings;
-            var tool = tools ?? this.tools;
+            var config = generationConfig ?? _generationConfig;
+            var safety = safetySettings ?? _safetySettings;
+            var tool = tools ?? _tools;
             var request = new GenerateContentRequest(prompt, config, safety, tool);
             request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
@@ -274,9 +274,9 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var config = generationConfig ?? this.generationConfig;
-            var safety = safetySettings ?? this.safetySettings;
-            var tool = tools ?? this.tools;
+            var config = generationConfig ?? _generationConfig;
+            var safety = safetySettings ?? _safetySettings;
+            var tool = tools ?? _tools;
             var request = new GenerateContentRequest(parts, config, safety, tool);
             request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
@@ -299,7 +299,7 @@ namespace Mscc.GenerativeAI
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
             var ms = new MemoryStream();
-            await JsonSerializer.SerializeAsync(ms, request, options);
+            await JsonSerializer.SerializeAsync(ms, request, _options);
             ms.Seek(0, SeekOrigin.Begin);
             
             var message = new HttpRequestMessage
@@ -334,7 +334,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
+            var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
             request.Contents[0].Role = Role.User;
             return await GenerateContentStream(request);
         }
@@ -344,7 +344,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
+            var request = new GenerateContentRequest(parts, _generationConfig, _safetySettings, _tools);
             request.Contents[0].Role = Role.User;
             return await GenerateContentStream(request);
         }
@@ -387,17 +387,17 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> EmbedContent(string? prompt)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (model != (string)GenerativeAI.Model.Embedding)
+            if (_model != (string)Model.Embedding)
             {
                 throw new NotSupportedException();
             }
 
-            var request = new EmbedContentRequest(prompt, generationConfig, safetySettings, tools);
+            var request = new EmbedContentRequest(prompt, _generationConfig, _safetySettings, _tools);
             var method = "embedContent";
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
-            var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
+            var payload = new StringContent(json, Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<EmbedContentResponse>(response);
@@ -416,7 +416,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var mediaType = "application/json";     // MediaTypeHeaderValue.Parse("application/json");
-            var payload = new StringContent(json, System.Text.Encoding.UTF8, mediaType);
+            var payload = new StringContent(json, Encoding.UTF8, mediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -427,7 +427,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings, tools);
+            var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
             return await CountTokens(request);
         }
 
@@ -436,7 +436,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts, generationConfig, safetySettings, tools);
+            var request = new GenerateContentRequest(parts, _generationConfig, _safetySettings, _tools);
             return await CountTokens(request);
         }
 
@@ -446,7 +446,7 @@ namespace Mscc.GenerativeAI
         /// <returns>Name of the model.</returns>
         public string Name()
         {
-            return this.model;
+            return _model;
         }
 
         // Todo: Implementation missing
@@ -461,9 +461,9 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null, 
             List<Tool>? tools = null)
         {
-            var config = generationConfig ?? this.generationConfig;
-            var safety = safetySettings ?? this.safetySettings;
-            var tool = tools ?? this.tools;
+            var config = generationConfig ?? _generationConfig;
+            var safety = safetySettings ?? _safetySettings;
+            var tool = tools ?? _tools;
             return new ChatSession(this, history, config, safety, tool);
         }
 
@@ -487,14 +487,14 @@ namespace Mscc.GenerativeAI
             {
                 return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    { "endpointGoogleAI", endpointGoogleAI },
+                    { "endpointGoogleAI", _endpointGoogleAi },
                     { "version", Version },
-                    { "model", model },
-                    { "apikey", apiKey },
-                    { "projectid", projectId },
-                    { "region", region },
-                    { "location", region },
-                    { "publisher", publisher }
+                    { "model", _model },
+                    { "apikey", _apiKey },
+                    { "projectid", _projectId },
+                    { "region", _region },
+                    { "location", _region },
+                    { "publisher", _publisher }
                 };
             }
         }
@@ -506,7 +506,7 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         private string Serialize<T>(T request)
         {
-            return JsonSerializer.Serialize(request, options);
+            return JsonSerializer.Serialize(request, _options);
         }
 
         /// <summary>
@@ -519,9 +519,9 @@ namespace Mscc.GenerativeAI
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
             var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(json, options);
+            return JsonSerializer.Deserialize<T>(json, _options);
 #else
-            return await response.Content.ReadFromJsonAsync<T>(options);
+            return await response.Content.ReadFromJsonAsync<T>(_options);
 #endif
         }
 
