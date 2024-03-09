@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-using System.Diagnostics;
 using System.IO;
+#endif
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 using System.Text;
 using Xunit;
 

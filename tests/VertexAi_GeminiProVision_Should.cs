@@ -1,7 +1,9 @@
-﻿    using FluentAssertions;
-using Mscc.GenerativeAI;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
 using System.Linq;
+#endif
+using FluentAssertions;
+using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
 
