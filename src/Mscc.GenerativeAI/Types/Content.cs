@@ -27,7 +27,7 @@ namespace Mscc.GenerativeAI
 
         private void SynchronizeParts()
         {
-            partTypes = null;
+            // partTypes = null;
             if (Parts == null) return;
 
             partTypes = new List<Part>();

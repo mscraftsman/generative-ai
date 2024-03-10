@@ -168,7 +168,7 @@ namespace Test.Mscc.GenerativeAI
             model.AccessToken = fixture.AccessToken;
 
             // Act
-            var response = await model.GenerateContentStream(prompt);
+            var response = model.GenerateContentStream(prompt);
 
             // Assert
             // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
@@ -196,7 +196,7 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var response = await model.GenerateContentStream(request);
+            var response = model.GenerateContentStream(request);
 
             // Assert
             // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
@@ -330,7 +330,7 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var response = await model.GenerateContentStream(request);
+            var response = model.GenerateContentStream(request);
 
             // Assert
             response.Should().NotBeNull();

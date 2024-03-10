@@ -168,16 +168,21 @@ namespace Test.Mscc.GenerativeAI
             model.AccessToken = fixture.AccessToken;
 
             // Act
-            var response = await model.GenerateContentStream(prompt);
+            var responseStream = model.GenerateContentStream(prompt);
 
             // Assert
-            // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // response.FirstOrDefault().Should().NotBeNull();
-            // response.ForEach(x => output.WriteLine(x.Text));
-            // response.LastOrDefault().UsageMetadata.Should().NotBeNull();
-            // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
-            // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Fact]
@@ -196,16 +201,21 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var response = await model.GenerateContentStream(request);
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // response.FirstOrDefault().Should().NotBeNull();
-            // response.ForEach(x => output.WriteLine(x.Text));
-            // response.LastOrDefault().UsageMetadata.Should().NotBeNull();
-            // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
-            // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Theory]
@@ -338,10 +348,10 @@ namespace Test.Mscc.GenerativeAI
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var chat = model.StartChat(tools: new List<Tool>());
-            var chatInput1 = "What is the weather in Boston?";
+            var prompt = "What is the weather in Boston?";
 
             // Act
-            //var result1 = await chat.SendMessageStream(chatInput1);
+            //var result1 = await chat.SendMessageStream(prompt);
             //var response1 = await result1.Response;
             //var result2 = await chat.SendMessageStream(new List<IPart> { new FunctionResponse() });
             //var response2 = await result2.Response;
@@ -381,12 +391,21 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var response = await model.GenerateContentStream(request);
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            response.Should().NotBeNull();
-            //response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Text.Should().NotBeEmpty();
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
     }
 }

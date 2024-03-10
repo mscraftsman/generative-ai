@@ -6,9 +6,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Text;
 
@@ -258,10 +260,10 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var config = generationConfig ?? _generationConfig;
-            var safety = safetySettings ?? _safetySettings;
-            var tool = tools ?? _tools;
-            var request = new GenerateContentRequest(prompt, config, safety, tool);
+            var request = new GenerateContentRequest(prompt, 
+                generationConfig ?? _generationConfig, 
+                safetySettings ?? _safetySettings, 
+                tools ?? _tools);
             request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
         }
@@ -274,10 +276,10 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var config = generationConfig ?? _generationConfig;
-            var safety = safetySettings ?? _safetySettings;
-            var tool = tools ?? _tools;
-            var request = new GenerateContentRequest(parts, config, safety, tool);
+            var request = new GenerateContentRequest(parts, 
+                generationConfig ?? _generationConfig, 
+                safetySettings ?? _safetySettings, 
+                tools ?? _tools);
             request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
         }
@@ -286,9 +288,11 @@ namespace Mscc.GenerativeAI
         /// Returns a list of responses to iterate over. 
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         // public async Task<List<GenerateContentResponse>> GenerateContentStream(GenerateContentRequest? request)
-        public async Task<Stream> GenerateContentStream(GenerateContentRequest? request)
+        public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -318,34 +322,67 @@ namespace Mscc.GenerativeAI
                     response.EnsureSuccessStatusCode();
                     if (response.Content is object)
                     {
-                        return await response.Content.ReadAsStreamAsync();
-                        // var stream = await response.Content.ReadAsStreamAsync();
-                        // return await JsonSerializer.DeserializeAsync<List<GenerateContentResponse>>(stream, options);
+                        GenerateContentResponse item;
+                        var json = new StringBuilder();
+                        var line = string.Empty;
+                        var stream = await response.Content.ReadAsStreamAsync();
+                        using var reader = new StreamReader(stream);
+                        while ((line = await reader.ReadLineAsync()) != null)
+                        {
+                            if (cancellationToken.IsCancellationRequested)
+                                yield break;
+                            if (json.Length == 0 && (line.StartsWith("[") || line.StartsWith(",")))
+                            {
+                                line = line.Substring(1);
+                            }
+                            json.Append(line);
+                            try
+                            {
+                                item = JsonSerializer.Deserialize<GenerateContentResponse>(json.ToString(),
+                                    _options);
+                                json.Clear();
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                            yield return item;
+                        }
                     }
                 }
             }
-
-            return null;
         }
 
         /// <remarks/>
-        public async Task<Stream> GenerateContentStream(string? prompt)
+        public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(string? prompt,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
+            var request = new GenerateContentRequest(prompt, 
+                generationConfig ?? _generationConfig, 
+                safetySettings ?? _safetySettings, 
+                tools ?? _tools);
             request.Contents[0].Role = Role.User;
-            return await GenerateContentStream(request);
+            return GenerateContentStream(request);
         }
 
         /// <remarks/>
-        public async Task<Stream> GenerateContentStream(List<IPart>? parts)
+        public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(List<IPart>? parts,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts, _generationConfig, _safetySettings, _tools);
+            var request = new GenerateContentRequest(parts, 
+                generationConfig ?? _generationConfig, 
+                safetySettings ?? _safetySettings, 
+                tools ?? _tools);
             request.Contents[0].Role = Role.User;
-            return await GenerateContentStream(request);
+            return GenerateContentStream(request);
         }
 
         /// <remarks/>

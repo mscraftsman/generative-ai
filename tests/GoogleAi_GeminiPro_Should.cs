@@ -207,7 +207,7 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
-        [Fact(Skip = "Incomplete")]
+        [Fact]
         public async void Generate_Content_Stream()
         {
             // Arrange
@@ -215,21 +215,24 @@ namespace Test.Mscc.GenerativeAI
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Act
-            var stream = await model.GenerateContentStream(prompt);
-            var response = await JsonSerializer.DeserializeAsync<List<GenerateContentResponse>>(stream, model.DefaultJsonSerializerOptions());
+            var responseStream = model.GenerateContentStream(prompt);
 
             // Assert
-            stream.Should().NotBeNull();
-            response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            response.FirstOrDefault().Should().NotBeNull();
-            response.ForEach(x => output.WriteLine(x.Text));
-            response.LastOrDefault()?.UsageMetadata.Should().NotBeNull();
-            output.WriteLine($"PromptTokenCount: {response?.LastOrDefault()?.UsageMetadata?.PromptTokenCount}");
-            output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
-        [Fact(Skip = "Incomplete")]
+        [Fact]
         public async void Generate_Content_Stream_Request()
         {
             // Arrange
@@ -243,19 +246,21 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var stream = await model.GenerateContentStream(request);
-            var response = await JsonSerializer.DeserializeAsync<List<GenerateContentResponse>>(stream, model.DefaultJsonSerializerOptions());
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            stream.Should().NotBeNull();
-            response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            response.FirstOrDefault().Should().NotBeNull();
-            response.ForEach(x => output.WriteLine(x.Text));
-            response.LastOrDefault()?.UsageMetadata.Should().NotBeNull();
-            output.WriteLine($"PromptTokenCount: {response?.LastOrDefault()?.UsageMetadata?.PromptTokenCount}");
-            output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
-
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Theory]
@@ -402,18 +407,21 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "How can I learn more about C#?";
 
             // Act
-            var stream = await chat.SendMessageStream(prompt);
-            var response = await JsonSerializer.DeserializeAsync<List<GenerateContentResponse>>(stream, model.DefaultJsonSerializerOptions());
+            var responseStream = chat.SendMessageStream(prompt);
 
             // Assert
-            stream.Should().NotBeNull();
-            response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            response.FirstOrDefault().Should().NotBeNull();
-            response.ForEach(x => output.WriteLine(x.Text));
-            response.LastOrDefault()?.UsageMetadata.Should().NotBeNull();
-            output.WriteLine($"PromptTokenCount: {response?.LastOrDefault()?.UsageMetadata?.PromptTokenCount}");
-            output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Fact(Skip = "Incomplete")]
@@ -464,7 +472,7 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var response = await model.GenerateContentStream(request);
+            var response = model.GenerateContentStream(request);
 
             // Assert
             // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
