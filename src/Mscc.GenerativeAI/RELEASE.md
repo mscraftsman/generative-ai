@@ -1,5 +1,9 @@
 # Release Notes
 
+## 0.6.1
+
+- implement Function Calling
+
 ## 0.6.0
 
 - implement streaming of content
@@ -9,7 +13,7 @@
 
 ## 0.5.4
 
-- add embeddings
+- implement Embeddings
 - refactor handling of parts
 - brief sanity check on model selection
 - ⛳ allow configuration, safety settings and tools for Chat
