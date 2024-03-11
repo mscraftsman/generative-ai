@@ -398,7 +398,7 @@ namespace Test.Mscc.GenerativeAI
             chat.History.ForEach(c => output.WriteLine($"{c.Role}: {c.Parts[0].Text}"));
         }
 
-        [Fact(Skip = "Incomplete")]
+        [Fact]
         public async void Start_Chat_Streaming()
         {
             // Arrange
