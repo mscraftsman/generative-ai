@@ -395,7 +395,11 @@ namespace Test.Mscc.GenerativeAI
             _ = await chat.SendMessage("Lastly, give a thorough definition for a CS graduate.");
 
             // Assert
-            chat.History.ForEach(c => output.WriteLine($"{c.Role}: {c.Parts[0].Text}"));
+            chat.History.ForEach(c =>
+            {
+                output.WriteLine($"{new string('-', 20)}");
+                output.WriteLine($"{c.Role}: {c.Parts[0].Text}");
+            });
         }
 
         [Fact]
