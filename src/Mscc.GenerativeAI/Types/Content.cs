@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+#endif
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
@@ -11,6 +13,7 @@ namespace Mscc.GenerativeAI
         
         [JsonIgnore]
         public List<IPart>? Parts { get; set; }
+        [JsonPropertyOrder(-1)]
         public string? Role { get; set; }
 
         [DebuggerHidden]
