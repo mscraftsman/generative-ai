@@ -126,9 +126,13 @@ namespace Test.Mscc.GenerativeAI
                 new TextData { Text = prompt },
                 new InlineData { MimeType = mimetype, Data = base64image }
             };
+            var generationConfig = new GenerationConfig()
+            {
+                Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024
+            };
 
             // Act
-            var response = await model.GenerateContent(parts);
+            var response = await model.GenerateContent(parts, generationConfig);
 
             // Assert
             response.Should().NotBeNull();
