@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -14,6 +16,7 @@ namespace Mscc.GenerativeAI
         /// final response back to the user. Maximum 64 function declarations can be
         /// provided.
         /// </summary>
+        // [JsonPropertyName("function_declarations")]
         public List<FunctionDeclaration>? FunctionDeclarations { get; set; }
     }
 }

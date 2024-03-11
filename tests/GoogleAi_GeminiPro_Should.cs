@@ -1,8 +1,8 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -428,7 +428,426 @@ namespace Test.Mscc.GenerativeAI
             }
         }
 
-        [Fact(Skip = "Incomplete")]
+        [Fact]
+        // Ref: https://ai.google.dev/docs/function_calling
+        public async void Function_Calling()
+        {
+            // Arrange
+            var prompt = "Which theaters in Mountain View show Barbie movie?";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            List<Tool> tools =
+            [
+                new Tool()
+                {
+                    FunctionDeclarations =
+                    [
+                        new()
+                        {
+                            Name = "find_movies",
+                            Description =
+                                "find movie titles currently playing in theaters based on any description, genre, title words, etc.",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new 
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Description = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any kind of description including category or genre, title words, attributes, etc."
+                                    }
+                                }, 
+                                Required = ["description"]
+                            }
+                        },
+
+
+                        new()
+                        {
+                            Name = "find_theaters",
+                            Description =
+                                "find theaters based on location and optionally movie title which are is currently playing in theaters",
+                            Parameters = new() { 
+                                Type = ParameterType.Object, 
+                                Properties = new
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    } 
+                                }, 
+                                Required = ["location"] 
+                            }
+                        },
+
+
+                        new()
+                        {
+                            Name = "get_showtimes",
+                            Description = "Find the start times for movies playing in a specific theater",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new 
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    },
+                                    Theater = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Name of the theater" 
+                                    },
+                                    Date = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Date for requested showtime"
+                                    }
+                                },
+                                Required = ["location", "movie", "theater", "date"]
+                            }
+                        }
+                    ]
+                }
+            ];
+
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        [Fact]
+        // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
+        public async void Function_Calling_MultiTurn()
+        {
+            // Arrange
+            var prompt = "Which theaters in Mountain View show Barbie movie?";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            List<Tool> tools =
+            [
+                new Tool()
+                {
+                    FunctionDeclarations =
+                    [
+                        new()
+                        {
+                            Name = "find_movies",
+                            Description =
+                                "find movie titles currently playing in theaters based on any description, genre, title words, etc.",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new 
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Description = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any kind of description including category or genre, title words, attributes, etc."
+                                    }
+                                }, 
+                                Required = ["description"]
+                            }
+                        },
+
+
+                        new()
+                        {
+                            Name = "find_theaters",
+                            Description =
+                                "find theaters based on location and optionally movie title which are is currently playing in theaters",
+                            Parameters = new() { 
+                                Type = ParameterType.Object, 
+                                Properties = new
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    } 
+                                }, 
+                                Required = ["location"] 
+                            }
+                        },
+
+
+                        new()
+                        {
+                            Name = "get_showtimes",
+                            Description = "Find the start times for movies playing in a specific theater",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new 
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    },
+                                    Theater = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Name of the theater" 
+                                    },
+                                    Date = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Date for requested showtime"
+                                    }
+                                },
+                                Required = ["location", "movie", "theater", "date"]
+                            }
+                        }
+                    ]
+                }
+            ];
+            var request = new GenerateContentRequest(prompt, tools: tools);
+            request.Contents[0].Role = Role.User;
+            request.Contents.Add(new Content()
+            {
+                Role = Role.Model,
+                Parts = new()
+                {
+                    new FunctionCall() { Name = "find_theaters", Args = new { Location = "Mountain View, CA", Movie = "Barbie" } }
+                }
+            });
+            request.Contents.Add(new Content()
+            {
+                Role = Role.Function,
+                Parts = new()
+                {
+                    new FunctionResponse() { Name = "find_theaters", Response = new
+                    {
+                        Name = "find_theaters", Content = new
+                        {
+                            Movie = "Barbie",
+                            Theaters = new dynamic[] { new
+                                {
+                                    Name = "AMC Mountain View 16",
+                                    Address = "2000 W El Camino Real, Mountain View, CA 94040"
+                                }, new
+                                {
+                                    Name = "Regal Edwards 14",
+                                    Address = "245 Castro St, Mountain View, CA 94040"
+                                }
+                            }
+                        }
+                    }}
+                }
+            });
+            
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        // Ref: https://ai.google.dev/docs/function_calling#multi-turn-example-2
+        public async void Function_Calling_MultiTurn_Multiple()
+        {
+            // Arrange
+            var prompt = "Which theaters in Mountain View show Barbie movie?";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            List<Tool> tools =
+            [
+                new Tool()
+                {
+                    FunctionDeclarations =
+                    [
+                        new()
+                        {
+                            Name = "find_movies",
+                            Description =
+                                "find movie titles currently playing in theaters based on any description, genre, title words, etc.",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new 
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Description = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any kind of description including category or genre, title words, attributes, etc."
+                                    }
+                                }, 
+                                Required = ["description"]
+                            }
+                        },
+
+
+                        new()
+                        {
+                            Name = "find_theaters",
+                            Description =
+                                "find theaters based on location and optionally movie title which are is currently playing in theaters",
+                            Parameters = new() { 
+                                Type = ParameterType.Object, 
+                                Properties = new
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    } 
+                                }, 
+                                Required = ["location"] 
+                            }
+                        },
+
+
+                        new()
+                        {
+                            Name = "get_showtimes",
+                            Description = "Find the start times for movies playing in a specific theater",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new 
+                                {
+                                    Location = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                    },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    },
+                                    Theater = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Name of the theater" 
+                                    },
+                                    Date = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Date for requested showtime"
+                                    }
+                                },
+                                Required = ["location", "movie", "theater", "date"]
+                            }
+                        }
+                    ]
+                }
+            ];
+            var request = new GenerateContentRequest(prompt, tools: tools);
+            request.Contents[0].Role = Role.User;
+            request.Contents.Add(new Content()
+            {
+                Role = Role.Model,
+                Parts = new()
+                {
+                    new FunctionCall() { Name = "find_theaters", Args = new { Location = "Mountain View, CA", Movie = "Barbie" } }
+                }
+            });
+            request.Contents.Add(new Content()
+            {
+                Role = Role.Function,
+                Parts = new()
+                {
+                    new FunctionResponse() { Name = "find_theaters", Response = new
+                    {
+                        Name = "find_theaters", Content = new
+                        {
+                            Movie = "Barbie",
+                            Theaters = new dynamic[] { new
+                                {
+                                    Name = "AMC Mountain View 16",
+                                    Address = "2000 W El Camino Real, Mountain View, CA 94040"
+                                }, new
+                                {
+                                    Name = "Regal Edwards 14",
+                                    Address = "245 Castro St, Mountain View, CA 94040"
+                                }
+                            }
+                        }
+                    }}
+                }
+            });
+            request.Contents.Add(new Content()
+            {
+                Role = Role.Model,
+                Parts = new()
+                {
+                    new TextData(){ Text = "OK. I found two theaters in Mountain View showing Barbie: AMC Mountain View 16 and Regal Edwards 14." }
+                }
+            });
+            request.Contents.Add(new Content()
+            {
+                Role = Role.User,
+                Parts = new()
+                {
+                    new TextData(){ Text = "Can we recommend some comedy movies on show in Mountain View?" }
+                }
+            });
+            
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        [Fact(Skip = "Work in progress")]
         public async void Function_Calling_Chat()
         {
             // Arrange
@@ -449,7 +868,7 @@ namespace Test.Mscc.GenerativeAI
             //output.WriteLine(response?.Text);
         }
 
-        [Fact(Skip = "Incomplete")]
+        [Fact(Skip = "Work in progress")]
         public async void Function_Calling_ContentStream()
         {
             // Arrange

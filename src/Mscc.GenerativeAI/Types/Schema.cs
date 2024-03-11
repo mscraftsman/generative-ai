@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. The type of the data.
         /// </summary>
-        public Type? Type { get; set; }
+        public ParameterType? Type { get; set; }
         /// <summary>
         /// Optional. The format of the data.
         /// Supported formats:
@@ -22,7 +22,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Indicates if the value may be null.
         /// </summary>
-        public bool Nullable { get; set; }
+        public bool? Nullable { get; set; }
         /// <summary>
         /// Optional. Schema of the elements of Type.ARRAY.
         /// </summary>
@@ -36,7 +36,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Properties of Type.OBJECT.
         /// </summary>
-        public Schema? Properties { get; set; }
+        public dynamic? Properties { get; set; }
         /// <summary>
         /// Optional. Required properties of Type.OBJECT.
         /// </summary>
