@@ -1,5 +1,12 @@
 # Release Notes
 
+## 0.6.0
+
+- implement streaming of content
+- support of HTTP/3 protocol
+- improve handling of config and settings
+- specify JSON order of properties
+
 ## 0.5.4
 
 - add embeddings
