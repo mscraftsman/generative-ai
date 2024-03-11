@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -18,39 +19,50 @@ namespace Mscc.GenerativeAI
 {
     public class GenerativeModel
     {
-        private const string _endpointGoogleAi = "generativelanguage.googleapis.com";
-        private const string _urlGoogleAi = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
-        private const string _urlParameterKey = "?key={apiKey}"; // Or in the x-goog-api-key header
-        private const string _urlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
-        private const string _mediaType = "application/json";
+        private const string EndpointGoogleAi = "generativelanguage.googleapis.com";
+        private const string UrlGoogleAi = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
+        private const string UrlParameterKey = "?key={apiKey}"; // Or in the x-goog-api-key header
+        private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
+        private const string MediaType = "application/json";
 
-        private readonly bool _useVertexAi = false;
-        private readonly bool _useApiKeyHeader = false;
+        private readonly bool _useVertexAi;
+        private readonly bool _useApiKeyHeader;
         private readonly string _model;
-        private readonly string _apiKey = default;
-        private readonly string _projectId = default;
-        private readonly string _region = default;
+        private readonly string _apiKey;
+        private readonly string _projectId;
+        private readonly string _region;
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
 
-        private static readonly HttpClient Client = new HttpClient();
-
+#if NET472_OR_GREATER || NETSTANDARD2_0
+        private static readonly Version _httpVersion = HttpVersion.Version11;
+        private static readonly HttpClient Client = new();
+#else
+        private static readonly Version _httpVersion = HttpVersion.Version30;
+        private static readonly HttpClient Client = new(new SocketsHttpHandler
+        {
+            PooledConnectionLifetime = TimeSpan.FromMinutes(30)
+        })
+        {
+            DefaultRequestVersion = _httpVersion
+        };
+#endif
         private string Url
         {
             get
             {
-                var url = _urlGoogleAi;
+                var url = UrlGoogleAi;
                 if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
                 {
-                    url += _urlParameterKey;
+                    url += UrlParameterKey;
                 }
 
                 if (_useVertexAi)
                 {
-                    url = _urlVertexAi;
+                    url = UrlVertexAi;
                 }
 
                 return url;
@@ -86,8 +98,6 @@ namespace Mscc.GenerativeAI
                         return "embedContent";
                     case Model.AttributedQuestionAnswering:
                         return "generateAnswer";
-                    default:
-                        break;
                 }
                 if (_useVertexAi)
                 {
@@ -99,15 +109,15 @@ namespace Mscc.GenerativeAI
         }
 
         // Todo: Remove after ADC has been added.
-        private string accessToken;
+        private string _accessToken;
 
         public string AccessToken
         {
-            get { return accessToken; }
+            get => _accessToken;
             set
             {
-                accessToken = value;
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                _accessToken = value;
+                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
         }
 
@@ -188,7 +198,7 @@ namespace Mscc.GenerativeAI
             var url = "https://{endpointGoogleAI}/{Version}/models";
             if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
             {
-                url += _urlParameterKey;
+                url += UrlParameterKey;
             }
 
             url = ParseUrl(url);
@@ -210,10 +220,10 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException();
             }
 
-            var url = $"https://{_endpointGoogleAi}/{Version}/models/{model}";
+            var url = $"https://{EndpointGoogleAi}/{Version}/models/{model}";
             if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
             {
-                url += _urlParameterKey;
+                url += UrlParameterKey;
             }
 
             url = ParseUrl(url);
@@ -233,7 +243,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, _mediaType);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
 
@@ -309,13 +319,14 @@ namespace Mscc.GenerativeAI
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri(url),
+                Version = _httpVersion
             };
-            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(_mediaType));
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
 
             using (var payload = new StreamContent(ms))
             {
                 message.Content = payload;
-                payload.Headers.ContentType = new MediaTypeHeaderValue(_mediaType);
+                payload.Headers.ContentType = new MediaTypeHeaderValue(MediaType);
 
                 using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
                 {
@@ -336,6 +347,11 @@ namespace Mscc.GenerativeAI
                                 line = line.Substring(1);
                             }
                             json.Append(line);
+                            if (!line.EndsWith("}"))
+                            {
+                                continue;
+                            }
+
                             try
                             {
                                 item = JsonSerializer.Deserialize<GenerateContentResponse>(json.ToString(),
@@ -346,6 +362,7 @@ namespace Mscc.GenerativeAI
                             {
                                 continue;
                             }
+
                             yield return item;
                         }
                     }
@@ -432,7 +449,7 @@ namespace Mscc.GenerativeAI
             var method = "embedContent";
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, _mediaType);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<EmbedContentResponse>(response);
@@ -450,7 +467,7 @@ namespace Mscc.GenerativeAI
             var method = "countTokens";
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, _mediaType);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -521,7 +538,7 @@ namespace Mscc.GenerativeAI
             {
                 return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    { "endpointGoogleAI", _endpointGoogleAi },
+                    { "endpointGoogleAI", EndpointGoogleAi },
                     { "version", Version },
                     { "model", _model },
                     { "apikey", _apiKey },

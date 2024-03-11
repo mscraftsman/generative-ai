@@ -22,12 +22,9 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
-			- add embeddings
-			- refactor handling of parts
-			- brief sanity check on model selection
-			- ⛳ allow configuration, safety settings and tools for Chat
+			- implement streaming of content.
 		</PackageReleaseNotes>
-		<Version>0.5.4</Version>
+		<Version>0.6.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
@@ -39,6 +36,11 @@
 		<Nullable>annotations</Nullable>
 	</PropertyGroup>
 
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
+		<RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support"
+										Value="true" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
 		<None Include="..\..\README.md" Pack="True" PackagePath="" />
