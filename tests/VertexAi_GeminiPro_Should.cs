@@ -179,9 +179,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -212,9 +212,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -331,16 +331,27 @@ namespace Test.Mscc.GenerativeAI
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
             var chat = model.StartChat();
-            var chatInput1 = "How can I learn more about C#?";
+            var prompt = "How can I learn more about C#?";
 
             // Act
-            //var response = await chat.SendMessageStream(chatInput1);
+            var responseStream = chat.SendMessageStream(prompt);
 
-            //// Assert
-            //response.Should().NotBeNull();
+            // Assert
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
-        [Fact]
+        [Fact(Skip = "Work in progress")]
         public async void Function_Calling_Chat()
         {
             // Arrange
@@ -362,7 +373,7 @@ namespace Test.Mscc.GenerativeAI
             //response.Text.Should().NotBeEmpty();
         }
 
-        [Fact]
+        [Fact(Skip = "Work in progress")]
         public async void Function_Calling_ContentStream()
         {
             // Arrange

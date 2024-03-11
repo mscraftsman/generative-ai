@@ -50,34 +50,22 @@ namespace Test.Mscc.GenerativeAI
             var fullText = new StringBuilder();
 
             // Act
-            var response = await model.GenerateContent(request);
-            //var response = model.GenerateContentStream(request);
-            //await foreach (var item in response)
-            //{
-            //    fullText.Append(item.Text);
-            //}
-            // Make the request, returning a streaming response
-            //        using PredictionServiceClient.StreamGenerateContentStream response = predictionServiceClient.StreamGenerateContent(generateContentRequest);
-            // Read streaming responses from server until complete
-            //        AsyncResponseStream<GenerateContentResponse> responseStream = response.GetResponseStream();
-            //        await foreach (GenerateContentResponse responseItem in responseStream)
-            //        {
-            //            fullText.Append(responseItem.Candidates[0].Content.Parts[0].Text);
-            //        }
-            //        return fullText.ToString();
-            //    }
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            response.Text.Should().Contain("blueberry");
-            output.WriteLine(response?.Text);
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                fullText.Append(response?.Text);
+            }
+            fullText.ToString().Should().Contain("blueberry");
             output.WriteLine(fullText.ToString());
         }
 
-        [Fact]
+        [Fact(Skip = "Skipped due to the configured HttpClient.Timeout of 100 seconds elapsing.")]
         public async void Multimodal_Multi_Image()
         {
             // Arrange
@@ -109,31 +97,31 @@ namespace Test.Mscc.GenerativeAI
             var fullText = new StringBuilder();
 
             // Act
-            var response = await model.GenerateContent(request);
-            //var response = model.GenerateContentStream(request);
-            //await foreach (var item in response)
-            //{
-            //    fullText.Append(item.Text);
-            //}
-            // Make the request, returning a streaming response
-            //        using PredictionServiceClient.StreamGenerateContentStream response = predictionServiceClient.StreamGenerateContent(generateContentRequest);
-            // Read streaming responses from server until complete
-            //        AsyncResponseStream<GenerateContentResponse> responseStream = response.GetResponseStream();
-            //        await foreach (GenerateContentResponse responseItem in responseStream)
-            //        {
-            //            fullText.Append(responseItem.Candidates[0].Content.Parts[0].Text);
-            //        }
-            //        return fullText.ToString();
-            //    }
-
+            var responseStream = model.GenerateContentStream(request);
+            
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            //response.Text.Should().Contain("good");
-            output.WriteLine(response?.Text);
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                fullText.Append(response?.Text);
+            }
+            fullText.ToString().Should().Contain("redeemer");
             output.WriteLine(fullText.ToString());
+
+            // // Act
+            // var response = await model.GenerateContent(request);
+            //
+            // // Assert
+            // response.Should().NotBeNull();
+            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            // //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            // //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            // //response.Text.Should().Contain("redeemer");
+            // output.WriteLine(response?.Text);
+            // output.WriteLine(fullText.ToString());
         }
 
         [Fact]
@@ -153,29 +141,31 @@ namespace Test.Mscc.GenerativeAI
             var fullText = new StringBuilder();
 
             // Act
-            var response = await model.GenerateContent(request);
-            //var response = model.GenerateContentStream(request);
-            //await foreach (var item in response)
-            //{
-            //    fullText.Append(item.Text);
-            //}
-            // Make the request, returning a streaming response
-            //        using PredictionServiceClient.StreamGenerateContentStream response = predictionServiceClient.StreamGenerateContent(generateContentRequest);
-            // Read streaming responses from server until complete
-            //        AsyncResponseStream<GenerateContentResponse> responseStream = response.GetResponseStream();
-            //        await foreach (GenerateContentResponse responseItem in responseStream)
-            //        {
-            //            fullText.Append(responseItem.Candidates[0].Content.Parts[0].Text);
-            //        }
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            response.Text.Should().Contain("Zootopia");
-            output.WriteLine(response?.Text);
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                fullText.Append(response?.Text);
+            }
+            fullText.ToString().Should().Contain("Zootopia");
             output.WriteLine(fullText.ToString());
+
+            // Act
+            // var response = await model.GenerateContent(request);
+
+            // Assert
+            // response.Should().NotBeNull();
+            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            // //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            // //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            // response.Text.Should().Contain("Zootopia");
+            // output.WriteLine(response?.Text);
+            // output.WriteLine(fullText.ToString());
         }
 
         [Fact]
@@ -210,47 +200,31 @@ namespace Test.Mscc.GenerativeAI
             var fullText = new StringBuilder();
 
             // Act
-            var response = await model.GenerateContent(request);
-            //var response = model.GenerateContentStream(request);
-            //await foreach (var item in response)
-            //{
-            //            // Check if the content has been blocked for safety reasons.
-            //bool blockForSafetyReason = responseItem.Candidates[0].FinishReason == FinishReason.FinishReasonSafety;
-            //            if (blockForSafetyReason)
-            //            {
-            //                fullText.Append("Blocked for safety reasons");
-            //            }
-            //            else
-            //            {
-            //                fullText.Append(item.Text);
-            //            }
-            //}
-            // Make the request, returning a streaming response
-            //        using PredictionServiceClient.StreamGenerateContentStream response = predictionServiceClient.StreamGenerateContent(generateContentRequest);
-            //Read streaming responses from server until complete
-            //        AsyncResponseStream<GenerateContentResponse> responseStream = response.GetResponseStream();
-            //        await foreach (GenerateContentResponse responseItem in responseStream)
-            //        {
-            //            // Check if the content has been blocked for safety reasons.
-            //            bool blockForSafetyReason = responseItem.Candidates[0].FinishReason == Candidate.Types.FinishReason.Safety;
-            //            if (blockForSafetyReason)
-            //            {
-            //                fullText.Append("Blocked for safety reasons");
-            //            }
-            //            else
-            //            {
-            //                fullText.Append(responseItem.Candidates[0].Content.Parts[0].Text);
-            //            }
-            //        }
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            //response.Text.Should().Contain("good");
-            output.WriteLine(response?.Text);
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                fullText.Append(response?.Text);
+            }
+            fullText.ToString().Should().Contain("assist");
             output.WriteLine(fullText.ToString());
+
+            // Act
+            // var response = await model.GenerateContent(request);
+
+            // Assert
+            // response.Should().NotBeNull();
+            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            // //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            // //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            // response.Text.Should().Contain("assist");
+            // output.WriteLine(response?.Text);
+            // output.WriteLine(fullText.ToString());
         }
     }
 }
