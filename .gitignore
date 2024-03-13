@@ -393,4 +393,4 @@ FodyWeavers.xsd
 # Own exclusions
 **/appsettings.user.json
 **/appsettings.Development.json
-/client_secret.json
+**/client_secret*.json
