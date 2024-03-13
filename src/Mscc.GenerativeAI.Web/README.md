@@ -40,7 +40,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 You can then add this code to your sources whenever you need to access any Gemini API provided by Google. This package works currently for Google AI (Google AI Studio) only. Use with Google Cloud Vertex AI is provided by the underlying Mscc.GenerativeAI package but not exposed yet.
 
-### Using Google AI Gemini API
+## Using Google AI Gemini API
 
 Working with Google AI in your application requires an API key. Get an API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
@@ -65,6 +65,8 @@ Add the following configuration to the `appsettings.json` file.
 ```
 
 The section name `Gemini` is arbitrary as well as the location of the section. Although, it needs to be referenced correctly in the `Configuration` builder.
+
+### Using the `AddGenerativeAI` service
 
 Next, add the service `AddGenerativeAI()` to the ASP.NET Core web app and map the routes as needed. Following is the most minimal implementation.
 
@@ -96,6 +98,31 @@ Following approaches are available:
 - Options instance parameter
 
 Hoping this provides enough flexibility for individual preferences.
+
+### Using a typed `HttpClient`
+
+Alternatively to the above described service extension methods `Mscc.GenerativeAI.Web` also provides a typed `HttpClient` that can be added to your ASP.NET web application.
+
+```csharp
+sing Mscc.GenerativeAI.Web;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient<GenerativeAIClient>()
+{
+    BaseAddress = "";
+};
+
+var app = builder.Build();
+
+app.MapGet("/", async (IGenerativeModelService service) =>
+{
+    var result = await service.GenerateContent("Write about the history of Mauritius.");
+    return result.Text;
+});
+
+app.Run();
+```
 
 ### Use global usings
 

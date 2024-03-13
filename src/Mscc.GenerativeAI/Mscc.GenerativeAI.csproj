@@ -22,9 +22,11 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
-			- implement Function Calling
+			- improve Function Calling
+			- improve Chat streaming
+			- improve Embeddings
 		</PackageReleaseNotes>
-		<Version>0.6.1</Version>
+		<Version>0.7.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">

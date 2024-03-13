@@ -18,6 +18,7 @@ namespace Test.Mscc.GenerativeAI
         public string ProjectId { get; set; } = default;
         public string Region { get; set; } = default;
         public string AccessToken { get; set; } = default;
+        public string ServiceAccount { get; set; }
 
 
         // Todo: Handle envVar GOOGLE_APPLICATION_CREDENTIALS
@@ -54,6 +55,8 @@ namespace Test.Mscc.GenerativeAI
                     AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
                 }
             }
+
+            ServiceAccount = Configuration["service_account"];
         }
 
         private string RunExternalExe(string filename, string arguments = null)

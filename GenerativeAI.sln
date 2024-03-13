@@ -5,7 +5,11 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mscc.GenerativeAI", "src\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj", "{C87DC6AE-3F5E-4499-9070-D7B905AF27B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Mscc.GenerativeAI", "tests\Test.Mscc.GenerativeAI.csproj", "{0EE48658-C084-4F39-87EE-C2F852BA30F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mscc.GenerativeAI.Web", "src\Mscc.GenerativeAI.Web\Mscc.GenerativeAI.Web.csproj", "{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mscc.GenerativeAI.Google", "src\Mscc.GenerativeAI.Google\Mscc.GenerativeAI.Google.csproj", "{56D15C05-C9F3-4F11-B123-8BC3923DD516}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Mscc.GenerativeAI", "tests\Mscc.GenerativeAI\Test.Mscc.GenerativeAI.csproj", "{0EE48658-C084-4F39-87EE-C2F852BA30F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A7772B3-4D83-4994-BFF0-E2AAA3EF6A66}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mscc.GenerativeAI.Web", "src\Mscc.GenerativeAI.Web\Mscc.GenerativeAI.Web.csproj", "{3B8C6A84-86EB-4AC2-ADAC-A3DE774D228C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CA866D95-03CA-40DC-815A-8FA42C1803A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mscc.GenerativeAI.Google", "src\Mscc.GenerativeAI.Google\Mscc.GenerativeAI.Google.csproj", "{56D15C05-C9F3-4F11-B123-8BC3923DD516}"
 EndProject

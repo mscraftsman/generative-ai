@@ -14,6 +14,12 @@ Client for ASP.NET Core:
 
 Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET web applications.
 
+Client for .NET using Google API Client Library:
+[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)
+
+Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) and how to add it to your .NET applications.
+
 ## Install the package
 
 Install the package [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/) from NuGet. You can install the package from the command line using either the command line or the NuGet Package Manager Console. Or you add it directly to your .NET project.
@@ -47,6 +53,8 @@ The package supports the following use cases to authenticate.
 - Google AI: [Authentication with an API key](https://ai.google.dev/tutorials/setup)
 - Google AI: [Authentication with OAuth](https://ai.google.dev/docs/oauth_quickstart)
 - Vertex AI: [Authentication with Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev)
+- Vertex AI: [Authentication with OAuth 2.0]() (using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google))
+- Vertex AI: [Authentication with Service Account]() (using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google))
 
 This applies mainly to the instantiation procedure.
 
