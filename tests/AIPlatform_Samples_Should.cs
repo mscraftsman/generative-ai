@@ -11,7 +11,7 @@ namespace Test.Mscc.GenerativeAI
 {
     /// <summary>
     /// Tests are based on the AIPlatform.Samples repository
-    /// https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/8db139c177a205ed075cccc0c5d5a61647748943/aiplatform/api/AIPlatform.Samples
+    /// https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/main/aiplatform/api/AIPlatform.Samples
     /// </summary>
     [Collection(nameof(ConfigurationFixture))]
     public class AIPlatform_Samples_Should
