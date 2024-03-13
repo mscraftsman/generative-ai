@@ -108,6 +108,10 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
+            response.UsageMetadata.Should().NotBeNull();
+            output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+            output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+            output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
         }
 
         [Fact]

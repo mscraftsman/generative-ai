@@ -148,8 +148,10 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
-        [Fact]
-        public async void Analyze_Image_From_Cloud_Storage()
+        [Theory]
+        [InlineData("gs://cloud-samples-data/generative-ai/image/320px-Felis_catus-cat_on_snow.jpg")]
+        [InlineData("gs://cloud-samples-data/ai-platform/flowers/daisy/10559679065_50d2b16f6d.jpg")]
+        public async void Analyze_Image_From_Cloud_Storage(string uri)
         {
             // Arrange
             var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
@@ -157,8 +159,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var parts = new List<IPart>
             {
-                new TextData { Text = "Is it a cat?" },
-                new FileData { MimeType = "image/jpeg", FileUri = "gs://cloud-samples-data/generative-ai/image/320px-Felis_catus-cat_on_snow.jpg" }
+                new TextData { Text = "what is this image?" },
+                new FileData { MimeType = "image/jpeg", FileUri = uri }
             };
             request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
@@ -171,6 +173,23 @@ namespace Test.Mscc.GenerativeAI
             //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             //response.Text.Should().Contain("Yes");
+
+            // // Act
+            // var responseStream = model.GenerateContentStream(request);
+            //
+            // // Assert
+            // responseStream.Should().NotBeNull();
+            // await foreach (var response in responseStream)
+            // {
+            //     response.Should().NotBeNull();
+            //     response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            //     response.Text.Should().NotBeEmpty();
+            //     output.WriteLine(response?.Text);
+            //     // response.UsageMetadata.Should().NotBeNull();
+            //     // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+            //     // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+            //     // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            // }
         }
 
         [Fact]
