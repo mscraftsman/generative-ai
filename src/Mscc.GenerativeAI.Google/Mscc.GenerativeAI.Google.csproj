@@ -1,0 +1,78 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net6.0;net7.0;netstandard2.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+        <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+        <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+        <PackageId>Mscc.GenerativeAI.Google</PackageId>
+        <Title>MSCC GenerativeAI using Google API Client Library for .NET.</Title>
+        <Product>MSCC GenerativeAI using Google API Client Library for .NET.</Product>
+        <Description>Gemini AI Client for .NET</Description>
+        <PackageTags>Gemini;GeminiAI;GoogleAI;VertexAI;GenAI;GenerativeAI;OAuth2</PackageTags>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Authors>jkirstaetter</Authors>
+        <Copyright>Copyright (c) Jochen Kirstätter</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>MsccGenerativeAi-icon-nuget.png</PackageIcon>
+        <PackageProjectUrl>https://mscraftsman.github.io/generative-ai</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+        <PackageReleaseNotes>
+            - initial implementation
+        </PackageReleaseNotes>
+        <Version>0.7.0</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
+        <IsTrimmable>true</IsTrimmable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
+        <Nullable>annotations</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
+        <RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support"
+                                        Value="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
+        <None Include="..\..\README.md" Pack="True" PackagePath="" />
+        <None Include="..\..\LICENSE" Pack="True" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
+        <Reference Include="System" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Threading.Tasks" />
+        <PackageReference Include="Nullable" Version="1.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Apis.Auth" Version="1.67.0" />
+        <PackageReference Include="Mscc.GenerativeAI" Version="0.6.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="client_secrets.json" />
+      <Content Include="client_secrets.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="key.p12" />
+      <Content Include="key.p12">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="tokens.json" />
+      <Content Include="tokens.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>
