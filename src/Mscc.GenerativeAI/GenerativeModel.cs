@@ -26,7 +26,8 @@ namespace Mscc.GenerativeAI
         private const string MediaType = "application/json";
 
         private readonly bool _useVertexAi;
-        private readonly bool _useApiKeyHeader;
+        private readonly bool _useHeaderApiKey;
+        private readonly bool _useHeaderProjectId;
         private readonly string _model;
         private readonly string _apiKey;
         private readonly string _projectId;
@@ -55,7 +56,7 @@ namespace Mscc.GenerativeAI
             get
             {
                 var url = UrlGoogleAi;
-                if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
+                if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
                 {
                     url += UrlParameterKey;
                 }
@@ -154,12 +155,12 @@ namespace Mscc.GenerativeAI
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                _useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-                if (!_useApiKeyHeader)
+                _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                if (!_useHeaderApiKey)
                 {
                     Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
                 }
-                _useApiKeyHeader = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
             }
         }
 
@@ -182,6 +183,16 @@ namespace Mscc.GenerativeAI
             _model = model.Sanitize();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
+
+            if (!string.IsNullOrEmpty(projectId))
+            {
+                _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+                if (!_useHeaderProjectId)
+                {
+                    Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
+                }
+                _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+            }
         }
 
         /// <summary>
@@ -196,7 +207,7 @@ namespace Mscc.GenerativeAI
             }
 
             var url = "https://{endpointGoogleAI}/{Version}/models";
-            if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
+            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
             {
                 url += UrlParameterKey;
             }
@@ -221,7 +232,7 @@ namespace Mscc.GenerativeAI
             }
 
             var url = $"https://{EndpointGoogleAi}/{Version}/models/{model}";
-            if (!string.IsNullOrEmpty(_apiKey) && !_useApiKeyHeader)
+            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
             {
                 url += UrlParameterKey;
             }
