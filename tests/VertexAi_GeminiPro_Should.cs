@@ -423,29 +423,74 @@ namespace Test.Mscc.GenerativeAI
             }
         }
 
-        [Fact(Skip = "Work in progress")]
+        [Fact]
         public async void Function_Calling_Chat()
         {
             // Arrange
+            var prompt = "What is the weather in Boston?";
+            var functionDeclarations = new List<FunctionDeclaration>() 
+            { new() {
+                Name = "get_current_weather",
+                Description = "get weather in a given location",
+                Parameters = new() {
+                    Type = ParameterType.Object,
+                    Properties = new {
+                        Location = new { Type = ParameterType.String }, 
+                        Unit = new {
+                            Type = ParameterType.String, 
+                            Enum = (string[])["celsius", "fahrenheit"]
+                        }
+                    },
+                    Required = ["location"]
+                }
+            }};
+            var functionResponses = new List<Part>()
+            {
+                new() {
+                FunctionResponse = new()
+                {
+                    Name = "get_current_weather",
+                    Response = new { Name = "get_current_weather", Content = new { Weather = "super nice" }}
+                }
+            }};
             var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: this.model);
             model.AccessToken = fixture.AccessToken;
-            var chat = model.StartChat(tools: new List<Tool>());
-            var prompt = "What is the weather in Boston?";
+            var chat = model.StartChat(tools: new()
+            {
+                new Tool() {FunctionDeclarations = functionDeclarations}
+            });
 
-            // Act
-            //var result1 = await chat.SendMessageStream(prompt);
-            //var response1 = await result1.Response;
-            //var result2 = await chat.SendMessageStream(new List<IPart> { new FunctionResponse() });
-            //var response2 = await result2.Response;
+            // Act & Assert
+            output.WriteLine(prompt);
+            var result1 = chat.SendMessageStream(prompt);
+            await foreach (var response in result1)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Candidates[0].Content.Parts[0].FunctionCall.Should().NotBeNull();
+                response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+                output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+                output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
 
-            //// Assert
-            //response1.Should().NotBeNull();
-            //response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Text.Should().NotBeEmpty();
+            var result2 = chat.SendMessageStream(functionResponses);
+            await foreach (var response in result2)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
-        [Fact(Skip = "Work in progress")]
+        [Fact]
         public async void Function_Calling_ContentStream()
         {
             // Arrange
@@ -465,12 +510,15 @@ namespace Test.Mscc.GenerativeAI
             request.Contents.Add(new Content
             {
                 Role = Role.Model,
-                Parts = new List<IPart> { new FunctionCall { Name = "get_current_weather", Args = new { location = "Boston" } } }
+                Parts = new List<IPart> { new FunctionCall { Name = "get_current_weather", Args = new { Location = "Boston" } } }
             });
             request.Contents.Add(new Content
             {
                 Role = Role.Function,
-                Parts = new List<IPart> { new FunctionResponse() }
+                Parts = new List<IPart> { new FunctionResponse() { 
+                    Name = "get_current_weather",
+                    Response = new { Name = "get_current_weather", Content = new { Weather = "slightly cloudy" }}
+                }}
             });
 
             // Act
@@ -484,7 +532,6 @@ namespace Test.Mscc.GenerativeAI
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
                 output.WriteLine(response?.Text);
-                // response.UsageMetadata.Should().NotBeNull();
                 output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
                 output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
