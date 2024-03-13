@@ -208,6 +208,36 @@ namespace Test.Mscc.GenerativeAI
             // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
         }
 
+        [Fact]
+        public async void Generate_Content_With_SafetySettings()
+        {
+            // Arrange
+            var prompt = "Tell me something dangerous.";
+            var safetySettings = new List<SafetySetting>()
+            {
+                new()
+                {
+                    Category = HarmCategory.HarmCategoryDangerousContent,
+                    Threshold = HarmBlockThreshold.BlockLowAndAbove
+                }
+            };
+            var generationConfig = new GenerationConfig() 
+                { MaxOutputTokens = 256 };
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model, generationConfig, safetySettings);
+            model.AccessToken = fixture.AccessToken;
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates[0].FinishReason.Should().Be(FinishReason.Safety);
+            response.Text.Should().BeNull();
+            // output.WriteLine(response?.Text);
+        }
+
         [Theory]
         [InlineData("How are you doing today?", 6)]
         [InlineData("What kind of fish is this?", 7)]
