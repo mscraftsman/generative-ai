@@ -44,7 +44,7 @@
 
     <ItemGroup>
         <None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
-        <None Include="..\..\README.md" Pack="True" PackagePath="" />
+        <None Include="README.md" Pack="True" PackagePath="" />
         <None Include="..\..\LICENSE" Pack="True" PackagePath="" />
     </ItemGroup>
 
@@ -61,15 +61,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="client_secrets.json" />
       <Content Include="client_secrets.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="key.p12" />
       <Content Include="key.p12">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="tokens.json" />
       <Content Include="tokens.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>

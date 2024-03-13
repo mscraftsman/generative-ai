@@ -12,7 +12,7 @@ namespace Mscc.GenerativeAI.Google
 {
     /// <summary>
     /// Helper class leveraging Google API Client Libraries.
-    /// Auth 2.0 credential for accessing protected resources using an access token, as well as optionally refreshing 
+    /// OAuth 2.0 credential for accessing protected resources using an access token, as well as optionally refreshing 
     /// the access token when it expires using a refresh token.
     /// </summary>
     public class GenerativeModelGoogle
@@ -20,14 +20,14 @@ namespace Mscc.GenerativeAI.Google
         private readonly List<string> _scopes =
             new List<string> { "https://www.googleapis.com/auth/generative-language.retriever" };
 
-        private string _clientFile = "client_secrets.json";
+        private string _clientFile = "client_secret.json";
         private string _tokenFile = "tokens.json";
         private string _certificateFile = "key.p12";
         private string _certificatePassphrase;
 
         private ICredential _credential;
-        private string ClientId;
-        private string ClientSecret;
+        // private string ClientId;
+        // private string ClientSecret;
 
         public string ProjectId { get; set; }
         public string Region { get; set; }
@@ -93,7 +93,7 @@ namespace Mscc.GenerativeAI.Google
             if (ProjectId == null) throw new ArgumentNullException(nameof(ProjectId));
             if (Region == null) throw new ArgumentNullException(nameof(Region));
 
-            var accessToken = _credential.GetAccessTokenForRequestAsync().Result;
+            var accessToken = _credential.GetAccessTokenForRequestAsync().Result;   // _credential.Token.AccessToken
             var vertex = new VertexAI(ProjectId, Region);
             var generativeModel = vertex.GenerativeModel(model, GenerationConfig, SafetySettings);
             generativeModel.AccessToken = accessToken;
@@ -111,10 +111,10 @@ namespace Mscc.GenerativeAI.Google
             // if (!_credentials.)
             ClientSecrets clientSecrets = null;
 
-            if (!string.IsNullOrEmpty(ClientId))
-            {
-                clientSecrets = new ClientSecrets { ClientId = ClientId, ClientSecret = ClientSecret };
-            }
+            // if (!string.IsNullOrEmpty(ClientId))
+            // {
+            //     clientSecrets = new ClientSecrets { ClientId = ClientId, ClientSecret = ClientSecret };
+            // }
 
             if (File.Exists(_clientFile))
             {

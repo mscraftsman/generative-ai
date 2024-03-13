@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CA866D95-03CA-40DC-815A-8FA42C1803A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mscc.GenerativeAI.Google", "src\Mscc.GenerativeAI.Google\Mscc.GenerativeAI.Google.csproj", "{56D15C05-C9F3-4F11-B123-8BC3923DD516}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Mscc.GenerativeAI.Google", "tests\Mscc.GenerativeAI.Google\Test.Mscc.GenerativeAI.Google.csproj", "{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,11 +48,18 @@ Global
 		{56D15C05-C9F3-4F11-B123-8BC3923DD516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56D15C05-C9F3-4F11-B123-8BC3923DD516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56D15C05-C9F3-4F11-B123-8BC3923DD516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FC6B0160-45B9-4A5F-97EB-6264A2029FED}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627} = {CA866D95-03CA-40DC-815A-8FA42C1803A9}
 	EndGlobalSection
 EndGlobal
