@@ -111,6 +111,36 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async void Generate_Content_With_SafetySettings()
+        {
+            // Arrange
+            var prompt = "Tell me something dangerous.";
+            var safetySettings = new List<SafetySetting>()
+            {
+                new()
+                {
+                    Category = HarmCategory.HarmCategoryDangerousContent,
+                    Threshold = HarmBlockThreshold.BlockLowAndAbove
+                }
+            };
+            var generationConfig = new GenerationConfig() 
+                { MaxOutputTokens = 256 };
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model, generationConfig, safetySettings);
+            model.AccessToken = fixture.AccessToken;
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates[0].FinishReason.Should().Be(FinishReason.Safety);
+            response.Text.Should().BeNull();
+            output.WriteLine("This response stream terminated due to safety concerns.");
+        }
+
+        [Fact]
         public async void Generate_Content_MultiplePrompt()
         {
             // Arrange
@@ -182,6 +212,48 @@ namespace Test.Mscc.GenerativeAI
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
                 // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
+        }
+
+        [Fact]
+        public async void Generate_Content_Stream_With_SafetySettings()
+        {
+            // Arrange
+            var prompt = "Tell me something dangerous.";
+            var safetySettings = new List<SafetySetting>()
+            {
+                new()
+                {
+                    Category = HarmCategory.HarmCategoryDangerousContent,
+                    Threshold = HarmBlockThreshold.BlockLowAndAbove
+                }
+            };
+            var generationConfig = new GenerationConfig() 
+                { MaxOutputTokens = 256 };
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model, generationConfig, safetySettings);
+            model.AccessToken = fixture.AccessToken;
+
+            // Act
+            var responseStream = model.GenerateContentStream(prompt);
+
+            // Assert
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Candidates[0].FinishReason.Should().BeOneOf(FinishReason.Safety);
+                if (response.Candidates[0].FinishReason == FinishReason.Safety)
+                {
+                    response.Text.Should().BeNull();
+                    output.WriteLine("This response stream terminated due to safety concerns.");
+                }
+                else
+                {
+                    response.Text.Should().NotBeEmpty();
+                    output.WriteLine(response?.Text);
+                }
             }
         }
 
