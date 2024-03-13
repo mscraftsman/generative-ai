@@ -21,6 +21,6 @@ namespace Mscc.GenerativeAI
         /// Required. The function response in JSON object format.
         /// </summary>
         //Response map[string] any
-        public object? Response { get; set; }
+        public dynamic? Response { get; set; }
     }
 }

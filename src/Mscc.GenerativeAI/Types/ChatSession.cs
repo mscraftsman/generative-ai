@@ -5,15 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using System.Runtime.CompilerServices;
 
 namespace Mscc.GenerativeAI
 {
     public class ChatSession
     {
         private readonly GenerativeModel _model;
-        // [JsonPropertyName("generation_config")]
         private readonly GenerationConfig? _generationConfig;
-        // [JsonPropertyName("safety_settings")]
         private readonly List<SafetySetting>? _safetySettings;
         private readonly List<Tool>? _tools;
 
@@ -31,7 +30,7 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null)
         {
             _model = model;
-            History = history ?? [];
+            History = history ?? new List<ContentResponse>();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
             _tools = tools;
@@ -58,7 +57,6 @@ namespace Mscc.GenerativeAI
                 Tools = _tools
             };
 
-            // ToDo: ?? => refactor to stream response.
             var response = await _model.GenerateContent(request);
             History.Add(new ContentResponse { Role = Role.Model, Parts = new List<Part> { new Part { Text = response.Text } } });
             return response;
@@ -67,16 +65,29 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="prompt"></param>
+        /// <param name="content"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public IAsyncEnumerable<GenerateContentResponse> SendMessageStream(string prompt, 
-            CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(object content, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (string.IsNullOrEmpty(prompt)) throw new ArgumentException(prompt, nameof(prompt));
+            if (content == null) throw new ArgumentNullException(nameof(content));
+            if (!(content is String || content is List<Part>)) throw new ArgumentException(content.ToString(), nameof(content));
 
-            History.Add(new ContentResponse { Role = Role.User, Parts = new List<Part> { new Part { Text = prompt } } });
+            var role = Role.User;
+            var parts = new List<Part>();
+            if (content is String prompt)
+            {
+                role = Role.User;
+                parts.Add(new Part { Text = prompt });
+            }
+            if (content is List<Part> contentParts)
+            {
+                role = Role.Function;
+                parts = contentParts;
+            }
+
+            History.Add(new ContentResponse { Role = role, Parts = parts });
             var request = new GenerateContentRequest
             {
                 Contents = History.Select(x => 
@@ -88,14 +99,13 @@ namespace Mscc.GenerativeAI
             };
 
             var response = _model.GenerateContentStream(request, cancellationToken);
-            // History.Add(new ContentResponse { Role = Role.Model, Parts = new List<Part> { new() { Text = response.Text } } });
-            return response;
-            // await foreach (var item in response)
-            // {
-            //     if (cancellationToken.IsCancellationRequested)
-            //         yield break;
-            //     yield return item;
-            // }
+            await foreach (var item in response)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    yield break;
+                History.Add(new ContentResponse { Role = Role.Model, Parts = item?.Candidates?[0]?.Content?.Parts });
+                yield return item;
+            }
         }
     }
 }

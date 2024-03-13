@@ -11,6 +11,10 @@ namespace Mscc.GenerativeAI
     public class EmbedContentResponse
     {
         /// <summary>
+        /// Output only. Generated candidates.
+        /// </summary>
+        public List<Candidate>? Candidates { get; set; }
+        /// <summary>
         /// 
         /// </summary>
         public Embedding? Embedding { get; set; }

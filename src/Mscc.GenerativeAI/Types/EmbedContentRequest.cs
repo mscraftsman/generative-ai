@@ -15,25 +15,40 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public Content Content { get; set; }
-        // [JsonPropertyName("generation_config")]
-        // public GenerationConfig? GenerationConfig { get; set; }
-        // [JsonPropertyName("safety_settings")]
-        // public List<SafetySetting>? SafetySettings { get; set; }
-        // public List<Tool>? Tools { get; set; }
+        public ContentResponse Content { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public TaskType? TaskType { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? Title { get; set; }
 
-        public EmbedContentRequest(string prompt, GenerationConfig? generationConfig = null, List<SafetySetting>? safetySettings = null, List<Tool>? tools = null)
+        public EmbedContentRequest(string prompt)
         {
-            Content = new Content
+            Content = new()
             {
-                Parts = new List<IPart> { new TextData
+                Parts = new List<Part> { new()
                 {
                     Text = prompt
                 }}
             };
-            // if (generationConfig != null) GenerationConfig = generationConfig;
-            // if (safetySettings != null) SafetySettings = safetySettings;
-            // if (tools != null) Tools = tools;
+        }
+
+        public EmbedContentRequest(List<string> prompts)
+        {
+            Content = new()
+            {
+                Parts = new List<Part>()
+            };
+            foreach (var prompt in prompts)
+            {
+                Content.Parts.Add(new()
+                {
+                    Text = prompt
+                });
+            }
         }
     }
 }

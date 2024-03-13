@@ -40,10 +40,10 @@ namespace Mscc.GenerativeAI
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         private static readonly Version _httpVersion = HttpVersion.Version11;
-        private static readonly HttpClient Client = new();
+        private static readonly HttpClient Client = new HttpClient();
 #else
         private static readonly Version _httpVersion = HttpVersion.Version30;
-        private static readonly HttpClient Client = new(new SocketsHttpHandler
+        private static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
         {
             PooledConnectionLifetime = TimeSpan.FromMinutes(30)
         })
@@ -132,7 +132,6 @@ namespace Mscc.GenerativeAI
             // Linux, macOS: $HOME /.config / gcloud / application_default_credentials.json
             // Windows: % APPDATA %\gcloud\application_default_credentials.json
             //var credentials = GoogleCredential.FromFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud", "application_default_credentials.json"))
-            //  .CreateScoped();
         }
 
         // Todo: Add parameters for GenerationConfig, SafetySettings, Transport? and Tools
@@ -260,11 +259,20 @@ namespace Mscc.GenerativeAI
 
             if (_useVertexAi)
             {
-                StringBuilder fullText = new();
+                var fullText = new StringBuilder();
                 var contentResponseVertex = await Deserialize<List<GenerateContentResponse>>(response);
                 foreach (var item in contentResponseVertex)
                 {
-                    fullText.Append(item.Text);
+                    switch (item.Candidates[0].FinishReason)
+                    {
+                        case FinishReason.Safety:
+                            return item;
+                            break;
+                        case FinishReason.Unspecified:
+                        default:
+                            fullText.Append(item.Text);
+                            break;
+                    }
                 }
                 var result = contentResponseVertex.LastOrDefault();
                 result.Candidates[0].Content.Parts[0].Text = fullText.ToString();
@@ -323,7 +331,7 @@ namespace Mscc.GenerativeAI
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
             var ms = new MemoryStream();
-            await JsonSerializer.SerializeAsync(ms, request, _options);
+            await JsonSerializer.SerializeAsync(ms, request, _options, cancellationToken);
             ms.Seek(0, SeekOrigin.Begin);
             
             var message = new HttpRequestMessage
@@ -339,7 +347,7 @@ namespace Mscc.GenerativeAI
                 message.Content = payload;
                 payload.Headers.ContentType = new MediaTypeHeaderValue(MediaType);
 
-                using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead))
+                using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
                     response.EnsureSuccessStatusCode();
                     if (response.Content is object)
@@ -441,6 +449,13 @@ namespace Mscc.GenerativeAI
             throw new NotImplementedException();
         }
 
+        /// <remarks/>
+        public async Task<GenerateContentResponse> Predict(GenerateContentRequest? request)
+        {
+            // ToDo: implement
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Get embedding information of the content.
         /// </summary>
@@ -448,7 +463,7 @@ namespace Mscc.GenerativeAI
         /// <returns>Embeddings of the content as a list of floating numbers.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
-        public async Task<EmbedContentResponse> EmbedContent(string? prompt)
+        public async Task<EmbedContentResponse> EmbedContent(string? prompt, TaskType? taskType = null, string? title = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (_model != (string)Model.Embedding)
@@ -456,7 +471,11 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException();
             }
 
-            var request = new EmbedContentRequest(prompt, _generationConfig, _safetySettings, _tools);
+            var request = new EmbedContentRequest(prompt)
+            {
+                TaskType = taskType,
+                Title = title
+            };
             var method = "embedContent";
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
