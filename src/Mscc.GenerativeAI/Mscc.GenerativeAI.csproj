@@ -22,6 +22,7 @@
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
+			- use EnvVars for default values (parameterless constructor)
 			- improve Function Calling
 			- improve Chat streaming
 			- improve Embeddings
@@ -30,7 +31,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
-		<IsTrimmable>true</IsTrimmable>
+		<IsTrimmable>false</IsTrimmable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>

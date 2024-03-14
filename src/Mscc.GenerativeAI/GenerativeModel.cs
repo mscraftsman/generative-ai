@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -29,11 +30,12 @@ namespace Mscc.GenerativeAI
         private readonly bool _useHeaderApiKey;
         private readonly bool _useHeaderProjectId;
         private readonly string _model;
-        private readonly string _apiKey;
-        private readonly string _projectId;
-        private readonly string _region;
+        private readonly string? _apiKey;
+        private readonly string? _projectId;
+        private readonly string? _region;
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
+        private string? _accessToken;
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
@@ -109,16 +111,20 @@ namespace Mscc.GenerativeAI
             }
         }
 
-        // Todo: Remove after ADC has been added.
-        private string _accessToken;
+        /// <summary>
+        /// Returns the name of the model. 
+        /// </summary>
+        /// <returns>Name of the model.</returns>
+        public string Name => _model;
 
-        public string AccessToken
+        public string? AccessToken
         {
             get => _accessToken;
             set
             {
                 _accessToken = value;
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+                if (value != null)
+                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
         }
 
@@ -128,10 +134,28 @@ namespace Mscc.GenerativeAI
         public GenerativeModel()
         {
             _options = DefaultJsonSerializerOptions();
-            // GOOGLE_APPLICATION_CREDENTIALS
-            // Linux, macOS: $HOME /.config / gcloud / application_default_credentials.json
-            // Windows: % APPDATA %\gcloud\application_default_credentials.json
-            //var credentials = GoogleCredential.FromFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud", "application_default_credentials.json"))
+            _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
+                     Model.Gemini10Pro;
+            _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+            _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
+            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION");
+            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
+                          GetAccessTokenFromAdc();
+
+            var credentialsFile = 
+                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
+                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
+                "application_default_credentials.json");
+            if (File.Exists(credentialsFile))
+            {
+                using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
+                {
+                    var json = JsonSerializer.DeserializeAsync<JsonElement>(stream, _options).Result;
+                    _projectId ??= json.GetValue("quota_project_id") ??
+                                   json.GetValue("project_id");
+                }
+            } //var credentials = GoogleCredential.FromFile()
         }
 
         // Todo: Add parameters for GenerationConfig, SafetySettings, Transport? and Tools
@@ -142,15 +166,15 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-pro")</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        public GenerativeModel(string apiKey = "", 
-            string model = Model.GeminiPro, 
+        public GenerativeModel(string? apiKey = null, 
+            string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
-            _apiKey = apiKey;
-            _model = model.Sanitize();
-            _generationConfig = generationConfig;
-            _safetySettings = safetySettings;
+            _apiKey = apiKey ?? _apiKey;
+            _model = model.SanitizeModelName() ?? _model;
+            _generationConfig ??= generationConfig;
+            _safetySettings ??= safetySettings;
 
             if (!string.IsNullOrEmpty(apiKey))
             {
@@ -179,7 +203,7 @@ namespace Mscc.GenerativeAI
             _useVertexAi = true;
             _projectId = projectId;
             _region = region;
-            _model = model.Sanitize();
+            _model = model.SanitizeModelName();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
 
@@ -521,15 +545,6 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request);
         }
 
-        /// <summary>
-        /// Returns the name of the model. 
-        /// </summary>
-        /// <returns>Name of the model.</returns>
-        public string Name()
-        {
-            return _model;
-        }
-
         // Todo: Implementation missing
         /// <summary>
         /// Starts a chat session. 
@@ -626,6 +641,80 @@ namespace Mscc.GenerativeAI
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
 
             return options;
+        }
+
+        private string GetAccessTokenFromAdc()
+        {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                return RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token").TrimEnd();
+            }
+            else
+            {
+                return RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
+            }
+        }
+        
+        private string RunExternalExe(string filename, string arguments = null)
+        {
+            var process = new Process();
+
+            process.StartInfo.FileName = filename;
+            if (!string.IsNullOrEmpty(arguments))
+            {
+                process.StartInfo.Arguments = arguments;
+            }
+
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.UseShellExecute = false;
+
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            var stdOutput = new StringBuilder();
+            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+
+            string stdError = null;
+            try
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                stdError = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+            }
+
+            if (process.ExitCode == 0)
+            {
+                return stdOutput.ToString();
+            }
+            else
+            {
+                var message = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(stdError))
+                {
+                    message.AppendLine(stdError);
+                }
+
+                if (stdOutput.Length != 0)
+                {
+                    message.AppendLine("Std output:");
+                    message.AppendLine(stdOutput.ToString());
+                }
+
+                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode + ": " + message);
+            }
+        }
+
+        private string Format(string filename, string arguments)
+        {
+            return "'" + filename + 
+                ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
+                "'";
         }
     }
 }

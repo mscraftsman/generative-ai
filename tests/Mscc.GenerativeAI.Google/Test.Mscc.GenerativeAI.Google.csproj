@@ -36,15 +36,12 @@
     <None Update="payload\scones.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Remove="client_secret.json" />
     <Content Include="client_secret.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="key.p12" />
     <Content Include="key.p12">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="tokens.json" />
     <Content Include="tokens.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

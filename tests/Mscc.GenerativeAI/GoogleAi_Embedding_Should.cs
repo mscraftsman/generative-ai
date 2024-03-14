@@ -29,7 +29,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name().Should().Be(expected);
+            model.Name.Should().Be(expected);
         }
 
         [Fact]

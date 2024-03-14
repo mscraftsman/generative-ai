@@ -1,4 +1,5 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Collections.Generic;
 #endif
 using FluentAssertions;
@@ -13,12 +14,26 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.GeminiPro;
+        private readonly string model = Model.Gemini10Pro;
 
         public GoogleAi_GeminiPro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             this.output = output;
             this.fixture = fixture;
+        }
+
+        [Fact]
+        public void Initialize_EnvVars()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("GOOGLE_API_KEY", fixture.ApiKey);
+
+            // Act
+            var model = new GenerativeModel();
+
+            // Assert
+            model.Should().NotBeNull();
+            model.Name.Should().Be(Model.Gemini10Pro);
         }
 
         [Fact]
@@ -31,7 +46,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name().Should().Be(Model.GeminiPro);
+            model.Name.Should().Be(Model.Gemini10Pro);
         }
 
         [Fact]
@@ -44,7 +59,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name().Should().Be(Model.GeminiPro);
+            model.Name.Should().Be(Model.Gemini10Pro);
         }
 
         [Fact]
