@@ -88,10 +88,10 @@ namespace Mscc.GenerativeAI.Google
         }
 
         /// <summary>
-        /// 
+        /// Returns an instance of the specified model.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">The model name, ie. "gemini-pro"</param>
+        /// <returns>The model.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         public GenerativeModel CreateModel(string model = Model.Gemini10Pro)
