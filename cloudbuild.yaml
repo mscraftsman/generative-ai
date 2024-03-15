@@ -9,6 +9,10 @@ steps:
   id: Build for ASP.NET Core
   entrypoint: 'dotnet'
   args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj']
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Build for .NET using Google Cloud Client Library
+  entrypoint: 'dotnet'
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj']
 
 # Pack the NuGet packages
 - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
@@ -19,6 +23,10 @@ steps:
   id: Pack for ASP.NET Core
   entrypoint: 'dotnet'
   args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', '-o', 'output/']
+- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+  id: Pack for .NET using Google Cloud Client Library
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', '-o', 'output/']
 
 # Push the packages to NuGet source feed
 - name: 'mcr.microsoft.com/dotnet/sdk:8.0'
