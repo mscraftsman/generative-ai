@@ -66,8 +66,10 @@ namespace Mscc.GenerativeAI.Google
                 passphrase ?? _certificatePassphrase,
                 X509KeyStorageFlags.Exportable);
             _credential = new ServiceAccountCredential(
-                new ServiceAccountCredential.Initializer(serviceAccountEmail) { Scopes = _scopes }.FromCertificate(
-                    x509Certificate));
+                new ServiceAccountCredential.Initializer(serviceAccountEmail)
+                {
+                    Scopes = _scopes
+                }.FromCertificate(x509Certificate));
         }
 
         /// <summary>
