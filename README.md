@@ -182,7 +182,7 @@ The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 
 ## Troubleshooting
 
-Sometimes you might have authentication warnings. You can fix it by re-authenticating through ADC.
+Sometimes you might have authentication warnings **HTTP 403** (Forbidden). Especially while working with OAuth-based authentication. You can fix it by re-authenticating through ADC.
 
 ```bash
 gcloud config set project "$PROJECT_ID"

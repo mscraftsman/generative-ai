@@ -181,7 +181,7 @@ namespace Mscc.GenerativeAI
             _credentials = GetCredentialsFromFile(credentialsFile);
             
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
                      Model.Gemini10Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
