@@ -49,7 +49,8 @@ namespace Mscc.GenerativeAI
         private static readonly Version _httpVersion = HttpVersion.Version30;
         private static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
         {
-            PooledConnectionLifetime = TimeSpan.FromMinutes(30)
+            PooledConnectionLifetime = TimeSpan.FromMinutes(30),
+            EnableMultipleHttp2Connections = true,
         })
         {
             DefaultRequestVersion = _httpVersion
@@ -386,38 +387,14 @@ namespace Mscc.GenerativeAI
                 using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
                     response.EnsureSuccessStatusCode();
-                    if (response.Content is object)
+                    if (response.Content is not null)
                     {
-                        GenerateContentResponse item;
-                        var json = new StringBuilder();
-                        var line = string.Empty;
-                        var stream = await response.Content.ReadAsStreamAsync();
-                        using var reader = new StreamReader(stream);
-                        while ((line = await reader.ReadLineAsync()) != null)
+                        using var stream = await response.Content.ReadAsStreamAsync();
+                        await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(
+                                           stream, _options, cancellationToken))
                         {
                             if (cancellationToken.IsCancellationRequested)
                                 yield break;
-                            if (json.Length == 0 && (line.StartsWith("[") || line.StartsWith(",")))
-                            {
-                                line = line.Substring(1);
-                            }
-                            json.Append(line);
-                            if (!line.EndsWith("}"))
-                            {
-                                continue;
-                            }
-
-                            try
-                            {
-                                item = JsonSerializer.Deserialize<GenerateContentResponse>(json.ToString(),
-                                    _options);
-                                json.Clear();
-                            }
-                            catch
-                            {
-                                continue;
-                            }
-
                             yield return item;
                         }
                     }
