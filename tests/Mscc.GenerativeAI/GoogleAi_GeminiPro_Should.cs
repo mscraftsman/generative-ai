@@ -27,39 +27,42 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             Environment.SetEnvironmentVariable("GOOGLE_API_KEY", fixture.ApiKey);
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
 
             // Act
             var model = new GenerativeModel();
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini10Pro);
+            model.Name.Should().Be(expected);
         }
 
         [Fact]
         public void Initialize_Default_Model()
         {
             // Arrange
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
 
             // Act
             var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini10Pro);
+            model.Name.Should().Be(expected);
         }
 
         [Fact]
         public void Initialize_Model()
         {
             // Arrange
+            var expected = this.model;
 
             // Act
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini10Pro);
+            model.Name.Should().Be(expected);
         }
 
         [Fact]

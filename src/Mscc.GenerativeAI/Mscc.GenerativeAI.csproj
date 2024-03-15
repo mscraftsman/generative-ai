@@ -23,6 +23,7 @@
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>
 			- use EnvVars for default values (parameterless constructor)
+			- support of .env file
 			- improve Function Calling
 			- improve Chat streaming
 			- improve Embeddings

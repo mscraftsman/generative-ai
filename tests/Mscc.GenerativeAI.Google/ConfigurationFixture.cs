@@ -26,6 +26,8 @@ namespace Test.Mscc.GenerativeAI.Google
         // Ref: https://cloud.google.com/vertex-ai/docs/start/client-libraries
         public ConfigurationFixture()
         {
+            ReadDotEnv();
+
             Configuration = new ConfigurationBuilder()
                .AddJsonFile("appsettings.json", optional: true)
                .AddJsonFile("appsettings.user.json", optional: true)
@@ -126,5 +128,19 @@ namespace Test.Mscc.GenerativeAI.Google
                 ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
                 "'";
         }
+ 
+        private void ReadDotEnv(string dotEnvFile = ".env")
+        {
+            if (!File.Exists(dotEnvFile)) return;
+
+            foreach (var line in File.ReadAllLines(dotEnvFile))
+            {
+                var parts = line.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2) continue;
+
+                Environment.SetEnvironmentVariable(parts[0], parts[1]);
+            }
+        }    
     }
 }

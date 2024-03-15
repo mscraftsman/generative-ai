@@ -27,15 +27,16 @@ namespace Mscc.GenerativeAI
         private const string MediaType = "application/json";
 
         private readonly bool _useVertexAi;
-        private readonly bool _useHeaderApiKey;
-        private readonly bool _useHeaderProjectId;
         private readonly string _model;
-        private readonly string? _apiKey;
-        private readonly string? _projectId;
-        private readonly string? _region;
+        private readonly string _region = "us-central1";
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
+
+        private bool _useHeaderApiKey;
+        private string? _apiKey;
         private string? _accessToken;
+        private bool _useHeaderProjectId;
+        private string? _projectId;
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
@@ -117,9 +118,25 @@ namespace Mscc.GenerativeAI
         /// <returns>Name of the model.</returns>
         public string Name => _model;
 
+        public string? ApiKey
+        {
+            set
+            {
+                _apiKey = value;
+                if (!string.IsNullOrEmpty(_apiKey))
+                {
+                    _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                    if (!_useHeaderApiKey)
+                    {
+                        Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
+                    }
+                    _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                }
+            }
+        }
+        
         public string? AccessToken
         {
-            get => _accessToken;
             set
             {
                 _accessToken = value;
@@ -127,38 +144,48 @@ namespace Mscc.GenerativeAI
                     Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
         }
+        
+        public string? ProjectId
+        {
+            set
+            {
+                _projectId = value;
+                if (!string.IsNullOrEmpty(_projectId))
+                {
+                    _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+                    if (!_useHeaderProjectId)
+                    {
+                        Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
+                    }
+                    _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+                }
+            }
+        }
 
-        // Todo: Integrate Google.Apis.Auth to retrieve Access_Token on demand. 
-        // Todo: Integrate Application Default Credentials as an alternative.
-        // Reference: https://cloud.google.com/docs/authentication 
+        /// <summary>
+        /// Default constructor attempts to read environment variables and
+        /// sets default values, if available
+        /// </summary>
         public GenerativeModel()
         {
             _options = DefaultJsonSerializerOptions();
-            _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
-                     Model.Gemini10Pro;
-            _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-            _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
-            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION");
-            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
-                          GetAccessTokenFromAdc();
-
+            GenerativeModelExtensions.ReadDotEnv();
             var credentialsFile = 
                 Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
                 Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
-                "application_default_credentials.json");
-            if (File.Exists(credentialsFile))
-            {
-                using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
-                {
-                    var json = JsonSerializer.DeserializeAsync<JsonElement>(stream, _options).Result;
-                    _projectId ??= json.GetValue("quota_project_id") ??
-                                   json.GetValue("project_id");
-                }
-            } //var credentials = GoogleCredential.FromFile()
+                    "application_default_credentials.json");
+            var credentials = GetCredentialsFromFile(credentialsFile);
+            
+            ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+            ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                        credentials?.ProjectId;
+            _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
+                     Model.Gemini10Pro;
+            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
 
-        // Todo: Add parameters for GenerationConfig, SafetySettings, Transport? and Tools
         /// <summary>
         /// Constructor to initialize access to Google AI Gemini API.
         /// </summary>
@@ -171,20 +198,10 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
-            _apiKey = apiKey ?? _apiKey;
-            _model = model.SanitizeModelName() ?? _model;
+            ApiKey = apiKey ?? _apiKey;
+            _model = model?.SanitizeModelName() ?? _model;
             _generationConfig ??= generationConfig;
             _safetySettings ??= safetySettings;
-
-            if (!string.IsNullOrEmpty(apiKey))
-            {
-                _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-                if (!_useHeaderApiKey)
-                {
-                    Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
-                }
-                _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-            }
         }
 
         /// <summary>
@@ -195,27 +212,19 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        internal GenerativeModel(string projectId, string region, 
-            string model = Model.Gemini10Pro, 
+        internal GenerativeModel(string? projectId = null, string? region = null, 
+            string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
             _useVertexAi = true;
-            _projectId = projectId;
-            _region = region;
-            _model = model.SanitizeModelName();
+            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
+                          GetAccessTokenFromAdc();
+            ProjectId = projectId ?? _projectId;
+            _region = region ?? _region;
+            _model = model?.SanitizeModelName() ?? _model;
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
-
-            if (!string.IsNullOrEmpty(projectId))
-            {
-                _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
-                if (!_useHeaderProjectId)
-                {
-                    Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
-                }
-                _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
-            }
         }
 
         /// <summary>
@@ -643,6 +652,32 @@ namespace Mscc.GenerativeAI
             return options;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="credentialsFile"></param>
+        /// <returns></returns>
+        private Credentials? GetCredentialsFromFile(string credentialsFile)
+        {
+            Credentials? credentials = null;
+            if (File.Exists(credentialsFile))
+            {
+                var options = DefaultJsonSerializerOptions();
+                options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+                using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
+                {
+                    credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
+                }
+            }
+
+            return credentials;
+        }
+
+        /// <summary>
+        /// Retrieve access token from Application Default Credentials (ADC) 
+        /// </summary>
+        /// <returns>The access token.</returns>
+        // Reference: https://cloud.google.com/docs/authentication 
         private string GetAccessTokenFromAdc()
         {
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
