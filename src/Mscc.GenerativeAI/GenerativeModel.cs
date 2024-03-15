@@ -31,6 +31,7 @@ namespace Mscc.GenerativeAI
         private readonly string _region = "us-central1";
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
+        private readonly Credentials? _credentials;
 
         private bool _useHeaderApiKey;
         private string? _apiKey;
@@ -54,6 +55,7 @@ namespace Mscc.GenerativeAI
             DefaultRequestVersion = _httpVersion
         };
 #endif
+
         private string Url
         {
             get
@@ -175,12 +177,10 @@ namespace Mscc.GenerativeAI
                 Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
                     "application_default_credentials.json");
-            var credentials = GetCredentialsFromFile(credentialsFile);
+            _credentials = GetCredentialsFromFile(credentialsFile);
             
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
-            ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                        credentials?.ProjectId;
             _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
                      Model.Gemini10Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
@@ -220,7 +220,10 @@ namespace Mscc.GenerativeAI
             _useVertexAi = true;
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
                           GetAccessTokenFromAdc();
-            ProjectId = projectId ?? _projectId;
+            ProjectId = projectId ??
+                Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                _credentials?.ProjectId ?? 
+                _projectId;
             _region = region ?? _region;
             _model = model?.SanitizeModelName() ?? _model;
             _generationConfig = generationConfig;
