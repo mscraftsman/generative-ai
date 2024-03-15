@@ -15,13 +15,17 @@ namespace Mscc.GenerativeAI.Google
     /// OAuth 2.0 credential for accessing protected resources using an access token, as well as optionally refreshing 
     /// the access token when it expires using a refresh token.
     /// </summary>
+    // Reference: https://cloud.google.com/docs/authentication 
     public class GenerativeModelGoogle
     {
         private readonly List<string> _scopes =
-            new List<string> { "https://www.googleapis.com/auth/generative-language.retriever" };
+        [
+            "https://www.googleapis.com/auth/cloud-platform",
+            "https://www.googleapis.com/auth/generative-language.retriever"
+        ];
 
         private string _clientFile = "client_secret.json";
-        private string _tokenFile = "tokens.json";
+        private string _tokenFile = "token.json";
         private string _certificateFile = "key.p12";
         private string _certificatePassphrase;
 
@@ -127,5 +131,31 @@ namespace Mscc.GenerativeAI.Google
 
             return clientSecrets;
         }
+
+        // private ICredential LoadCredentials()
+        // {
+        //     ICredential credentials = null;
+        //     if (File.Exists(_tokenFile))
+        //     {
+        //         using (var stream = new FileStream(_tokenFile, FileMode.Open, FileAccess.Read))
+        //         {
+        //             credentials = GoogleCredential.FromStreamAsync(stream, new CancellationToken()).Result
+        //                 .UnderlyingCredential;
+        //         }
+        //     }
+        //
+        //     if (credentials == null || credentials.)
+        //     {
+        //         var clientSecrets = getClientSecrets();
+        //         var flow = new GoogleAuthorizationCodeFlow(
+        //             new GoogleAuthorizationCodeFlow.Initializer()
+        //             {
+        //                 ClientSecrets = clientSecrets,
+        //             });
+        //         flow.
+        //     }
+        //
+        //     return credentials;
+        // }
     }
 }
