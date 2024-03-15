@@ -21,6 +21,12 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
-    # - name: Test 
+    - name: Build
+      run: |
+        dotnet build ./GenerativeAI.sln -c Release
+    # - name: Test Mscc.GenerativeAI
     #   run: |
-    #     dotnet test ./tests/Test.Mscc.Google.csproj -c Release --logger "console;verbosity=detailed"
+    #     dotnet test ./tests/Mscc.GenerativeAI/Test.Mscc.GenerativeAI.csproj -c Release --logger "console;verbosity=detailed"
+    # - name: Test Mscc.GenerativeAI.Google
+    #   run: |
+    #     dotnet test ./tests/Mscc.GenerativeAI.Google/Test.Mscc.GenerativeAI.Google.csproj -c Release --logger "console;verbosity=detailed"
