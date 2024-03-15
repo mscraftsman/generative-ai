@@ -34,7 +34,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name().Should().Be(Model.GeminiProVision);
+            model.Name.Should().Be(Model.GeminiProVision);
         }
 
         [Fact]

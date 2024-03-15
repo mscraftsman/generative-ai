@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -26,14 +27,17 @@ namespace Mscc.GenerativeAI
         private const string MediaType = "application/json";
 
         private readonly bool _useVertexAi;
-        private readonly bool _useHeaderApiKey;
-        private readonly bool _useHeaderProjectId;
         private readonly string _model;
-        private readonly string _apiKey;
-        private readonly string _projectId;
-        private readonly string _region;
+        private readonly string _region = "us-central1";
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
+        private readonly Credentials? _credentials;
+
+        private bool _useHeaderApiKey;
+        private string? _apiKey;
+        private string? _accessToken;
+        private bool _useHeaderProjectId;
+        private string? _projectId;
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
@@ -45,12 +49,14 @@ namespace Mscc.GenerativeAI
         private static readonly Version _httpVersion = HttpVersion.Version30;
         private static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
         {
-            PooledConnectionLifetime = TimeSpan.FromMinutes(30)
+            PooledConnectionLifetime = TimeSpan.FromMinutes(30),
+            EnableMultipleHttp2Connections = true,
         })
         {
             DefaultRequestVersion = _httpVersion
         };
 #endif
+
         private string Url
         {
             get
@@ -109,32 +115,78 @@ namespace Mscc.GenerativeAI
             }
         }
 
-        // Todo: Remove after ADC has been added.
-        private string _accessToken;
+        /// <summary>
+        /// Returns the name of the model. 
+        /// </summary>
+        /// <returns>Name of the model.</returns>
+        public string Name => _model;
 
-        public string AccessToken
+        public string? ApiKey
         {
-            get => _accessToken;
+            set
+            {
+                _apiKey = value;
+                if (!string.IsNullOrEmpty(_apiKey))
+                {
+                    _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                    if (!_useHeaderApiKey)
+                    {
+                        Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
+                    }
+                    _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
+                }
+            }
+        }
+        
+        public string? AccessToken
+        {
             set
             {
                 _accessToken = value;
-                Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+                if (value != null)
+                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            }
+        }
+        
+        public string? ProjectId
+        {
+            set
+            {
+                _projectId = value;
+                if (!string.IsNullOrEmpty(_projectId))
+                {
+                    _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+                    if (!_useHeaderProjectId)
+                    {
+                        Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
+                    }
+                    _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+                }
             }
         }
 
-        // Todo: Integrate Google.Apis.Auth to retrieve Access_Token on demand. 
-        // Todo: Integrate Application Default Credentials as an alternative.
-        // Reference: https://cloud.google.com/docs/authentication 
+        /// <summary>
+        /// Default constructor attempts to read environment variables and
+        /// sets default values, if available
+        /// </summary>
         public GenerativeModel()
         {
             _options = DefaultJsonSerializerOptions();
-            // GOOGLE_APPLICATION_CREDENTIALS
-            // Linux, macOS: $HOME /.config / gcloud / application_default_credentials.json
-            // Windows: % APPDATA %\gcloud\application_default_credentials.json
-            //var credentials = GoogleCredential.FromFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud", "application_default_credentials.json"))
+            GenerativeModelExtensions.ReadDotEnv();
+            var credentialsFile = 
+                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
+                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
+                    "application_default_credentials.json");
+            _credentials = GetCredentialsFromFile(credentialsFile);
+            
+            ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
+            _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
+                     Model.Gemini10Pro;
+            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
 
-        // Todo: Add parameters for GenerationConfig, SafetySettings, Transport? and Tools
         /// <summary>
         /// Constructor to initialize access to Google AI Gemini API.
         /// </summary>
@@ -142,25 +194,15 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-pro")</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        public GenerativeModel(string apiKey = "", 
-            string model = Model.GeminiPro, 
+        public GenerativeModel(string? apiKey = null, 
+            string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
-            _apiKey = apiKey;
-            _model = model.Sanitize();
-            _generationConfig = generationConfig;
-            _safetySettings = safetySettings;
-
-            if (!string.IsNullOrEmpty(apiKey))
-            {
-                _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-                if (!_useHeaderApiKey)
-                {
-                    Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
-                }
-                _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-            }
+            ApiKey = apiKey ?? _apiKey;
+            _model = model?.SanitizeModelName() ?? _model;
+            _generationConfig ??= generationConfig;
+            _safetySettings ??= safetySettings;
         }
 
         /// <summary>
@@ -171,27 +213,22 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
-        internal GenerativeModel(string projectId, string region, 
-            string model = Model.Gemini10Pro, 
+        internal GenerativeModel(string? projectId = null, string? region = null, 
+            string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
         {
             _useVertexAi = true;
-            _projectId = projectId;
-            _region = region;
-            _model = model.Sanitize();
+            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
+                          GetAccessTokenFromAdc();
+            ProjectId = projectId ??
+                Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                _credentials?.ProjectId ?? 
+                _projectId;
+            _region = region ?? _region;
+            _model = model?.SanitizeModelName() ?? _model;
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
-
-            if (!string.IsNullOrEmpty(projectId))
-            {
-                _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
-                if (!_useHeaderProjectId)
-                {
-                    Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
-                }
-                _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
-            }
         }
 
         /// <summary>
@@ -350,38 +387,14 @@ namespace Mscc.GenerativeAI
                 using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
                     response.EnsureSuccessStatusCode();
-                    if (response.Content is object)
+                    if (response.Content is not null)
                     {
-                        GenerateContentResponse item;
-                        var json = new StringBuilder();
-                        var line = string.Empty;
-                        var stream = await response.Content.ReadAsStreamAsync();
-                        using var reader = new StreamReader(stream);
-                        while ((line = await reader.ReadLineAsync()) != null)
+                        using var stream = await response.Content.ReadAsStreamAsync();
+                        await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(
+                                           stream, _options, cancellationToken))
                         {
                             if (cancellationToken.IsCancellationRequested)
                                 yield break;
-                            if (json.Length == 0 && (line.StartsWith("[") || line.StartsWith(",")))
-                            {
-                                line = line.Substring(1);
-                            }
-                            json.Append(line);
-                            if (!line.EndsWith("}"))
-                            {
-                                continue;
-                            }
-
-                            try
-                            {
-                                item = JsonSerializer.Deserialize<GenerateContentResponse>(json.ToString(),
-                                    _options);
-                                json.Clear();
-                            }
-                            catch
-                            {
-                                continue;
-                            }
-
                             yield return item;
                         }
                     }
@@ -521,15 +534,6 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request);
         }
 
-        /// <summary>
-        /// Returns the name of the model. 
-        /// </summary>
-        /// <returns>Name of the model.</returns>
-        public string Name()
-        {
-            return _model;
-        }
-
         // Todo: Implementation missing
         /// <summary>
         /// Starts a chat session. 
@@ -626,6 +630,106 @@ namespace Mscc.GenerativeAI
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
 
             return options;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="credentialsFile"></param>
+        /// <returns></returns>
+        private Credentials? GetCredentialsFromFile(string credentialsFile)
+        {
+            Credentials? credentials = null;
+            if (File.Exists(credentialsFile))
+            {
+                var options = DefaultJsonSerializerOptions();
+                options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+                using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
+                {
+                    credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
+                }
+            }
+
+            return credentials;
+        }
+
+        /// <summary>
+        /// Retrieve access token from Application Default Credentials (ADC) 
+        /// </summary>
+        /// <returns>The access token.</returns>
+        // Reference: https://cloud.google.com/docs/authentication 
+        private string GetAccessTokenFromAdc()
+        {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                return RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token").TrimEnd();
+            }
+            else
+            {
+                return RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
+            }
+        }
+        
+        private string RunExternalExe(string filename, string arguments = null)
+        {
+            var process = new Process();
+
+            process.StartInfo.FileName = filename;
+            if (!string.IsNullOrEmpty(arguments))
+            {
+                process.StartInfo.Arguments = arguments;
+            }
+
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.UseShellExecute = false;
+
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            var stdOutput = new StringBuilder();
+            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+
+            string stdError = null;
+            try
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                stdError = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+            }
+
+            if (process.ExitCode == 0)
+            {
+                return stdOutput.ToString();
+            }
+            else
+            {
+                var message = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(stdError))
+                {
+                    message.AppendLine(stdError);
+                }
+
+                if (stdOutput.Length != 0)
+                {
+                    message.AppendLine("Std output:");
+                    message.AppendLine(stdOutput.ToString());
+                }
+
+                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode + ": " + message);
+            }
+        }
+
+        private string Format(string filename, string arguments)
+        {
+            return "'" + filename + 
+                ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
+                "'";
         }
     }
 }

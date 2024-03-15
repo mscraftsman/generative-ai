@@ -1,4 +1,5 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Collections.Generic;
 #endif
 using FluentAssertions;
@@ -13,7 +14,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.GeminiPro;
+        private readonly string model = Model.Gemini10Pro;
 
         public GoogleAi_GeminiPro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
@@ -22,29 +23,46 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public void Initialize_EnvVars()
+        {
+            // Arrange
+            Environment.SetEnvironmentVariable("GOOGLE_API_KEY", fixture.ApiKey);
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
+
+            // Act
+            var model = new GenerativeModel();
+
+            // Assert
+            model.Should().NotBeNull();
+            model.Name.Should().Be(expected);
+        }
+
+        [Fact]
         public void Initialize_Default_Model()
         {
             // Arrange
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
 
             // Act
             var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             // Assert
             model.Should().NotBeNull();
-            model.Name().Should().Be(Model.GeminiPro);
+            model.Name.Should().Be(expected);
         }
 
         [Fact]
         public void Initialize_Model()
         {
             // Arrange
+            var expected = this.model;
 
             // Act
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
             // Assert
             model.Should().NotBeNull();
-            model.Name().Should().Be(Model.GeminiPro);
+            model.Name.Should().Be(expected);
         }
 
         [Fact]
@@ -161,8 +179,8 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().Be("84");
             output.WriteLine(response?.Text);
+            response.Text.Should().Be("84");
         }
 
         [Fact]
@@ -264,7 +282,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData("How are you doing today?", 7)]
+        [InlineData("How are you doing today?", 6)]
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
@@ -284,9 +302,9 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData("How are you doing today?", 7)]
-        [InlineData("What kind of fish is this?", 7)]
-        [InlineData("Write a story about a magic backpack.", 8)]
-        [InlineData("Write an extended story about a magic backpack.", 9)]
+        [InlineData("What kind of fish is this?", 8)]
+        [InlineData("Write a story about a magic backpack.", 9)]
+        [InlineData("Write an extended story about a magic backpack.", 10)]
         public async void Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange

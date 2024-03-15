@@ -391,6 +391,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Own exclusions
+.env
 **/appsettings.user.json
 **/appsettings.Development.json
-/client_secret.json
+**/client_secret*.json
+*.p12

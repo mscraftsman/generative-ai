@@ -1,5 +1,13 @@
 # Release Notes
 
+## 0.7.0
+
+- use Environment Variables for default values (parameterless constructor)
+- support of .env file
+- improve Function Calling
+- improve Chat streaming
+- improve Embeddings
+
 ## 0.6.1
 
 - implement Function Calling

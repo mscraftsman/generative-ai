@@ -18,12 +18,15 @@ namespace Test.Mscc.GenerativeAI
         public string ProjectId { get; set; } = default;
         public string Region { get; set; } = default;
         public string AccessToken { get; set; } = default;
+        public string ServiceAccount { get; set; }
 
 
         // Todo: Handle envVar GOOGLE_APPLICATION_CREDENTIALS
         // Ref: https://cloud.google.com/vertex-ai/docs/start/client-libraries
         public ConfigurationFixture()
         {
+            ReadDotEnv();
+            
             Configuration = new ConfigurationBuilder()
                .AddJsonFile("appsettings.json", optional: true)
                .AddJsonFile("appsettings.user.json", optional: true)
@@ -54,6 +57,8 @@ namespace Test.Mscc.GenerativeAI
                     AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
                 }
             }
+
+            ServiceAccount = Configuration["service_account"];
         }
 
         private string RunExternalExe(string filename, string arguments = null)
@@ -117,5 +122,19 @@ namespace Test.Mscc.GenerativeAI
                 ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
                 "'";
         }
+
+        private void ReadDotEnv(string dotEnvFile = ".env")
+        {
+            if (!File.Exists(dotEnvFile)) return;
+
+            foreach (var line in File.ReadAllLines(dotEnvFile))
+            {
+                var parts = line.Split(new[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts.Length != 2) continue;
+
+                Environment.SetEnvironmentVariable(parts[0], parts[1]);
+            }
+        }    
     }
 }

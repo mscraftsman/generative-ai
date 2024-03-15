@@ -14,6 +14,12 @@ Client for ASP.NET Core:
 
 Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET web applications.
 
+Client for .NET using Google API Client Library:
+[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)
+
+Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) and how to add it to your .NET applications.
+
 ## Install the package
 
 Install the package [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/) from NuGet. You can install the package from the command line using either the command line or the NuGet Package Manager Console. Or you add it directly to your .NET project.
@@ -47,12 +53,36 @@ The package supports the following use cases to authenticate.
 - Google AI: [Authentication with an API key](https://ai.google.dev/tutorials/setup)
 - Google AI: [Authentication with OAuth](https://ai.google.dev/docs/oauth_quickstart)
 - Vertex AI: [Authentication with Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev)
+- Vertex AI: [Authentication with OAuth]() (using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google))
+- Vertex AI: [Authentication with Service Account]() (using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google))
 
 This applies mainly to the instantiation procedure.
 
 ## Getting Started
 
 Use of Gemini API in either Google AI or Vertex AI is almost identical. The major difference is the way to instantiate the model handling your prompt.
+
+### Using Environment variables
+
+In the cloud most settings are configured via environment variables (EnvVars). The ease of configuration, their wide spread support and the simplicity of environment variables makes them a very interesting option.
+
+| Variable Name                  | Description                                                   |
+|--------------------------------|---------------------------------------------------------------|
+| GOOGLE_AI_MODEL                | The name of the model to use (default is *Model.Gemini10Pro*) |
+| GOOGLE_API_KEY                 | The API key generated in Google AI Studio                     |
+| GOOGLE_PROJECT_ID              | Project ID in Google Cloud to access the APIs                 |
+| GOOGLE_REGION                  | Region in Google Cloud (default is *us-central1*)             |
+| GOOGLE_ACCESS_TOKEN            | The access token required to use models running in Vertex AI  |
+| GOOGLE_APPLICATION_CREDENTIALS | Path to the application credentials file.                     |
+| GOOGLE_WEB_CREDENTIALS         | Path to a Web credentials file.                               |
+
+Using any environment variable provides a simplified access to a model.
+
+```csharp
+using Mscc.GenerativeAI;
+
+var model = new GenerativeModel();
+```
 
 ### Choose an API and authentication mode
 
@@ -152,7 +182,7 @@ The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 
 ## Troubleshooting
 
-Sometimes you might have authentication warnings. You can fix it by re-authenticating through ADC.
+Sometimes you might have authentication warnings **HTTP 403** (Forbidden). Especially while working with OAuth-based authentication. You can fix it by re-authenticating through ADC.
 
 ```bash
 gcloud config set project "$PROJECT_ID"
