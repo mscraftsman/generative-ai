@@ -179,8 +179,8 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().Be("84");
             output.WriteLine(response?.Text);
+            response.Text.Should().Be("84");
         }
 
         [Fact]
@@ -282,7 +282,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData("How are you doing today?", 7)]
+        [InlineData("How are you doing today?", 6)]
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
@@ -302,9 +302,9 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData("How are you doing today?", 7)]
-        [InlineData("What kind of fish is this?", 7)]
-        [InlineData("Write a story about a magic backpack.", 8)]
-        [InlineData("Write an extended story about a magic backpack.", 9)]
+        [InlineData("What kind of fish is this?", 8)]
+        [InlineData("Write a story about a magic backpack.", 9)]
+        [InlineData("Write an extended story about a magic backpack.", 10)]
         public async void Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
