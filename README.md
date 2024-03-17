@@ -40,7 +40,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="0.6.1" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="0.7.1" />
   </ItemGroup>
 ```
 
@@ -212,4 +212,19 @@ The test cases should provide more insights and use cases on how to use the [Msc
 
 ## Feedback
 
-You can create issues at the <https://github.com/mscraftsman/generative-ai> repository.
+For support and feedback kindly create issues at the <https://github.com/mscraftsman/generative-ai> repository.
+
+## Citation
+
+If you use [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) in your research project, kindly cite as follows
+
+```text
+@misc{Mscc.GenerativeAI,
+  author = {Kirstaetter, J and MSCraftsman},
+  title = {Mscc.GenerativeAI - Gemini AI Client for .NET and ASP.NET Core},
+  year = {2024},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  note = {https://github.com/mscraftsman/generative-ai}
+}
+```
