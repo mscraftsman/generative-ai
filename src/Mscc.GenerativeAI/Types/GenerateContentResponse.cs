@@ -12,7 +12,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
 		public string? Text
         {
-            get { return Candidates?.FirstOrDefault().Content?.Parts?.FirstOrDefault().Text; }
+            get
+            {
+                if (Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Safety)
+                    return string.Empty;
+                return Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
+            }
         }
 
         /// <summary>
