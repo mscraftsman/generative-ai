@@ -21,7 +21,8 @@ namespace Mscc.GenerativeAI.Google
         private readonly List<string> _scopes =
         [
             "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/generative-language.retriever"
+            "https://www.googleapis.com/auth/generative-language.retriever",
+            "https://www.googleapis.com/auth/generative-language.tuning"
         ];
 
         private string _clientFile = "client_secret.json";
