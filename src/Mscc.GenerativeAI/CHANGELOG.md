@@ -8,8 +8,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+- provide types to simplify creation of tuned model
+
 ### Changed
 ### Fixed
+
+## 0.7.1
+
+### Added
+
+- implement model tuning (works with stable models only)
+  - text-bison-001
+  - gemini-1.0-pro-001
+- tests for model tuning
+- 
+### Changed
+
+- improved authentication regarding API key or OAuth/ADC
+- added scope https://www.googleapis.com/auth/generative-language.tuning
+- harmonized version among NuGet packages
+- provide empty response on Safety stop
+- merged regular and tuned ModelResponse
 
 ## 0.7.0
 
