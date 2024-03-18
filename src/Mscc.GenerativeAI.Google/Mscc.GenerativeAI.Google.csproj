@@ -21,7 +21,7 @@
         <RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-        <PackageReleaseNotes>(Package release notes are in RELEASE.md)</PackageReleaseNotes>
+        <PackageReleaseNotes>(Package release notes are in CHANGELOG.md)</PackageReleaseNotes>
         <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
     </PropertyGroup>
 
@@ -69,9 +69,9 @@
       </None>
     </ItemGroup>
 
-    <Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('RELEASE.md')">
+    <Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">
         <PropertyGroup>
-            <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/RELEASE.md"))</PackageReleaseNotes>
+            <PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
         </PropertyGroup>
     </Target>
 

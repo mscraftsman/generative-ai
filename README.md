@@ -20,7 +20,7 @@ Client for .NET using Google API Client Library:
 
 Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) and how to add it to your .NET applications.
 
-## Install the package
+## Install the package 🖥️
 
 Install the package [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/) from NuGet. You can install the package from the command line using either the command line or the NuGet Package Manager Console. Or you add it directly to your .NET project.
 
@@ -46,7 +46,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 You can then add this code to your sources whenever you need to access any Gemini API provided by Google. This package works for Google AI (Google AI Studio) and Google Cloud Vertex AI.
 
-## Authentication use cases
+## Authentication use cases 👥
 
 The package supports the following use cases to authenticate.
 
@@ -58,7 +58,7 @@ The package supports the following use cases to authenticate.
 
 This applies mainly to the instantiation procedure.
 
-## Getting Started
+## Getting Started 🚀
 
 Use of Gemini API in either Google AI or Vertex AI is almost identical. The major difference is the way to instantiate the model handling your prompt.
 
@@ -123,8 +123,8 @@ Working with Google AI in your application requires an API key. Get an API key f
 using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
-
 var prompt = "Write a story about a magic backpack.";
+
 var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiPro);
 
 var response = model.GenerateContent(prompt).Result;
@@ -141,8 +141,8 @@ using Mscc.GenerativeAI;
 var projectId = "your_google_project_id"; // the ID of a project, not its name.
 var region = "us-central1";     // see documentation for available regions.
 var accessToken = "your_access_token";      // use `gcloud auth application-default print-access-token` to get it.
-
 var prompt = "Write a story about a magic backpack.";
+
 var vertex = new VertexAI(projectId: projectId, region: region);
 var model = vertex.GenerativeModel(model: Model.GeminiPro);
 model.AccessToken = accessToken;
@@ -180,7 +180,7 @@ The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 - [ASP.NET Core Minimal web application](./samples/Web.Minimal.Api)
 - [ASP.NET Core MVP web application](./samples/Web.Mvp) (work in progress!)
 
-## Troubleshooting
+## Troubleshooting ⚡
 
 Sometimes you might have authentication warnings **HTTP 403** (Forbidden). Especially while working with OAuth-based authentication. You can fix it by re-authenticating through ADC.
 
@@ -198,7 +198,7 @@ Make sure that the required API have been enabled.
 gcloud services enable aiplatform.googleapis.com
 ```
 
-## Using the tests
+## Using the tests 🧩
 
 The repository contains a number of test cases for Google AI and Vertex AI. You will find them in the [tests](./tests/) folder. They are part of the [GenerativeAI solution].
 To run the tests, either enter the relevant information into the [appsettings.json](./tests/appsettings.json), create a new `appsettings.user.json` file with the same JSON structure in the `tests` folder, or define the following environment variables
@@ -210,17 +210,21 @@ To run the tests, either enter the relevant information into the [appsettings.js
 
 The test cases should provide more insights and use cases on how to use the [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) package in your .NET projects.
 
-## Feedback
+## Feedback ✨
 
 For support and feedback kindly create issues at the <https://github.com/mscraftsman/generative-ai> repository.
 
-## Citation
+## License 📜
+
+This project is licensed under the [Apache-2.0 License](LICENSE) - see the [LICENSE](LICENSE) file for details.
+
+## Citation 📚
 
 If you use [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) in your research project, kindly cite as follows
 
 ```text
 @misc{Mscc.GenerativeAI,
-  author = {Kirstaetter, J and MSCraftsman},
+  author = {Kirstätter, J and MSCraftsman},
   title = {Mscc.GenerativeAI - Gemini AI Client for .NET and ASP.NET Core},
   year = {2024},
   publisher = {GitHub},
@@ -228,3 +232,7 @@ If you use [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) in 
   note = {https://github.com/mscraftsman/generative-ai}
 }
 ```
+
+--- 
+
+Created by [Jochen Kirstätter](https://jochen.kirstaetter.name/).
