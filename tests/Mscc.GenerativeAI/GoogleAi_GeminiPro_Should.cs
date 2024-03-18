@@ -110,7 +110,8 @@ namespace Test.Mscc.GenerativeAI
             var model = new GenerativeModel { AccessToken = fixture.AccessToken };
 
             // Act
-            var sut = await model.ListTunedModels();
+            var sut = await model.ListModels(true);
+            // var sut = await model.ListTunedModels();
 
             // Assert
             sut.Should().NotBeNull();
@@ -1014,6 +1015,25 @@ namespace Test.Mscc.GenerativeAI
             response.Metadata.Should().NotBeNull();
             output.WriteLine($"Name: {response.Name}");
             output.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Metadata.TotalSteps})");
+        }
+
+        [Fact]
+        public async void Delete_Tuned_Model()
+        {
+            // Arrange
+            var modelName = "tunedModels/number-generator-model-psx3d3gljyko";     // see List_Tuned_Models for available options.
+            var model = new GenerativeModel()
+            {
+                AccessToken = fixture.AccessToken,
+                ProjectId = fixture.ProjectId
+            };
+            
+            // Act
+            var response = await model.DeleteTunedModel(modelName);
+            
+            // Assert
+            response.Should().NotBeNull();
+            output.WriteLine(response);
         }
 
         [Theory]

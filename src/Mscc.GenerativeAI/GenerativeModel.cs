@@ -245,8 +245,13 @@ namespace Mscc.GenerativeAI
         /// Get a list of available models and description.
         /// </summary>
         /// <returns>List of available models.</returns>
-        public async Task<List<ModelResponse>> ListModels()
+        public async Task<List<ModelResponse>> ListModels(bool tuned = false)
         {
+            if (tuned)
+            {
+                return await ListTunedModels();
+            }
+            
             if (_useVertexAi)
             {
                 throw new NotSupportedException();
@@ -317,6 +322,36 @@ namespace Mscc.GenerativeAI
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CreateTunedModelResponse>(response);
+        }
+
+        /// <summary>
+        /// Delete the specified tuned model.
+        /// </summary>
+        /// <param name="model">The model to delete</param>
+        /// <returns></returns>
+        public async Task<string> DeleteTunedModel(string model)
+        {
+            if (string.IsNullOrEmpty(model))
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (_useVertexAi)
+            {
+                throw new NotSupportedException();
+            }
+
+            model = model.SanitizeModelName();
+            if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
+            url = ParseUrl(url);
+            var response = await Client.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
         }
 
         /// <summary>

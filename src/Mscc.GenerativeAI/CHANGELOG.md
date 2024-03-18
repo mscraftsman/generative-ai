@@ -14,6 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 0.7.2
+
+###
+
+- delete tuned model
+
+### Changed
+
+- method to list models supports both - regular and tuned - model types
+
 ## 0.7.1
 
 ### Added
