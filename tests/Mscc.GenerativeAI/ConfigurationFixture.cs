@@ -26,13 +26,14 @@ namespace Test.Mscc.GenerativeAI
         public ConfigurationFixture()
         {
             ReadDotEnv();
-            
+
             Configuration = new ConfigurationBuilder()
-               .AddJsonFile("appsettings.json", optional: true)
-               .AddJsonFile("appsettings.user.json", optional: true)
-               .AddJsonFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud", "application_default_credentials.json"), optional: true)
-               .AddEnvironmentVariables()
-               .Build();
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.user.json", optional: true)
+                .AddJsonFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
+                        "application_default_credentials.json"), optional: true)
+                .AddEnvironmentVariables()
+                .Build();
 
             ApiKey = Configuration["api_key"];
             if (string.IsNullOrEmpty(ApiKey))
@@ -43,18 +44,23 @@ namespace Test.Mscc.GenerativeAI
             Region = Configuration["region"];
             if (string.IsNullOrEmpty(Region))
                 Region = Environment.GetEnvironmentVariable("GOOGLE_REGION");
-            AccessToken = Configuration["access_token"];
-            if (string.IsNullOrEmpty(AccessToken))
-                AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
-            if (string.IsNullOrEmpty(AccessToken))
+            if (string.IsNullOrEmpty(ApiKey))
             {
-                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                AccessToken = Configuration["access_token"];
+                if (string.IsNullOrEmpty(AccessToken))
+                    AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+                if (string.IsNullOrEmpty(AccessToken))
                 {
-                    AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token").TrimEnd();
-                }
-                else
-                {
-                    AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices
+                            .OSPlatform.Windows))
+                    {
+                        AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token")
+                            .TrimEnd();
+                    }
+                    else
+                    {
+                        AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
+                    }
                 }
             }
 
