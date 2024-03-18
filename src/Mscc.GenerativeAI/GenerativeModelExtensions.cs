@@ -13,12 +13,14 @@ namespace Mscc.GenerativeAI
         {
             if (value == null) return value;
 
-            if (value.StartsWith("model", StringComparison.InvariantCultureIgnoreCase))
+            if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
+                return value;
+            
+            if (!value.StartsWith("model", StringComparison.InvariantCultureIgnoreCase))
             {
-                var parts = value.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                value = parts.Last();
+                return $"models/{value}";
             }
-            return value.ToLower();
+            return value;
         }
 
         public static string? GetValue(this JsonElement element, string key)

@@ -21,18 +21,18 @@ namespace Mscc.GenerativeAI
     public class GenerativeModel
     {
         private const string EndpointGoogleAi = "generativelanguage.googleapis.com";
-        private const string UrlGoogleAi = "https://{endpointGoogleAI}/{version}/models/{model}:{method}";
+        private const string UrlGoogleAi = "https://{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlParameterKey = "?key={apiKey}"; // Or in the x-goog-api-key header
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
         private const string MediaType = "application/json";
 
         private readonly bool _useVertexAi;
-        private readonly string _model;
         private readonly string _region = "us-central1";
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
         private readonly Credentials? _credentials;
 
+        private string _model;
         private bool _useHeaderApiKey;
         private string? _apiKey;
         private string? _accessToken;
@@ -95,15 +95,15 @@ namespace Mscc.GenerativeAI
             {
                 switch (_model)
                 {
-                    case Model.BisonChat:
+                    case GenerativeAI.Model.BisonChat:
                         return "generateMessage";
-                    case Model.BisonText:
+                    case GenerativeAI.Model.BisonText:
                         return "generateText";
-                    case Model.GeckoEmbedding:
+                    case GenerativeAI.Model.GeckoEmbedding:
                         return "embedText";
-                    case Model.Embedding:
+                    case GenerativeAI.Model.Embedding:
                         return "embedContent";
-                    case Model.AttributedQuestionAnswering:
+                    case GenerativeAI.Model.AttributedQuestionAnswering:
                         return "generateAnswer";
                 }
                 if (_useVertexAi)
@@ -121,6 +121,16 @@ namespace Mscc.GenerativeAI
         /// <returns>Name of the model.</returns>
         public string Name => _model;
 
+        public string Model
+        {
+            set
+            {
+                if (value != null)
+                {
+                    _model = value.SanitizeModelName();
+                }
+            }
+        }
         public string? ApiKey
         {
             set
@@ -182,8 +192,8 @@ namespace Mscc.GenerativeAI
             
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
-            _model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
-                     Model.Gemini10Pro;
+            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
+                     GenerativeAI.Model.Gemini10Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
 
@@ -200,7 +210,7 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null) : this()
         {
             ApiKey = apiKey ?? _apiKey;
-            _model = model?.SanitizeModelName() ?? _model;
+            Model = model ?? _model;
             _generationConfig ??= generationConfig;
             _safetySettings ??= safetySettings;
         }
@@ -226,7 +236,7 @@ namespace Mscc.GenerativeAI
                 _credentials?.ProjectId ?? 
                 _projectId;
             _region = region ?? _region;
-            _model = model?.SanitizeModelName() ?? _model;
+            Model = model ?? _model;
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
         }
@@ -234,7 +244,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Get a list of available models and description.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of available models.</returns>
         public async Task<List<ModelResponse>> ListModels()
         {
             if (_useVertexAi)
@@ -256,18 +266,78 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get information about the model, including default values.
+        /// Get a list of available tuned models and description.
         /// </summary>
-        /// <param name="model">The model to query</param>
-        /// <returns></returns>
-        public async Task<ModelResponse> GetModel(string model = Model.GeminiPro)
+        /// <returns>List of available tuned models.</returns>
+        public async Task<List<ModelResponse>> ListTunedModels()
         {
             if (_useVertexAi)
             {
                 throw new NotSupportedException();
             }
 
-            var url = $"https://{EndpointGoogleAi}/{Version}/models/{model}";
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var url = "https://{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
+            url = ParseUrl(url);
+            var response = await Client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var models = await Deserialize<ListTunedModelResponse>(response);
+            return models?.TunedModels!;
+        }
+
+        /// <summary>
+        /// Create a tuned model.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request)
+        {
+            if (!(_model is (string)GenerativeAI.Model.BisonText001 ||
+                _model is (string)GenerativeAI.Model.Gemini10Pro001))
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var method = "tunedModels";
+            // var method = "createTunedModel";
+            // if (_model is (string)Model.BisonText001)
+            //     method = "createTunedTextModel";
+            var url = "https://{endpointGoogleAI}/{Version}/{method}";   // v1beta3
+            url = ParseUrl(url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<CreateTunedModelResponse>(response);
+        }
+
+        /// <summary>
+        /// Get information about the model, including default values.
+        /// </summary>
+        /// <param name="model">The model to query</param>
+        /// <returns></returns>
+        public async Task<ModelResponse> GetModel(string model = GenerativeAI.Model.GeminiPro)
+        {
+            if (_useVertexAi)
+            {
+                throw new NotSupportedException();
+            }
+
+            model = model.SanitizeModelName();
+            if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";
             if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
             {
                 url += UrlParameterKey;
@@ -479,7 +549,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> EmbedContent(string? prompt, TaskType? taskType = null, string? title = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (_model != (string)Model.Embedding)
+            if (_model != (string)GenerativeAI.Model.Embedding)
             {
                 throw new NotSupportedException();
             }
