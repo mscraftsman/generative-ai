@@ -21,6 +21,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
+        source-url: https://nuget.pkg.github.com/mscraftsman/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Build
       run: |
         dotnet build ./GenerativeAI.sln -c Release
@@ -30,3 +33,15 @@ jobs:
     # - name: Test Mscc.GenerativeAI.Google
     #   run: |
     #     dotnet test ./tests/Mscc.GenerativeAI.Google/Test.Mscc.GenerativeAI.Google.csproj -c Release --logger "console;verbosity=detailed"
+    - name: Pack for .NET
+      run: |
+        dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -o output/
+    - name: Pack for ASP.NET Core
+      run: |
+        dotnet pack -c Release ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj -o output/
+    - name: Pack for .NET using Google Cloud Client Library
+      run: |
+        dotnet pack -c Release ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj -o output/
+    - name: Push to GitHub Package Registry (GPR)
+      run: |
+        dotnet nuget push output/*.nupkg --skip-duplicate
