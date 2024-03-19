@@ -6,16 +6,30 @@ using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The base structured datatype containing multi-part content of a message.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/Content
+    /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class Content
     {
         private List<Part>? partTypes;
         
+        /// <summary>
+        /// Ordered Parts that constitute a single message. Parts may have different MIME types.
+        /// </summary>
         [JsonIgnore]
         public List<IPart>? Parts { get; set; }
+        /// <summary>
+        /// Optional. The producer of the content. Must be either 'user' or 'model'.
+        /// Useful to set for multi-turn conversations, otherwise can be left blank or unset.
+        /// </summary>
         [JsonPropertyOrder(-1)]
         public string? Role { get; set; }
 
+        /// <summary>
+        /// Ordered Parts that constitute a single message. Parts may have different MIME types.
+        /// </summary>
         [DebuggerHidden]
         [JsonPropertyName("parts")]
         public virtual List<Part>? PartTypes 

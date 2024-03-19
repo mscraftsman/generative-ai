@@ -2,6 +2,10 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// A response candidate generated from the model.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/Candidate
+    /// </summary>
     public class Candidate
     {
         /// <summary>
@@ -32,9 +36,22 @@ namespace Mscc.GenerativeAI
         /// Output only. Source attribution of the generated content.
         /// </summary>
         public CitationMetadata? CitationMetadata { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public FunctionCall? FunctionCall { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public GroundingMetadata? GroundingMetadata {  get; set; }
+        /// <summary>
+        /// Output only. Token count for this candidate.
+        /// </summary>
+        public int? TokenCount { get; set; }
+        /// <summary>
+        /// Output only. Attribution information for sources that contributed to a grounded answer.
+        /// This field is populated for GenerateAnswer calls.
+        /// </summary>
+        public List<GroundingAttribution>? GroundingAttributions { get; set; }
     }
 }

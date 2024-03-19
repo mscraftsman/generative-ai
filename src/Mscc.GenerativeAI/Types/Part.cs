@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
+    /// A datatype containing media that is part of a multi-part Content message.
     /// A part of a turn in a conversation with the model with a fixed MIME type. 
     /// It has one of the following mutually exclusive fields: 
     ///     1. text 
@@ -48,11 +49,11 @@ namespace Mscc.GenerativeAI
         [JsonPropertyName("file_data")]
         public FileData FileData { get; set; }
         /// <summary>
-        /// The result output of a FunctionCall.
+        /// The result output of a FunctionCall that contains a string representing the FunctionDeclaration.name and a structured JSON object containing any output from the function is used as context to the model.
         /// </summary>
         public FunctionResponse FunctionResponse { get; set; }
         /// <summary>
-        /// A predicted FunctionCall returned from the model.
+        /// A predicted FunctionCall returned from the model that contains a string representing the FunctionDeclaration.name with the arguments and their values.
         /// </summary>
         public FunctionCall FunctionCall { get; set; }
 

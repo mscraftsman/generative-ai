@@ -4,7 +4,10 @@ using System;
 
 namespace Mscc.GenerativeAI
 {
-    public class Citation
+    /// <summary>
+    /// A citation to a source for a portion of a specific response.
+    /// </summary>
+    public class CitationSource
     {
         /// <summary>
         /// Output only. Start index into the content.

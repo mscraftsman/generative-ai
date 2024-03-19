@@ -11,12 +11,13 @@ namespace Mscc.GenerativeAI
     public class InlineData : IPart
     {
         /// <summary>
+        /// Raw bytes for media formats.
         /// Data must be base64 string.
         /// </summary>
         public string Data { get; set; } = default;
         /// <summary>
         /// The IANA standard MIME type of the source data.
-        /// The only accepted values: "image/png" or "image/jpeg".
+        /// Accepted types include: "image/png", "image/jpeg", "image/heic", "image/heif", "image/webp".
         /// </summary>
         [JsonPropertyName("mime_type")]
         public string MimeType { get; set; } = default;

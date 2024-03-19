@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Tool details that the model may use to generate response.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/Tool
+    /// </summary>
     public class Tool
     {
         /// <summary>
@@ -16,7 +20,6 @@ namespace Mscc.GenerativeAI
         /// final response back to the user. Maximum 64 function declarations can be
         /// provided.
         /// </summary>
-        // [JsonPropertyName("function_declarations")]
         public List<FunctionDeclaration>? FunctionDeclarations { get; set; }
     }
 }

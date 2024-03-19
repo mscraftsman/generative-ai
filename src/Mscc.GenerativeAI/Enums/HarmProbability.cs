@@ -2,6 +2,9 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The probability that a piece of content is harmful.
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmProbability>))]
     public enum HarmProbability
     {

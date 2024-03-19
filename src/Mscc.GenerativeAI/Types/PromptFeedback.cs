@@ -2,14 +2,17 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// A set of the feedback metadata the prompt specified in GenerateContentRequest.content.
+    /// </summary>
     public class PromptFeedback
     {
         /// <summary>
-        /// Output only. Blocked reason.
+        /// Output only. Optional. If set, the prompt was blocked and no candidates are returned. Rephrase your prompt.
         /// </summary>
         public BlockedReason BlockReason { get; set; }
         /// <summary>
-        /// Output only. Safety ratings.
+        /// Output only. Ratings for safety of the prompt. There is at most one rating per category.
         /// </summary>
         public List<SafetyRating>? SafetyRatings { get; set; }
         /// <summary>

@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Response from the model supporting multiple candidates.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/GenerateContentResponse
+    /// </summary>
     public class GenerateContentResponse
     {
         /// <summary>
@@ -21,7 +25,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Output only. Generated candidates.
+        /// Output only. Generated Candidate responses from the model.
         /// </summary>
         public List<Candidate>? Candidates { get; set; }
         /// <summary>

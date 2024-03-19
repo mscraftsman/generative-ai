@@ -2,6 +2,10 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Configuration options for model generation and outputs. Not all parameters may be configurable for every model.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/GenerationConfig
+    /// </summary>
     public class GenerationConfig
     {
         /// <summary>
@@ -20,9 +24,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public int? TopK { get; set; } = default;
         /// <summary>
-        /// Optional. Number of candidates to generate.
+        /// Optional. Number of generated responses to return.
+        /// This value must be between [1, 8], inclusive. If unset, this will default to 1.
         /// </summary>
-        public int? CandidateCount { get; set; } = default;
+        public int? CandidateCount { get; set; } = 1;
         /// <summary>
         /// Optional. The maximum number of output tokens to generate per message.
         /// Token limit determines the maximum amount of text output from one prompt. A token is approximately four characters. 

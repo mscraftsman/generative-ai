@@ -4,28 +4,36 @@ using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Type of task for which the embedding will be used.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/TaskType
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
     public enum TaskType
     {
         /// <summary>
-        /// 
+        /// Unset value, which will default to one of the other enum values.
         /// </summary>
-        RetrievalQuery = 0,
+        Unspecified = 0,
         /// <summary>
-        /// 
+        /// Specifies the given text is a query in a search/retrieval setting.
         /// </summary>
-        RetrievalDocument = 1,
+        RetrievalQuery = 1,
         /// <summary>
-        /// 
+        /// Specifies the given text is a document from the corpus being searched.
         /// </summary>
-        SemanticSimilarity = 2,
+        RetrievalDocument = 2,
         /// <summary>
-        /// 
+        /// Specifies the given text will be used for STS.
         /// </summary>
-        Classification = 3,
+        SemanticSimilarity = 3,
         /// <summary>
-        /// 
+        /// Specifies that the given text will be classified.
         /// </summary>
-        Clustering = 4
+        Classification = 4,
+        /// <summary>
+        /// Specifies that the embeddings will be used for clustering.
+        /// </summary>
+        Clustering = 5
     }
 }

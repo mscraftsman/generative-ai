@@ -2,10 +2,13 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The Schema object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an OpenAPI 3.0 schema object.
+    /// </summary>
     public class Schema
     {
         /// <summary>
-        /// Optional. The type of the data.
+        /// Required. Data type.
         /// </summary>
         public ParameterType? Type { get; set; }
         /// <summary>
@@ -16,7 +19,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string Format { get; set; } = default;
         /// <summary>
-        /// Optional. The description of the data.
+        /// Optional. A brief description of the parameter. This could contain examples of use. Parameter description may be formatted as Markdown.
         /// </summary>
         public string Description { get; set; } = default;
         /// <summary>
@@ -35,6 +38,7 @@ namespace Mscc.GenerativeAI
         public List<string>? Enum { get; set; }
         /// <summary>
         /// Optional. Properties of Type.OBJECT.
+        /// An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
         /// </summary>
         public dynamic? Properties { get; set; }
         /// <summary>

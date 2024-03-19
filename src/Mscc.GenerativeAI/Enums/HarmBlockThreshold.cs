@@ -2,6 +2,9 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Block at and beyond a specified harm probability.
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmBlockThreshold>))]
 
     public enum HarmBlockThreshold

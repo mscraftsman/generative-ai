@@ -2,16 +2,20 @@
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Safety rating for a piece of content.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/SafetyRating
+    /// </summary>
     [DebuggerDisplay("{Category}: {Probability} ({Blocked})")]
     public class SafetyRating
     {
         /// <summary>
-        /// Output only. Harm category.
+        /// Output only. Required. The category for this rating.
         /// </summary>
         //public HarmCategory Category { get; internal set; }
         public HarmCategory Category { get; set; } = default;
         /// <summary>
-        /// Output only. Harm probability levels in the content.
+        /// Output only. Required. The probability of harm for this content.
         /// </summary>
         //public HarmProbability Probability { get; internal set; }
         public HarmProbability Probability { get; set; } = default;
