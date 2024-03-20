@@ -1,6 +1,6 @@
 namespace Mscc.GenerativeAI
 {
-    public class Credentials : ClientSecrets
+    internal class Credentials : ClientSecrets
     {
         private string _projectId;
         
@@ -25,7 +25,7 @@ namespace Mscc.GenerativeAI
         }
     }
 
-    public class ClientSecrets
+    internal class ClientSecrets
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
