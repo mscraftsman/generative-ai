@@ -388,7 +388,87 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get information about the model, including default values.
+        /// Updates a tuned model.
+        /// </summary>
+        /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<ModelResponse> PatchTunedModel(string model, ModelResponse tunedModel, string? updateMask = null)
+        {
+            if (string.IsNullOrEmpty(model))
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            if (_useVertexAi)
+            {
+                throw new NotSupportedException();
+            }
+
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            throw new NotSupportedException();
+#else
+            model = model.SanitizeModelName();
+            if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(updateMask)] = updateMask
+            };
+            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
+            {
+                queryStringParams.Add("key", _apiKey);
+            }
+
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            string json = Serialize(tunedModel);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PatchAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<ModelResponse>(response);
+#endif
+        }
+
+        /// <summary>
+        /// Transfers ownership of the tuned model. This is the only way to change ownership of the tuned model. The current owner will be downgraded to writer role.
+        /// </summary>
+        /// <param name="model">Required. The resource name of the tuned model to transfer ownership. Format: tunedModels/my-model-id</param>
+        /// <param name="emailAddress">Required. The email address of the user to whom the tuned model is being transferred to.</param>
+        /// <returns>If successful, the response body is empty.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<string> TransferOwnership(string model, string emailAddress)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
+
+            if (_useVertexAi)
+            {
+                throw new NotSupportedException();
+            }
+
+            model = model.SanitizeModelName();
+            if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var method = GenerativeAI.Method.TransferOwnership;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(new { EmailAddress = emailAddress });
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        /// <summary>
+        /// Gets information about a specific Model.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
         /// <returns></returns>
