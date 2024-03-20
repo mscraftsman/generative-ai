@@ -8,15 +8,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
+ 
 - provide types to simplify creation of tuned model
+- compatibility methods for PaLM models
 
 ### Changed
 ### Fixed
 
+## 0.8.0
+
+### Added
+
+- implement tuned model patching (.NET 6 and higher only)
+- implement transfer of ownership of tuned model
+- implement batched Embeddings
+- query string parameters to list models (pagination and filter support)
+- type documentation
+- generate a grounded answer
+- constants for method names/endpoints
+- enumeration of state of created tuned model
+
+### Changed
+
+- text prompts have `user` role assigned
+- improve Embeddings
+- refactor types according to API reference 
+- extend type documentation
+- improve .NET targetting of source code
+
 ## 0.7.2
 
-###
+### Added
 
 - delete tuned model
 
@@ -32,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - text-bison-001
   - gemini-1.0-pro-001
 - tests for model tuning
-- 
+ 
 ### Changed
 
 - improved authentication regarding API key or OAuth/ADC
