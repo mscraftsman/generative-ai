@@ -164,7 +164,11 @@ _ = await chat.SendMessage("Okay, how about a more detailed explanation to a hig
 _ = await chat.SendMessage("Lastly, give a thorough definition for a CS graduate.");
 
 // A chat session keeps every response in its history.
-chat.History.ForEach(c => Console.WriteLine($"{c.Role}: {c.Parts[0].Text}"));
+chat.History.ForEach(c => Console.WriteLine($"{c.Role}: {c.Text}"));
+
+// Last request/response pair can be removed from the history.
+var latest = chat.Rewind();
+Console.WriteLine($"{latest.Sent} - {latest.Received}");
 ```
 
 ### Create a tuned model
