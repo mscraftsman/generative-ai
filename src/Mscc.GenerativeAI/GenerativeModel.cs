@@ -331,8 +331,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException"></exception>
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request)
         {
-            if (!(_model is (string)GenerativeAI.Model.BisonText001 ||
-                _model is (string)GenerativeAI.Model.Gemini10Pro001))
+            if (!(_model.Equals($"models/{GenerativeAI.Model.BisonText001}", StringComparison.InvariantCultureIgnoreCase) ||
+                _model.Equals($"models/{GenerativeAI.Model.Gemini10Pro001}", StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NotSupportedException();
             }
@@ -664,7 +664,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateAnswerResponse> GenerateAnswer(GenerateAnswerRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (_model != (string)GenerativeAI.Model.AttributedQuestionAnswering)
+            if (!_model.Equals($"models/{GenerativeAI.Model.AttributedQuestionAnswering}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -711,7 +711,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> EmbedContent(EmbedContentRequest request, TaskType? taskType = null, string? title = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (_model != (string)GenerativeAI.Model.Embedding)
+            if (!_model.Equals($"models/{GenerativeAI.Model.Embedding}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -736,7 +736,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> EmbedContent(string? prompt, TaskType? taskType = null, string? title = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (_model != (string)GenerativeAI.Model.Embedding)
+            if (!_model.Equals($"models/{GenerativeAI.Model.Embedding}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -759,7 +759,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> BatchEmbedContent(List<EmbedContentRequest> requests)
         {
             if (requests == null) throw new ArgumentNullException(nameof(requests));
-            if (_model != (string)GenerativeAI.Model.Embedding)
+            if (!_model.Equals($"models/{GenerativeAI.Model.Embedding}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
