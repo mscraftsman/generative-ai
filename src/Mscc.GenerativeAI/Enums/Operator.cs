@@ -23,7 +23,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         LessEqual = 2,
         /// <summary>
-        /// Supported by numeric & string.
+        /// Supported by numeric and string.
         /// </summary>
         Equal = 3,
         /// <summary>
@@ -35,7 +35,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         Greater = 5,
         /// <summary>
-        /// Supported by numeric & string.
+        /// Supported by numeric and string.
         /// </summary>
         NotEqual = 6,
         /// <summary>
