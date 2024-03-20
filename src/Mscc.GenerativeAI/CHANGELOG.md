@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - simplify creation of tuned model
 
+### Fixed
+
+- check of model for Tuning, Answering and Embedding
+
 ## 0.8.2
 
 ### Added
