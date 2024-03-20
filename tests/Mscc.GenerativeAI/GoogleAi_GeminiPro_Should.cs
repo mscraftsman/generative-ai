@@ -989,17 +989,17 @@ namespace Test.Mscc.GenerativeAI
                         {
                             Examples = new()
                             {
-                                new TrainingDataExample() { TextInput = "1", Output = "2" },
-                                new TrainingDataExample() { TextInput = "3", Output = "4" },
-                                new TrainingDataExample() { TextInput = "-3", Output = "-2" },
-                                new TrainingDataExample() { TextInput = "twenty two", Output = "twenty three" },
-                                new TrainingDataExample() { TextInput = "two hundred", Output = "two hundred one" },
-                                new TrainingDataExample() { TextInput = "ninety nine", Output = "one hundred" },
-                                new TrainingDataExample() { TextInput = "8", Output = "9" },
-                                new TrainingDataExample() { TextInput = "-98", Output = "-97" },
-                                new TrainingDataExample() { TextInput = "1,000", Output = "1,001" },
-                                new TrainingDataExample() { TextInput = "thirteen", Output = "fourteen" },
-                                new TrainingDataExample() { TextInput = "seven", Output = "eight" },
+                                new TuningExample() { TextInput = "1", Output = "2" },
+                                new TuningExample() { TextInput = "3", Output = "4" },
+                                new TuningExample() { TextInput = "-3", Output = "-2" },
+                                new TuningExample() { TextInput = "twenty two", Output = "twenty three" },
+                                new TuningExample() { TextInput = "two hundred", Output = "two hundred one" },
+                                new TuningExample() { TextInput = "ninety nine", Output = "one hundred" },
+                                new TuningExample() { TextInput = "8", Output = "9" },
+                                new TuningExample() { TextInput = "-98", Output = "-97" },
+                                new TuningExample() { TextInput = "1,000", Output = "1,001" },
+                                new TuningExample() { TextInput = "thirteen", Output = "fourteen" },
+                                new TuningExample() { TextInput = "seven", Output = "eight" },
                             }
                         }
                     }
