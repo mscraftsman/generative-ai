@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+- provide types to simplify creation of tuned model
+- compatibility methods for PaLM models
+
 ### Changed
 ### Fixed
 
@@ -16,8 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
  
 - ability to rewind chat history
-- provide types to simplify creation of tuned model
-- compatibility methods for PaLM models
 - access text of content response easier
 
 ### Changed
