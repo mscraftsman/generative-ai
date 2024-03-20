@@ -85,6 +85,8 @@ namespace Mscc.GenerativeAI
         public List<Part> Parts { get; set; }
         public string Role { get; set; }
 
+        public virtual string Text => Parts[0].Text;
+
         private string GetDebuggerDisplay()
         {
             return $"Role: {Role} - Parts: {Parts.Count}";
