@@ -9,11 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- provide types to simplify creation of tuned model
 - compatibility methods for PaLM models
 
 ### Changed
 ### Fixed
+
+## 0.8.3
+
+### Added
+
+- simplify creation of tuned model
 
 ## 0.8.2
 
