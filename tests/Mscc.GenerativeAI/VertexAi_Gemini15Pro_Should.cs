@@ -15,7 +15,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.Gemini15Pro;
+        private readonly string model = Model.Gemini15ProLatest;
 
         public VertexAi_Gemini15Pro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
@@ -76,7 +76,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.GeminiPro)]
+        [InlineData(Model.Gemini15ProLatest)]
         [InlineData(Model.GeminiProVision)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]

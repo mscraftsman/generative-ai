@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Helper class to provide model names.
+    /// Ref: https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versioning#latest-version
+    /// </summary>
     public static class Model
     {
         public const string GeminiPro = "gemini-pro";
@@ -16,6 +20,7 @@ namespace Mscc.GenerativeAI
         // public const string Gemini10ProVision001 = "gemini-1.0-pro-vision-001";
         public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
         public const string Gemini15Pro = "gemini-1.5-pro";
+        public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
         // public const string Gemini15ProVision = "gemini-1.5-pro-vision";
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
