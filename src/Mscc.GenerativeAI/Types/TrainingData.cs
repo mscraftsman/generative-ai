@@ -5,20 +5,42 @@ using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Dataset for training or validation.
+    /// </summary>
+    // public class Dataset 
     public class TrainingData
     {
-        public TrainingDataExamples Examples { get; set; }
+        /// <summary>
+        /// Optional. Inline examples.
+        /// </summary>
+        public TuningExamples? Examples { get; set; }
     }
 
-    public class TrainingDataExamples
+    /// <summary>
+    /// A set of tuning examples. Can be training or validation data.
+    /// </summary>
+    public class TuningExamples
     {
-        public List<TrainingDataExample> Examples { get; set; }
+        /// <summary>
+        /// Required. The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+        /// </summary>
+        public List<TuningExample> Examples { get; set; }
     }
 
+    /// <summary>
+    /// A single example for tuning.
+    /// </summary>
     [DebuggerDisplay("Input: {TextInput,nq} - Output: {Output,nq}")]
-    public class TrainingDataExample
+    public class TuningExample
     {
-        public string TextInput { get; set; }
+        /// <summary>
+        /// Optional. Text model input.
+        /// </summary>
+        public string? TextInput { get; set; }
+        /// <summary>
+        /// Required. The expected model output.
+        /// </summary>
         public string Output { get; set; }
     }
 }

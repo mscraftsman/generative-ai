@@ -6,10 +6,20 @@ using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
-    /// <remarks/>
+    /// <summary>
+    /// Response from ListModel containing a paginated list of Models.
+    /// </summary>
     internal class ListModelsResponse
     {
+        /// <summary>
+        /// The returned Models.
+        /// </summary>
         public List<ModelResponse>? Models { get; set; }
+        /// <summary>
+        /// A token, which can be sent as pageToken to retrieve the next page.
+        /// If this field is omitted, there are no more pages.
+        /// </summary>
+        public string? NextPageToken { get; set; }
     }
 
     /// <summary>
@@ -71,25 +81,45 @@ namespace Mscc.GenerativeAI
         
         // Properties related to tunedModels.
         /// <summary>
-        /// The name of the base model, pass this to the generation request.
+        /// Output only. The state of the tuned model.
         /// </summary>
-        public string? BaseModel { get; set; }
+        public State? State { get; set; }
         /// <summary>
-        /// 
-        /// </summary>
-        public string? State { get; set; }
-        /// <summary>
-        /// 
+        /// Output only. The timestamp when this model was created.
+        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
         /// </summary>
         public DateTime? CreateTime { get; set; }
         /// <summary>
-        /// 
+        /// Output only. The timestamp when this model was updated.
+        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
         /// </summary>
         public DateTime? UpdateTime { get; set; }
         /// <summary>
-        /// 
+        /// Required. The tuning task that creates the tuned model.
         /// </summary>
         public TuningTask? TuningTask { get; set; }
-
+        /// <summary>
+        /// Optional. TunedModel to use as the starting point for training the new model.
+        /// </summary>
+        public TunedModelSource? TunedModelSource { get; set; }
+        /// <summary>
+        /// The name of the base model, pass this to the generation request.
+        /// </summary>
+        public string? BaseModel { get; set; }
+    }
+    
+    /// <summary>
+    /// Tuned model as a source for training a new model.
+    /// </summary>
+    public class TunedModelSource
+    {
+        /// <summary>
+        /// Immutable. The name of the TunedModel to use as the starting point for training the new model. Example: tunedModels/my-tuned-model
+        /// </summary>
+        public string TunedModel { get; set; }
+        /// <summary>
+        /// Output only. The name of the base Model this TunedModel was tuned from. Example: models/text-bison-001
+        /// </summary>
+        public string BaseModel { get; set; }
     }
 }

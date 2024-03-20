@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// The response to an EmbedContentRequest.
     /// </summary>
     public class EmbedContentResponse
     {
@@ -15,9 +15,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<Candidate>? Candidates { get; set; }
         /// <summary>
-        /// 
+        /// Output only. The embedding generated from the input content.
         /// </summary>
         public Embedding? Embedding { get; set; }
+        /// <summary>
+        /// Output only. The embeddings for each request, in the same order as provided in the batch request.
+        /// </summary>
         public List<Embedding>? Embeddings { get; set; }
     }
 }
