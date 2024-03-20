@@ -1,9 +1,11 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 #endif
+using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -48,6 +50,25 @@ namespace Mscc.GenerativeAI
 
                 Environment.SetEnvironmentVariable(parts[0], parts[1]);
             }
+        }
+
+        public static string AddQueryString(this string requestUri, Dictionary<string, string?> queryStringParams)
+        {
+            bool startingQuestionMarkAdded = false;
+            var sb = new StringBuilder();
+            sb.Append(requestUri);
+            foreach (var parameter in queryStringParams)
+            {
+                if (parameter.Value == null)
+                {
+                    continue;
+                }
+
+                sb.Append(startingQuestionMarkAdded ? '&' : '?');
+                sb.Append($"{parameter.Key}={parameter.Value}");
+                startingQuestionMarkAdded = true;
+            }
+            return sb.ToString();
         }
     }
 }

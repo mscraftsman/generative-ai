@@ -96,22 +96,22 @@ namespace Mscc.GenerativeAI
                 switch (_model)
                 {
                     case GenerativeAI.Model.BisonChat:
-                        return "generateMessage";
+                        return GenerativeAI.Method.GenerateMessage;
                     case GenerativeAI.Model.BisonText:
-                        return "generateText";
+                        return GenerativeAI.Method.GenerateText;
                     case GenerativeAI.Model.GeckoEmbedding:
-                        return "embedText";
+                        return GenerativeAI.Method.EmbedText;
                     case GenerativeAI.Model.Embedding:
-                        return "embedContent";
+                        return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
-                        return "generateAnswer";
+                        return GenerativeAI.Method.GenerateAnswer;
                 }
                 if (_useVertexAi)
                 {
-                    return "streamGenerateContent";
+                    return GenerativeAI.Method.StreamGenerateContent;
                 }
 
-                return "generateContent";
+                return GenerativeAI.Method.GenerateContent;
             }
         }
 
@@ -202,8 +202,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
         /// <param name="model">Model to use (default: "gemini-pro")</param>
-        /// <param name="generationConfig"></param>
-        /// <param name="safetySettings"></param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         public GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
@@ -221,8 +221,8 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
-        /// <param name="generationConfig"></param>
-        /// <param name="safetySettings"></param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         internal GenerativeModel(string? projectId = null, string? region = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
@@ -242,14 +242,22 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get a list of available models and description.
+        /// Lists models available through the API.
         /// </summary>
         /// <returns>List of available models.</returns>
-        public async Task<List<ModelResponse>> ListModels(bool tuned = false)
+        /// <param name="tuned">Flag, whether models or tuned models shall be returned.</param>
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<List<ModelResponse>> ListModels(bool tuned = false, 
+            int? pageSize = null, 
+            string? pageToken = null, 
+            string? filter = null)
         {
             if (tuned)
             {
-                return await ListTunedModels();
+                return await ListTunedModels(pageSize, pageToken, filter);
             }
             
             if (_useVertexAi)
@@ -258,12 +266,17 @@ namespace Mscc.GenerativeAI
             }
 
             var url = "https://{endpointGoogleAI}/{Version}/models";
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken
+            };
             if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
             {
-                url += UrlParameterKey;
+                queryStringParams.Add("key", _apiKey);
             }
 
-            url = ParseUrl(url);
+            url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var models = await Deserialize<ListModelsResponse>(response);
@@ -274,7 +287,13 @@ namespace Mscc.GenerativeAI
         /// Get a list of available tuned models and description.
         /// </summary>
         /// <returns>List of available tuned models.</returns>
-        public async Task<List<ModelResponse>> ListTunedModels()
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <exception cref="NotSupportedException"></exception>
+        private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
+            string? pageToken = null, 
+            string? filter = null)
         {
             if (_useVertexAi)
             {
@@ -287,7 +306,18 @@ namespace Mscc.GenerativeAI
             }
 
             var url = "https://{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
-            url = ParseUrl(url);
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken,
+                [nameof(filter)] = filter
+            };
+            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
+            {
+                queryStringParams.Add("key", _apiKey);
+            }
+
+            url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var models = await Deserialize<ListTunedModelResponse>(response);
@@ -295,9 +325,10 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Create a tuned model.
+        /// Creates a tuned model.
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request)
         {
             if (!(_model is (string)GenerativeAI.Model.BisonText001 ||
@@ -311,7 +342,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var method = "tunedModels";
+            var method = GenerativeAI.Method.TunedModels;
             // var method = "createTunedModel";
             // if (_model is (string)Model.BisonText001)
             //     method = "createTunedTextModel";
@@ -325,10 +356,12 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Delete the specified tuned model.
+        /// Deletes a tuned model.
         /// </summary>
-        /// <param name="model">The model to delete</param>
-        /// <returns></returns>
+        /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
+        /// <returns>If successful, the response body is empty.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
         public async Task<string> DeleteTunedModel(string model)
         {
             if (string.IsNullOrEmpty(model))
@@ -357,8 +390,9 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Get information about the model, including default values.
         /// </summary>
-        /// <param name="model">The model to query</param>
+        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
         /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
         public async Task<ModelResponse> GetModel(string model = GenerativeAI.Model.GeminiPro)
         {
             if (_useVertexAi)
@@ -385,10 +419,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Produces a single request and response.
+        /// Generates a response from the model given an input GenerateContentRequest.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -435,7 +470,6 @@ namespace Mscc.GenerativeAI
                 generationConfig ?? _generationConfig, 
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools);
-            request.Contents[0].Role = Role.User;
             return await GenerateContent(request);
         }
 
@@ -456,12 +490,12 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Returns a list of responses to iterate over. 
+        /// Generates a streamed response from the model given an input GenerateContentRequest.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        // public async Task<List<GenerateContentResponse>> GenerateContentStream(GenerateContentRequest? request)
+        /// <exception cref="ArgumentNullException"></exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -519,7 +553,6 @@ namespace Mscc.GenerativeAI
                 generationConfig ?? _generationConfig, 
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools);
-            request.Contents[0].Role = Role.User;
             return GenerateContentStream(request);
         }
 
@@ -539,45 +572,82 @@ namespace Mscc.GenerativeAI
             return GenerateContentStream(request);
         }
 
-        /// <remarks/>
-        public async Task<GenerateContentResponse> GenerateMessage(GenerateContentRequest? request)
+        /// <summary>
+        /// Generates a grounded answer from the model given an input GenerateAnswerRequest.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Response from the model for a grounded answer.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<GenerateAnswerResponse> GenerateAnswer(GenerateAnswerRequest? request)
         {
-            // ToDo: implement
-            throw new NotImplementedException();
-        }
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (_model != (string)GenerativeAI.Model.AttributedQuestionAnswering)
+            {
+                throw new NotSupportedException();
+            }
 
-        /// <remarks/>
-        public async Task<GenerateContentResponse> GenerateText(GenerateContentRequest? request)
-        {
-            // ToDo: implement
-            throw new NotImplementedException();
-        }
+            var url = ParseUrl(Url, Method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
 
-        /// <remarks/>
-        public async Task<GenerateContentResponse> GenerateAnswer(GenerateContentRequest? request)
-        {
-            // ToDo: implement
-            throw new NotImplementedException();
-        }
-
-        /// <remarks/>
-        public async Task<GenerateContentResponse> EmbedText(GenerateContentRequest? request)
-        {
-            // ToDo: implement
-            throw new NotImplementedException();
-        }
-
-        /// <remarks/>
-        public async Task<GenerateContentResponse> Predict(GenerateContentRequest? request)
-        {
-            // ToDo: implement
-            throw new NotImplementedException();
+            // if (_useVertexAi)
+            // {
+            //     var fullText = new StringBuilder();
+            //     var contentResponseVertex = await Deserialize<List<GenerateAnswerResponse>>(response);
+            //     foreach (var item in contentResponseVertex)
+            //     {
+            //         switch (item.Candidates[0].FinishReason)
+            //         {
+            //             case FinishReason.Safety:
+            //                 return item;
+            //                 break;
+            //             case FinishReason.Unspecified:
+            //             default:
+            //                 fullText.Append(item.Text);
+            //                 break;
+            //         }
+            //     }
+            //     var result = contentResponseVertex.LastOrDefault();
+            //     result.Candidates[0].Content.Parts[0].Text = fullText.ToString();
+            //     return result;
+            // }
+            return await Deserialize<GenerateAnswerResponse>(response);
         }
 
         /// <summary>
-        /// Get embedding information of the content.
+        /// Generates an embedding from the model given an input Content.
         /// </summary>
-        /// <param name="prompt">String to process.</param>
+        /// <param name="prompt">Required. String to process. The content to embed. Only the parts.text fields will be counted.</param>
+        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
+        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
+        /// <returns>Embeddings of the content as a list of floating numbers.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<EmbedContentResponse> EmbedContent(EmbedContentRequest request, TaskType? taskType = null, string? title = null)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (_model != (string)GenerativeAI.Model.Embedding)
+            {
+                throw new NotSupportedException();
+            }
+
+            var url = ParseUrl(Url, Method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<EmbedContentResponse>(response);
+        }
+
+        /// <summary>
+        /// Generates an embedding from the model given an input Content.
+        /// </summary>
+        /// <param name="prompt">Required. String to process. The content to embed. Only the parts.text fields will be counted.</param>
+        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
+        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
         /// <returns>Embeddings of the content as a list of floating numbers.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
@@ -594,12 +664,29 @@ namespace Mscc.GenerativeAI
                 TaskType = taskType,
                 Title = title
             };
-            var method = "embedContent";
+            return await EmbedContent(request);
+        }
+
+        /// <summary>
+        /// Generates multiple embeddings from the model given input text in a synchronous call.
+        /// </summary>
+        /// <param name="requests">Required. Embed requests for the batch. The model in each of these requests must match the model specified BatchEmbedContentsRequest.model.</param>
+        /// <returns>List of Embeddings of the content as a list of floating numbers.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<EmbedContentResponse> BatchEmbedContent(List<EmbedContentRequest> requests)
+        {
+            if (requests == null) throw new ArgumentNullException(nameof(requests));
+            if (_model != (string)GenerativeAI.Model.Embedding)
+            {
+                throw new NotSupportedException();
+            }
+
+            var method = GenerativeAI.Method.BatchEmbedContent;
             var url = ParseUrl(Url, method);
-            string json = Serialize(request);
+            string json = Serialize(requests);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
             return await Deserialize<EmbedContentResponse>(response);
         }
 
@@ -608,11 +695,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = "countTokens";
+            var method = GenerativeAI.Method.CountTokens;
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
@@ -644,7 +732,9 @@ namespace Mscc.GenerativeAI
         /// Starts a chat session. 
         /// </summary>
         /// <param name="history"></param>
-        /// <param name="tools"></param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <returns></returns>
         public ChatSession StartChat(List<ContentResponse>? history = null, 
             GenerationConfig? generationConfig = null,
