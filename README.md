@@ -2,23 +2,16 @@
 [![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/blob/main/LICENSE)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
 
-Access the Gemini API in Google AI Studio and Google Cloud Vertex AI.
+Access and integrate the Gemini API into your .NET applications. The packages support both Google AI Studio and Google Cloud Vertex AI.
 
-Client for .NET: 
-[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)
+| Name                                            | Package                                                                              |Status|
+|-------------------------------------------------|--------------------------------------------------------------------------------------|----|
+| Client for .NET                                 | [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/)               |[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)|
+| Client for ASP.NET (Core)                       | [Mscc.GenerativeAI.Web](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)       |[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)|
+| Client for .NET using Google API Client Library | [Mscc.GenerativeAI.Google](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/) |[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)|
 
-Client for ASP.NET Core: 
-[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)
-
-Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET web applications.
-
-Client for .NET using Google API Client Library:
-[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)
-
-Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) and how to add it to your .NET applications.
+Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET (Core) web applications.
+Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google).
 
 ## Install the package 🖥️
 
