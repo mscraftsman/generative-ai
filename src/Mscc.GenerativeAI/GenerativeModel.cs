@@ -391,6 +391,8 @@ namespace Mscc.GenerativeAI
         /// Updates a tuned model.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
+        /// <param name="tunedModel">The tuned model to update.</param>
+        /// <param name="updateMask">Required. The list of fields to update. This is a comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
@@ -700,7 +702,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Generates an embedding from the model given an input Content.
         /// </summary>
-        /// <param name="prompt">Required. String to process. The content to embed. Only the parts.text fields will be counted.</param>
+        /// <param name="request">Required. EmbedContentRequest to process. The content to embed. Only the parts.text fields will be counted.</param>
         /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
         /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
         /// <returns>Embeddings of the content as a list of floating numbers.</returns>
