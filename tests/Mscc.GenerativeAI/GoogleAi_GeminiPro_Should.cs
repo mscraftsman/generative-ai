@@ -458,8 +458,64 @@ namespace Test.Mscc.GenerativeAI
             chat.History.ForEach(c =>
             {
                 output.WriteLine($"{new string('-', 20)}");
-                output.WriteLine($"{c.Role}: {c.Parts[0].Text}");
+                output.WriteLine($"{c.Role}: {c.Text}");
             });
+        }
+
+        [Fact]
+        // Refs:
+        // https://ai.google.dev/tutorials/python_quickstart#chat_conversations
+        public async void Start_Chat_Rewind_Conversation()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var chat = model.StartChat();
+            _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
+            _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
+            _ = await chat.SendMessage("Okay, how about a more detailed explanation to a high school kid?");
+            _ = await chat.SendMessage("Lastly, give a thorough definition for a CS graduate.");
+
+            // Act
+            var entries = chat.Rewind();
+
+            // Assert
+            entries.Should().NotBeNull();
+            entries.Sent.Should().NotBeNull();
+            entries.Received.Should().NotBeNull();
+            output.WriteLine("------ Rewind ------");
+            output.WriteLine($"{entries.Sent.Role}: {entries.Sent.Text}");
+            output.WriteLine($"{new string('-', 20)}");
+            output.WriteLine($"{entries.Received.Role}: {entries.Received.Text}");
+            output.WriteLine($"{new string('-', 20)}");
+            
+            chat.History.Count.Should().Be(6);
+            output.WriteLine("------ History -----");
+            chat.History.ForEach(c =>
+            {
+                output.WriteLine($"{new string('-', 20)}");
+                output.WriteLine($"{c.Role}: {c.Text}");
+            });
+        }
+
+        [Fact]
+        // Refs:
+        // https://ai.google.dev/tutorials/python_quickstart#chat_conversations
+        public async void Start_Chat_Conversations_Get_Last()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var chat = model.StartChat();
+            _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
+            _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
+            _ = await chat.SendMessage("Okay, how about a more detailed explanation to a high school kid?");
+            _ = await chat.SendMessage("Lastly, give a thorough definition for a CS graduate.");
+
+            // Act
+            var sut = chat.Last;
+
+            // Assert
+            sut.Should().NotBeNull();
+            output.WriteLine($"{sut.Role}: {sut.Text}");
         }
 
         [Fact]
@@ -486,6 +542,14 @@ namespace Test.Mscc.GenerativeAI
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
                 // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
+            chat.History.Count.Should().Be(2);
+            output.WriteLine($"{new string('-', 20)}");
+            output.WriteLine("------ History -----");
+            chat.History.ForEach(c =>
+            {
+                output.WriteLine($"{new string('-', 20)}");
+                output.WriteLine($"{c.Role}: {c.Text}");
+            });
         }
 
         [Fact]
