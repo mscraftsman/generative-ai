@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 #endif
-using Google.Apis.Auth.OAuth2;
+using gauth = Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
 using System.Security.Cryptography.X509Certificates;
 
@@ -30,7 +30,7 @@ namespace Mscc.GenerativeAI.Google
         private string _certificateFile = "key.p12";
         private string _certificatePassphrase;
 
-        private ICredential _credential;
+        private gauth.ICredential _credential;
         // private string ClientId;
         // private string ClientSecret;
 
@@ -46,7 +46,7 @@ namespace Mscc.GenerativeAI.Google
         public GenerativeModelGoogle()
         {
             var clientSecrets = getClientSecrets();
-            _credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+            _credential = gauth.GoogleWebAuthorizationBroker.AuthorizeAsync(
                 clientSecrets,
                 _scopes,
                 "user",
@@ -66,8 +66,8 @@ namespace Mscc.GenerativeAI.Google
                 certificate ?? _certificateFile,
                 passphrase ?? _certificatePassphrase,
                 X509KeyStorageFlags.Exportable);
-            _credential = new ServiceAccountCredential(
-                new ServiceAccountCredential.Initializer(serviceAccountEmail)
+            _credential = new gauth.ServiceAccountCredential(
+                new gauth.ServiceAccountCredential.Initializer(serviceAccountEmail)
                 {
                     Scopes = _scopes
                 }.FromCertificate(x509Certificate));
@@ -107,7 +107,7 @@ namespace Mscc.GenerativeAI.Google
             return generativeModel;
         }
 
-        private ClientSecrets getClientSecrets()
+        private gauth.ClientSecrets getClientSecrets()
         {
             // _credentials = GoogleCredential.GetApplicationDefaultAsync();
 
@@ -116,7 +116,7 @@ namespace Mscc.GenerativeAI.Google
             //     _credentials = await GoogleCredential.FromFileAsync(_tokenFile);
             // }
             // if (!_credentials.)
-            ClientSecrets clientSecrets = null;
+            gauth.ClientSecrets clientSecrets = null;
 
             // if (!string.IsNullOrEmpty(ClientId))
             // {
@@ -128,7 +128,7 @@ namespace Mscc.GenerativeAI.Google
                 using (var stream = new FileStream(_clientFile, FileMode.Open, FileAccess.Read))
                 {
                     // clientSecrets = GoogleClientSecrets.Load(stream).Secrets;
-                    clientSecrets = GoogleClientSecrets.FromStreamAsync(stream).Result.Secrets;
+                    clientSecrets = gauth.GoogleClientSecrets.FromStreamAsync(stream).Result.Secrets;
                 }
             }
 
