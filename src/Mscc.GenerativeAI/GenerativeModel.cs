@@ -573,10 +573,12 @@ namespace Mscc.GenerativeAI
 
         /// <summary>
         /// Generates a streamed response from the model given an input GenerateContentRequest.
+        /// This method uses a MemoryStream and StreamContent to send a streaming request to the API.
+        /// It runs asynchronously sending and receiving chunks to and from the API endpoint, which allows non-blocking code execution.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">The request to send to the API.</param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        /// <returns>Stream of GenerateContentResponse with chunks asynchronously.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -831,9 +833,11 @@ namespace Mscc.GenerativeAI
 
         /// <summary>
         /// Parses the URL template and replaces the placeholder with current values.
+        /// Given two API endpoints for Google AI Gemini and Vertex AI Gemini this
+        /// method uses regular expressions to replace placeholders in a URL template with actual values.
         /// </summary>
-        /// <param name="url"></param>
-        /// <param name="method"></param>
+        /// <param name="url">API endpoint to parse.</param>
+        /// <param name="method">Method part of the URL to inject</param>
         /// <returns></returns>
         private string ParseUrl(string url, string? method = default)
         {
@@ -931,10 +935,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Retrieve access token from Application Default Credentials (ADC) 
+        /// This method uses the gcloud command-line tool to retrieve an access token from the Application Default Credentials (ADC).
+        /// It is specific to Google Cloud Platform and allows easy authentication with the Gemini API on Google Cloud.
+        /// Reference: https://cloud.google.com/docs/authentication 
         /// </summary>
         /// <returns>The access token.</returns>
-        // Reference: https://cloud.google.com/docs/authentication 
         private string GetAccessTokenFromAdc()
         {
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
@@ -947,6 +952,13 @@ namespace Mscc.GenerativeAI
             }
         }
         
+        /// <summary>
+        /// Run an external application as process in the underlying operating system, if possible.
+        /// </summary>
+        /// <param name="filename">The command or application to run.</param>
+        /// <param name="arguments">Optional arguments given to the application to run.</param>
+        /// <returns>Output from the application.</returns>
+        /// <exception cref="Exception"></exception>
         private string RunExternalExe(string filename, string arguments = null)
         {
             var process = new Process();
@@ -1002,6 +1014,12 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Formatting string for logging purpose.
+        /// </summary>
+        /// <param name="filename">The command or application to run.</param>
+        /// <param name="arguments">Optional arguments given to the application to run.</param>
+        /// <returns>Formatted string containing parameter values.</returns>
         private string Format(string filename, string arguments)
         {
             return "'" + filename + 
