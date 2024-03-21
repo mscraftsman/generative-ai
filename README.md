@@ -39,6 +39,22 @@ Alternatively, add the following line to your `.csproj` file.
 
 You can then add this code to your sources whenever you need to access any Gemini API provided by Google. This package works for Google AI (Google AI Studio) and Google Cloud Vertex AI.
 
+## Features (as per Gemini analysis) ✦
+
+The provided code defines a C# library for interacting with Google's Generative AI models, specifically the Gemini models. It provides functionalities to:
+
+- **List available models**: This allows users to see which models are available for use.
+- **Get information about a specific model**: This provides details about a specific model, such as its capabilities and limitations.
+- **Generate content**: This allows users to send prompts to a model and receive generated text in response. 
+- **Generate content stream**: This allows users to receive a stream of generated text from a model, which can be useful for real-time applications. 
+- **Generate a grounded answer**: This allows users to ask questions and receive answers that are grounded in provided context. 
+- **Generate embeddings**: This allows users to convert text into numerical representations that can be used for tasks like similarity search. 
+- **Count tokens**: This allows users to estimate the cost of using a model by counting the number of tokens in a prompt or response. 
+- **Start a chat session**: This allows users to have a back-and-forth conversation with a model.
+- **Create tuned models**: This allows users to provide samples for tuning an existing model. Currently, only the `text-bison-001` and `gemini-1.0-pro-001` models are supported for tuning
+
+The package also defines various helper classes and enums to represent different aspects of the Gemini API, such as model names, request parameters, and response data.
+
 ## Authentication use cases 👥
 
 The package supports the following use cases to authenticate.
