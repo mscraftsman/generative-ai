@@ -18,6 +18,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         private GoogleAI()
         {
+            GenerativeModelExtensions.ReadDotEnv();
+
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
         }
         

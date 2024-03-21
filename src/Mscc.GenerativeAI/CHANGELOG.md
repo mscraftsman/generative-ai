@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - compatibility methods for PaLM models
+- Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
 
 ### Changed
 ### Fixed
@@ -19,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - missing comments and better explanations
+- add GoogleAI type ([#3](https://github.com/mscraftsman/generative-ai/issues/3))
+- read environment variables in GoogleAI and VertexAI
 
 ## 0.8.3
 
