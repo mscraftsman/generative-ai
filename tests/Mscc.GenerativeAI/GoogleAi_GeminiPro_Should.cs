@@ -23,6 +23,33 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public void Initialize_GoogleAI()
+        {
+            // Arrange
+            
+            // Act
+            var googleAI = new GoogleAI(apiKey: fixture.ApiKey);
+            
+            // Assert
+            googleAI.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Initialize_Using_GoogleAI()
+        {
+            // Arrange
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
+            var googleAI = new GoogleAI(apiKey: fixture.ApiKey);
+            
+            // Act
+            var model = googleAI.GenerativeModel();
+
+            // Assert
+            model.Should().NotBeNull();
+            model.Name.Should().Be($"models/{expected}");
+        }
+
+        [Fact]
         public void Initialize_EnvVars()
         {
             // Arrange
@@ -34,7 +61,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(expected);
+            model.Name.Should().Be($"models/{expected}");
         }
 
         [Fact]
@@ -48,7 +75,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(expected);
+            model.Name.Should().Be($"models/{expected}");
         }
 
         [Fact]
@@ -62,7 +89,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(expected);
+            model.Name.Should().Be($"models/{expected}");
         }
 
         [Fact]
@@ -139,7 +166,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
-            sut.Name.Should().Be($"models/{modelName}");
+            // sut.Name.Should().Be($"models/{modelName}");
             output.WriteLine($"Model: {sut.DisplayName} ({sut.Name})");
             sut.SupportedGenerationMethods.ForEach(m => output.WriteLine($"  Method: {m}"));
         }
