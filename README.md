@@ -238,7 +238,7 @@ The folders [samples](./samples/) and [tests](./tests/) contain more examples.
 
 - [Simple console application](./samples/Console.Minimal.Prompt/)
 - [ASP.NET Core Minimal web application](./samples/Web.Minimal.Api)
-- [ASP.NET Core MVP web application](./samples/Web.Mvp) (work in progress!)
+- [ASP.NET Core MVP web application](./samples/Web.Mvc) (work in progress!)
 
 ## Troubleshooting ⚡
 
@@ -261,7 +261,7 @@ gcloud services enable aiplatform.googleapis.com
 ## Using the tests 🧩
 
 The repository contains a number of test cases for Google AI and Vertex AI. You will find them in the [tests](./tests/) folder. They are part of the [GenerativeAI solution].
-To run the tests, either enter the relevant information into the [appsettings.json](./tests/appsettings.json), create a new `appsettings.user.json` file with the same JSON structure in the `tests` folder, or define the following environment variables
+To run the tests, either enter the relevant information into the [appsettings.json](./tests/Mscc.GenerativeAI/appsettings.json), create a new `appsettings.user.json` file with the same JSON structure in the `tests` folder, or define the following environment variables
 
 - GOOGLE_API_KEY
 - GOOGLE_PROJECT_ID
