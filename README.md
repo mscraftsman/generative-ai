@@ -4,11 +4,11 @@
 
 Access and integrate the Gemini API into your .NET applications. The packages support both Google AI Studio and Google Cloud Vertex AI.
 
-| Name                                            | Package                                                                              |Status|
-|-------------------------------------------------|--------------------------------------------------------------------------------------|----|
-| Client for .NET                                 | [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/)               |[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)|
-| Client for ASP.NET (Core)                       | [Mscc.GenerativeAI.Web](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)       |[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)|
-| Client for .NET using Google API Client Library | [Mscc.GenerativeAI.Google](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/) |[![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)|
+| Name                                            | Package                                                                              | Status                                                                                                                                                                                                                                                                        |
+|-------------------------------------------------|--------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Client for .NET                                 | [Mscc.GenerativeAI](https://www.nuget.org/packages/Mscc.GenerativeAI/)               | [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI)](https://www.nuget.org/packages/Mscc.GenerativeAI/)                             |
+| Client for ASP.NET (Core)                       | [Mscc.GenerativeAI.Web](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)       | [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Web)](https://www.nuget.org/packages/Mscc.GenerativeAI.Web/)             |
+| Client for .NET using Google API Client Library | [Mscc.GenerativeAI.Google](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/) | [![NuGet Version](https://img.shields.io/nuget/v/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/)[![NuGet Downloads](https://img.shields.io/nuget/dt/Mscc.GenerativeAI.Google)](https://www.nuget.org/packages/Mscc.GenerativeAI.Google/) |
 
 Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET (Core) web applications.
 Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google).
@@ -100,7 +100,11 @@ Google AI with an API key
 ```csharp
 using Mscc.GenerativeAI;
 // Google AI with an API key
-var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
+var googleAI = new GoogleAI(apiKey: "your API key");
+var model = googleAI.GenerativeModel(model: Model.GeminiPro);
+
+// Original approach, still valid.
+// var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
 ```
 
 Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -234,9 +238,9 @@ Tuned models appear in your Google AI Studio library.
 
 ### More samples
 
-The folders [samples](./samples/) and [tests](./tests/) contain more examples.
+The folders [samples](./samples) and [tests](./tests) contain more examples.
 
-- [Simple console application](./samples/Console.Minimal.Prompt/)
+- [Simple console application](./samples/Console.Minimal.Prompt)
 - [ASP.NET Core Minimal web application](./samples/Web.Minimal.Api)
 - [ASP.NET Core MVP web application](./samples/Web.Mvc) (work in progress!)
 
@@ -260,7 +264,7 @@ gcloud services enable aiplatform.googleapis.com
 
 ## Using the tests 🧩
 
-The repository contains a number of test cases for Google AI and Vertex AI. You will find them in the [tests](./tests/) folder. They are part of the [GenerativeAI solution].
+The repository contains a number of test cases for Google AI and Vertex AI. You will find them in the [tests](./tests) folder. They are part of the [GenerativeAI solution].
 To run the tests, either enter the relevant information into the [appsettings.json](./tests/Mscc.GenerativeAI/appsettings.json), create a new `appsettings.user.json` file with the same JSON structure in the `tests` folder, or define the following environment variables
 
 - GOOGLE_API_KEY
