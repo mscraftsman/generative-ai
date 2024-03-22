@@ -23,7 +23,7 @@ namespace Mscc.GenerativeAI
         private const string EndpointGoogleAi = "generativelanguage.googleapis.com";
         private const string UrlGoogleAi = "https://{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlParameterKey = "?key={apiKey}"; // Or in the x-goog-api-key header
-        private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
+        private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
         private const string MediaType = "application/json";
 
         private readonly bool _useVertexAi;
