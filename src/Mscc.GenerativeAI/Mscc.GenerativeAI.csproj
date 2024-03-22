@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;net472;net6.0;net7.0;net8.0</TargetFrameworks>
+		<ProjectType>Library</ProjectType>
 		<LangVersion>latest</LangVersion>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -10,7 +11,7 @@
 		<Title>MSCC GenerativeAI</Title>
 		<Product>MSCC GenerativeAI</Product>
 		<Description>Gemini AI Client for .NET</Description>
-		<PackageTags>Gemini;GeminiAI;GoogleAI;VertexAI;GenAI;GenerativeAI</PackageTags>
+		<PackageTags>Gemini GeminiAI GeminiPro GeminiProVision GoogleAI VertexAI GenAI GenerativeAI Summarization TextGeneration AIAssistant CodeAssistant TunedModel Model</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Authors>jkirstaetter</Authors>
@@ -26,9 +27,13 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
-		<IsTrimmable>false</IsTrimmable>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<EnableAotAnalyzer>true</EnableAotAnalyzer>
+		<EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<IsAotCompatible>true</IsAotCompatible>
+		<IsTrimmable>false</IsTrimmable>
 	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
 		<Nullable>annotations</Nullable>
