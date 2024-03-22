@@ -47,7 +47,7 @@ namespace Test.Mscc.GenerativeAI
             
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"models/{expected}");
+            model.Name.Should().Be($"{expected.SanitizeModelName()}");
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"models/{Model.Gemini10Pro}");
+            model.Name.Should().Be($"{Model.Gemini10Pro.SanitizeModelName()}");
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"models/{Model.Gemini10Pro}");
+            model.Name.Should().Be($"{Model.Gemini10Pro.SanitizeModelName()}");
         }
 
         [Fact]

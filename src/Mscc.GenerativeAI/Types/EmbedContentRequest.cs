@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public class EmbedContentRequest
     {
-        public string Model { get; } = $"models/{GenerativeAI.Model.Embedding}";
+        public string Model { get; } = $"{GenerativeAI.Model.Embedding.SanitizeModelName()}";
 
         /// <summary>
         /// 
