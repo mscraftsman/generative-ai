@@ -9,8 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- compatibility methods for PaLM models
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
+
+### Changed
+### Fixed
+
+## 0.9.0
+
+### Added
+
+- compatibility methods for PaLM models
 
 ### Changed
 ### Fixed
