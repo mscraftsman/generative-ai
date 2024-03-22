@@ -9,7 +9,6 @@ namespace Mscc.GenerativeAI
     /// 
     /// </summary>
     public class GenerateContentRequest
-
     {
         /// <summary>
         /// Required. The content of the current conversation with the model.
@@ -32,7 +31,7 @@ namespace Mscc.GenerativeAI
         public List<Tool>? Tools { get; set; }
 
         /// <summary>
-        /// 
+        /// Default constructor.
         /// </summary>
         public GenerateContentRequest() { }
 
@@ -46,7 +45,7 @@ namespace Mscc.GenerativeAI
         public GenerateContentRequest(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null) : this()
         {
             Contents = new List<Content> { new Content
             {

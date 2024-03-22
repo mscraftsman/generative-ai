@@ -30,19 +30,31 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// HarmCategorySexuallyExplicit means the harm category is sexually explicit content.
         /// </summary>
-        HarmCategorySexuallyExplicit = 4
+        HarmCategorySexuallyExplicit = 4,
         
-        // // Negative or harmful comments targeting identity and/or protected attribute.
-        // HarmCategoryDerogatory = 1
-        // // Content that is rude, disrespectful, or profane.
-        // HarmCategoryToxicity = 2
-        // // Describes scenarios depicting violence against an individual or group, or general descriptions of gore.
-        // HarmCategoryViolence = 3
-        // // Contains references to sexual acts or other lewd content.
-        // HarmCategorySexual = 4
-        // // Promotes unchecked medical advice.
-        // HarmCategoryMedical = 5
-        // // Dangerous content that promotes, facilitates, or encourages harmful acts.
-        // HarmCategoryDangerous = 6
+        /// <summary>
+        /// Negative or harmful comments targeting identity and/or protected attribute.
+        /// </summary>
+        HarmCategoryDerogatory = 101,
+        /// <summary>
+        /// Content that is rude, disrespectful, or profane.
+        /// </summary>
+        HarmCategoryToxicity,
+        /// <summary>
+        /// Describes scenarios depicting violence against an individual or group, or general descriptions of gore.
+        /// </summary>
+        HarmCategoryViolence,
+        /// <summary>
+        /// Contains references to sexual acts or other lewd content.
+        /// </summary>
+        HarmCategorySexual,
+        /// <summary>
+        /// Promotes unchecked medical advice.
+        /// </summary>
+        HarmCategoryMedical,
+        /// <summary>
+        /// Dangerous content that promotes, facilitates, or encourages harmful acts.
+        /// </summary>
+        HarmCategoryDangerous
     }
 }

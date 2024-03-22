@@ -332,8 +332,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException"></exception>
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request)
         {
-            if (!(_model.Equals($"models/{GenerativeAI.Model.BisonText001}", StringComparison.InvariantCultureIgnoreCase) ||
-                _model.Equals($"models/{GenerativeAI.Model.Gemini10Pro001}", StringComparison.InvariantCultureIgnoreCase)))
+            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase) ||
+                _model.Equals($"{GenerativeAI.Model.Gemini10Pro001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NotSupportedException();
             }
@@ -667,7 +667,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateAnswerResponse> GenerateAnswer(GenerateAnswerRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"models/{GenerativeAI.Model.AttributedQuestionAnswering}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.AttributedQuestionAnswering.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -714,7 +714,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> EmbedContent(EmbedContentRequest request, TaskType? taskType = null, string? title = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"models/{GenerativeAI.Model.Embedding}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.Embedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -739,7 +739,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> EmbedContent(string? prompt, TaskType? taskType = null, string? title = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (!_model.Equals($"models/{GenerativeAI.Model.Embedding}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.Embedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -762,7 +762,7 @@ namespace Mscc.GenerativeAI
         public async Task<EmbedContentResponse> BatchEmbedContent(List<EmbedContentRequest> requests)
         {
             if (requests == null) throw new ArgumentNullException(nameof(requests));
-            if (!_model.Equals($"models/{GenerativeAI.Model.Embedding}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.Embedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -798,9 +798,23 @@ namespace Mscc.GenerativeAI
         public async Task<CountTokensResponse> CountTokens(string? prompt)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-
-            var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
-            return await CountTokens(request);
+            
+            var model = _model.SanitizeModelName().Split(new[] { '/' })[1];
+            switch (model)
+            {
+                case GenerativeAI.Model.BisonChat:
+                    var chatRequest = new GenerateMessageRequest(prompt);
+                    return await CountTokens(chatRequest);
+                case GenerativeAI.Model.BisonText:
+                    var textRequest = new GenerateTextRequest(prompt);
+                    return await CountTokens(textRequest);
+                case GenerativeAI.Model.GeckoEmbedding:
+                    var embeddingRequest = new GenerateTextRequest(prompt);
+                    return await CountTokens(embeddingRequest);
+                default:
+                    var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
+                    return await CountTokens(request);
+            }
         }
 
         /// <remarks/>
@@ -831,7 +845,193 @@ namespace Mscc.GenerativeAI
             var tool = tools ?? _tools;
             return new ChatSession(this, history, config, safety, tool);
         }
+        
+        #region "PaLM 2" methods
 
+        /// <summary>
+        /// Generates a response from the model given an input message.
+        /// </summary>
+        /// <param name="request">The request to send to the API.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<GenerateTextResponse> GenerateText(GenerateTextRequest? request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (!_model.Equals($"{GenerativeAI.Model.BisonText.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException();
+            }
+
+            var url = ParseUrl(Url, Method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<GenerateTextResponse>(response);
+        }
+
+        /// <remarks/>
+        public async Task<GenerateTextResponse> GenerateText(string prompt)
+        {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new GenerateTextRequest(prompt);
+            return await GenerateText(request);
+        }
+        
+        /// <summary>
+        /// Counts the number of tokens in the content. 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Number of tokens.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<CountTokensResponse> CountTokens(GenerateTextRequest? request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var method = GenerativeAI.Method.CountTextTokens;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<CountTokensResponse>(response);
+        }
+
+        /// <summary>
+        /// Generates a response from the model given an input prompt.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<GenerateMessageResponse> GenerateMessage(GenerateMessageRequest? request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (!_model.Equals($"{GenerativeAI.Model.BisonChat.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException();
+            }
+
+            var url = ParseUrl(Url, Method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<GenerateMessageResponse>(response);
+        }
+
+        /// <remarks/>
+        public async Task<GenerateMessageResponse> GenerateMessage(string prompt)
+        {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new GenerateMessageRequest(prompt);
+            return await GenerateMessage(request);
+        }
+
+        /// <summary>
+        /// Counts the number of tokens in the content. 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Number of tokens.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<CountTokensResponse> CountTokens(GenerateMessageRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var method = GenerativeAI.Method.CountMessageTokens;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<CountTokensResponse>(response);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<EmbedTextResponse> EmbedText(EmbedTextRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException();
+            }
+            
+            var url = ParseUrl(Url, Method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<EmbedTextResponse>(response);
+
+        }
+        
+        /// <remarks/>
+        public async Task<EmbedTextResponse> EmbedText(string prompt)
+        {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException();
+            }
+            
+            var request = new EmbedTextRequest(prompt);
+            return await EmbedText(request);
+        }
+
+        /// <summary>
+        /// Counts the number of tokens in the content. 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Number of tokens.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<CountTokensResponse> CountTokens(EmbedTextRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var method = GenerativeAI.Method.CountMessageTokens;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<CountTokensResponse>(response);
+        }
+
+        /// <summary>
+        /// Generates multiple embeddings from the model given input text in a synchronous call.
+        /// </summary>
+        /// <param name="request">Required. Embed requests for the batch. The model in each of these requests must match the model specified BatchEmbedContentsRequest.model.</param>
+        /// <returns>List of Embeddings of the content as a list of floating numbers.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public async Task<EmbedTextResponse> BatchEmbedText(BatchEmbedTextRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException();
+            }
+
+            var method = GenerativeAI.Method.BatchEmbedText;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var response = await Client.PostAsync(url, payload);
+            return await Deserialize<EmbedTextResponse>(response);
+        }
+
+        #endregion
+
+        #region "Private methods"
+        
         /// <summary>
         /// Parses the URL template and replaces the placeholder with current values.
         /// Given two API endpoints for Google AI Gemini and Vertex AI Gemini this
@@ -888,6 +1088,7 @@ namespace Mscc.GenerativeAI
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(json, _options);
 #else
+            var json = await response.Content.ReadAsStringAsync();
             return await response.Content.ReadFromJsonAsync<T>(_options);
 #endif
         }
@@ -1027,5 +1228,7 @@ namespace Mscc.GenerativeAI
                 ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
                 "'";
         }
+        
+        #endregion
     }
 }

@@ -17,10 +17,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. The embedding generated from the input content.
         /// </summary>
-        public Embedding? Embedding { get; set; }
+        public ContentEmbedding? Embedding { get; set; }
         /// <summary>
         /// Output only. The embeddings for each request, in the same order as provided in the batch request.
         /// </summary>
-        public List<Embedding>? Embeddings { get; set; }
+        public List<ContentEmbedding>? Embeddings { get; set; }
     }
 }
