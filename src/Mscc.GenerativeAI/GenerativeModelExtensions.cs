@@ -59,7 +59,7 @@ namespace Mscc.GenerativeAI
             sb.Append(requestUri);
             foreach (var parameter in queryStringParams)
             {
-                if (parameter.Value == null)
+                if (string.IsNullOrEmpty(parameter.Value))
                 {
                     continue;
                 }
