@@ -93,7 +93,8 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                switch (_model)
+                var model = _model.SanitizeModelName().Split(new[] { '/' })[1];
+                switch (model)
                 {
                     case GenerativeAI.Model.BisonChat:
                         return GenerativeAI.Method.GenerateMessage;
@@ -121,7 +122,7 @@ namespace Mscc.GenerativeAI
         /// <returns>Name of the model.</returns>
         public string Name => _model;
 
-        public string Model
+        private string Model
         {
             set
             {
