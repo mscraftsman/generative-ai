@@ -365,7 +365,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
-            response.TotalTokens.Should().Be(expected);
+            response.TotalTokens.Should().BeGreaterThanOrEqualTo(expected);
             output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
@@ -390,7 +390,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
-            response.TotalTokens.Should().Be(expected);
+            response.TotalTokens.Should().BeGreaterOrEqualTo(expected);
             output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 

@@ -60,7 +60,7 @@ namespace Mscc.GenerativeAI.Google
         /// <param name="serviceAccountEmail"></param>
         /// <param name="certificate"></param>
         /// <param name="passphrase"></param>
-        private GenerativeModelGoogle(string serviceAccountEmail, string certificate = null, string passphrase = null)
+        private GenerativeModelGoogle(string serviceAccountEmail, string? certificate = null, string? passphrase = null)
         {
             var x509Certificate = new X509Certificate2(
                 certificate ?? _certificateFile,
@@ -80,8 +80,9 @@ namespace Mscc.GenerativeAI.Google
         /// <param name="certificate"></param>
         /// <param name="passphrase"></param>
         /// <returns></returns>
-        public static GenerativeModelGoogle CreateInstance(string serviceAccountEmail = null, string certificate = null,
-            string passphrase = null)
+        public static GenerativeModelGoogle CreateInstance(string? serviceAccountEmail = null, 
+            string? certificate = null,
+            string? passphrase = null)
         {
             return serviceAccountEmail == null
                 ? new GenerativeModelGoogle()
