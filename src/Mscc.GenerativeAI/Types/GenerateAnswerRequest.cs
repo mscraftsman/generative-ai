@@ -34,6 +34,26 @@ namespace Mscc.GenerativeAI
         /// Values can range from [0.0,1.0], inclusive. A value closer to 1.0 will produce responses that are more varied and creative, while a value closer to 0.0 will typically result in more straightforward responses from the model. A low temperature (~0.2) is usually recommended for Attributed-Question-Answering use cases. 
         /// </summary>
         public float? Temperature { get; set; } = default;
+        
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public GenerateAnswerRequest() { }
+
+        public GenerateAnswerRequest(string prompt,
+            AnswerStyle? answerStyle,
+            List<SafetySetting>? safetySettings = null) : this()
+        {
+            Contents = new List<Content> { new Content 
+            {                 
+                Parts = new List<IPart> { new TextData
+                {
+                    Text = prompt
+                }}
+            }};
+            AnswerStyle = answerStyle ?? AnswerStyle.Unspecified;
+            if (safetySettings != null) SafetySettings = safetySettings;
+        }
     }
 
     /// <summary>

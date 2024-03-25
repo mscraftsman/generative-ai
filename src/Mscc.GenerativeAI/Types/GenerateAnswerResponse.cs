@@ -1,7 +1,25 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+using System.Linq;
+#endif
+
 namespace Mscc.GenerativeAI
 {
     public class GenerateAnswerResponse
     {
+        /// <summary>
+        /// Responded text information of first candidate.
+        /// </summary>
+        public string? Text
+        {
+            get
+            {
+                if (Answer?.FinishReason == FinishReason.Safety)
+                    return string.Empty;
+                return Answer?.Content?.Parts?.FirstOrDefault()?.Text;
+            }
+        }
+
         /// <summary>
         /// Candidate answer from the model.
         /// Note: The model always attempts to provide a grounded answer, even when the answer is unlikely to be answerable from the given passages. In that case, a low-quality or ungrounded answer may be provided, along with a low answerableProbability.

@@ -702,6 +702,19 @@ namespace Mscc.GenerativeAI
             return await Deserialize<GenerateAnswerResponse>(response);
         }
 
+        /// <remarks/>
+        public async Task<GenerateAnswerResponse> GenerateAnswer(string? prompt,
+            AnswerStyle? answerStyle = null,
+            List<SafetySetting>? safetySettings = null)
+        {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new GenerateAnswerRequest(prompt, 
+                answerStyle,
+                safetySettings ?? _safetySettings);
+            return await GenerateAnswer(request);
+        }
+
         /// <summary>
         /// Generates an embedding from the model given an input Content.
         /// </summary>

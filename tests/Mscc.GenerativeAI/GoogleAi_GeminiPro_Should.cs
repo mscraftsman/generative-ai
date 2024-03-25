@@ -232,6 +232,17 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async void GenerateContent_WithEmptyPrompt_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            string prompt = null;
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => model.GenerateContent(prompt));
+        }
+        
+        [Fact]
         public async void Generate_Content_MultiplePrompt()
         {
             // Arrange
@@ -275,6 +286,17 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async void GenerateContent_WithNullRequest_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            GenerateContentRequest request = null;
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => model.GenerateContent(request));
+        }
+        
         [Fact]
         public async void Generate_Content_RequestConstructor()
         {
@@ -348,6 +370,22 @@ namespace Test.Mscc.GenerativeAI
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
                 // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
+        }
+        
+        [Fact]
+        public async void GenerateAnswer_WithValidRequest_ReturnsAnswerResponse()
+        {
+            // Arrange
+            var model = new GenerativeModel(apiKey: "YOUR_API_KEY", model: Model.AttributedQuestionAnswering);
+            var request = new GenerateAnswerRequest("What is the capital of France?", AnswerStyle.Abstractive);
+
+            // Act
+            var response = await model.GenerateAnswer(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Answer.Should().NotBeNull();
+            response.Text.Should().Be("Paris");
         }
 
         [Theory]
