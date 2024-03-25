@@ -1,6 +1,7 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -284,6 +285,30 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void GenerateContent_WithRequest_MultipleCandidates_ThrowsHttpRequestException()
+        {
+            // Arrange
+            var prompt = "Write a short poem about koi fish.";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var request = new GenerateContentRequest
+            {
+                Contents = new List<Content>(), 
+                GenerationConfig = new GenerationConfig()
+                {
+                    CandidateCount = 3
+                }
+            };
+            request.Contents.Add(new Content
+            {
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
+            });
+
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(request));
         }
 
         [Fact]
