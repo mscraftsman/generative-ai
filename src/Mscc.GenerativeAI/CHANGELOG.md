@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - simplify image/media handling in requests
 - extend generateAnswer feature
 - more tests for Gemini Pro Vision model
+- add exceptions from API reference
 
 ### Changed
 

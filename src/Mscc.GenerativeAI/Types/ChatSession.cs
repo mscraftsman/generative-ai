@@ -35,8 +35,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Constructor to start a chat session with history.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="history"></param>
+        /// <param name="model">The model to use in the chat.</param>
+        /// <param name="history">A chat history to initialize the object with.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. </param>
@@ -73,6 +73,11 @@ namespace Mscc.GenerativeAI
                 Role = Role.User, Parts = new List<Part> { new Part { Text = prompt } }
             };
             History.Add(_lastSent);
+
+            generationConfig ??= _generationConfig;
+            if (generationConfig?.CandidateCount > 1)
+                throw new ValueErrorException("Can't chat with `CandidateCount > 1`");
+            
             var request = new GenerateContentRequest
             {
                 Contents = History.Select(x =>
