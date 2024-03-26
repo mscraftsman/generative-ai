@@ -8,7 +8,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Entry point to access Gemini API running in Google AI.
     /// </summary>
-    public sealed class GoogleAI
+    public sealed class GoogleAI : IGenerativeAI
     {
         private readonly string? _apiKey;
         private readonly string? _accessToken;
@@ -45,7 +45,7 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <exception cref="ArgumentNullException"></exception>
-        /// <returns></returns>
+        /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null)
