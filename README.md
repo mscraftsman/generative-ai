@@ -166,6 +166,30 @@ Console.WriteLine(response.Text);
 
 ## More examples
 
+Supported models are accessible via the `Model` class. Since release 0.9.0 there is support for the previous PaLM 2 models and their functionalities.
+
+### Text-and-image input
+
+```csharp
+using Mscc.GenerativeAI;
+
+var apiKey = "your_api_key";
+var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiVisionPro);
+var prompt = "Parse the time and city from the airport board shown in this image into a list.";
+// Download the image from the web and provide base64 string of the image.
+// Either use the extension method from the `tests` or your own one.
+var board = await TestExtensions.ReadImageFileBase64Async("https://ai.google.dev/static/docs/images/timetable.png");
+var request = new GenerateContentRequest(prompt);
+request.Contents[0].Parts.Add(
+    new InlineData { MimeType = "image/png", Data = board }
+);
+
+var response = await model.GenerateContent(request);
+Console.WriteLine(response.Text);
+```
+
+The part of `InlineData` is supported by both Google AI and Vertex AI. Whereas the part `FileData` is restricted to Vertex AI only.
+
 ### Chat conversations
 
 Gemini enables you to have freeform conversations across multiple turns. You can interact with Gemini Pro using a single-turn prompt and response or chat with it in a multi-turn, continuous conversation, even for code understanding and generation.
