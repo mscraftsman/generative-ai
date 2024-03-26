@@ -22,7 +22,6 @@ namespace Mscc.GenerativeAI
     {
         private const string EndpointGoogleAi = "generativelanguage.googleapis.com";
         private const string UrlGoogleAi = "https://{endpointGoogleAI}/{version}/{model}:{method}";
-        private const string UrlParameterKey = "?key={apiKey}"; // Or in the x-goog-api-key header
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
         private const string MediaType = "application/json";
 
@@ -33,7 +32,6 @@ namespace Mscc.GenerativeAI
         private readonly Credentials? _credentials;
 
         private string _model;
-        private bool _useHeaderApiKey;
         private string? _apiKey;
         private string? _accessToken;
         private bool _useHeaderProjectId;
@@ -62,11 +60,6 @@ namespace Mscc.GenerativeAI
             get
             {
                 var url = UrlGoogleAi;
-                if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
-                {
-                    url += UrlParameterKey;
-                }
-
                 if (_useVertexAi)
                 {
                     url = UrlVertexAi;
@@ -139,12 +132,10 @@ namespace Mscc.GenerativeAI
                 _apiKey = value;
                 if (!string.IsNullOrEmpty(_apiKey))
                 {
-                    _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
-                    if (!_useHeaderApiKey)
+                    if (!Client.DefaultRequestHeaders.Contains("x-goog-api-key"))
                     {
                         Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
                     }
-                    _useHeaderApiKey = Client.DefaultRequestHeaders.Contains("x-goog-api-key");
                 }
             }
         }
@@ -272,10 +263,6 @@ namespace Mscc.GenerativeAI
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
                 [nameof(pageToken)] = pageToken
             };
-            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
-            {
-                queryStringParams.Add("key", _apiKey);
-            }
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
@@ -313,10 +300,6 @@ namespace Mscc.GenerativeAI
                 [nameof(pageToken)] = pageToken,
                 [nameof(filter)] = filter
             };
-            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
-            {
-                queryStringParams.Add("key", _apiKey);
-            }
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
@@ -423,10 +406,6 @@ namespace Mscc.GenerativeAI
             {
                 [nameof(updateMask)] = updateMask
             };
-            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
-            {
-                queryStringParams.Add("key", _apiKey);
-            }
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             string json = Serialize(tunedModel);
@@ -490,10 +469,6 @@ namespace Mscc.GenerativeAI
             }
 
             var url = $"https://{EndpointGoogleAi}/{Version}/{model}";
-            if (!string.IsNullOrEmpty(_apiKey) && !_useHeaderApiKey)
-            {
-                url += UrlParameterKey;
-            }
 
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
