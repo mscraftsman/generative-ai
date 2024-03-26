@@ -1,6 +1,9 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 #endif
 
 namespace Mscc.GenerativeAI
@@ -93,6 +96,45 @@ namespace Mscc.GenerativeAI
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
+        }
+
+        public void AddContent(Content content)
+        {
+            Contents.Add(content);
+        }
+
+        public async Task AddMedia(string uri, bool isRemote = false)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            var base64data = string.Empty;
+            string mimeType = GenerativeModelExtensions.GetMimeType(uri);
+
+            if (isRemote)
+            {
+                Contents[0].Parts.Add(new FileData
+                {
+                    FileUri = uri,
+                    MimeType = mimeType
+                });
+            }
+            
+            if (File.Exists(uri))
+            {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                base64data = Convert.ToBase64String(File.ReadAllBytes(uri));
+#else
+                base64data = Convert.ToBase64String(await File.ReadAllBytesAsync(uri));
+#endif
+            }
+            else
+            {
+                base64data =  await GenerativeModelExtensions.ReadImageFileBase64Async(uri);
+            }
+
+            Contents[0].Parts.Add(
+                new InlineData { MimeType = mimeType, Data = base64data }
+            );
         }
     }
 }
