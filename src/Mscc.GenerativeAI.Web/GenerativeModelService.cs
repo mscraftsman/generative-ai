@@ -23,12 +23,13 @@ namespace Mscc.GenerativeAI.Web
             var model = options?.Value?.Model ?? Model.Gemini10Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
-                var vertex = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
-                this.model = vertex.GenerativeModel(model: model);
+                var vertexAi = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
+                this.model = vertexAi.GenerativeModel(model: model);
             }
             else
             {
-                this.model = new GenerativeModel(apiKey: options?.Value.Credentials.ApiKey, model: model);
+                var googleAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
+                this.model = googleAi.GenerativeModel(model: model);
             }
         }
 
@@ -36,12 +37,13 @@ namespace Mscc.GenerativeAI.Web
         {
             if (!string.IsNullOrEmpty(options?.Value?.ProjectId))
             {
-                var vertex = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
-                this.model = vertex.GenerativeModel(model: model);
+                var vertexAi = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
+                this.model = vertexAi.GenerativeModel(model: model);
             }
             else
             {
-                this.model = new GenerativeModel(apiKey: options?.Value.Credentials.ApiKey, model: model);
+                var googleAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
+                this.model = googleAi.GenerativeModel(model: model);
             }
         }
 
