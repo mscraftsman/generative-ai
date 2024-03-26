@@ -174,15 +174,10 @@ Supported models are accessible via the `Model` class. Since release 0.9.0 there
 using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
+var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
 var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiVisionPro);
-var prompt = "Parse the time and city from the airport board shown in this image into a list.";
-// Download the image from the web and provide base64 string of the image.
-// Either use the extension method from the `tests` or your own one.
-var board = await TestExtensions.ReadImageFileBase64Async("https://ai.google.dev/static/docs/images/timetable.png");
 var request = new GenerateContentRequest(prompt);
-request.Contents[0].Parts.Add(
-    new InlineData { MimeType = "image/png", Data = board }
-);
+await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
 
 var response = await model.GenerateContent(request);
 Console.WriteLine(response.Text);
