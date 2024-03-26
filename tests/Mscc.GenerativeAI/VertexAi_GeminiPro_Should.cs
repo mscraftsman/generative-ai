@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -205,6 +206,32 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void GenerateContent_WithRequest_MultipleCandidates_ThrowsHttpRequestException()
+        {
+            // Arrange
+            var prompt = "Write a short poem about koi fish.";
+            var vertexai = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertexai.GenerativeModel(model: this.model);
+            model.AccessToken = fixture.AccessToken;
+            var request = new GenerateContentRequest
+            {
+                Contents = new List<Content>(), 
+                GenerationConfig = new GenerationConfig()
+                {
+                    CandidateCount = 3
+                }
+            };
+            request.Contents.Add(new Content
+            {
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
+            });
+
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(request));
         }
 
         [Fact]
