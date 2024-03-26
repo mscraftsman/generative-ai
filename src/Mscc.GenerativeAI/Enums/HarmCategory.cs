@@ -1,4 +1,6 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+﻿
+using System;
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Text.Json.Serialization;
 #endif
 
@@ -32,29 +34,39 @@ namespace Mscc.GenerativeAI
         /// </summary>
         HarmCategorySexuallyExplicit = 4,
         
+        #region "PaLM 2" safety settings
+        
         /// <summary>
         /// Negative or harmful comments targeting identity and/or protected attribute.
         /// </summary>
+        [Obsolete("This value is related to PaLM 2 models and features.")]
         HarmCategoryDerogatory = 101,
         /// <summary>
         /// Content that is rude, disrespectful, or profane.
         /// </summary>
+        [Obsolete("This value is related to PaLM 2 models and features.")]
         HarmCategoryToxicity,
         /// <summary>
         /// Describes scenarios depicting violence against an individual or group, or general descriptions of gore.
         /// </summary>
+        [Obsolete("This value is related to PaLM 2 models and features.")]
         HarmCategoryViolence,
         /// <summary>
         /// Contains references to sexual acts or other lewd content.
         /// </summary>
+        [Obsolete("This value is related to PaLM 2 models and features.")]
         HarmCategorySexual,
         /// <summary>
         /// Promotes unchecked medical advice.
         /// </summary>
+        [Obsolete("This value is related to PaLM 2 models and features.")]
         HarmCategoryMedical,
         /// <summary>
         /// Dangerous content that promotes, facilitates, or encourages harmful acts.
         /// </summary>
+        [Obsolete("This value is related to PaLM 2 models and features.")]
         HarmCategoryDangerous
+        
+        #endregion
     }
 }
