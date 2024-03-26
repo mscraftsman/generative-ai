@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - use GoogleAI type to create model reference
+- increase package reference
 - bump version
 
 ## 0.9.0
