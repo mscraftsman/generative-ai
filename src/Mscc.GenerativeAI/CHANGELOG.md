@@ -10,9 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
+- implement Automatic Function Call (AFC)
 
 ### Changed
 ### Fixed
+
+## 0.9.1
+
+### Added
+
+- simplify image/media handling in requests
+- extend generateAnswer feature
+- more tests for Gemini Pro Vision model
+
+### Changed
+
+- improve creation of generative model in Google AI class
 
 ## 0.9.0
 
