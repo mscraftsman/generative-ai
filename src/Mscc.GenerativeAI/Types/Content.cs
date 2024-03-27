@@ -85,6 +85,7 @@ namespace Mscc.GenerativeAI
         public List<Part> Parts { get; set; }
         public string Role { get; set; }
 
+        [JsonIgnore]
         public virtual string Text => Parts[0].Text;
 
         private string GetDebuggerDisplay()
