@@ -1,9 +1,7 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
-using System.Collections.Generic;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 

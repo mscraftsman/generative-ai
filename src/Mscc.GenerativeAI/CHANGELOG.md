@@ -10,10 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
+- Feature suggestion: Add logs with LogLevel using the Standard logging in .NET ([#6](https://github.com/mscraftsman/generative-ai/issues/6))
 - implement Automatic Function Call (AFC)
 
 ### Changed
 ### Fixed
+
+## 0.9.2
+
+### Added
+
+- models of Gemini 1.5 and Gemini 1.0 Ultra
+- tests for Gemini 1.5 and Gemini 1.0 Ultra
 
 ## 0.9.1
 
@@ -29,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - improve creation of generative model in Google AI class
 - SafetySettings can be easier and less error-prone. ([#8](https://github.com/mscraftsman/generative-ai/issues/8))
-- remove _useHeaderApiKey ([#10](https://github.com/mscraftsman/generative-ai/issues/10])
+- remove _useHeaderApiKey ([#10](https://github.com/mscraftsman/generative-ai/issues/10]))
 
 ## 0.9.0
 
