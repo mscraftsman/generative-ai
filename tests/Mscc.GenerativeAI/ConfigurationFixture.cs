@@ -32,6 +32,7 @@ namespace Test.Mscc.GenerativeAI
                 .AddJsonFile("appsettings.user.json", optional: true)
                 .AddJsonFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
                         "application_default_credentials.json"), optional: true)
+                .AddUserSecrets("b2e3f388-3f81-435b-9467-73081761ab6f") // Add User Secrets
                 .AddEnvironmentVariables()
                 .Build();
 
