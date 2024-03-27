@@ -22,8 +22,8 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var expected = Model.Embedding;
-            
+            var expected = Model.Embedding.SanitizeModelName();
+
             // Act
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
 
