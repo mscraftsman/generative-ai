@@ -189,6 +189,38 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async void Describe_Image_From_StorageBucket()
+        {
+            // Arrange
+            var prompt = "Describe the image with a creative description";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var generationConfig = new GenerationConfig
+            {
+                Temperature = 0.4f,
+                TopP = 1,
+                TopK = 32,
+                MaxOutputTokens = 2048
+            };
+            // var request = new GenerateContentRequest(prompt, generationConfig);
+            var request = new GenerateContentRequest(prompt);
+            request.Contents[0].Parts.Add(new FileData
+            {
+                FileUri = "gs://generativeai-downloads/images/scones.jpg",
+                MimeType = "image/jpeg"
+            });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
         [Fact(Skip = "Bad Request due to FileData part")]
         public async void Describe_Image_From_FileData()
         {
