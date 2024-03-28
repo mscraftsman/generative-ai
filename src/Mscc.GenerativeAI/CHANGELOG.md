@@ -24,8 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix a bug in Initialize_Model() test by Will ([#13](https://github.com/mscraftsman/generative-ai/issues/13))
-- Fixes ContentResponse class issue by Will ([#16](https://github.com/mscraftsman/generative-ai/issues/16))
+- Fix a bug in Initialize_Model() test by Will @doggy8088 ([#13](https://github.com/mscraftsman/generative-ai/issues/13))
+- Fixes ContentResponse class issue by Will @doggy8088 ([#16](https://github.com/mscraftsman/generative-ai/issues/16))
+- ignore Text member in ContentResponse by Will @doggy8088 ([#14](https://github.com/mscraftsman/generative-ai/issues/14))
 
 ## 0.9.2
 
