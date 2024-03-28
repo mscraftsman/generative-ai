@@ -491,6 +491,10 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            request.GenerationConfig ??= _generationConfig;
+            request.SafetySettings ??= _safetySettings;
+            request.Tools ??= _tools;
+            
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
@@ -565,6 +569,10 @@ namespace Mscc.GenerativeAI
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
+
+            request.GenerationConfig ??= _generationConfig;
+            request.SafetySettings ??= _safetySettings;
+            request.Tools ??= _tools;
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
