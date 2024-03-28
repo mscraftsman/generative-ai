@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement Automatic Function Call (AFC)
 
 ### Changed
+
+- apply default config and settings to request
+
 ### Fixed
 
 ## 0.9.2
