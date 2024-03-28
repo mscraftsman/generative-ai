@@ -455,18 +455,14 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        public async Task<ModelResponse> GetModel(string model = null)
+        public async Task<ModelResponse> GetModel(string? model = null)
         {
             if (_useVertexAi)
             {
                 throw new NotSupportedException();
             }
 
-            if (model is null)
-            {
-                model = _model;
-            }
-
+            model ??= _model;
             model = model.SanitizeModelName();
             if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
             {

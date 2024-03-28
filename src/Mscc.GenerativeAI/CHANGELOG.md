@@ -14,10 +14,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement Automatic Function Call (AFC)
 
 ### Changed
+### Fixed
+
+## 0.9.3
+
+### Changed
 
 - apply default config and settings to request
 
 ### Fixed
+
+- Fix a bug in Initialize_Model() test by Will ([#13](https://github.com/mscraftsman/generative-ai/issues/13))
+- Fixes ContentResponse class issue by Will ([#16](https://github.com/mscraftsman/generative-ai/issues/16))
 
 ## 0.9.2
 
