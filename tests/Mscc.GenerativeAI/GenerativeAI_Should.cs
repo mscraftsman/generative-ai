@@ -2,6 +2,7 @@
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,6 +40,22 @@ namespace Test.Mscc.GenerativeAI
             genAi.Should().NotBeNull();
             model.Should().NotBeNull();
             model.Name.Should().Be($"{expected}");
+        }
+
+        [Fact]
+        public async Task GetModel()
+        {
+            // Arrange
+            IGenerativeAI genAi;
+            genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var expected = Model.Embedding.SanitizeModelName();
+
+            // Act
+            var model = genAi.GenerativeModel(model: Model.Embedding);
+            var get_model = await model.GetModel();
+
+            // Assert
+            get_model.Name.SanitizeModelName().Should().Be(expected);
         }
 
         [Fact]
