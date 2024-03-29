@@ -108,12 +108,8 @@ namespace Mscc.GenerativeAI
                 return GenerativeAI.Method.GenerateContent;
             }
         }
-
-        /// <summary>
-        /// Returns the name of the model. 
-        /// </summary>
-        /// <returns>Name of the model.</returns>
-        public string Name => _model;
+        
+        internal bool IsVertexAI => _useVertexAi;
 
         private string Model
         {
@@ -125,6 +121,13 @@ namespace Mscc.GenerativeAI
                 }
             }
         }
+
+        /// <summary>
+        /// Returns the name of the model. 
+        /// </summary>
+        /// <returns>Name of the model.</returns>
+        public string Name => _model;
+
         public string? ApiKey
         {
             set
@@ -247,14 +250,11 @@ namespace Mscc.GenerativeAI
             string? pageToken = null, 
             string? filter = null)
         {
+            this.GuardSupported();
+            
             if (tuned)
             {
                 return await ListTunedModels(pageSize, pageToken, filter);
-            }
-            
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
             }
 
             var url = "https://{endpointGoogleAI}/{Version}/models";
@@ -272,40 +272,28 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get a list of available tuned models and description.
+        /// Gets information about a specific Model.
         /// </summary>
-        /// <returns>List of available tuned models.</returns>
-        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
-        /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
-        /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
-        /// <exception cref="NotSupportedException"></exception>
-        private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
-            string? pageToken = null, 
-            string? filter = null)
+        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public async Task<ModelResponse> GetModel(string? model = null)
         {
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
-            }
+            this.GuardSupported();
 
-            if (!string.IsNullOrEmpty(_apiKey))
+            model ??= _model;
+            model = model.SanitizeModelName();
+            if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = "https://{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
-            var queryStringParams = new Dictionary<string, string?>()
-            {
-                [nameof(pageSize)] = Convert.ToString(pageSize), 
-                [nameof(pageToken)] = pageToken,
-                [nameof(filter)] = filter
-            };
+            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";
 
-            url = ParseUrl(url).AddQueryString(queryStringParams);
+            url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            var models = await Deserialize<ListTunedModelResponse>(response);
-            return models?.TunedModels!;
+            return await Deserialize<ModelResponse>(response);
         }
 
         /// <summary>
@@ -348,15 +336,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> DeleteTunedModel(string model)
         {
-            if (string.IsNullOrEmpty(model))
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
-            }
+            if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
+            this.GuardSupported();
 
             model = model.SanitizeModelName();
             if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
@@ -426,13 +407,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> TransferOwnership(string model, string emailAddress)
         {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
-
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
-            }
+            if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
+            if (string.IsNullOrEmpty(emailAddress)) throw new ArgumentNullException(nameof(emailAddress));
+            this.GuardSupported();
 
             model = model.SanitizeModelName();
             if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
@@ -447,34 +424,6 @@ namespace Mscc.GenerativeAI
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
-        }
-
-        /// <summary>
-        /// Gets information about a specific Model.
-        /// </summary>
-        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException"></exception>
-        public async Task<ModelResponse> GetModel(string? model = null)
-        {
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
-            }
-
-            model ??= _model;
-            model = model.SanitizeModelName();
-            if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
-            }
-
-            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";
-
-            url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            return await Deserialize<ModelResponse>(response);
         }
 
         /// <summary>
@@ -1028,6 +977,43 @@ namespace Mscc.GenerativeAI
         #endregion
 
         #region "Private methods"
+
+        /// <summary>
+        /// Get a list of available tuned models and description.
+        /// </summary>
+        /// <returns>List of available tuned models.</returns>
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <exception cref="NotSupportedException"></exception>
+        private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
+            string? pageToken = null, 
+            string? filter = null)
+        {
+            if (_useVertexAi)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var url = "https://{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken,
+                [nameof(filter)] = filter
+            };
+
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            var response = await Client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var models = await Deserialize<ListTunedModelResponse>(response);
+            return models?.TunedModels!;
+        }
         
         /// <summary>
         /// Parses the URL template and replaces the placeholder with current values.
