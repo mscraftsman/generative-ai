@@ -78,7 +78,7 @@ namespace Test.Mscc.GenerativeAI
             model.Should().NotBeNull();
             model.Name.Should().Be($"{expected.SanitizeModelName()}");
         }
-
+        
         [Fact]
         public void Initialize_Model()
         {
@@ -241,6 +241,45 @@ namespace Test.Mscc.GenerativeAI
 
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => model.GenerateContent(prompt));
+        }
+        
+        [Fact]
+        public async void GenerateContent_WithInvalidAPIKey_ChangingBeforeRequest()
+        {
+            // Arrange
+            var prompt = "Tell me 4 things about Taipei. Be short.";
+            var googleAI = new GoogleAI(apiKey: "WRONG_API_KEY");
+            var model = googleAI.GenerativeModel(model: Model.Gemini10Pro001);
+            model.ApiKey = fixture.ApiKey;
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+        
+        [Fact]
+        public async void GenerateContent_WithInvalidAPIKey_ChangingAfterRequest()
+        {
+            // Arrange
+            var prompt = "Tell me 4 things about Taipei. Be short.";
+            var googleAI = new GoogleAI(apiKey: "WRONG_API_KEY");
+            var model = googleAI.GenerativeModel(model: Model.Gemini10Pro001);
+            await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
+            
+            // Act
+            model.ApiKey = fixture.ApiKey;
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
         }
         
         [Fact]

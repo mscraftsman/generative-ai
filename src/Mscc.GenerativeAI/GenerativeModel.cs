@@ -34,7 +34,6 @@ namespace Mscc.GenerativeAI
         private string _model;
         private string? _apiKey;
         private string? _accessToken;
-        private bool _useHeaderProjectId;
         private string? _projectId;
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
@@ -123,11 +122,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Returns the name of the model. 
+        /// Sets the API key to use for the request.
         /// </summary>
-        /// <returns>Name of the model.</returns>
-        public string Name => _model;
-
+        /// <remarks>
+        /// The value can only be set or modified before the first request is made.
+        /// </remarks>
         public string? ApiKey
         {
             set
@@ -135,24 +134,21 @@ namespace Mscc.GenerativeAI
                 _apiKey = value;
                 if (!string.IsNullOrEmpty(_apiKey))
                 {
-                    if (!Client.DefaultRequestHeaders.Contains("x-goog-api-key"))
+                    if (Client.DefaultRequestHeaders.Contains("x-goog-api-key"))
                     {
-                        Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
+                        Client.DefaultRequestHeaders.Remove("x-goog-api-key");
                     }
+                    Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
                 }
             }
         }
         
-        public string? AccessToken
-        {
-            set
-            {
-                _accessToken = value;
-                if (value != null)
-                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-            }
-        }
-        
+        /// <summary>
+        /// Sets the project ID to use for the request.
+        /// </summary>
+        /// <remarks>
+        /// The value can only be set or modified before the first request is made.
+        /// </remarks>
         public string? ProjectId
         {
             set
@@ -160,13 +156,31 @@ namespace Mscc.GenerativeAI
                 _projectId = value;
                 if (!string.IsNullOrEmpty(_projectId))
                 {
-                    _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
-                    if (!_useHeaderProjectId)
+                    if (Client.DefaultRequestHeaders.Contains("x-goog-user-project"))
                     {
-                        Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
+                        Client.DefaultRequestHeaders.Remove("x-goog-user-project");
                     }
-                    _useHeaderProjectId = Client.DefaultRequestHeaders.Contains("x-goog-user-project");
+                    Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Returns the name of the model. 
+        /// </summary>
+        /// <returns>Name of the model.</returns>
+        public string Name => _model;
+        
+        /// <summary>
+        /// Sets the access token to use for the request.
+        /// </summary>
+        public string? AccessToken
+        {
+            set
+            {
+                _accessToken = value;
+                if (value != null)
+                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
         }
 
@@ -433,6 +447,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -443,7 +458,7 @@ namespace Mscc.GenerativeAI
             
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType); 
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
 

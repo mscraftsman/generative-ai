@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - extend XML documentation
 
+### Fixed
+
+- Assigning a API_KEY using model.ApiKey is not working ([#20](https://github.com/mscraftsman/generative-ai/issues/20))
+
 ## 0.9.3
 
 ### Changed
