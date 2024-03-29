@@ -71,5 +71,11 @@ namespace Mscc.GenerativeAI
 
             return _generativeModel;
         }
+
+        /// <inheritdoc cref="IGenerativeAI"/>
+        public async Task<ModelResponse> GetModel(string model)
+        {
+            return await _generativeModel?.GetModel(model);
+        }
     }
 }

@@ -65,5 +65,11 @@ namespace Mscc.GenerativeAI
             _generativeModel = new GenerativeModel(_projectId, _region, model, generationConfig, safetySettings);
             return _generativeModel;
         }
+
+        /// <inheritdoc cref="IGenerativeAI"/>
+        public Task<ModelResponse> GetModel(string model)
+        {
+            throw new NotSupportedException();
+        }
     }
 }
