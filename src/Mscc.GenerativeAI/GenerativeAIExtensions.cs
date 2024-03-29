@@ -10,8 +10,19 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public static class GenerativeModelExtensions
+    public static class GenerativeAIExtensions
     {
+        /// <summary>
+        /// Checks if the functionality is supported by the model.
+        /// </summary>
+        /// <param name="model">Model to use.</param>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public static void GuardSupported(this GenerativeModel model, string? message = null)
+        {
+            message ??= $"Vertex AI or the model `{model.Name}` does not support this functionality.";
+            if (model.IsVertexAI) throw new NotSupportedException(message);
+        }
+        
         public static string? SanitizeModelName(this string? value)
         {
             if (value == null) return value;

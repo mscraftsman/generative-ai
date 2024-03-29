@@ -108,7 +108,7 @@ namespace Mscc.GenerativeAI
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
             var base64data = string.Empty;
-            string mimeType = GenerativeModelExtensions.GetMimeType(uri);
+            string mimeType = GenerativeAIExtensions.GetMimeType(uri);
 
             if (isRemote)
             {
@@ -129,7 +129,7 @@ namespace Mscc.GenerativeAI
             }
             else
             {
-                base64data =  await GenerativeModelExtensions.ReadImageFileBase64Async(uri);
+                base64data =  await GenerativeAIExtensions.ReadImageFileBase64Async(uri);
             }
 
             Contents[0].Parts.Add(

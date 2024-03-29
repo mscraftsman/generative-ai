@@ -1,6 +1,7 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 #endif
 
 namespace Mscc.GenerativeAI
@@ -12,22 +13,30 @@ namespace Mscc.GenerativeAI
     {
         private readonly string? _apiKey;
         private readonly string? _accessToken;
-        private readonly string? _projectId;
+        private GenerativeModel? _generativeModel;
 
         /// <summary>
-        /// Default constructor attempts to read environment variables and
-        /// sets default values, if available
+        /// Default constructor attempts to read <c>.env</c> file and environment variables.
+        /// Sets default values, if available.
         /// </summary>
+        /// <remarks>The following environment variables are used:
+        /// <list type="table">
+        /// <item><term>GOOGLE_API_KEY</term>
+        /// <description>API key provided by Google AI Studio.</description></item>
+        /// <item><term>GOOGLE_ACCESS_TOKEN</term>
+        /// <description>Optional. Access token provided by OAuth 2.0 or Application Default Credentials (ADC).</description></item>
+        /// </list>
+        /// </remarks>
         private GoogleAI()
         {
-            GenerativeModelExtensions.ReadDotEnv();
+            GenerativeAIExtensions.ReadDotEnv();
 
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
         }
 
         /// <summary>
-        /// Constructor to initialize access to Google AI Gemini API.
+        /// Initialize access to Google AI Gemini API.
         /// Either API key or access token is required.
         /// </summary>
         /// <param name="apiKey">Identifier of the Google Cloud project</param>
@@ -44,7 +53,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when either API key or access token is null.</exception>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
@@ -54,13 +63,13 @@ namespace Mscc.GenerativeAI
                 throw new ArgumentNullException("apiKey or accessToken", 
                     message: "Either API key or access token is required.");
             
-            var generativeModel = new GenerativeModel(_apiKey, model, generationConfig, safetySettings);
+            _generativeModel = new GenerativeModel(_apiKey, model, generationConfig, safetySettings);
             if (_apiKey is null)
             {
-                generativeModel.AccessToken = _accessToken;
+                _generativeModel.AccessToken = _accessToken;
             }
 
-            return generativeModel;
+            return _generativeModel;
         }
     }
 }

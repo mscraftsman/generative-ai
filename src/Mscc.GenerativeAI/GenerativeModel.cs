@@ -174,7 +174,7 @@ namespace Mscc.GenerativeAI
         public GenerativeModel()
         {
             _options = DefaultJsonSerializerOptions();
-            GenerativeModelExtensions.ReadDotEnv();
+            GenerativeAIExtensions.ReadDotEnv();
             var credentialsFile = 
                 Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
                 Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
@@ -241,7 +241,7 @@ namespace Mscc.GenerativeAI
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<List<ModelResponse>> ListModels(bool tuned = false, 
             int? pageSize = null, 
             string? pageToken = null, 
@@ -312,7 +312,7 @@ namespace Mscc.GenerativeAI
         /// Creates a tuned model.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request)
         {
             if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase) ||
@@ -344,8 +344,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
         /// <returns>If successful, the response body is empty.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the model is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> DeleteTunedModel(string model)
         {
             if (string.IsNullOrEmpty(model))
@@ -378,8 +378,8 @@ namespace Mscc.GenerativeAI
         /// <param name="tunedModel">The tuned model to update.</param>
         /// <param name="updateMask">Required. The list of fields to update. This is a comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the model is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<ModelResponse> PatchTunedModel(string model, ModelResponse tunedModel, string? updateMask = null)
         {
             if (string.IsNullOrEmpty(model))
@@ -422,8 +422,8 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Required. The resource name of the tuned model to transfer ownership. Format: tunedModels/my-model-id</param>
         /// <param name="emailAddress">Required. The email address of the user to whom the tuned model is being transferred to.</param>
         /// <returns>If successful, the response body is empty.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the model is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> TransferOwnership(string model, string emailAddress)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
