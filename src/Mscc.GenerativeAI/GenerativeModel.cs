@@ -171,8 +171,9 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Default constructor attempts to read environment variables and
-        /// sets default values, if available
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
+        /// The default constructor attempts to read <c>.env</c> file and environment variables.
+        /// Sets default values, if available.
         /// </summary>
         public GenerativeModel()
         {
@@ -193,13 +194,13 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Constructor to initialize access to Google AI Gemini API.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class with access to Google AI Gemini API.
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
         /// <param name="model">Model to use (default: "gemini-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
-        public GenerativeModel(string? apiKey = null, 
+        internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null) : this()
@@ -211,7 +212,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Constructor to initialize access to Vertex AI Gemini API.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
@@ -332,7 +333,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
         /// <returns>If successful, the response body is empty.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the model is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> DeleteTunedModel(string model)
         {
@@ -359,7 +360,7 @@ namespace Mscc.GenerativeAI
         /// <param name="tunedModel">The tuned model to update.</param>
         /// <param name="updateMask">Required. The list of fields to update. This is a comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException">Thrown when the model is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<ModelResponse> PatchTunedModel(string model, ModelResponse tunedModel, string? updateMask = null)
         {
@@ -403,7 +404,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Required. The resource name of the tuned model to transfer ownership. Format: tunedModels/my-model-id</param>
         /// <param name="emailAddress">Required. The email address of the user to whom the tuned model is being transferred to.</param>
         /// <returns>If successful, the response body is empty.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the model is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> or <paramref name="emailAddress"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> TransferOwnership(string model, string emailAddress)
         {
@@ -431,7 +432,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -470,7 +471,7 @@ namespace Mscc.GenerativeAI
             return await Deserialize<GenerateContentResponse>(response);
         }
 
-        /// <remarks/>
+        /// <inheritdoc cref="M:GenerativeModel.GenerateContent(request)"/>
         public async Task<GenerateContentResponse> GenerateContent(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -509,7 +510,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request">The request to send to the API.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Stream of GenerateContentResponse with chunks asynchronously.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -595,7 +596,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Response from the model for a grounded answer.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<GenerateAnswerResponse> GenerateAnswer(GenerateAnswerRequest? request)
         {
@@ -655,7 +656,7 @@ namespace Mscc.GenerativeAI
         /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
         /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
         /// <returns>Embeddings of the content as a list of floating numbers.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedContentResponse> EmbedContent(EmbedContentRequest request, TaskType? taskType = null, string? title = null)
         {
@@ -680,7 +681,7 @@ namespace Mscc.GenerativeAI
         /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
         /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
         /// <returns>Embeddings of the content as a list of floating numbers.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedContentResponse> EmbedContent(string? prompt, TaskType? taskType = null, string? title = null)
         {
@@ -703,7 +704,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="requests">Required. Embed requests for the batch. The model in each of these requests must match the model specified BatchEmbedContentsRequest.model.</param>
         /// <returns>List of Embeddings of the content as a list of floating numbers.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="requests"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedContentResponse> BatchEmbedContent(List<EmbedContentRequest> requests)
         {
@@ -726,7 +727,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -800,7 +801,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request">The request to send to the API.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<GenerateTextResponse> GenerateText(GenerateTextRequest? request)
         {
@@ -832,7 +833,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(GenerateTextRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -851,7 +852,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<GenerateMessageResponse> GenerateMessage(GenerateMessageRequest? request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -882,7 +883,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(GenerateMessageRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -901,7 +902,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedTextResponse> EmbedText(EmbedTextRequest request)
         {
@@ -938,7 +939,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(EmbedTextRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -957,7 +958,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request">Required. Embed requests for the batch. The model in each of these requests must match the model specified BatchEmbedContentsRequest.model.</param>
         /// <returns>List of Embeddings of the content as a list of floating numbers.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedTextResponse> BatchEmbedText(BatchEmbedTextRequest request)
         {

@@ -16,7 +16,8 @@ namespace Mscc.GenerativeAI
         private GenerativeModel? _generativeModel;
 
         /// <summary>
-        /// Default constructor attempts to read <c>.env</c> file and environment variables.
+        /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
+        /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
         /// <remarks>The following environment variables are used:
@@ -30,17 +31,16 @@ namespace Mscc.GenerativeAI
         private VertexAI()
         {
             GenerativeAIExtensions.ReadDotEnv();
-
             _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
         
         /// <summary>
-        /// Initialize access to Vertex AI Gemini API.
+        /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
         /// <param name="region">Region to use (default: "us-central1").</param>
-        /// <exception cref="ArgumentNullException">Thrown when projectId is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
         public VertexAI(string projectId, string? region = null) : this()
         {
             _projectId ??= projectId ?? throw new ArgumentNullException(nameof(projectId));
@@ -53,7 +53,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
-        /// <exception cref="ArgumentNullException">Thrown when projectId or region is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> or <paramref name="region"/> is <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,

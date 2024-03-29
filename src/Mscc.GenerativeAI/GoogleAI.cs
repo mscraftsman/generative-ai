@@ -16,7 +16,8 @@ namespace Mscc.GenerativeAI
         private GenerativeModel? _generativeModel;
 
         /// <summary>
-        /// Default constructor attempts to read <c>.env</c> file and environment variables.
+        /// Initializes a new instance of the <see cref="GoogleAI"/> class with access to Google AI Gemini API.
+        /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
         /// <remarks>The following environment variables are used:
@@ -30,13 +31,12 @@ namespace Mscc.GenerativeAI
         private GoogleAI()
         {
             GenerativeAIExtensions.ReadDotEnv();
-
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
         }
 
         /// <summary>
-        /// Initialize access to Google AI Gemini API.
+        /// Initializes a new instance of the <see cref="GoogleAI"/> class with access to Google AI Gemini API.
         /// Either API key or access token is required.
         /// </summary>
         /// <param name="apiKey">Identifier of the Google Cloud project</param>
@@ -53,7 +53,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
-        /// <exception cref="ArgumentNullException">Thrown when either API key or access token is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when both <paramref name="apiKey"/> and <paramref name="accessToken"/> are <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,

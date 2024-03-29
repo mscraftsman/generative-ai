@@ -9,7 +9,7 @@ namespace Mscc.GenerativeAI
     public interface IGenerativeAI
     {
         /// <summary>
-        /// Create a generative model to use.
+        /// Create an instance of a generative model to use.
         /// </summary>
         /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
