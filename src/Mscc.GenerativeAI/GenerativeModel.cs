@@ -784,12 +784,13 @@ namespace Mscc.GenerativeAI
         public ChatSession StartChat(List<ContentResponse>? history = null, 
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null, 
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            bool enableAutomaticFunctionCalling = false)
         {
             var config = generationConfig ?? _generationConfig;
             var safety = safetySettings ?? _safetySettings;
             var tool = tools ?? _tools;
-            return new ChatSession(this, history, config, safety, tool);
+            return new ChatSession(this, history, config, safety, tool, enableAutomaticFunctionCalling);
         }
         
         #region "PaLM 2" methods
