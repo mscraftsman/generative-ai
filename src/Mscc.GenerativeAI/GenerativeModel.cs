@@ -363,19 +363,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<ModelResponse> PatchTunedModel(string model, ModelResponse tunedModel, string? updateMask = null)
         {
-            if (string.IsNullOrEmpty(model))
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+            if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
+            this.GuardSupported();
 
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
-            }
-
-#if NET472_OR_GREATER || NETSTANDARD2_0
-            throw new NotSupportedException();
-#else
             model = model.SanitizeModelName();
             if (!string.IsNullOrEmpty(_apiKey) && model.StartsWith("tunedModel", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -387,14 +377,24 @@ namespace Mscc.GenerativeAI
             {
                 [nameof(updateMask)] = updateMask
             };
-
+            
             url = ParseUrl(url).AddQueryString(queryStringParams);
             string json = Serialize(tunedModel);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            var message = new HttpRequestMessage
+            {
+                Method = new HttpMethod("PATCH"),
+                Content = payload,
+                RequestUri = new Uri(url),
+                Version = _httpVersion
+            };
+            var response = await Client.SendAsync(message);
+#else
             var response = await Client.PatchAsync(url, payload);
+#endif
             response.EnsureSuccessStatusCode();
             return await Deserialize<ModelResponse>(response);
-#endif
         }
 
         /// <summary>
