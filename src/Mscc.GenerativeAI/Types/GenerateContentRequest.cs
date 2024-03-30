@@ -123,14 +123,28 @@ namespace Mscc.GenerativeAI
             Contents.Add(content);
         }
 
-        public async Task AddMedia(string uri, bool isRemote = false)
+        /// <summary>
+        /// Adds a media file to the request.
+        /// </summary>
+        /// <remarks>
+        /// Depending on the <paramref name="useOnline"/> flag, either an <see cref="InlineData"/>
+        /// or <see cref="FileData"/> part will be added to the request.
+        /// Standard URLs are supported and the resource is downloaded if <paramref name="useOnline"/> is <see langword="false"/>.
+        /// </remarks>
+        /// <param name="uri">The URI of the media file.</param>
+        /// <param name="mimeType">The IANA standard MIME type to check.</param>
+        /// <param name="useOnline">Flag indicating whether the file shall be used online or read from the local file system.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is <see langword="null"/>.</exception>
+        public async Task AddMedia(string uri, string? mimeType = null, bool useOnline = false)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
-            var base64data = string.Empty;
-            string mimeType = GenerativeAIExtensions.GetMimeType(uri);
-
-            if (isRemote)
+            string base64data;
+            mimeType ??= GenerativeAIExtensions.GetMimeType(uri);
+            // Strangely, the MIME type is not checked for FileData but InlineData only.
+            // GenerativeAIExtensions.GuardMimeType(mimeType);
+            
+            if (useOnline)
             {
                 Contents[0].Parts.Add(new FileData
                 {
@@ -152,8 +166,26 @@ namespace Mscc.GenerativeAI
                 base64data =  await GenerativeAIExtensions.ReadImageFileBase64Async(uri);
             }
 
+            GenerativeAIExtensions.GuardMimeType(mimeType);
             Contents[0].Parts.Add(
                 new InlineData { MimeType = mimeType, Data = base64data }
+            );
+        }
+
+        /// <summary>
+        /// Adds a media file resource to the request.
+        /// </summary>
+        /// <param name="file">The media file resource.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the MIME type of <paramref name="file"/>> is not supported by the API.</exception>
+        public void AddMedia(FileResource file)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            // Strangely, the MIME type is not checked for FileData but InlineData only.
+            // GenerativeAIExtensions.GuardMimeType(file.MimeType);
+
+            Contents[0].Parts.Add(
+                new FileData { FileUri = file.Uri, MimeType = file.MimeType }
             );
         }
     }

@@ -176,7 +176,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest(prompt);
-            await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png", true);
+            await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png", useOnline: true);
 
             // Act
             var response = await model.GenerateContent(request);
