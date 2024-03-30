@@ -33,7 +33,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="0.9.4" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="1.0.0" />
   </ItemGroup>
 ```
 
@@ -52,6 +52,7 @@ The provided code defines a C# library for interacting with Google's Generative 
 - **Count tokens**: This allows users to estimate the cost of using a model by counting the number of tokens in a prompt or response. 
 - **Start a chat session**: This allows users to have a back-and-forth conversation with a model.
 - **Create tuned models**: This allows users to provide samples for tuning an existing model. Currently, only the `text-bison-001` and `gemini-1.0-pro-001` models are supported for tuning
+- **File API**: This allows users to upload large files and use them with Gemini 1.5.
 
 The package also defines various helper classes and enums to represent different aspects of the Gemini API, such as model names, request parameters, and response data.
 
@@ -210,6 +211,40 @@ var latest = chat.Rewind();
 Console.WriteLine($"{latest.Sent} - {latest.Received}");
 ```
 
+### Use Gemini 1.5 with large files
+
+With Gemini 1.5 you can create multimodal prompts supporting large files.
+
+The following example uploads one or more files via File API and the created File URIs are used in the `GenerateContent` call to generate text.
+
+```csharp
+using Mscc.GenerativeAI;
+
+var apiKey = "your_api_key";
+var prompt = "Make a short story from the media resources. The media resources are:";
+IGenerativeAI genAi = new GoogleAI(apiKey);
+var model = genAi.GenerativeModel(Model.Gemini15Pro);
+
+// Upload your large image(s).
+// Instead of discarding you could also use the response and access `response.Text`.
+var filePath = Path.Combine(Environment.CurrentDirectory, "verylarge.png");
+var displayName = "My very large image";
+_ = await model.UploadMedia(filePath, displayName);
+
+// Create the prompt with references to File API resources.
+var request = new GenerateContentRequest(prompt);
+var files = await model.ListFiles();
+foreach (var file in files.Where(x => x.MimeType.StartsWith("image/")))
+{
+    _output.WriteLine($"File: {file.Name}");
+    request.AddMedia(file);
+}
+var response = await model.GenerateContent(request);
+Console.WriteLine(response.Text);
+```
+
+Read more about [Gemini 1.5: Our next-generation model, now available for Private Preview in Google AI Studio](https://developers.googleblog.com/2024/02/gemini-15-available-for-private-preview-in-google-ai-studio.html).
+
 ### Create a tuned model
 
 The Gemini API lets you tune models on your own data. Since it's your data and your tuned models this needs stricter access controls than API-Keys can provide.
@@ -254,6 +289,8 @@ Console.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Meta
 Tuned models appear in your Google AI Studio library.
 
 [![Tuned models are listed below My Library in Google AI Studio](./docs/GeminiTunedModels.png)](https://aistudio.google.com/app/library)
+
+Read more about [Tune Gemini Pro in Google AI Studio or with the Gemini API](https://developers.googleblog.com/2024/03/tune-gemini-pro-in-google-ai-studio-or-gemini-api.html).
 
 ### More samples
 

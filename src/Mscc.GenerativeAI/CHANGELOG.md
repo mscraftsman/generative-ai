@@ -16,6 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.0.0
+
+### Added
+
+- implement File API to support large files
+- full support of Gemini 1.5 and Gemini 1.0 Ultra
+
+### Changed
+
+- improve XML documentation
+
 ## 0.9.4
 
 ### Added
