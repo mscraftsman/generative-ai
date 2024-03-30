@@ -20,10 +20,11 @@ namespace Mscc.GenerativeAI
 {
     public class GenerativeModel
     {
-        private const string EndpointGoogleAi = "generativelanguage.googleapis.com";
-        private const string UrlGoogleAi = "https://{endpointGoogleAI}/{version}/{model}:{method}";
+        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+        private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
         private const string MediaType = "application/json";
+        private const int ChunkSize = 8388608;  // 8 MiB
 
         private readonly bool _useVertexAi;
         private readonly string _region = "us-central1";
@@ -251,6 +252,8 @@ namespace Mscc.GenerativeAI
             _safetySettings = safetySettings;
         }
 
+        #region Undecided location of methods.Maybe IGenerativeAI might be better...
+
         /// <summary>
         /// Lists models available through the API.
         /// </summary>
@@ -260,6 +263,7 @@ namespace Mscc.GenerativeAI
         /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<List<ModelResponse>> ListModels(bool tuned = false, 
             int? pageSize = null, 
             string? pageToken = null, 
@@ -272,7 +276,7 @@ namespace Mscc.GenerativeAI
                 return await ListTunedModels(pageSize, pageToken, filter);
             }
 
-            var url = "https://{endpointGoogleAI}/{Version}/models";
+            var url = "{endpointGoogleAI}/{Version}/models";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
@@ -292,6 +296,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ModelResponse> GetModel(string? model = null)
         {
             this.GuardSupported();
@@ -303,8 +308,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";
-
+            var url = $"{EndpointGoogleAi}/{Version}/{model}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
@@ -333,7 +337,7 @@ namespace Mscc.GenerativeAI
             // var method = "createTunedModel";
             // if (_model is (string)Model.BisonText001)
             //     method = "createTunedTextModel";
-            var url = "https://{endpointGoogleAI}/{Version}/{method}";   // v1beta3
+            var url = "{endpointGoogleAI}/{Version}/{method}";   // v1beta3
             url = ParseUrl(url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
@@ -360,7 +364,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
+            var url = $"{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
             response.EnsureSuccessStatusCode();
@@ -387,7 +391,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"https://{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
+            var url = $"{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(updateMask)] = updateMask
@@ -442,10 +446,163 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Uploads a file to the File API backend.
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="displayName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A URI of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
+        /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UploadMediaResponse> UploadMedia(string uri, 
+            string? displayName = null, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+
+            string uploadUrl = default;
+            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            var totalBytes = new FileInfo(uri).Length;
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                }
+            };
+
+            // Initial resumable request defining metadata.
+            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            url = ParseUrl(url);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var message = new HttpRequestMessage
+            {
+                Method = new HttpMethod("POST"),
+                Content = payload,
+                RequestUri = new Uri(url),
+                Version = _httpVersion
+            };
+            message.Headers.Add("X-Goog-Upload-Protocol","resumable");
+            message.Headers.Add("X-Goog-Upload-Command", "start");
+            message.Headers.Add("X-Goog-Upload-Header-Content-Length", $"{totalBytes}");
+            message.Headers.Add("X-Goog-Upload-Header-Content-Type",$"{mimeType}");
+            var response = await Client.SendAsync(message);
+            response.EnsureSuccessStatusCode();
+
+            if (response.Headers.TryGetValues("x-goog-upload-url", out var values))
+            {
+                uploadUrl = values.FirstOrDefault();
+            }
+            if (string.IsNullOrEmpty(uploadUrl)) throw new UploadFileException();
+
+            // Upload the actual bytes.
+            // var stream = new FileStream(uri, FileMode.Open);
+            using (var fs = File.OpenRead(uri))
+            {
+                fs.Seek(0, SeekOrigin.Begin);
+                message = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post, RequestUri = new Uri(url), Version = _httpVersion
+                };
+                // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+                using (var upload = new StreamContent(fs, ChunkSize))
+                {
+                    message.Content = upload;
+                    // upload.Headers.ContentType = new MediaTypeHeaderValue(MediaType);
+
+                    using (var responseUpload = await Client.SendAsync(message,
+                               HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+                    {
+                        responseUpload.EnsureSuccessStatusCode();
+                        using var stream = await responseUpload.Content.ReadAsStreamAsync();
+                        return await JsonSerializer.DeserializeAsync<UploadMediaResponse>(stream, _options, cancellationToken);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Lists the metadata for Files owned by the requesting project.
+        /// </summary>
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <returns>List of files in File API.</returns>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<List<FileResource>> ListFiles(int? pageSize = null, 
+            string? pageToken = null)
+        {
+            this.GuardSupported();
+            
+            var url = "{endpointGoogleAI}/{Version}/files";
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken
+            };
+
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            var response = await Client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var files = await Deserialize<ListFilesResponse>(response);
+            return files?.Files!;
+        }
+
+        /// <summary>
+        /// Gets the metadata for the given File.
+        /// </summary>
+        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <returns>Metadata for the given file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<FileResource> GetFile(string file)
+        {
+            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
+            this.GuardSupported();
+
+            file = file.SanitizeFileName();
+
+            var url = $"{EndpointGoogleAi}/{Version}/{file}";
+            url = ParseUrl(url);
+            var response = await Client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<FileResource>(response);
+        }
+
+        /// <summary>
+        /// Deletes a file.
+        /// </summary>
+        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <returns>If successful, the response body is empty.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<string> DeleteFile(string file)
+        {
+            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
+            this.GuardSupported();
+
+            file = file.SanitizeFileName();
+
+            var url = $"{EndpointGoogleAi}/{Version}/{file}";   // v1beta3
+            url = ParseUrl(url);
+            var response = await Client.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+        
+        #endregion
+
+        /// <summary>
         /// Generates a response from the model given an input GenerateContentRequest.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request)
@@ -486,7 +643,16 @@ namespace Mscc.GenerativeAI
             return await Deserialize<GenerateContentResponse>(response);
         }
 
-        /// <inheritdoc cref="M:GenerativeModel.GenerateContent(request)"/>
+        /// <summary>
+        /// Generates a response from the model given an input GenerateContentRequest.
+        /// </summary>
+        /// <param name="prompt">Required. String to process.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateContentResponse> GenerateContent(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -1017,7 +1183,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = "https://{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
+            var url = "{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
