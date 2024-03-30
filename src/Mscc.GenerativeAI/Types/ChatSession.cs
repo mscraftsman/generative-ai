@@ -40,7 +40,7 @@ namespace Mscc.GenerativeAI
         /// <param name="history">A chat history to initialize the object with.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
-        /// <param name="tools">Optional. </param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="enableAutomaticFunctionCalling">Optional. </param>
         public ChatSession(GenerativeModel model,
             List<ContentResponse>? history = null,

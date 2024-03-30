@@ -34,22 +34,25 @@ namespace Mscc.GenerativeAI
         public List<Tool>? Tools { get; set; }
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
         /// </summary>
         public GenerateContentRequest() { }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
         /// </summary>
-        /// <param name="prompt"></param>
-        /// <param name="generationConfig"></param>
-        /// <param name="safetySettings"></param>
-        /// <param name="tools"></param>
+        /// <param name="prompt">String to process.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null) : this()
         {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
             Contents = new List<Content> { new Content
             {
                 Role = Role.User,
@@ -64,17 +67,20 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
         /// </summary>
         /// <param name="parts"></param>
-        /// <param name="generationConfig"></param>
-        /// <param name="safetySettings"></param>
-        /// <param name="tools"></param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parts"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(List<IPart> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null)
         {
+            if (parts == null) throw new ArgumentNullException(nameof(parts));
+
             Contents = new List<Content> { new Content
             {
                 Parts = parts
@@ -83,12 +89,22 @@ namespace Mscc.GenerativeAI
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
         }
-
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parts"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null)
         {
+            if (parts == null) throw new ArgumentNullException(nameof(parts));
+
             Contents = new List<Content> { new Content
             {
                 Parts = parts.Select(p => (IPart)p).ToList()
@@ -98,6 +114,10 @@ namespace Mscc.GenerativeAI
             if (tools != null) Tools = tools;
         }
 
+        /// <summary>
+        /// Adds a <see cref="Content"/> object to the request.
+        /// </summary>
+        /// <param name="content"></param>
         public void AddContent(Content content)
         {
             Contents.Add(content);

@@ -7,12 +7,12 @@ using System.Diagnostics;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Response from ListModel containing a paginated list of Models.
+    /// Response from ListModels method containing a paginated list of Models.
     /// </summary>
     internal class ListModelsResponse
     {
         /// <summary>
-        /// The returned Models.
+        /// The list of Models.
         /// </summary>
         public List<ModelResponse>? Models { get; set; }
         /// <summary>
