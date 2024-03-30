@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,6 +23,21 @@ namespace Mscc.GenerativeAI
             message ??= $"Vertex AI or the model `{model.Name}` does not support this functionality.";
             if (model.IsVertexAI) throw new NotSupportedException(message);
         }
+
+        /// <summary>
+        /// Checks if the IANA standard MIME type is supported by the model.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://ai.google.dev/api/rest/v1beta/Content#blob"/> for a list of supported mime types.
+        /// </remarks>
+        /// <param name="mimeType">The IANA standard MIME type to check.</param>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
+        public static void GuardMimeType(string mimeType)
+        {
+            string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp"];
+            
+            if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
+        }
         
         public static string? SanitizeModelName(this string? value)
         {
@@ -37,7 +53,19 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
+        
+        public static string? SanitizeFileName(this string? value)
+        {
+            if (value == null) return value;
 
+            if (!value.StartsWith("file", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"files/{value}";
+            }
+
+            return value;
+        }
+        
         public static string? GetValue(this JsonElement element, string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
