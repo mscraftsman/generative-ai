@@ -17,13 +17,12 @@ namespace Mscc.GenerativeAI
         public const string GeminiProLatest = "gemini-1.0-pro-latest";
         public const string GeminiProVision = "gemini-pro-vision";
         public const string Gemini10ProVision = "gemini-1.0-pro-vision";
-        // public const string Gemini10ProVision001 = "gemini-1.0-pro-vision-001";
         public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
-        public const string GeminiUltra = GeminiUltraLatest;
+        public const string GeminiUltra = "gemini-ultra";
         public const string GeminiUltraLatest = "gemini-1.0-ultra-latest";
         public const string Gemini15Pro = Gemini15ProLatest;
+        public const string Gemini15ProGfFc = "gemini-1.5-pro-gf-fc";
         public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
-        // public const string Gemini15ProVision = "gemini-1.5-pro-vision";
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
         public const string BisonText = BisonText001;
