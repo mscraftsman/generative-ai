@@ -70,6 +70,10 @@ namespace Mscc.GenerativeAI
                 {
                     partTypes.Add(new Part { FunctionCall = call });
                 }
+                if (part is VideoMetadata video)
+                {
+                    partTypes.Add(new Part { VideoMetadata = video });
+                }
             }
         }
 
@@ -79,6 +83,9 @@ namespace Mscc.GenerativeAI
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class ContentResponse
     {

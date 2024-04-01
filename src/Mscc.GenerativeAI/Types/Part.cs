@@ -41,12 +41,12 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Raw media bytes sent directly in the request. 
         /// </summary>
-        [JsonPropertyName("inline_data")]
+        // [JsonPropertyName("inline_data")]
         public InlineData InlineData { get; set; }
         /// <summary>
         /// URI based data.
         /// </summary>
-        [JsonPropertyName("file_data")]
+        // [JsonPropertyName("file_data")]
         public FileData FileData { get; set; }
         /// <summary>
         /// The result output of a FunctionCall that contains a string representing the FunctionDeclaration.name and a structured JSON object containing any output from the function is used as context to the model.
@@ -56,6 +56,10 @@ namespace Mscc.GenerativeAI
         /// A predicted FunctionCall returned from the model that contains a string representing the FunctionDeclaration.name with the arguments and their values.
         /// </summary>
         public FunctionCall FunctionCall { get; set; }
+        /// <summary>
+        /// Optional. For video input, the start and end offset of the video in Duration format.
+        /// </summary>
+        public VideoMetadata VideoMetadata { get; set; }
 
         public FileData FromUri(string uri, string mimetype)
         {
