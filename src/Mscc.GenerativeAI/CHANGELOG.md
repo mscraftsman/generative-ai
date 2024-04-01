@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
 - Feature suggestion: Add logs with LogLevel using the Standard logging in .NET ([#6](https://github.com/mscraftsman/generative-ai/issues/6))
 - implement Automatic Function Call (AFC)
+- Use AddUserSecrets to secure development environments ([#18](https://github.com/mscraftsman/generative-ai/pull/18))
 
 ### Changed
 ### Fixed
