@@ -33,6 +33,7 @@ namespace Test.Mscc.GenerativeAI.Google
                .AddJsonFile("appsettings.user.json", optional: true)
                .AddJsonFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud", "application_default_credentials.json"), optional: true)
                .AddEnvironmentVariables()
+               .AddUserSecrets<ConfigurationFixture>()
                .Build();
 
             ApiKey = Configuration["api_key"];
