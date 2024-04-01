@@ -186,6 +186,14 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// You can enable Server Sent Events (SSE) for gemini-1.0-pro
+        /// </summary>
+        /// <remarks>
+        /// See <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">Server-sent Events</a>
+        /// </remarks>
+        public bool UseServerSentEvents { get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
@@ -614,6 +622,10 @@ namespace Mscc.GenerativeAI
             request.Tools ??= _tools;
             
             var url = ParseUrl(Url, Method);
+            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro)
+            {
+                url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
+            }
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType); 
             var response = await Client.PostAsync(url, payload);
@@ -703,6 +715,10 @@ namespace Mscc.GenerativeAI
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
+            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro)
+            {
+                url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
+            }
 
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
