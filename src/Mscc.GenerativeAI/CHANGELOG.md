@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - implement part type of VideoMetadata
 - enable Server Sent Events (SSE) for `gemini-1.0-pro`
+- add models Gemini 1.5 Pro (FC patch, PIv5 and DI) and Gemini 1.0 Ultra
 
 ### Changed
 
