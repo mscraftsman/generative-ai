@@ -16,6 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.0.1
+
+### Added
+
+- implement part type of VideoMetadata
+- enable Server Sent Events (SSE) for `gemini-1.0-pro`
+
+### Changed
+
+- improve XML documentation
+- remove/reduce snake_case JSON elements
+
 ## 1.0.0
 
 ### Added
