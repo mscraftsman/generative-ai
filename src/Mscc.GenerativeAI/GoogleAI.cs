@@ -9,6 +9,9 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Entry point to access Gemini API running in Google AI.
     /// </summary>
+    /// <remarks>
+    /// See <a href="https://ai.google.dev/api/rest">Model reference</a>.
+    /// </remarks>
     public sealed class GoogleAI : IGenerativeAI
     {
         private readonly string? _apiKey;
