@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
     /// Entry point to access Gemini API running in Vertex AI.
     /// </summary>
     /// <remarks>
-    /// See <see href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview"/>
+    /// See <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview">Model reference</a>.
     /// </remarks>
     public sealed class VertexAI : IGenerativeAI
     {
