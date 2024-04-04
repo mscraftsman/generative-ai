@@ -150,10 +150,30 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Describe_AddMedia_From_Url()
+        public async void Describe_AddMedia_From_Url_Markdown()
         {
             // Arrange
-            var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
+            var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown table";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var request = new GenerateContentRequest(prompt);
+            await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void Describe_AddMedia_From_Url_JSON()
+        {
+            // Arrange
+            var prompt = "Parse the time and city from the airport board shown in this image into a list, in JSON";
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
