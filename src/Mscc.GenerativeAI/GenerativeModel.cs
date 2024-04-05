@@ -622,7 +622,7 @@ namespace Mscc.GenerativeAI
             request.Tools ??= _tools;
             
             var url = ParseUrl(Url, Method);
-            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro)
+            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro.SanitizeModelName())
             {
                 url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
             }
@@ -715,7 +715,7 @@ namespace Mscc.GenerativeAI
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
-            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro)
+            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro.SanitizeModelName())
             {
                 url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
             }
