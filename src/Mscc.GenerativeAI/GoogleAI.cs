@@ -60,13 +60,14 @@ namespace Mscc.GenerativeAI
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null)
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             if (_apiKey is null && _accessToken is null) 
                 throw new ArgumentNullException("apiKey or accessToken", 
                     message: "Either API key or access token is required.");
             
-            _generativeModel = new GenerativeModel(_apiKey, model, generationConfig, safetySettings);
+            _generativeModel = new GenerativeModel(_apiKey, model, generationConfig, safetySettings, tools);
             if (_apiKey is null)
             {
                 _generativeModel.AccessToken = _accessToken;

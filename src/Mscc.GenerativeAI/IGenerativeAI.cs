@@ -20,7 +20,8 @@ namespace Mscc.GenerativeAI
         /// Google AI Gemini API or Vertex AI Gemini API as backends.</remarks>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null);
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null);
 
         /// <summary>
         /// Gets information about a specific Model.

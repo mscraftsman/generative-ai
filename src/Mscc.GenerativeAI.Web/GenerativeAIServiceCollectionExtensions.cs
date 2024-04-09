@@ -46,8 +46,7 @@ namespace Mscc.GenerativeAI.Web
 
             return services;
         }
-
-
+        
         /// <summary>
         /// Adds Google Gemini features to the <see cref="IServiceCollection" />.
         /// </summary>

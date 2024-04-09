@@ -206,39 +206,44 @@ namespace Mscc.GenerativeAI
             return result;
         }
 
-        private (List<ContentResponse> history, ContentResponse content, GenerateContentResponse response) HandleAutomaticFunctionCalling(GenerateContentResponse response, List<ContentResponse> history, GenerationConfig generationConfig, List<SafetySetting> safetySettings, List<Tool> tools)
+        private (List<ContentResponse> history, ContentResponse content, GenerateContentResponse response) HandleAutomaticFunctionCalling(
+            GenerateContentResponse response, 
+            List<ContentResponse> history, 
+            GenerationConfig generationConfig, 
+            List<SafetySetting> safetySettings, 
+            List<Tool> tools)
         {
             throw new NotImplementedException();
-            var functionResponseParts = new List<Part>();
-            var functionCalls = GetFunctionCalls(response);
-            history.Add(response.Candidates[0].Content);
-            
-            foreach (var functionCall in functionCalls)
-            {
-                var functionResponse = tools.Find(x =>
-                    x.FunctionDeclarations.Where(fd => fd.Name == functionCall.Name).Any());
-                if (functionResponse is not null)
-                {
-                    // functionResponseParts.Add(functionResponse);
-                }
-            }
-
-            var send = new ContentResponse() { Role = Role.User, Parts = functionResponseParts };
-            history.Add(send);
-            
-            var request = new GenerateContentRequest
-            {
-                Contents = history.Select(x =>
-                    new Content { Role = x.Role, PartTypes = x.Parts }
-                ).ToList(),
-                GenerationConfig = generationConfig,
-                SafetySettings = safetySettings,
-                Tools = tools
-            };
-            response = _model.GenerateContent(request).Result;
-            response.CheckResponse();
-
-            return (history, send, response);
+            // var functionResponseParts = new List<Part>();
+            // var functionCalls = GetFunctionCalls(response);
+            // history.Add(response.Candidates[0].Content);
+            //
+            // foreach (var functionCall in functionCalls)
+            // {
+            //     var functionResponse = tools.Find(x =>
+            //         x.FunctionDeclarations.Where(fd => fd.Name == functionCall.Name).Any());
+            //     if (functionResponse is not null)
+            //     {
+            //         // functionResponseParts.Add(functionResponse);
+            //     }
+            // }
+            //
+            // var send = new ContentResponse() { Role = Role.User, Parts = functionResponseParts };
+            // history.Add(send);
+            //
+            // var request = new GenerateContentRequest
+            // {
+            //     Contents = history.Select(x =>
+            //         new Content { Role = x.Role, PartTypes = x.Parts }
+            //     ).ToList(),
+            //     GenerationConfig = generationConfig,
+            //     SafetySettings = safetySettings,
+            //     Tools = tools
+            // };
+            // response = _model.GenerateContent(request).Result;
+            // response.CheckResponse();
+            //
+            // return (history, send, response);
         }
 
         private List<FunctionCall> GetFunctionCalls(GenerateContentResponse response)

@@ -11,11 +11,14 @@ namespace Mscc.GenerativeAI
     /// </summary>
     /// <remarks>
     /// See <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview">Model reference</a>.
+    /// See also https://cloud.google.com/nodejs/docs/reference/vertexai/latest/vertexai/vertexinit
     /// </remarks>
     public sealed class VertexAI : IGenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";
+        // private readonly string? _apiEndpoint = "us-central1-aiplatform.googleapis.com";
+        // private readonly GoogleAuthOptions? _googleAuthOptions;
         private GenerativeModel? _generativeModel;
 
         /// <summary>
@@ -60,12 +63,13 @@ namespace Mscc.GenerativeAI
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null)
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null)
         {
             if (_projectId is null) throw new ArgumentNullException("projectId");
             if (_region is null) throw new ArgumentNullException("region");
 
-            _generativeModel = new GenerativeModel(_projectId, _region, model, generationConfig, safetySettings);
+            _generativeModel = new GenerativeModel(_projectId, _region, model, generationConfig, safetySettings, tools);
             return _generativeModel;
         }
 

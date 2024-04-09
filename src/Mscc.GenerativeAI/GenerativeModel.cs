@@ -231,12 +231,14 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
-            List<SafetySetting>? safetySettings = null) : this()
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null) : this()
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
             _generationConfig ??= generationConfig;
             _safetySettings ??= safetySettings;
+            _tools = tools;
         }
 
         /// <summary>
@@ -250,7 +252,8 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(string? projectId = null, string? region = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
-            List<SafetySetting>? safetySettings = null) : this()
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null) : this()
         {
             _useVertexAi = true;
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
@@ -263,6 +266,7 @@ namespace Mscc.GenerativeAI
             Model = model ?? _model;
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
+            _tools = tools;
         }
 
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
