@@ -1,80 +1,71 @@
 ﻿using Microsoft.Extensions.Options;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI.Web
 {
     public interface IGenerativeModelService
     {
-        Task<CountTokensResponse> CountTokens(GenerateContentRequest? request);
-        Task<CountTokensResponse> CountTokens(string? prompt);
-        Task<GenerateContentResponse> GenerateContent(GenerateContentRequest prompt);
-        Task<GenerateContentResponse> GenerateContent(string prompt);
-        Task<ModelResponse> GetModel(string model = Model.GeminiPro);
-        Task<List<ModelResponse>> ListModels();
+        GenerativeModel Model { get; }
+        
+        GenerativeModel CreateInstance();
+        
+        GenerativeModel CreateInstance(string model);
     }
 
     public class GenerativeModelService : IGenerativeModelService
     {
-        private readonly GenerativeModel model;
+        private readonly IGenerativeAI _generativeAi;
+        private readonly GenerativeModel _model;
 
         public GenerativeModelService(IOptions<GenerativeAIOptions> options)
         {
-            var model = options?.Value?.Model ?? Model.Gemini10Pro;
+            var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini10Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
-                var vertexAi = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
-                this.model = vertexAi.GenerativeModel(model: model);
+                _generativeAi = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
             }
             else
             {
-                var googleAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
-                this.model = googleAi.GenerativeModel(model: model);
+                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
             }
+            _model = _generativeAi.GenerativeModel(model: model);
         }
 
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, string model) : base()
         {
+            IGenerativeAI genAI;
             if (!string.IsNullOrEmpty(options?.Value?.ProjectId))
             {
-                var vertexAi = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
-                this.model = vertexAi.GenerativeModel(model: model);
+                genAI = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
             }
             else
             {
-                var googleAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
-                this.model = googleAi.GenerativeModel(model: model);
+                genAI = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
             }
+            _model = genAI.GenerativeModel(model: model);
+        }
+        
+        /// <summary>
+        /// Default instance of the model.
+        /// </summary>
+        public GenerativeModel Model => _model;
+        
+        /// <summary>
+        /// Creates a new instance of the current model.
+        /// </summary>
+        /// <returns>A new instance of the current model.</returns>
+        public GenerativeModel CreateInstance()
+        {
+            return _generativeAi.GenerativeModel(model: _model.Name);
         }
 
-        public async Task<List<ModelResponse>> ListModels()
+        /// <summary>
+        /// Creates a new instance of the specified model.
+        /// </summary>
+        /// <param name="model">The model name to create.</param>
+        /// <returns>A new instance of the model.</returns>
+        public GenerativeModel CreateInstance(string model)
         {
-            return await model.ListModels();
-        }
-
-        public async Task<ModelResponse> GetModel(string model = Model.GeminiPro)
-        {
-            return await this.model.GetModel(model);
-        }
-
-        public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest prompt)
-        {
-            return await model.GenerateContent(prompt);
-        }
-
-        public async Task<GenerateContentResponse> GenerateContent(string prompt)
-        {
-            return await model.GenerateContent(prompt);
-        }
-
-        public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request)
-        {
-            return await model.CountTokens(request);
-        }
-
-        public async Task<CountTokensResponse> CountTokens(string? prompt)
-        {
-            return await model.CountTokens(prompt);
+            return _generativeAi.GenerativeModel(model: model);
         }
     }
 }
