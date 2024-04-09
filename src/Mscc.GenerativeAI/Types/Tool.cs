@@ -1,12 +1,11 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
 #endif
 
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Tool details that the model may use to generate response.
-    /// Ref: https://ai.google.dev/api/rest/v1beta/Tool
+    /// Defines a tool that model can call to access external knowledge.
     /// </summary>
     public class Tool
     {
@@ -21,5 +20,15 @@ namespace Mscc.GenerativeAI
         /// provided.
         /// </summary>
         public List<FunctionDeclaration>? FunctionDeclarations { get; set; }
+        /// <summary>
+        /// Optional. Retrieval tool type. System will always execute the provided retrieval tool(s)
+        /// to get external knowledge to answer the prompt. Retrieval results are presented
+        /// to the model for generation.
+        /// </summary>
+        public Retrieval? Retrieval { get; set; }
+        /// <summary>
+        /// Optional. GoogleSearchRetrieval tool type. Specialized retrieval tool that is powered by Google search.
+        /// </summary>
+        public GoogleSearchRetrieval? GoogleSearchRetrieval { get; set; }
     }
 }
