@@ -194,6 +194,11 @@ namespace Mscc.GenerativeAI
         public bool UseServerSentEvents { get; set; } = false;
 
         /// <summary>
+        /// Activate JSON Mode (default = no)
+        /// </summary>
+        public bool UseJsonMode { get; set; } = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
@@ -626,6 +631,11 @@ namespace Mscc.GenerativeAI
             {
                 url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
             }
+            if (UseJsonMode)
+            {
+                request.GenerationConfig ??= new GenerationConfig();
+                request.GenerationConfig.ResponseMimeType = MediaType;
+            }
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType); 
             var response = await Client.PostAsync(url, payload);
@@ -718,6 +728,11 @@ namespace Mscc.GenerativeAI
             if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro.SanitizeModelName())
             {
                 url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
+            }
+            if (UseJsonMode)
+            {
+                request.GenerationConfig ??= new GenerationConfig();
+                request.GenerationConfig.ResponseMimeType = MediaType;
             }
 
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/

@@ -17,7 +17,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
-        private readonly string _model = Model.Gemini15Pro;
+        private readonly string _model = Model.Gemini15ProLatest;
 
         public GoogleAi_Gemini15Pro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
@@ -68,6 +68,25 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             model.ApiKey = _fixture.ApiKey;
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void GenerateContent_Using_JsonMode()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
+            var googleAI = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = googleAI.GenerativeModel(model: _model);
+            model.UseJsonMode = true;
+
+            // Act
             var response = await model.GenerateContent(prompt);
 
             // Assert
