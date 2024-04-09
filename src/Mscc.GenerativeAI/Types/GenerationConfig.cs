@@ -29,7 +29,7 @@ namespace Mscc.GenerativeAI
         /// Optional. Number of generated responses to return.
         /// This value must be between [1, 8], inclusive. If unset, this will default to 1.
         /// </summary>
-        public int? CandidateCount { get; set; } = 1;
+        public int? CandidateCount { get; set; }
         /// <summary>
         /// Optional. The maximum number of output tokens to generate per message.
         /// Token limit determines the maximum amount of text output from one prompt. A token is approximately four characters. 
@@ -40,5 +40,9 @@ namespace Mscc.GenerativeAI
         /// A stop sequence is a series of characters (including spaces) that stops response generation if the model encounters it. The sequence is not included as part of the response. You can add up to five stop sequences.
         /// </summary>
         public List<string>? StopSequences { get; set; }
+        /// <summary>
+        /// Optional. Activate JSON mode.
+        /// </summary>
+        public string? ResponseMimeType { get; set; }
     }
 }
