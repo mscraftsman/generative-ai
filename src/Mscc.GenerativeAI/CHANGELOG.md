@@ -23,7 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - implement JSON mode
 - implement Grounding for Google Search and Vertex AI Search
+- implement system instructions
 - add model text-embedding-004
+- add model gemini-1.0-pro-002
 - add Audio / File API support
 
 ### Changed

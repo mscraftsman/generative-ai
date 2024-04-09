@@ -14,6 +14,8 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
         /// <returns>Generative model instance.</returns>
         /// <remarks>The interface shall be used to write generic implementations using either
@@ -21,7 +23,8 @@ namespace Mscc.GenerativeAI
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null);
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null);
 
         /// <summary>
         /// Gets information about a specific Model.

@@ -15,7 +15,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.Gemini15ProLatest;
+        private readonly string model = Model.Gemini15ProPreview;
 
         public VertexAi_Gemini15Pro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
@@ -236,6 +236,56 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates[0].FinishReason.Should().Be(FinishReason.Safety);
             response.Text.Should().BeNull();
             // output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void Generate_Content_SystemInstruction()
+        {
+            // Load a example model with system instructions
+            // Arrange
+            var prompt = @"User input: I like bagels.
+Answer:";
+            var parts = new List<IPart>
+            {
+                new TextData { Text = "You are a helpful language translator." },
+                new TextData { Text = "Your mission is to translate text in English to French." }
+            };
+            var systemInstruction = new List<Content> { new Content
+            {
+                Role = Role.User,
+                Parts = parts
+            }};
+            var generationConfig = new GenerationConfig() 
+                { 
+                    Temperature = 0.9f,
+                    TopP = 1.0f,
+                    TopK = 32,
+                    CandidateCount = 1,
+                    MaxOutputTokens = 8192
+                };
+            var safetySettings = new List<SafetySetting>()
+            {
+                new() { Category = HarmCategory.HarmCategoryHarassment, Threshold = HarmBlockThreshold.BlockLowAndAbove },
+                new() { Category = HarmCategory.HarmCategoryHateSpeech, Threshold = HarmBlockThreshold.BlockLowAndAbove },
+                new() { Category = HarmCategory.HarmCategorySexuallyExplicit, Threshold = HarmBlockThreshold.BlockLowAndAbove },
+                new() { Category = HarmCategory.HarmCategoryDangerousContent, Threshold = HarmBlockThreshold.BlockLowAndAbove }
+            };
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertex.GenerativeModel(model: this.model, systemInstruction: systemInstruction);
+            model.AccessToken = fixture.AccessToken;
+            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeNull();
+            output.WriteLine($"Answer:\n{response?.Text}");
+            output.WriteLine($"Usage metadata: {response.UsageMetadata.TotalTokenCount}");
+            output.WriteLine($"Finish reason: {response.Candidates[0].FinishReason}");
+            output.WriteLine($"Safety settings: {response.Candidates[0].SafetyRatings}");
         }
 
         [Theory]

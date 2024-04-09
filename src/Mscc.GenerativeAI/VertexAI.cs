@@ -59,17 +59,26 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> or <paramref name="region"/> is <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null)
         {
             if (_projectId is null) throw new ArgumentNullException("projectId");
             if (_region is null) throw new ArgumentNullException("region");
 
-            _generativeModel = new GenerativeModel(_projectId, _region, model, generationConfig, safetySettings, tools);
+            _generativeModel = new GenerativeModel(_projectId,
+                _region,
+                model,
+                generationConfig,
+                safetySettings,
+                tools,
+                systemInstruction);
             return _generativeModel;
         }
 

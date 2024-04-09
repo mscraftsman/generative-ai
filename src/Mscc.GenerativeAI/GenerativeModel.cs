@@ -39,6 +39,7 @@ namespace Mscc.GenerativeAI
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
+        private List<Content>? _systemInstruction;
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         private static readonly Version _httpVersion = HttpVersion.Version11;
@@ -228,17 +229,21 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "gemini-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null) : this()
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null) : this()
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
             _generationConfig ??= generationConfig;
             _safetySettings ??= safetySettings;
             _tools = tools;
+            _systemInstruction = systemInstruction;
         }
 
         /// <summary>
@@ -249,11 +254,14 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         internal GenerativeModel(string? projectId = null, string? region = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null) : this()
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null) : this()
         {
             _useVertexAi = true;
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
@@ -267,6 +275,7 @@ namespace Mscc.GenerativeAI
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
             _tools = tools;
+            _systemInstruction = systemInstruction;
         }
 
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
@@ -629,6 +638,7 @@ namespace Mscc.GenerativeAI
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             request.Tools ??= _tools;
+            request.SystemInstruction ??= _systemInstruction;
             
             var url = ParseUrl(Url, Method);
             if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro.SanitizeModelName())
@@ -778,6 +788,7 @@ namespace Mscc.GenerativeAI
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             request.Tools ??= _tools;
+            request.SystemInstruction ??= _systemInstruction;
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);

@@ -32,6 +32,13 @@ namespace Mscc.GenerativeAI
         /// A Tool is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. The only supported tool is currently Function.
         /// </summary>
         public List<Tool>? Tools { get; set; }
+        /// <summary>
+        /// Optional. Available for gemini-1.5-pro and gemini-1.0-pro-002.
+        /// Instructions for the model to steer it toward better performance. For example, "Answer as concisely as possible" or "Don't use technical terms in your response".
+        /// The text strings count toward the token limit.
+        /// The role field of systemInstruction is ignored and doesn't affect the performance of the model. 
+        /// </summary>
+        public List<Content>? SystemInstruction { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
@@ -45,11 +52,13 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null) : this()
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null) : this()
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -64,6 +73,7 @@ namespace Mscc.GenerativeAI
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
+            if (systemInstruction != null) SystemInstruction = systemInstruction;
         }
 
         /// <summary>
@@ -73,11 +83,13 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parts"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(List<IPart> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null) : this()
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
@@ -88,6 +100,7 @@ namespace Mscc.GenerativeAI
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
+            if (systemInstruction != null) SystemInstruction = systemInstruction;
         }
 
 
@@ -98,11 +111,13 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(FileResource file,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null) : this()
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null) : this()
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -114,6 +129,7 @@ namespace Mscc.GenerativeAI
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
+            if (systemInstruction != null) SystemInstruction = systemInstruction;
         }
 
         /// <summary>
@@ -123,11 +139,13 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="parts"/> is <see langword="null"/>.</exception>
         public GenerateContentRequest(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            List<Content>? systemInstruction = null) : this()
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
@@ -138,6 +156,7 @@ namespace Mscc.GenerativeAI
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
+            if (systemInstruction != null) SystemInstruction = systemInstruction;
         }
 
         /// <summary>
