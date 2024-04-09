@@ -14,6 +14,7 @@ namespace Mscc.GenerativeAI
         public const string GeminiPro = "gemini-pro";
         public const string Gemini10Pro = "gemini-1.0-pro";
         public const string Gemini10Pro001 = "gemini-1.0-pro-001";
+        public const string Gemini10Pro002 = "gemini-1.0-pro-002";
         public const string Gemini10ProTuning = Gemini10Pro001;
         public const string GeminiProLatest = "gemini-1.0-pro-latest";
         public const string GeminiProVision = "gemini-pro-vision";
