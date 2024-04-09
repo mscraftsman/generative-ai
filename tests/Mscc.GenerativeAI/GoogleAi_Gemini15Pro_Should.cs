@@ -560,6 +560,55 @@ Use speaker A, speaker B, etc. to identify the speakers.
             _output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async void Generate_Content_SystemInstruction()
+        {
+            // Load a example model with system instructions
+            // Arrange
+            var prompt = @"User input: I like bagels.
+Answer:";
+            var parts = new List<IPart>
+            {
+                new TextData { Text = "You are a helpful language translator. Your mission is to translate text in English to French." }
+            };
+            var systemInstruction = new List<Content> { new Content
+            {
+                Role = Role.System,
+                Parts = parts
+            }};
+            var generationConfig = new GenerationConfig() 
+                { 
+                    Temperature = 0.9f,
+                    TopP = 1.0f,
+                    TopK = 32,
+                    CandidateCount = 1,
+                    MaxOutputTokens = 8192
+                };
+            var safetySettings = new List<SafetySetting>()
+            {
+                new() { Category = HarmCategory.HarmCategoryHarassment, Threshold = HarmBlockThreshold.BlockLowAndAbove },
+                new() { Category = HarmCategory.HarmCategoryHateSpeech, Threshold = HarmBlockThreshold.BlockLowAndAbove },
+                new() { Category = HarmCategory.HarmCategorySexuallyExplicit, Threshold = HarmBlockThreshold.BlockLowAndAbove },
+                new() { Category = HarmCategory.HarmCategoryDangerousContent, Threshold = HarmBlockThreshold.BlockLowAndAbove }
+            };
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
+            model.AccessToken = _fixture.AccessToken;
+            var request = new GenerateContentRequest(prompt, generationConfig, safetySettings);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeNull();
+            _output.WriteLine($"Answer:\n{response?.Text}");
+            _output.WriteLine($"Usage metadata: {response.UsageMetadata.TotalTokenCount}");
+            _output.WriteLine($"Finish reason: {response.Candidates[0].FinishReason}");
+            _output.WriteLine($"Safety settings: {response.Candidates[0].SafetyRatings}");
+        }
+
         [Fact(Skip = "URL scheme not supported")]
         public async void Multimodal_Video_Input()
         {
