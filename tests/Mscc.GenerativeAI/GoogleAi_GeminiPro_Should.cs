@@ -381,6 +381,46 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async void GenerateContent_WithRequest_UseServerSentEvents()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            var googleAI = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAI.GenerativeModel(model: this.model);
+            model.UseServerSentEvents = true;
+            var request = new GenerateContentRequest(prompt);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void GenerateContent_WithRequest_ServerSentEvents()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            var googleAI = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAI.GenerativeModel(model: this.model);
+            var request = new GenerateContentRequest(prompt);
+
+            // Act
+            var responseEvents = model.GenerateContentSSE(request);
+            
+            // Assert
+            responseEvents.Should().NotBeNull();
+            await foreach (var response in responseEvents)
+            {
+                output.WriteLine($"{response}");
+            }
+        }
+
+        [Fact]
         public async void Generate_Content_Stream()
         {
             // Arrange
