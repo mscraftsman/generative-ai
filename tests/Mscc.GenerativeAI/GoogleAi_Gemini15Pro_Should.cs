@@ -253,6 +253,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("cat.jpg", "Wildcat on snow")]
         [InlineData("cat.jpg", "Cat in the snow")]
         [InlineData("animals.mp4", "Zootopia in da house")]
+        [InlineData("sample.mp3", "State_of_the_Union_Address_30_January_1961")]
         public async void Upload_File_Using_FileAPI(string filename, string displayName)
         {
             // Arrange
@@ -389,6 +390,32 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async void Describe_Audio_From_FileAPI()
+        {
+            // Arrange
+            var prompt = "Listen carefully to the following audio file. Provide a brief summary.";
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            var files = await model.ListFiles();
+            foreach (var file in files.Where(x => x.MimeType.StartsWith("audio/")))
+            {
+                _output.WriteLine($"File: {file.Name}");
+                request.AddMedia(file);
+            }
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+
         [Fact(Skip = "Bad Request due to FileData part")]
         // [Fact]
         public async void Describe_Videos_From_FileAPI()
@@ -492,6 +519,52 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain("Zootopia");
             _output.WriteLine(response?.Text);
+        }
+
+        [Theory]
+        [InlineData("https://generativelanguage.googleapis.com/v1beta/files/e2bq1yd67zfb", 78330)]
+        public async void Count_Tokens_Audio(string prompt, int expected)
+        {
+            // Arrange
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
+            var files = await model.ListFiles();
+            foreach (var file in files.Where(x => x.MimeType.StartsWith("audio/")))
+            {
+                _output.WriteLine($"File: {file.Name}");
+                request.Contents.Add(new Content
+                {
+                    Role = Role.User,
+                    Parts = new List<IPart> { new FileData { FileUri = file.Uri, MimeType = file.MimeType } }
+                });
+            }
+
+            // Act
+            var response = await model.CountTokens(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.TotalTokens.Should().BeGreaterOrEqualTo(expected);
+            _output.WriteLine($"Tokens: {response?.TotalTokens}");
+        }
+
+        [Fact]
+        public async void Count_Tokens_Audio_FileApi()
+        {
+            // Arrange
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
+            var files = await model.ListFiles();
+            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+
+            // Act
+            var response = await model.CountTokens(file);
+
+            // Assert
+            response.Should().NotBeNull();
+            _output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
     }
 }

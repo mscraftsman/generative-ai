@@ -985,6 +985,14 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request);
         }
 
+        public async Task<CountTokensResponse> CountTokens(FileResource file)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+
+            var request = new GenerateContentRequest(file, _generationConfig, _safetySettings, _tools);
+            return await CountTokens(request);
+        }
+
         // Todo: Implementation missing
         /// <summary>
         /// Starts a chat session. 

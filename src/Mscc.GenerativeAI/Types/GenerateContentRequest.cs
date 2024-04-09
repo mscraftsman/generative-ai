@@ -89,7 +89,33 @@ namespace Mscc.GenerativeAI
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
         }
-        
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
+        /// </summary>
+        /// <param name="file">The media file resource.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is <see langword="null"/>.</exception>
+        public GenerateContentRequest(FileResource file,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null) : this()
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+
+            Contents = new List<Content> { new Content
+            {
+                Role = Role.User,
+                Parts = new List<IPart> { new FileData { FileUri = file.Uri, MimeType = file.MimeType } }
+            }};
+            if (generationConfig != null) GenerationConfig = generationConfig;
+            if (safetySettings != null) SafetySettings = safetySettings;
+            if (tools != null) Tools = tools;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
         /// </summary>

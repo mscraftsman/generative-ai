@@ -34,7 +34,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
         public static void GuardMimeType(string mimeType)
         {
-            string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp"];
+            string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
+                "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac"];
             
             if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
         }
