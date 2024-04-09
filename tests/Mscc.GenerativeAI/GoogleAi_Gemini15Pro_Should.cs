@@ -254,6 +254,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("cat.jpg", "Cat in the snow")]
         [InlineData("animals.mp4", "Zootopia in da house")]
         [InlineData("sample.mp3", "State_of_the_Union_Address_30_January_1961")]
+        [InlineData("pixel.mp3", "Pixel Feature Drops: March 2023")]
         public async void Upload_File_Using_FileAPI(string filename, string displayName)
         {
             // Arrange
@@ -414,6 +415,66 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void Summarize_Audio_From_FileAPI()
+        {
+            // Arrange
+            var prompt = @"Please provide a summary for the audio.
+Provide chapter titles with timestamps, be concise and short, no need to provide chapter summaries.
+Do not make up any information that is not part of the audio and do not be verbose.
+";
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            var files = await model.ListFiles();
+            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            _output.WriteLine($"File: {file.Name}");
+            request.AddMedia(file);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void TranscribeStream_Audio_From_FileAPI()
+        {
+            // Arrange
+            var prompt = @"Can you transcribe this interview, in the format of timecode, speaker, caption.
+Use speaker A, speaker B, etc. to identify the speakers.
+";
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            var files = await model.ListFiles();
+            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            _output.WriteLine($"File: {file.Name}");
+            request.AddMedia(file);
+
+            // Act
+            var responseStream = model.GenerateContentStream(request);
+
+            // Assert
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                // response.Text.Should().NotBeEmpty();
+                _output.WriteLine(response?.Text);
+                // response.UsageMetadata.Should().NotBeNull();
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
