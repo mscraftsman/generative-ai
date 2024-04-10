@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI
         private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
         private const string MediaType = "application/json";
-        private const int ChunkSize = 8388608;  // 8 MiB
+        private const int ChunkSize = 8 * 1024 * 1024;
 
         private readonly bool _useVertexAi;
         private readonly string _region = "us-central1";
@@ -482,7 +482,141 @@ namespace Mscc.GenerativeAI
         /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
         /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<UploadMediaResponse> UploadMedia(string uri, 
+        public async Task<UploadMediaResponse> UploadMedia(string uri,
+            string? displayName = null,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+
+            UploadMediaResponse response;
+            var uploadType = 1;
+            switch (uploadType)
+            {
+                case 1:
+                    response = await UploadMediaAsMultipart(uri, displayName, cancellationToken);
+                    break;
+                case 2:
+                    response = await UploadMediaAsChunks(uri, displayName, cancellationToken);
+                    break;
+                default:
+                    response = await UploadMediaAsStream(uri, displayName, cancellationToken);
+                    break;
+            }
+
+            return response;
+        }
+
+        internal async Task<UploadMediaResponse> UploadMediaAsStream(string uri, 
+            string? displayName = null, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+
+            string uploadUrl = default;
+            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            var totalBytes = new FileInfo(uri).Length;
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                }
+            };
+
+            // Initial resumable request defining metadata.
+            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            url = ParseUrl(url);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var message = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = payload,
+                RequestUri = new Uri(url),
+                Version = _httpVersion
+            };
+            message.Headers.Add("X-Goog-Upload-Protocol","resumable");
+            message.Headers.Add("X-Goog-Upload-Command", "start");
+            message.Headers.Add("X-Goog-Upload-Header-Content-Length", $"{totalBytes}");
+            message.Headers.Add("X-Goog-Upload-Header-Content-Type",$"{mimeType}");
+            var response = await Client.SendAsync(message);
+            response.EnsureSuccessStatusCode();
+
+            if (response.Headers.TryGetValues("x-goog-upload-url", out var values))
+            {
+                uploadUrl = values.FirstOrDefault();
+            }
+            if (string.IsNullOrEmpty(uploadUrl)) throw new UploadFileException();
+
+            // Upload the actual bytes.
+            // var stream = new FileStream(uri, FileMode.Open);
+            using (var fs = File.OpenRead(uri))
+            {
+                fs.Seek(0, SeekOrigin.Begin);
+                message = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post, 
+                    RequestUri = new Uri(url), 
+                    Version = _httpVersion
+                };
+                // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+                using (var upload = new StreamContent(fs, ChunkSize))
+                {
+                    message.Content = upload;
+                    message.Headers.Add("X-Goog-Upload-Command", "upload");
+                    using (var responseUpload = await Client.SendAsync(message,
+                               HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+                    {
+                        responseUpload.EnsureSuccessStatusCode();
+                        using var stream = await responseUpload.Content.ReadAsStreamAsync();
+                        return await JsonSerializer.DeserializeAsync<UploadMediaResponse>(stream, _options, cancellationToken);
+                    }
+                }
+            }
+        }
+
+        internal async Task<UploadMediaResponse> UploadMediaAsMultipart(string uri, 
+            string? displayName = null, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+
+            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            var totalBytes = new FileInfo(uri).Length;
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                }
+            };
+
+            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            string json = Serialize(request);
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, MediaType));
+            multipartContent.Add(new StreamContent(new FileStream(uri, FileMode.Open), ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
+
+            var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<UploadMediaResponse>(response);
+        }
+
+        internal async Task<UploadMediaResponse> UploadMediaAsChunks(string uri, 
             string? displayName = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -526,29 +660,21 @@ namespace Mscc.GenerativeAI
             if (string.IsNullOrEmpty(uploadUrl)) throw new UploadFileException();
 
             // Upload the actual bytes.
-            // var stream = new FileStream(uri, FileMode.Open);
-            using (var fs = File.OpenRead(uri))
+            var uploadCommand = "upload";
+            var offset = 0L;
+            message = new HttpRequestMessage
             {
-                fs.Seek(0, SeekOrigin.Begin);
-                message = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Post, RequestUri = new Uri(url), Version = _httpVersion
-                };
-                // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
-                using (var upload = new StreamContent(fs, ChunkSize))
-                {
-                    message.Content = upload;
-                    // upload.Headers.ContentType = new MediaTypeHeaderValue(MediaType);
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(uploadUrl),
+                Version = _httpVersion
+            };
+            message.Headers.Add("Content-Length", $"{totalBytes}");
+            message.Headers.Add("X-Goog-Upload-Offset", $"{offset}");
+            message.Headers.Add("X-Goog-Upload-Command", uploadCommand);
 
-                    using (var responseUpload = await Client.SendAsync(message,
-                               HttpCompletionOption.ResponseHeadersRead, cancellationToken))
-                    {
-                        responseUpload.EnsureSuccessStatusCode();
-                        using var stream = await responseUpload.Content.ReadAsStreamAsync();
-                        return await JsonSerializer.DeserializeAsync<UploadMediaResponse>(stream, _options, cancellationToken);
-                    }
-                }
-            }
+            response = await Client.SendAsync(message, cancellationToken);
+            response.EnsureSuccessStatusCode();
+            return await Deserialize<UploadMediaResponse>(response);
         }
 
         /// <summary>

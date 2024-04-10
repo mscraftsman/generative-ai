@@ -252,6 +252,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("scones.jpg", "Set of blueberry scones")]
         [InlineData("cat.jpg", "Wildcat on snow")]
         [InlineData("cat.jpg", "Cat in the snow")]
+        [InlineData("image.jpg", "Sample drawing")]
         [InlineData("animals.mp4", "Zootopia in da house")]
         [InlineData("sample.mp3", "State_of_the_Union_Address_30_January_1961")]
         [InlineData("pixel.mp3", "Pixel Feature Drops: March 2023")]
@@ -277,7 +278,7 @@ namespace Test.Mscc.GenerativeAI
             response.File.SizeBytes.Should().BeGreaterThan(0);
             response.File.Sha256Hash.Should().NotBeNull();
             response.File.Uri.Should().NotBeNull();
-            _output.WriteLine(response?.File.Uri);
+            _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
         }
 
         [Fact]
@@ -295,17 +296,18 @@ namespace Test.Mscc.GenerativeAI
             sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.ForEach(x =>
             {
+                _output.WriteLine($"Display Name: {x.DisplayName}");
                 _output.WriteLine($"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
-                _output.WriteLine(($@"Uri: {x.Uri}"));
+                _output.WriteLine($"Uri: {x.Uri}");
             });
         }
 
         [Theory]
-        [InlineData("files/e0zb8cooleen")]
-        [InlineData("5kfit2vb3r9e")]
-        [InlineData("files/s0ebp56ef0ri")]
-        [InlineData("e8dz3lhkyu7w")]
-        [InlineData("bb1e4cqfk6wc")]
+        [InlineData("files/sfqq5iev1m5d")]
+        // [InlineData("5kfit2vb3r9e")]
+        // [InlineData("files/s0ebp56ef0ri")]
+        // [InlineData("e8dz3lhkyu7w")]
+        // [InlineData("bb1e4cqfk6wc")]
         public async void Get_File(string fileName)
         {
             // Arrange
@@ -319,8 +321,9 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
+            _output.WriteLine($"Retrieved file '{sut.DisplayName}'");
             _output.WriteLine($"File: {sut.Name} (MimeType: {sut.MimeType}, Size: {sut.SizeBytes} bytes, Created: {sut.CreateTime} UTC, Updated: {sut.UpdateTime} UTC)");
-            _output.WriteLine(($@"Uri: {sut.Uri}"));
+            _output.WriteLine(($"Uri: {sut.Uri}"));
         }
         
         [Fact]
@@ -563,7 +566,34 @@ Use speaker A, speaker B, etc. to identify the speakers.
         [Fact]
         public async void Generate_Content_SystemInstruction()
         {
-            // Load a example model with system instructions
+            // Arrange
+            var prompt = "Good morning! How are you?";
+            var parts = new List<IPart>
+            {
+                new TextData { Text = "You are a cat. Your name is Neko." }
+            };
+            var systemInstruction = new List<Content> { new Content
+            {
+                Role = Role.System,
+                Parts = parts
+            }};
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
+            var request = new GenerateContentRequest(prompt);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeNull();
+            _output.WriteLine($"{response?.Text}");
+        }
+
+        [Fact]
+        public async void Generate_Content_SystemInstruction_WithSafetySettings()
+        {
             // Arrange
             var prompt = @"User input: I like bagels.
 Answer:";
@@ -593,7 +623,6 @@ Answer:";
             };
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
-            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest(prompt, generationConfig, safetySettings);
 
             // Act
