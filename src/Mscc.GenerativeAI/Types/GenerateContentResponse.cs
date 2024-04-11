@@ -20,7 +20,11 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                if (Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Safety)
+                if (Candidates?.FirstOrDefault()?.FinishReason is
+                    FinishReason.MaxTokens or
+                    FinishReason.Safety or
+                    FinishReason.Recitation or
+                    FinishReason.Other)
                     return string.Empty;
                 return Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
             }
