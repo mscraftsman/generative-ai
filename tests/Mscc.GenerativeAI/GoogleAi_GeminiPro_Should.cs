@@ -281,6 +281,51 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(response?.Text);
         }
+
+        [Fact]
+        public async void Generate_Content_MaxTokens()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: Model.Gemini10Pro001);
+            var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
+
+            // Act
+            var response = await model.GenerateContent(prompt, generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void Generate_Content_Stream_MaxTokens()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: Model.Gemini10Pro001);
+            var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
+
+            // Act
+            var responseStream = model.GenerateContentStream(prompt, generationConfig);
+
+            // Assert
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                if (response.Candidates[0].FinishReason is FinishReason.MaxTokens)
+                    _output.WriteLine("...");
+                else
+                    _output.WriteLine(response?.Text);
+            }
+        }
         
         [Fact]
         public async void Generate_Content_MultiplePrompt()
