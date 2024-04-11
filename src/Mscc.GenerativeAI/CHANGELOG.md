@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.1.2
+
+### Added
+
+- test cases for FinishReason.MaxTokens
+
+### Changed
+
+- improve accessor of response.Text
+- upgrade NuGet packages dependencies
+
 ## 1.1.1
 
 ### Fixed
