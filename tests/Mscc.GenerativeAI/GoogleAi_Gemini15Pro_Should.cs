@@ -13,13 +13,13 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAi_Gemini15Pro_Should
+    public class GoogleAiGemini15ProShould
     {
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini15ProLatest;
 
-        public GoogleAi_Gemini15Pro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public GoogleAiGemini15ProShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             _output = output;
             _fixture = fixture;
@@ -43,8 +43,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
-            var googleAI = new GoogleAI(apiKey: "WRONG_API_KEY");
-            var model = googleAI.GenerativeModel(model: _model);
+            var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
+            var model = googleAi.GenerativeModel(model: _model);
             model.ApiKey = _fixture.ApiKey;
 
             // Act
@@ -62,8 +62,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
-            var googleAI = new GoogleAI(apiKey: "WRONG_API_KEY");
-            var model = googleAI.GenerativeModel(model: _model);
+            var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
+            var model = googleAi.GenerativeModel(model: _model);
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
 
             // Act
@@ -82,8 +82,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
-            var googleAI = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = googleAI.GenerativeModel(model: _model);
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             model.UseJsonMode = true;
 
             // Act
@@ -102,11 +102,11 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
-            var base64image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+            var base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is this picture about?" },
-                new InlineData { MimeType = "image/jpeg", Data = base64image }
+                new InlineData { MimeType = "image/jpeg", Data = base64Image }
             };
             request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
@@ -155,11 +155,11 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
-            var base64image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
+            var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
             var parts = new List<IPart>
             {
                 new TextData { Text = prompt },
-                new InlineData { MimeType = mimetype, Data = base64image }
+                new InlineData { MimeType = mimetype, Data = base64Image }
             };
             var generationConfig = new GenerationConfig()
             {

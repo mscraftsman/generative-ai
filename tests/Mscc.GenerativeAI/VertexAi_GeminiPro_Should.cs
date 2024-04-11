@@ -12,16 +12,16 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class VertexAi_GeminiPro_Should
+    public class VertexAiGeminiProShould
     {
-        private readonly ITestOutputHelper output;
-        private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.Gemini10Pro;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
+        private readonly string _model = Model.Gemini10Pro;
 
-        public VertexAi_GeminiPro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public VertexAiGeminiProShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
-            this.output = output;
-            this.fixture = fixture;
+            _output = output;
+            _fixture = fixture;
         }
         
         [Fact]
@@ -30,10 +30,10 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Assert
-            vertexAI.Should().NotBeNull();
+            vertexAi.Should().NotBeNull();
         }
 
         [Fact]
@@ -41,10 +41,10 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
-            var model = vertexAI.GenerativeModel();
+            var model = vertexAi.GenerativeModel();
             
             // Assert
             model.Should().NotBeNull();
@@ -55,10 +55,10 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
-            var model = vertexAI.GenerativeModel();
+            var model = vertexAi.GenerativeModel();
 
             // Assert
             model.Should().NotBeNull();
@@ -69,10 +69,10 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
-            var model = vertexAI.GenerativeModel(model: this.model);
+            var model = vertexAi.GenerativeModel(model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -83,9 +83,9 @@ namespace Test.Mscc.GenerativeAI
         public async void List_Models()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
 
             // Act & Assert
             await Assert.ThrowsAsync<NotSupportedException>(() => model.ListModels());
@@ -99,9 +99,9 @@ namespace Test.Mscc.GenerativeAI
         public async void Get_Model_Information(string modelName)
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
 
             // Act & Assert
             await Assert.ThrowsAsync<NotSupportedException>(() => model.GetModel(model: modelName));
@@ -112,9 +112,9 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -123,11 +123,11 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
             response.UsageMetadata.Should().NotBeNull();
-            output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-            output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-            output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+            _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+            _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
         }
 
         [Fact]
@@ -145,9 +145,9 @@ namespace Test.Mscc.GenerativeAI
             };
             var generationConfig = new GenerationConfig() 
                 { MaxOutputTokens = 256 };
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model, generationConfig, safetySettings);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model, generationConfig, safetySettings);
+            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -157,16 +157,16 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates[0].FinishReason.Should().Be(FinishReason.Safety);
             response.Text.Should().BeNull();
-            output.WriteLine("This response stream terminated due to safety concerns.");
+            _output.WriteLine("This response stream terminated due to safety concerns.");
         }
 
         [Fact]
         public async void Generate_Content_MultiplePrompt()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is x multiplied by 2?" },
@@ -180,7 +180,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().Be("84");
-            output.WriteLine($"Result: {response?.Text}");
+            _output.WriteLine($"Result: {response?.Text}");
         }
 
         [Fact]
@@ -188,9 +188,9 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -205,7 +205,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -213,9 +213,9 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a short poem about koi fish.";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(), 
@@ -239,9 +239,9 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var responseStream = model.GenerateContentStream(prompt);
@@ -253,7 +253,7 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                output.WriteLine(response?.Text);
+                _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -276,9 +276,9 @@ namespace Test.Mscc.GenerativeAI
             };
             var generationConfig = new GenerationConfig() 
                 { MaxOutputTokens = 256 };
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model, generationConfig, safetySettings);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model, generationConfig, safetySettings);
+            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var responseStream = model.GenerateContentStream(prompt);
@@ -293,12 +293,12 @@ namespace Test.Mscc.GenerativeAI
                 if (response.Candidates[0].FinishReason == FinishReason.Safety)
                 {
                     response.Text.Should().BeNull();
-                    output.WriteLine("This response stream terminated due to safety concerns.");
+                    _output.WriteLine("This response stream terminated due to safety concerns.");
                 }
                 else
                 {
                     response.Text.Should().NotBeEmpty();
-                    output.WriteLine(response?.Text);
+                    _output.WriteLine(response?.Text);
                 }
             }
         }
@@ -308,9 +308,9 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -328,7 +328,7 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                output.WriteLine(response?.Text);
+                _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -341,8 +341,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Why is the sky blue?";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model,
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model,
                 safetySettings: new List<SafetySetting>()
                 {
                     new()
@@ -352,7 +352,7 @@ namespace Test.Mscc.GenerativeAI
                     }
                 },
                 generationConfig: new GenerationConfig() { MaxOutputTokens = 256 });
-            model.AccessToken = fixture.AccessToken;
+            model.AccessToken = _fixture.AccessToken;
             var googleSearchRetrievalTool = new Tool() { GoogleSearchRetrieval = new() { DisableAttribution = false } };
 
             // Act
@@ -363,9 +363,9 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
             response.Candidates[0].GroundingMetadata.Should().NotBeNull();
-            output.WriteLine($"GroundingMetadata: {response.Candidates[0].GroundingMetadata}");
+            _output.WriteLine($"GroundingMetadata: {response.Candidates[0].GroundingMetadata}");
         }
 
         [Fact]
@@ -373,8 +373,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Why is the sky blue?";
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model,
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model,
                 safetySettings: new List<SafetySetting>()
                 {
                     new()
@@ -384,8 +384,8 @@ namespace Test.Mscc.GenerativeAI
                     }
                 },
                 generationConfig: new GenerationConfig() { MaxOutputTokens = 256 });
-            model.AccessToken = fixture.AccessToken;
-            var vertexAIRetrievalTool = new Tool()
+            model.AccessToken = _fixture.AccessToken;
+            var vertexAiRetrievalTool = new Tool()
             {
                 Retrieval = new()
                 {
@@ -396,15 +396,15 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var response = await model.GenerateContent(prompt, 
-                tools: new List<Tool>() { vertexAIRetrievalTool });
+                tools: new List<Tool>() { vertexAiRetrievalTool });
 
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
             response.Candidates[0].GroundingMetadata.Should().NotBeNull();
-            output.WriteLine($"GroundingMetadata: {response.Candidates[0].GroundingMetadata}");
+            _output.WriteLine($"GroundingMetadata: {response.Candidates[0].GroundingMetadata}");
         }
 
         [Theory]
@@ -415,9 +415,9 @@ namespace Test.Mscc.GenerativeAI
         public async void Count_Tokens(string prompt, int expected)
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -431,7 +431,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.TotalTokens.Should().Be(expected);
-            output.WriteLine($"Tokens: {response?.TotalTokens}");
+            _output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
         [Theory]
@@ -442,9 +442,9 @@ namespace Test.Mscc.GenerativeAI
         public async void Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -458,16 +458,16 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.TotalTokens.Should().Be(expected);
-            output.WriteLine($"Tokens: {response?.TotalTokens}");
+            _output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
         [Fact]
         public async void Start_Chat()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -478,7 +478,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -487,24 +487,24 @@ namespace Test.Mscc.GenerativeAI
         public async void Start_Chat_Multiple_Prompts()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var chat = model.StartChat();
 
             // Act
             var prompt = "Hello.";
             var response = await chat.SendMessage(prompt);
-            output.WriteLine(prompt);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(prompt);
+            _output.WriteLine(response?.Text);
             prompt = "What are all the colors in a rainbow?";
             response = await chat.SendMessage(prompt);
-            output.WriteLine(prompt);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(prompt);
+            _output.WriteLine(response?.Text);
             prompt = "Why does it appear when it rains?";
             response = await chat.SendMessage(prompt);
-            output.WriteLine(prompt);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(prompt);
+            _output.WriteLine(response?.Text);
 
             // Assert
             response.Should().NotBeNull();
@@ -516,9 +516,9 @@ namespace Test.Mscc.GenerativeAI
         public async void Start_Chat_Streaming()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -532,7 +532,7 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                output.WriteLine(response?.Text);
+                _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -570,16 +570,16 @@ namespace Test.Mscc.GenerativeAI
                     Response = new { Name = "get_current_weather", Content = new { Weather = "super nice" }}
                 }
             }};
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var chat = model.StartChat(tools: new()
             {
                 new Tool() { FunctionDeclarations = functionDeclarations }
             });
 
             // Act & Assert
-            output.WriteLine(prompt);
+            _output.WriteLine(prompt);
             var result1 = chat.SendMessageStream(prompt);
             await foreach (var response in result1)
             {
@@ -587,11 +587,11 @@ namespace Test.Mscc.GenerativeAI
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Candidates[0].Content.Parts[0].FunctionCall.Should().NotBeNull();
                 response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
-                output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
-                output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
-                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+                _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+                _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
 
             var result2 = chat.SendMessageStream(functionResponses);
@@ -600,10 +600,10 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                output.WriteLine(response?.Text);
-                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                _output.WriteLine(response?.Text);
+                _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -611,9 +611,9 @@ namespace Test.Mscc.GenerativeAI
         public async void Function_Calling_ContentStream()
         {
             // Arrange
-            var vertexAI = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
-            var model = vertexAI.GenerativeModel(model: this.model);
-            model.AccessToken = fixture.AccessToken;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var model = vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
@@ -648,10 +648,10 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                output.WriteLine(response?.Text);
-                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                _output.WriteLine(response?.Text);
+                _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
     }

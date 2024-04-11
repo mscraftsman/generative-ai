@@ -13,16 +13,16 @@ namespace Test.Mscc.GenerativeAI
     /// https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/main/aiplatform/api/AIPlatform.Samples
     /// </summary>
     [Collection(nameof(ConfigurationFixture))]
-    public class GenerativeAI_Should
+    public class GenerativeAiShould
     {
-        private readonly ITestOutputHelper output;
-        private readonly ConfigurationFixture fixture;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini10ProVision;
 
-        public GenerativeAI_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public GenerativeAiShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
-            this.output = output;
-            this.fixture = fixture;
+            _output = output;
+            _fixture = fixture;
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             IGenerativeAI genAi;
-            genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            genAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var expected = _model.SanitizeModelName();
             
             // Act
@@ -47,15 +47,15 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             IGenerativeAI genAi;
-            genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            genAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var expected = Model.Embedding.SanitizeModelName();
 
             // Act
             var model = genAi.GenerativeModel(model: Model.Embedding);
-            var get_model = await model.GetModel();
+            var getModel = await model.GetModel();
 
             // Assert
-            get_model.Name.SanitizeModelName().Should().Be(expected);
+            getModel.Name.SanitizeModelName().Should().Be(expected);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             IGenerativeAI genAi;
-            genAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            genAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
             var expected = _model.SanitizeModelName();
             
             // Act

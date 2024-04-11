@@ -6,16 +6,16 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAi_Embedding_Should
+    public class GoogleAiEmbeddingShould
     {
-        private readonly ITestOutputHelper output;
-        private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.Embedding;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
+        private readonly string _model = Model.Embedding;
 
-        public GoogleAi_Embedding_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public GoogleAiEmbeddingShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
-            this.output = output;
-            this.fixture = fixture;
+            _output = output;
+            _fixture = fixture;
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Test.Mscc.GenerativeAI
             var expected = Model.Embedding.SanitizeModelName();
 
             // Act
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -37,7 +37,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
 
             // Act
             var response = await model.EmbedContent(prompt);
@@ -48,7 +48,7 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                output.WriteLine(x.ToString());
+                _output.WriteLine(x.ToString());
             });
         }
     }

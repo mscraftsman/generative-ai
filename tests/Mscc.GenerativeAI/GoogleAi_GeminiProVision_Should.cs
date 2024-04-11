@@ -12,16 +12,16 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAi_GeminiProVision_Should
+    public class GoogleAiGeminiProVisionShould
     {
-        private readonly ITestOutputHelper output;
-        private readonly ConfigurationFixture fixture;
-        private readonly string model = Model.GeminiProVision;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
+        private readonly string _model = Model.GeminiProVision;
 
-        public GoogleAi_GeminiProVision_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public GoogleAiGeminiProVisionShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
-            this.output = output;
-            this.fixture = fixture;
+            _output = output;
+            _fixture = fixture;
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -41,13 +41,13 @@ namespace Test.Mscc.GenerativeAI
         public async void Generate_Text_From_Image()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
-            var base64image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
+            var base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is this picture about?" },
-                new InlineData { MimeType = "image/jpeg", Data = base64image }
+                new InlineData { MimeType = "image/jpeg", Data = base64Image }
             };
             request.Contents.Add(new Content { Role = Role.User, Parts = parts });
 
@@ -60,7 +60,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain("red");
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async("https://ai.google.dev/static/docs/images/timetable.png");
             var request = new GenerateContentRequest(prompt);
@@ -84,7 +84,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Theory]
@@ -95,12 +95,12 @@ namespace Test.Mscc.GenerativeAI
         public async void Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
-            var base64image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
             var parts = new List<IPart>
             {
                 new TextData { Text = prompt },
-                new InlineData { MimeType = mimetype, Data = base64image }
+                new InlineData { MimeType = mimetype, Data = base64Image }
             };
             var generationConfig = new GenerationConfig()
             {
@@ -116,7 +116,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain(expected);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Theory]
@@ -127,7 +127,7 @@ namespace Test.Mscc.GenerativeAI
         public async void Describe_AddMedia_From_ImageFile(string filename, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt)
             {
                 GenerationConfig = new GenerationConfig()
@@ -146,7 +146,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain(expected);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown table";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
 
@@ -166,7 +166,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in JSON";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
 
@@ -186,7 +186,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
@@ -194,7 +194,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png", useOnline: true);
 
@@ -206,7 +206,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
@@ -214,7 +214,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Parts.Add(new FileData
             {
@@ -230,7 +230,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
 
         [Fact(Skip = "URL scheme not supported")]
@@ -239,7 +239,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "What's in the video?";
             var videoUrl = "gs://cloud-samples-data/video/animals.mp4";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: this.model);
+            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             // var video = await TestExtensions.ReadImageFileBase64Async(videoUrl);
             var request = new GenerateContentRequest(prompt);
             // request.Contents[0].Parts.Add(new InlineData { MimeType = "video/mp4", Data = video });
@@ -254,7 +254,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain("Zootopia");
-            output.WriteLine(response?.Text);
+            _output.WriteLine(response?.Text);
         }
     }
 }

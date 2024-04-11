@@ -11,16 +11,16 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class VertexAi_Gemini15Pro_Should
+    public class VertexAiGemini15ProShould
     {
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini15ProPreview;
 
-        public VertexAi_Gemini15Pro_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public VertexAiGemini15ProShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
-            this._output = output;
-            this._fixture = fixture;
+            _output = output;
+            _fixture = fixture;
         }
 
         [Fact]
@@ -56,11 +56,11 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(this._model.SanitizeModelName());
+            model.Name.Should().Be(_model.SanitizeModelName());
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
 
             // Act & Assert
@@ -84,7 +84,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
 
             // Act & Assert
@@ -97,7 +97,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
 
             // Act
@@ -115,7 +115,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var parts = new List<IPart>
             {
@@ -139,7 +139,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
@@ -164,7 +164,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "How are you doing today?";
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
 
             // Act
@@ -186,7 +186,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "How are you doing today?";
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
@@ -224,7 +224,7 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerationConfig() 
                 { MaxOutputTokens = 256 };
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model, generationConfig, safetySettings);
+            var model = vertex.GenerativeModel(model: _model, generationConfig, safetySettings);
             model.AccessToken = _fixture.AccessToken;
 
             // Act
@@ -271,7 +271,7 @@ Answer:";
                 new() { Category = HarmCategory.HarmCategoryDangerousContent, Threshold = HarmBlockThreshold.BlockLowAndAbove }
             };
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model, systemInstruction: systemInstruction);
+            var model = vertex.GenerativeModel(model: _model, systemInstruction: systemInstruction);
             model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest(prompt, generationConfig, safetySettings);
 
@@ -297,7 +297,7 @@ Answer:";
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
@@ -324,7 +324,7 @@ Answer:";
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
@@ -347,7 +347,7 @@ Answer:";
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var chat = model.StartChat();
             var chatInput1 = "How can I learn more about C#?";
@@ -364,7 +364,7 @@ Answer:";
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var chat = model.StartChat(tools: new List<Tool>());
             var chatInput1 = "What is the weather in Boston?";
@@ -386,7 +386,7 @@ Answer:";
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = vertex.GenerativeModel(model: this._model);
+            var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var request = new GenerateContentRequest
             {
