@@ -297,8 +297,8 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            response.Text.Should().BeEmpty();
+            // _output.WriteLine(response?.Text);
         }
 
         [Fact]
