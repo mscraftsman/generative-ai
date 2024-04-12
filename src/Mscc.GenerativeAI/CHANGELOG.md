@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement Server-Sent Events (SSE)
 
 ### Changed
+
+- improve Grounding for Google Search and Vertex AI Search
+
 ### Fixed
 
 ## 1.1.2

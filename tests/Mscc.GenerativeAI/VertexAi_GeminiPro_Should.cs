@@ -365,7 +365,13 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(response?.Text);
             response.Candidates[0].GroundingMetadata.Should().NotBeNull();
-            _output.WriteLine($"GroundingMetadata: {response.Candidates[0].GroundingMetadata}");
+            response.Candidates[0].GroundingMetadata.WebSearchQueries.Should().NotBeNull();
+            response.Candidates[0].GroundingMetadata.WebSearchQueries.Count.Should().BeGreaterOrEqualTo(1);
+            _output.WriteLine($"{new string('-', 20)}");
+            foreach (string query in response.Candidates[0].GroundingMetadata.WebSearchQueries)
+            {
+                _output.WriteLine($"SearchQuery: {query}");
+            }
         }
 
         [Fact]
@@ -404,7 +410,13 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(response?.Text);
             response.Candidates[0].GroundingMetadata.Should().NotBeNull();
-            _output.WriteLine($"GroundingMetadata: {response.Candidates[0].GroundingMetadata}");
+            response.Candidates[0].GroundingMetadata.WebSearchQueries.Should().NotBeNull();
+            response.Candidates[0].GroundingMetadata.WebSearchQueries.Count.Should().BeGreaterOrEqualTo(1);
+            _output.WriteLine($"{new string('-', 20)}");
+            foreach (string query in response.Candidates[0].GroundingMetadata.WebSearchQueries)
+            {
+                _output.WriteLine($"SearchQuery: {query}");
+            }
         }
 
         [Theory]

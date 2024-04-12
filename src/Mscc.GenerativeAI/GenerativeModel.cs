@@ -628,21 +628,45 @@ namespace Mscc.GenerativeAI
             if (_useVertexAi)
             {
                 var fullText = new StringBuilder();
-                var contentResponseVertex = await Deserialize<List<GenerateContentResponse>>(response);
-                foreach (var item in contentResponseVertex)
+                GroundingMetadata groundingMetadata = null;
+                var contents = await Deserialize<List<GenerateContentResponse>>(response);
+                foreach (var content in contents)
                 {
-                    switch (item.Candidates[0].FinishReason)
+                    if (!(content.Candidates?[0].GroundingMetadata is null))
+                    {
+                        groundingMetadata = content.Candidates[0].GroundingMetadata;
+                        continue;
+                    }
+                    
+                    switch (content.Candidates?[0].FinishReason)
                     {
                         case FinishReason.Safety:
-                            return item;
+                            return content;
                             break;
                         case FinishReason.Unspecified:
                         default:
-                            fullText.Append(item.Text);
+                            fullText.Append(content.Text);
                             break;
                     }
                 }
-                var result = contentResponseVertex.LastOrDefault();
+                var result = contents.LastOrDefault();
+                if (result.Candidates is null)
+                {
+                    result.Candidates = new List<Candidate>()
+                    {
+                        new()
+                        {
+                            Content = new ContentResponse()
+                            {
+                                Parts = new List<Part>()
+                                {
+                                    new()
+                                }
+                            }
+                        }
+                    };
+                }
+                result.Candidates[0].GroundingMetadata = groundingMetadata;
                 result.Candidates[0].Content.Parts[0].Text = fullText.ToString();
                 return result;
             }
