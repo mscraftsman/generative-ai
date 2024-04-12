@@ -67,7 +67,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null)
+            Content? systemInstruction = null)
         {
             if (_projectId is null) throw new ArgumentNullException("projectId");
             if (_region is null) throw new ArgumentNullException("region");

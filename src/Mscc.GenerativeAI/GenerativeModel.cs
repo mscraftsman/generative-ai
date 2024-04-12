@@ -39,7 +39,7 @@ namespace Mscc.GenerativeAI
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
-        private List<Content>? _systemInstruction;
+        private Content? _systemInstruction;
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         private static readonly Version _httpVersion = HttpVersion.Version11;
@@ -236,7 +236,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null) : this()
+            Content? systemInstruction = null) : this()
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
@@ -261,7 +261,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null) : this()
+            Content? systemInstruction = null) : this()
         {
             _useVertexAi = true;
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 

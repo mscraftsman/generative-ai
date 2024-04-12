@@ -15,10 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement Server-Sent Events (SSE)
 
 ### Changed
+### Fixed
+
+## 1.1.3
+
+### Changed
 
 - improve Grounding for Google Search and Vertex AI Search
 
 ### Fixed
+
+- system instruction is an instance of content, not a list of same.
 
 ## 1.1.2
 

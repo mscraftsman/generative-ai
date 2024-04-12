@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null);
+            Content? systemInstruction = null);
 
         /// <summary>
         /// Gets information about a specific Model.

@@ -38,7 +38,7 @@ namespace Mscc.GenerativeAI
         /// The text strings count toward the token limit.
         /// The role field of systemInstruction is ignored and doesn't affect the performance of the model. 
         /// </summary>
-        public List<Content>? SystemInstruction { get; set; }
+        public Content? SystemInstruction { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null) : this()
+            Content? systemInstruction = null) : this()
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -89,7 +89,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null) : this()
+            Content? systemInstruction = null) : this()
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
@@ -117,7 +117,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null) : this()
+            Content? systemInstruction = null) : this()
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
@@ -145,7 +145,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null) : this()
+            Content? systemInstruction = null) : this()
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 

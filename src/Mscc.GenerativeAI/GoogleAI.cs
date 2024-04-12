@@ -64,7 +64,7 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            List<Content>? systemInstruction = null)
+            Content? systemInstruction = null)
         {
             if (_apiKey is null && _accessToken is null) 
                 throw new ArgumentNullException("apiKey or accessToken", 

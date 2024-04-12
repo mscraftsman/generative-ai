@@ -568,15 +568,10 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Good morning! How are you?";
-            var parts = new List<IPart>
+            var systemInstruction = new Content
             {
-                new TextData { Text = "You are a cat. Your name is Neko." }
+                Parts = new() { new TextData { Text = "You are a friendly pirate. Speak like one." }}
             };
-            var systemInstruction = new List<Content> { new Content
-            {
-                Role = Role.System,
-                Parts = parts
-            }};
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
             var request = new GenerateContentRequest(prompt);
@@ -597,15 +592,10 @@ Use speaker A, speaker B, etc. to identify the speakers.
             // Arrange
             var prompt = @"User input: I like bagels.
 Answer:";
-            var parts = new List<IPart>
+            var systemInstruction = new Content
             {
-                new TextData { Text = "You are a helpful language translator. Your mission is to translate text in English to French." }
+                Parts = new() { new TextData { Text = "You are a helpful language translator. Your mission is to translate text in English to French." }}
             };
-            var systemInstruction = new List<Content> { new Content
-            {
-                Role = Role.System,
-                Parts = parts
-            }};
             var generationConfig = new GenerationConfig() 
                 { 
                     Temperature = 0.9f,
@@ -632,10 +622,7 @@ Answer:";
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"Answer:\n{response?.Text}");
-            _output.WriteLine($"Usage metadata: {response.UsageMetadata.TotalTokenCount}");
-            _output.WriteLine($"Finish reason: {response.Candidates[0].FinishReason}");
-            _output.WriteLine($"Safety settings: {response.Candidates[0].SafetyRatings}");
+            _output.WriteLine($"{prompt} {response?.Text}");
         }
 
         [Fact(Skip = "URL scheme not supported")]
