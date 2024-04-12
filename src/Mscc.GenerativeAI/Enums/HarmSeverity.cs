@@ -2,9 +2,11 @@
 using System.Text.Json.Serialization;
 #endif
 
-
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Harm severity levels.
+    /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmSeverity>))]
     public enum HarmSeverity
     {

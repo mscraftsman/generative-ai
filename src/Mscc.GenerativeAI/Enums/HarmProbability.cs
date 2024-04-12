@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 #endif
 
-
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -14,7 +13,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Unspecified means harm probability unspecified.
         /// </summary>
-        Unspecified = 0,
+        HarmProbabilityUnspecified = 0,
         /// <summary>
         /// Negligible means negligible level of harm.
         /// </summary>

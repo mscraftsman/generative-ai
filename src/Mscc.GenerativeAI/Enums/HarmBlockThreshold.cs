@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 #endif
 
-
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -15,7 +14,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// BlockUnspecified means unspecified harm block threshold.
         /// </summary>
-        BlockUnspecified = 0,
+        HarmBlockThresholdUnspecified = 0,
         /// <summary>
         /// BlockLowAndAbove means block low threshold and above (i.e. block more).
         /// </summary>

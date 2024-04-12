@@ -639,7 +639,7 @@ namespace Mscc.GenerativeAI
                         case FinishReason.Safety:
                             return content;
                             break;
-                        case FinishReason.Unspecified:
+                        case FinishReason.FinishReasonUnspecified:
                         default:
                             fullText.Append(content.Text);
                             break;

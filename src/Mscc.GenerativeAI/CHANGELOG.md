@@ -13,9 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature suggestion: Add logs with LogLevel using the Standard logging in .NET ([#6](https://github.com/mscraftsman/generative-ai/issues/6))
 - implement Automatic Function Call (AFC)
 - implement Server-Sent Events (SSE)
+- new values in enum FinishReason
+- new enum HarmBlockMethod
 
 ### Changed
 
+- improve enums (ref: Google.Cloud.AIPlatform.V1)
 - improve response in SSE format
 - update samples to latest NuGet package
 
