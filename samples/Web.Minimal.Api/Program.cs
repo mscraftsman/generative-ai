@@ -6,7 +6,8 @@ var app = builder.Build();
 
 app.MapGet("/", async (IGenerativeModelService service) =>
 {
-    var result = await service.GenerateContent("Write about the history of Mauritius.");
+    var model = service.CreateInstance();
+    var result = await model.GenerateContent("Write about the history of Mauritius.");
     return result.Text;
 });
 
