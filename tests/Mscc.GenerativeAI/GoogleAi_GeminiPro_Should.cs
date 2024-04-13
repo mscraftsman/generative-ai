@@ -432,7 +432,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            model.UseServerSentEvents = true;
+            model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
 
             // Act
@@ -446,22 +446,23 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void GenerateContent_WithRequest_ServerSentEvents()
+        public async void GenerateContent_Stream_WithRequest_ServerSentEvents()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
+            model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
 
             // Act
-            var responseEvents = model.GenerateContentSSE(request);
+            var responseEvents = model.GenerateContentStream(request);
             
             // Assert
             responseEvents.Should().NotBeNull();
             await foreach (var response in responseEvents)
             {
-                _output.WriteLine($"{response}");
+                _output.WriteLine($"{response.Text}");
             }
         }
 
