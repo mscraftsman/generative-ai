@@ -840,7 +840,6 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method).AddQueryString(new Dictionary<string, string?>() { ["alt"] = "sse" });
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
-            // Todo: How to POST the request?
             var message = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
