@@ -192,7 +192,7 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// See <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events">Server-sent Events</a>
         /// </remarks>
-        public bool UseServerSentEvents { get; set; } = false;
+        public bool UseServerSentEventsFormat { get; set; } = false;
 
         /// <summary>
         /// Activate JSON Mode (default = no)
@@ -611,10 +611,6 @@ namespace Mscc.GenerativeAI
             request.SystemInstruction ??= _systemInstruction;
             
             var url = ParseUrl(Url, Method);
-            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro.SanitizeModelName())
-            {
-                url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
-            }
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
@@ -714,58 +710,6 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Generates a response from the model given an input GenerateContentRequest.
-        /// </summary>
-        /// <param name="request">Required. The request to send to the API.</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Response from the model for generated content.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        internal async IAsyncEnumerable<Task<string>> GenerateContentSSE(GenerateContentRequest? request, 
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (_model != GenerativeAI.Model.Gemini10Pro.SanitizeModelName()) throw new NotSupportedException();
-
-            request.GenerationConfig ??= _generationConfig;
-            request.SafetySettings ??= _safetySettings;
-            request.Tools ??= _tools;
-            
-            var url = ParseUrl(Url, Method).AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
-            string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
-            // Todo: How to POST the request?
-            var message = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                Content = payload,
-                RequestUri = new Uri(url),
-                Version = _httpVersion
-            };
-            // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
-            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
-
-            using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
-            {
-                response.EnsureSuccessStatusCode();
-                if (response.Content is not null)
-                {
-                    using (var sr = new StreamReader(await response.Content.ReadAsStreamAsync()))
-                    {
-                        while (!sr.EndOfStream)
-                        {
-                            var item = sr.ReadLineAsync();
-                            if (cancellationToken.IsCancellationRequested)
-                                yield break;
-                            yield return item;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Generates a streamed response from the model given an input GenerateContentRequest.
         /// This method uses a MemoryStream and StreamContent to send a streaming request to the API.
         /// It runs asynchronously sending and receiving chunks to and from the API endpoint, which allows non-blocking code execution.
@@ -774,9 +718,22 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken"></param>
         /// <returns>Stream of GenerateContentResponse with chunks asynchronously.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="HttpIOException">Thrown when the response ended prematurely.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
+            if (UseServerSentEventsFormat)
+            {
+                await foreach (var item in GenerateContentStreamSSE(request, cancellationToken))
+                {
+                    if (cancellationToken.IsCancellationRequested)
+                        yield break;
+                    yield return item;
+                }
+                yield break;
+            }
+
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             request.GenerationConfig ??= _generationConfig;
@@ -786,10 +743,6 @@ namespace Mscc.GenerativeAI
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
-            if (UseServerSentEvents && _model == GenerativeAI.Model.Gemini10Pro.SanitizeModelName())
-            {
-                url = url.AddQueryString(new Dictionary<string, string?>() { ["key"] = "sse" });
-            }
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
@@ -862,6 +815,63 @@ namespace Mscc.GenerativeAI
                 tools ?? _tools);
             request.Contents[0].Role = Role.User;
             return GenerateContentStream(request);
+        }
+
+        /// <summary>
+        /// Generates a response from the model given an input GenerateContentRequest.
+        /// </summary>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        internal async IAsyncEnumerable<GenerateContentResponse> GenerateContentStreamSSE(GenerateContentRequest? request, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (_model != GenerativeAI.Model.Gemini10Pro.SanitizeModelName()) throw new NotSupportedException();
+
+            request.GenerationConfig ??= _generationConfig;
+            request.SafetySettings ??= _safetySettings;
+            request.Tools ??= _tools;
+            
+            var method = "streamGenerateContent";
+            var url = ParseUrl(Url, method).AddQueryString(new Dictionary<string, string?>() { ["alt"] = "sse" });
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var message = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = payload,
+                RequestUri = new Uri(url),
+                Version = _httpVersion
+            };
+            // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+
+            using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            {
+                response.EnsureSuccessStatusCode();
+                if (response.Content is not null)
+                {
+                    using (var sr = new StreamReader(await response.Content.ReadAsStreamAsync()))
+                    {
+                        while (!sr.EndOfStream)
+                        {
+                            var data = await sr.ReadLineAsync();
+                            if (string.IsNullOrWhiteSpace(data)) 
+                                continue;
+                            
+                            var item = JsonSerializer.Deserialize<GenerateContentResponse>(
+                                data.Substring("data:".Length).Trim(), _options);
+                            if (cancellationToken.IsCancellationRequested)
+                                yield break;
+                            yield return item;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
