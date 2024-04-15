@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -43,7 +44,10 @@ namespace Mscc.GenerativeAI
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         private static readonly Version _httpVersion = HttpVersion.Version11;
-        private static readonly HttpClient Client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient(new HttpClientHandler
+        {
+            SslProtocols = SslProtocols.Tls12,
+        });
 #else
         private static readonly Version _httpVersion = HttpVersion.Version30;
         private static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
