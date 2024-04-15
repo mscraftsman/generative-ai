@@ -21,7 +21,8 @@ if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("YOUR_API_KEY"))
 }
 
 // Create a new instance of the GenerativeModel class.
-var model = new GenerativeModel(apiKey);
+var genai = new GoogleAI(apiKey);
+var model = genai.GenerativeModel();
 
 // Create a loop to keep the program running until the user exits entering the Escape key.
 var hint = " (Press Escape to exit)";
