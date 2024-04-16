@@ -318,6 +318,23 @@ Make sure that the required API have been enabled.
 gcloud services enable aiplatform.googleapis.com
 ```
 
+In case of long-running streaming requests it can happen that you get a `HttpIOException`: The response ended prematurely while waiting for the next frame from the server. (ResponseEnded). 
+The root cause is the .NET runtime and the solution is to **upgrade to the latest version of the .NET runtime**. 
+In case that you cannot upgrade you might disable dynamic window sizing as a workaround:
+Either using the environment variable [`DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2FLOWCONTROL_DISABLEDYNAMICWINDOWSIZING`](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables)
+```bash
+DOTNET_SYSTEM_NET_HTTP_SOCKETSHTTPHANDLER_HTTP2FLOWCONTROL_DISABLEDYNAMICWINDOWSIZING=true
+```
+or setting an `AppContext` switch:
+```csharp
+AppContext.SetSwitch("System.Net.SocketsHttpHandler.Http2FlowControl.DisableDynamicWindowSizing", true);
+```
+
+Several issues regarding this problem have been reported on GitHub:
+- https://github.com/dotnet/runtime/pull/97881
+- https://github.com/grpc/grpc-dotnet/issues/2361
+- https://github.com/grpc/grpc-dotnet/issues/2358
+
 ## Using the tests 🧩
 
 The repository contains a number of test cases for Google AI and Vertex AI. You will find them in the [tests](./tests) folder. They are part of the [GenerativeAI solution].

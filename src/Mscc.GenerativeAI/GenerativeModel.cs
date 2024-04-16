@@ -778,6 +778,8 @@ namespace Mscc.GenerativeAI
                     if (response.Content is not null)
                     {
                         using var stream = await response.Content.ReadAsStreamAsync();
+                        // Ref: https://github.com/dotnet/runtime/issues/97128 - HttpIOException
+                        // https://github.com/grpc/grpc-dotnet/issues/2361#issuecomment-1895805167 
                         await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(
                                            stream, _options, cancellationToken))
                         {
