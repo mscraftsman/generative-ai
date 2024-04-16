@@ -475,6 +475,35 @@ Use speaker A, speaker B, etc. to identify the speakers.
             }
         }
 
+        [Fact]
+        public async void TranscribeStream_Audio_From_FileAPI_UsingSSEFormat()
+        {
+            // Arrange
+            var prompt = @"Can you transcribe this interview, in the format of timecode, speaker, caption.
+Use speaker A, speaker B, etc. to identify the speakers.
+";
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            model.UseServerSentEventsFormat = true;
+            var request = new GenerateContentRequest(prompt);
+            var files = await model.ListFiles();
+            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            request.AddMedia(file);
+
+            // Act
+            var responseStream = model.GenerateContentStream(request);
+
+            // Assert
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                _output.WriteLine(response?.Text);
+            }
+        }
+
         [Fact(Skip = "Bad Request due to FileData part")]
         // [Fact]
         public async void Describe_Videos_From_FileAPI()

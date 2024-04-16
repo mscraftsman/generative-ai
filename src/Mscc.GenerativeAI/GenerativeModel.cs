@@ -723,7 +723,6 @@ namespace Mscc.GenerativeAI
         /// <returns>Stream of GenerateContentResponse with chunks asynchronously.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        /// <exception cref="HttpIOException">Thrown when the response ended prematurely.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -830,13 +829,11 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken"></param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         internal async IAsyncEnumerable<GenerateContentResponse> GenerateContentStreamSSE(GenerateContentRequest? request, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (_model != GenerativeAI.Model.Gemini10Pro.SanitizeModelName()) throw new NotSupportedException();
 
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
