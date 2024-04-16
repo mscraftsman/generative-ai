@@ -607,8 +607,8 @@ namespace Test.Mscc.GenerativeAI
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var history = new List<ContentResponse>
             {
-                new ContentResponse { Role = Role.User, Parts = new List<Part> { new Part("Hello") } },
-                new ContentResponse { Role = Role.Model, Parts = new List<Part> { new Part("Hello! How can I assist you today?") } }
+                new() { Role = Role.User, Text = "Hello" },
+                new() { Role = Role.Model, Text = "Hello! How can I assist you today?"}
             };
             var chat = model.StartChat(history);
             var prompt = "How does electricity work?";

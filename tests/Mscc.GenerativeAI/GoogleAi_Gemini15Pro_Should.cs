@@ -302,19 +302,14 @@ namespace Test.Mscc.GenerativeAI
             });
         }
 
-        [Theory]
-        [InlineData("files/sfqq5iev1m5d")]
-        // [InlineData("5kfit2vb3r9e")]
-        // [InlineData("files/s0ebp56ef0ri")]
-        // [InlineData("e8dz3lhkyu7w")]
-        // [InlineData("bb1e4cqfk6wc")]
-        public async void Get_File(string fileName)
+        [Fact]
+        public async void Get_File()
         {
             // Arrange
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var files = await model.ListFiles();
-            // var fileName = files.FirstOrDefault().Name;
+            var fileName = files.FirstOrDefault().Name;
 
             // Act
             var sut = await model.GetFile(fileName);
@@ -354,7 +349,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
             var file = files.Where(x => x.MimeType.StartsWith("image/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}");
+            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -379,7 +374,7 @@ namespace Test.Mscc.GenerativeAI
             var files = await model.ListFiles();
             foreach (var file in files.Where(x => x.MimeType.StartsWith("image/")))
             {
-                _output.WriteLine($"File: {file.Name}");
+                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -405,7 +400,7 @@ namespace Test.Mscc.GenerativeAI
             var files = await model.ListFiles();
             foreach (var file in files.Where(x => x.MimeType.StartsWith("audio/")))
             {
-                _output.WriteLine($"File: {file.Name}");
+                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -433,7 +428,7 @@ Do not make up any information that is not part of the audio and do not be verbo
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
             var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}");
+            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -459,7 +454,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
             var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}");
+            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -492,7 +487,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             var files = await model.ListFiles();
             foreach (var file in files.Where(x => x.MimeType.StartsWith("video/")))
             {
-                _output.WriteLine($"File: {file.Name}");
+                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -567,11 +562,8 @@ Use speaker A, speaker B, etc. to identify the speakers.
         public async void Generate_Content_SystemInstruction()
         {
             // Arrange
+            var systemInstruction = new Content("You are a friendly pirate. Speak like one.");
             var prompt = "Good morning! How are you?";
-            var systemInstruction = new Content
-            {
-                Parts = new() { new TextData { Text = "You are a friendly pirate. Speak like one." }}
-            };
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
             var request = new GenerateContentRequest(prompt);
@@ -590,12 +582,11 @@ Use speaker A, speaker B, etc. to identify the speakers.
         public async void Generate_Content_SystemInstruction_WithSafetySettings()
         {
             // Arrange
+            var systemInstruction =
+                new Content(
+                    "You are a helpful language translator. Your mission is to translate text in English to French.");
             var prompt = @"User input: I like bagels.
 Answer:";
-            var systemInstruction = new Content
-            {
-                Parts = new() { new TextData { Text = "You are a helpful language translator. Your mission is to translate text in English to French." }}
-            };
             var generationConfig = new GenerationConfig() 
                 { 
                     Temperature = 0.9f,

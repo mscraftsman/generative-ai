@@ -243,12 +243,11 @@ namespace Test.Mscc.GenerativeAI
         {
             // Load a example model with system instructions
             // Arrange
+            var systemInstruction =
+                new Content(
+                    "You are a friendly pirate. Speak like one. Your mission is to translate text in English to French.");
             var prompt = @"User input: I like bagels.
 Answer:";
-            var systemInstruction = new Content
-            {
-                Parts = new() { new TextData { Text = "You are a friendly pirate. Speak like one. Your mission is to translate text in English to French." }}
-            };
             var generationConfig = new GenerationConfig() 
                 { 
                     Temperature = 0.9f,
