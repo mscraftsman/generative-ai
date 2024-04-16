@@ -14,7 +14,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Unset value, which will default to one of the other enum values.
         /// </summary>
-        Unspecified = 0,
+        TaskTypeUnspecified = 0,
         /// <summary>
         /// Specifies the given text is a query in a search/retrieval setting.
         /// </summary>
