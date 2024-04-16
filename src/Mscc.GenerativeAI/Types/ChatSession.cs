@@ -75,10 +75,7 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (string.IsNullOrEmpty(prompt)) throw new ArgumentException(prompt, nameof(prompt));
 
-            _lastSent = new ContentResponse
-            {
-                Role = Role.User, Parts = new List<Part> { new Part { Text = prompt } }
-            };
+            _lastSent = new() { Role = Role.User, Text = prompt };
             History.Add(_lastSent);
 
             generationConfig ??= _generationConfig;
@@ -108,10 +105,7 @@ namespace Mscc.GenerativeAI
                     _tools);
             }
             
-            _lastReceived = new ContentResponse
-            {
-                Role = Role.Model, Parts = new List<Part> { new Part { Text = response.Text ?? string.Empty } }
-            };
+            _lastReceived = new() { Role = Role.Model, Text = response.Text ?? string.Empty };
             History.Add(_lastReceived);
             return response;
         }
@@ -147,10 +141,7 @@ namespace Mscc.GenerativeAI
                 parts = contentParts;
             }
 
-            _lastSent = new ContentResponse
-            {
-                Role = role, Parts = parts
-            };
+            _lastSent = new ContentResponse { Role = role, Parts = parts };
             History.Add(_lastSent);
             var request = new GenerateContentRequest
             {
@@ -174,10 +165,7 @@ namespace Mscc.GenerativeAI
                 fullText.Append(item.Text);
                 yield return item;
             }
-            _lastReceived = new ContentResponse
-            {
-                Role = Role.Model, Parts = new List<Part> { new Part { Text = fullText.ToString() } }
-            };
+            _lastReceived = new() { Role = Role.Model, Text = fullText.ToString() };
             History.Add(_lastReceived);
         }
 

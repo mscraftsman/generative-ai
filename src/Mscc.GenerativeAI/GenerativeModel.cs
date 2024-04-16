@@ -652,13 +652,13 @@ namespace Mscc.GenerativeAI
                 var result = contents.LastOrDefault();
                 if (result.Candidates is null)
                 {
-                    result.Candidates = new List<Candidate>()
+                    result.Candidates = new()
                     {
                         new()
                         {
-                            Content = new ContentResponse()
+                            Content = new()
                             {
-                                Parts = new List<Part>()
+                                Parts = new()
                                 {
                                     new()
                                 }

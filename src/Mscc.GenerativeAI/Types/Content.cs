@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 #endif
+using System;
 using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
@@ -11,9 +12,9 @@ namespace Mscc.GenerativeAI
     /// Ref: https://ai.google.dev/api/rest/v1beta/Content
     /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class Content
+    public sealed class Content
     {
-        private List<Part>? partTypes;
+        private List<Part>? _partTypes;
         
         /// <summary>
         /// Ordered Parts that constitute a single message. Parts may have different MIME types.
@@ -32,14 +33,29 @@ namespace Mscc.GenerativeAI
         /// </summary>
         [DebuggerHidden]
         [JsonPropertyName("parts")]
-        public virtual List<Part>? PartTypes 
+        public List<Part>? PartTypes 
         { 
             get
             {
                 SynchronizeParts();
-                return partTypes;
+                return _partTypes;
             }
-            set => partTypes = value;
+            set => _partTypes = value;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        internal Content() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        /// <param name="text">String to process.</param>
+        public Content(string text) : this()
+        {
+            Parts = new List<IPart>();
+            Parts.Add(new TextData { Text = text });
         }
 
         private void SynchronizeParts()
@@ -47,32 +63,32 @@ namespace Mscc.GenerativeAI
             // partTypes = null;
             if (Parts == null) return;
 
-            partTypes = new List<Part>();
+            _partTypes = new List<Part>();
             foreach (var part in Parts)
             {
                 if (part is TextData text)
                 {
-                    partTypes.Add(new Part { TextData = text });
+                    _partTypes.Add(new Part { TextData = text });
                 }
                 if (part is InlineData inline)
                 {
-                    partTypes.Add(new Part { InlineData = inline });
+                    _partTypes.Add(new Part { InlineData = inline });
                 }
                 if (part is FileData file)
                 {
-                    partTypes.Add(new Part { FileData = file });
+                    _partTypes.Add(new Part { FileData = file });
                 }
                 if (part is FunctionResponse response)
                 {
-                    partTypes.Add(new Part { FunctionResponse = response });
+                    _partTypes.Add(new Part { FunctionResponse = response });
                 }
                 if (part is FunctionCall call)
                 {
-                    partTypes.Add(new Part { FunctionCall = call });
+                    _partTypes.Add(new Part { FunctionCall = call });
                 }
                 if (part is VideoMetadata video)
                 {
-                    partTypes.Add(new Part { VideoMetadata = video });
+                    _partTypes.Add(new Part { VideoMetadata = video });
                 }
             }
         }
@@ -87,13 +103,54 @@ namespace Mscc.GenerativeAI
     /// 
     /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class ContentResponse
+    public sealed class ContentResponse
     {
         public List<Part> Parts { get; set; }
         public string Role { get; set; }
 
         [JsonIgnore]
-        public virtual string Text => Parts[0].Text;
+        public string Text
+        {
+            get
+            {
+                if (Parts.Count > 0)
+                {
+                    return Parts[0].Text;
+                }
+                return string.Empty;
+            }
+            set
+            {
+                if (Parts.Count == 0)
+                {
+                    Parts.Add(new Part() { Text = value });
+                }
+                else
+                {
+                    Parts[0].Text = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentResponse"/> class.
+        /// </summary>
+        internal ContentResponse() => Parts = new List<Part>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentResponse"/> class.
+        /// </summary>
+        /// <param name="text">String to process.</param>
+        /// <param name="role">Role of the content. Must be either 'user' or 'model'.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> or <paramref name="role"/> is null.</exception>
+        public ContentResponse(string text, string role = GenerativeAI.Role.User) : this()
+        {
+            // if (text == null) throw new ArgumentNullException(nameof(text));
+            // if (role == null) throw new ArgumentNullException(nameof(role));
+
+            Parts.Add(new Part() { Text = text });
+            Role = role;
+        }
 
         private string GetDebuggerDisplay()
         {

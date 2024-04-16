@@ -27,21 +27,12 @@ namespace Mscc.GenerativeAI
 
         public EmbedContentRequest(string prompt)
         {
-            Content = new()
-            {
-                Parts = new List<Part> { new()
-                {
-                    Text = prompt
-                }}
-            };
+            Content = new() { Text = prompt };
         }
 
         public EmbedContentRequest(List<string> prompts)
         {
-            Content = new()
-            {
-                Parts = new List<Part>()
-            };
+            Content = new();
             foreach (var prompt in prompts)
             {
                 Content.Parts.Add(new()
