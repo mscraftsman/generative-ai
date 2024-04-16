@@ -15,10 +15,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement Server-Sent Events (SSE)
 
 ### Changed
+### Fixed
 
-- use TLS 1.2 protocol
+## 1.2.0
+
+### Added
+
+- use TLS 1.2 protocol (.NET Fx)
+- troubleshooting for streaming HttpIOException (.NET runtime issue)
+
+### Changed
+
+- improve writing of model name
+- refactor Content type used for SystemInstruction
+- update tests regarding Content type
 
 ### Fixed
+
+- fix response checking in ChatSession
 
 ## 1.1.4
 
