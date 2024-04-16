@@ -116,9 +116,9 @@ namespace Mscc.GenerativeAI
 
         public static void CheckResponse(this GenerateContentResponse response, bool stream = false)
         {
-            if (response.PromptFeedback.BlockReason is not BlockedReason.BlockedReasonUnspecified)
+            if (response.PromptFeedback is { BlockReason: not BlockedReason.BlockedReasonUnspecified })
             {
-                throw new BlockedPromptException(response.PromptFeedback);
+                throw new BlockedPromptException(response.PromptFeedback!);
             }
 
             if (!stream)
