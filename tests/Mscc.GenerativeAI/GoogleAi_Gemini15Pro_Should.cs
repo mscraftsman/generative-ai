@@ -531,7 +531,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             _output.WriteLine(response?.Text);
         }
         
-        [Fact]
+        [Fact(Skip = "Bad Request due to FileData part")]
         public async void Describe_Image_From_StorageBucket()
         {
             // Arrange
@@ -564,7 +564,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
-        public async void Describe_Image_From_FileData()
+        public async void Describe_Image_From_URL()
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
@@ -645,7 +645,7 @@ Answer:";
             _output.WriteLine($"{prompt} {response?.Text}");
         }
 
-        [Fact(Skip = "URL scheme not supported")]
+        [Fact(Skip = "The 'gs' scheme is not supported.")]
         public async void Multimodal_Video_Input()
         {
             // Arrange
