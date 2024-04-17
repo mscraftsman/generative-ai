@@ -302,7 +302,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<List<ModelResponse>> ListModels(bool tuned = false, 
-            int? pageSize = null, 
+            int? pageSize = 50, 
             string? pageToken = null, 
             string? filter = null)
         {
@@ -540,7 +540,7 @@ namespace Mscc.GenerativeAI
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<List<FileResource>> ListFiles(int? pageSize = null, 
+        public async Task<List<FileResource>> ListFiles(int? pageSize = 100, 
             string? pageToken = null)
         {
             this.GuardSupported();
