@@ -37,10 +37,37 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = genAi.GenerativeModel(model: _model);
 
             // Act
             var response = await model.EmbedContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Embedding.Should().NotBeNull();
+            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.Embedding.Values.ForEach(x =>
+            {
+                _output.WriteLine(x.ToString());
+            });
+        }
+
+        [Fact]
+        public async void Embed_Content_Batches()
+        {
+            // Arrange
+            var prompts = new[] {
+                "What is the meaning of life?",
+                "How much wood would a woodchuck chuck?",
+                "How does the brain work?"};
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = genAi.GenerativeModel(model: _model);
+
+            // Act
+            var response = await model.EmbedContent(content: prompts, 
+                taskType: TaskType.RetrievalDocument,
+                title: "Embedding of list of strings");
 
             // Assert
             response.Should().NotBeNull();

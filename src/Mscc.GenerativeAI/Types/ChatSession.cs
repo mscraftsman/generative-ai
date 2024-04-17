@@ -11,8 +11,11 @@ using System.Text;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// This ChatSession object collects the messages sent and received, in its ChatSession.History attribute.
+    /// Contains an ongoing conversation with the model.
     /// </summary>
+    /// <remarks>
+    /// This ChatSession object collects the messages sent and received, in its ChatSession.History attribute.
+    /// </remarks>
     public class ChatSession
     {
         private readonly GenerativeModel _model;
@@ -20,13 +23,23 @@ namespace Mscc.GenerativeAI
         private readonly List<SafetySetting>? _safetySettings;
         private readonly List<Tool>? _tools;
         private readonly bool _enableAutomaticFunctionCalling;
+        private List<ContentResponse> _history;
         private ContentResponse? _lastSent;
         private ContentResponse? _lastReceived;
 
         /// <summary>
         /// The chat history.
         /// </summary>
-        public List<ContentResponse> History { get; set; }
+        public List<ContentResponse> History
+        {
+            get => _history;
+            set
+            {
+                _history = value;
+                _lastSent = null;
+                _lastReceived = null;
+            }
+        }
 
         /// <summary>
         /// Returns the last received ContentResponse
@@ -37,7 +50,7 @@ namespace Mscc.GenerativeAI
         /// Constructor to start a chat session with history.
         /// </summary>
         /// <param name="model">The model to use in the chat.</param>
-        /// <param name="history">A chat history to initialize the object with.</param>
+        /// <param name="history">A chat history to initialize the session with.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
@@ -61,16 +74,20 @@ namespace Mscc.GenerativeAI
         /// Sends the conversation history with the added message and returns the model's response.
         /// Appends the request and response to the conversation history.
         /// </summary>
-        /// <param name="prompt"></param>
+        /// <param name="prompt">The message sent.</param>
         /// <param name="generationConfig">Optional. Overrides for the model's generation config.</param>
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="BlockedPromptException"></exception>
-        /// <exception cref="StopCandidateException"></exception>
+        /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
+        /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
+        /// <returns>The model's response.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="BlockedPromptException">Thrown when the model's response is blocked by a reason.</exception>
+        /// <exception cref="StopCandidateException">Thrown when the model's response is stopped by the model's safety settings.</exception>
         public async Task<GenerateContentResponse> SendMessage(string prompt,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null)
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null,
+            ToolConfig? toolConfig = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (string.IsNullOrEmpty(prompt)) throw new ArgumentException(prompt, nameof(prompt));
@@ -89,7 +106,8 @@ namespace Mscc.GenerativeAI
                 ).ToList(),
                 GenerationConfig = generationConfig ?? _generationConfig,
                 SafetySettings = safetySettings ?? _safetySettings,
-                Tools = _tools
+                Tools = tools ?? _tools,
+                ToolConfig = toolConfig
             };
 
             var response = await _model.GenerateContent(request);
@@ -111,18 +129,23 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// 
+        /// Sends the conversation history with the added message and returns the model's response.
         /// </summary>
-        /// <param name="content"></param>
+        /// <remarks>Appends the request and response to the conversation history.</remarks>
+        /// <param name="content">The message contents.</param>
         /// <param name="generationConfig">Optional. Overrides for the model's generation config.</param>
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
+        /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
+        /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="BlockedPromptException"></exception>
+        /// <returns>The model's response.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="content"/> is <see langword="null"/></exception>
+        /// <exception cref="BlockedPromptException">Thrown when the <paramref name="content"/> is blocked by a reason.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(object content,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null, 
+            List<SafetySetting>? safetySettings = null,
+            List<Tool>? tools = null,
+            ToolConfig? toolConfig = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
@@ -150,7 +173,8 @@ namespace Mscc.GenerativeAI
                 ).ToList(),
                 GenerationConfig = generationConfig ?? _generationConfig,
                 SafetySettings = safetySettings ?? _safetySettings,
-                Tools = _tools
+                Tools = tools ?? _tools,
+                ToolConfig = toolConfig
             };
 
             var fullText = new StringBuilder();

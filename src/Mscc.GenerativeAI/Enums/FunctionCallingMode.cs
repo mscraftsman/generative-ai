@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Mode of function calling.
+    /// Mode of function calling to define the execution behavior for function calling.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
     public enum FunctionCallingMode

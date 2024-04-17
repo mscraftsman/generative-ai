@@ -10,12 +10,14 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public class EmbedContentRequest
     {
-        public string Model { get; } = $"{GenerativeAI.Model.Embedding.SanitizeModelName()}";
-
         /// <summary>
         /// 
         /// </summary>
-        public ContentResponse Content { get; set; }
+        public string? Model { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public ContentResponse? Content { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -25,11 +27,24 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string? Title { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public EmbedContentRequest() { }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prompt"></param>
         public EmbedContentRequest(string prompt)
         {
             Content = new() { Text = prompt };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prompts"></param>
         public EmbedContentRequest(List<string> prompts)
         {
             Content = new();

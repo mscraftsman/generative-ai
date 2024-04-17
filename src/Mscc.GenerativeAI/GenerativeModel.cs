@@ -40,6 +40,7 @@ namespace Mscc.GenerativeAI
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
+        private ToolConfig? _toolConfig;
         private Content? _systemInstruction;
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
@@ -235,18 +236,21 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="toolConfig">Optional. Configuration of tools.</param>
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            Content? systemInstruction = null) : this()
+            Content? systemInstruction = null,
+            ToolConfig? toolConfig = null) : this()
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
             _generationConfig ??= generationConfig;
             _safetySettings ??= safetySettings;
             _tools = tools;
+            _toolConfig = toolConfig;
             _systemInstruction = systemInstruction;
         }
 
@@ -260,12 +264,14 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="toolConfig">Optional. Configuration of tools.</param>
         internal GenerativeModel(string? projectId = null, string? region = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            Content? systemInstruction = null) : this()
+            Content? systemInstruction = null,
+            ToolConfig? toolConfig = null) : this()
         {
             _useVertexAi = true;
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
@@ -279,6 +285,7 @@ namespace Mscc.GenerativeAI
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
             _tools = tools;
+            _toolConfig = toolConfig;
             _systemInstruction = systemInstruction;
         }
 
@@ -410,7 +417,7 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<ModelResponse> PatchTunedModel(string model, ModelResponse tunedModel, string? updateMask = null)
+        public async Task<ModelResponse> UpdateTunedModel(string model, ModelResponse tunedModel, string? updateMask = null)
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
             this.GuardSupported();
@@ -478,15 +485,15 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Uploads a file to the File API backend.
         /// </summary>
-        /// <param name="uri"></param>
-        /// <param name="displayName"></param>
+        /// <param name="uri">URI or path to the file to upload.</param>
+        /// <param name="displayName">A name displazed for the uploaded file.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
         /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
         /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<UploadMediaResponse> UploadMedia(string uri,
+        public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -612,6 +619,7 @@ namespace Mscc.GenerativeAI
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             request.Tools ??= _tools;
+            request.ToolConfig ??= _toolConfig;
             request.SystemInstruction ??= _systemInstruction;
             
             var url = ParseUrl(Url, Method);
@@ -623,6 +631,13 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType); 
             var response = await Client.PostAsync(url, payload);
+            // ToDo: Handle payload exception like this
+            // except google.api_core.exceptions.InvalidArgument as e:
+            // if e.message.startswith("Request payload size exceeds the limit:"):
+            // e.message += (
+            //     " Please upload your files with the File API instead."
+            // "`f = genai.upload_file(path); m.generate_content(['tell me about this file:', f])`"
+            //     )
             response.EnsureSuccessStatusCode();
 
             if (_useVertexAi)
@@ -680,20 +695,23 @@ namespace Mscc.GenerativeAI
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
+        /// <param name="toolConfig">Optional. Configuration of tools.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateContentResponse> GenerateContent(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            ToolConfig? toolConfig = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
             var request = new GenerateContentRequest(prompt, 
                 generationConfig ?? _generationConfig, 
                 safetySettings ?? _safetySettings, 
-                tools ?? _tools);
+                tools ?? _tools,
+                toolConfig: toolConfig ?? _toolConfig);
             return await GenerateContent(request);
         }
 
@@ -742,6 +760,7 @@ namespace Mscc.GenerativeAI
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             request.Tools ??= _tools;
+            request.ToolConfig ??= _toolConfig;
             request.SystemInstruction ??= _systemInstruction;
 
             var method = "streamGenerateContent";
@@ -939,19 +958,34 @@ namespace Mscc.GenerativeAI
         /// Generates an embedding from the model given an input Content.
         /// </summary>
         /// <param name="request">Required. EmbedContentRequest to process. The content to embed. Only the parts.text fields will be counted.</param>
+        /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
         /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
         /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
-        /// <returns>Embeddings of the content as a list of floating numbers.</returns>
+        /// <returns>List containing the embedding (list of float values) for the input content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException"></exception>
-        public async Task<EmbedContentResponse> EmbedContent(EmbedContentRequest request, TaskType? taskType = null, string? title = null)
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public async Task<EmbedContentResponse> EmbedContent(EmbedContentRequest request,
+            string? model = null,
+            TaskType? taskType = null,
+            string? title = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.Embedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Content == null) throw new ArgumentNullException(nameof(request.Content));
+            if (string.IsNullOrEmpty(request.Model))
             {
-                throw new NotSupportedException();
+                request.Model = model ?? _model;
             }
+            request.TaskType ??= taskType;
+            request.Title ??= title;
 
+            string[] allowedModels =
+            [
+                GenerativeAI.Model.Embedding.SanitizeModelName(), 
+                GenerativeAI.Model.TextEmbedding.SanitizeModelName()
+            ];
+            if (!allowedModels.Contains(request.Model.SanitizeModelName())) throw new NotSupportedException();
+            if (!string.IsNullOrEmpty(request.Title) && request.TaskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
+            
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
@@ -961,44 +995,28 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Generates an embedding from the model given an input Content.
-        /// </summary>
-        /// <param name="prompt">Required. String to process. The content to embed. Only the parts.text fields will be counted.</param>
-        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
-        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
-        /// <returns>Embeddings of the content as a list of floating numbers.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException"></exception>
-        public async Task<EmbedContentResponse> EmbedContent(string? prompt, TaskType? taskType = null, string? title = null)
-        {
-            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (!_model.Equals($"{GenerativeAI.Model.Embedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
-
-            var request = new EmbedContentRequest(prompt)
-            {
-                TaskType = taskType,
-                Title = title
-            };
-            return await EmbedContent(request);
-        }
-
-        /// <summary>
         /// Generates multiple embeddings from the model given input text in a synchronous call.
         /// </summary>
         /// <param name="requests">Required. Embed requests for the batch. The model in each of these requests must match the model specified BatchEmbedContentsRequest.model.</param>
-        /// <returns>List of Embeddings of the content as a list of floating numbers.</returns>
+        /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
+        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
+        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
+        /// <returns>List containing the embedding (list of float values) for the input content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="requests"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
-        public async Task<EmbedContentResponse> BatchEmbedContent(List<EmbedContentRequest> requests)
+        public async Task<EmbedContentResponse> EmbedContent(List<EmbedContentRequest> requests,
+            string? model = null,
+            TaskType? taskType = null,
+            string? title = null)
         {
             if (requests == null) throw new ArgumentNullException(nameof(requests));
-            if (!_model.Equals($"{GenerativeAI.Model.Embedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
+            string[] allowedModels =
+            [
+                GenerativeAI.Model.Embedding.SanitizeModelName(), 
+                GenerativeAI.Model.TextEmbedding.SanitizeModelName()
+            ];
+            if (!allowedModels.Contains(_model.SanitizeModelName())) throw new NotSupportedException();
+            if (!string.IsNullOrEmpty(title) && taskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
 
             var method = GenerativeAI.Method.BatchEmbedContent;
             var url = ParseUrl(Url, method);
@@ -1006,6 +1024,97 @@ namespace Mscc.GenerativeAI
             var payload = new StringContent(json, Encoding.UTF8, MediaType);
             var response = await Client.PostAsync(url, payload);
             return await Deserialize<EmbedContentResponse>(response);
+        }
+
+        /// <summary>
+        /// Generates an embedding from the model given an input Content.
+        /// </summary>
+        /// <param name="content">Required. String to process. The content to embed. Only the parts.text fields will be counted.</param>
+        /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
+        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
+        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
+        /// <returns>List containing the embedding (list of float values) for the input content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="content"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public async Task<EmbedContentResponse> EmbedContent(string content, string? model = null, TaskType? taskType = null, string? title = null)
+        {
+            if (content == null) throw new ArgumentNullException(nameof(content));
+
+            var request = new EmbedContentRequest(content)
+            {
+                Model = model,
+                TaskType = taskType,
+                Title = title
+            };
+            return await EmbedContent(request);
+        }
+
+        // Todo: Capture Python SDK for JSON structures.
+        /// <summary>
+        /// Generates an embedding from the model given an input Content.
+        /// </summary>
+        /// <param name="content">Required. List of strings to process. The content to embed. Only the parts.text fields will be counted.</param>
+        /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
+        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
+        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
+        /// <returns>List containing the embedding (list of float values) for the input content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="content"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public async Task<EmbedContentResponse> EmbedContent(IEnumerable<string> content, string? model = null, TaskType? taskType = null, string? title = null)
+        {
+            if (content == null) throw new ArgumentNullException(nameof(content));
+
+            // var requests = new List<EmbedContentRequest>();
+            // foreach (string prompt in content)
+            // {
+            //     if (string.IsNullOrEmpty(prompt)) continue;
+            //     var request = new EmbedContentRequest()
+            //     {
+            //         Model = model?.SanitizeModelName(),
+            //         Content = new(prompt),
+            //         TaskType = taskType,
+            //         Title = title
+            //     };
+            //     requests.Add(request);
+            // }
+            // return await EmbedContent(requests);
+            var request = new EmbedContentRequest()
+            {
+                Model = model?.SanitizeModelName(),
+                Content = new(),
+                TaskType = taskType,
+                Title = title
+            };
+            foreach (string prompt in content)
+            {
+                if (string.IsNullOrEmpty(prompt)) continue;
+                request.Content.Parts.Add(new() { Text = prompt });
+            }
+            return await EmbedContent(request);
+        }
+
+        /// <summary>
+        /// Generates multiple embeddings from the model given input text in a synchronous call.
+        /// </summary>
+        /// <param name="content">Content to embed.</param>
+        /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
+        /// <param name="taskType">Optional. Optional task type for which the embeddings will be used. Can only be set for models/embedding-001.</param>
+        /// <param name="title">Optional. An optional title for the text. Only applicable when TaskType is RETRIEVAL_DOCUMENT. Note: Specifying a title for RETRIEVAL_DOCUMENT provides better quality embeddings for retrieval.</param>
+        /// <returns>List containing the embedding (list of float values) for the input content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="content"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public async Task<EmbedContentResponse> EmbedContent(ContentResponse content, string? model = null, TaskType? taskType = null, string? title = null)
+        {
+            if (content == null) throw new ArgumentNullException(nameof(content));
+
+            var request = new EmbedContentRequest()
+            {
+                Model = model,
+                Content = content,
+                TaskType = taskType,
+                Title = title
+            };
+            return await EmbedContent(request);
         }
 
         /// <summary>
@@ -1071,11 +1180,12 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Starts a chat session. 
         /// </summary>
-        /// <param name="history"></param>
+        /// <param name="history">Optional. A collection of <see cref="ContentResponse"/> objects, or equivalents to initialize the session.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
-        /// <returns></returns>
+        /// <param name="enableAutomaticFunctionCalling"></param>
+        /// <returns>Returns a <see cref="ChatSession"/> attached to this model.</returns>
         public ChatSession StartChat(List<ContentResponse>? history = null, 
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null, 

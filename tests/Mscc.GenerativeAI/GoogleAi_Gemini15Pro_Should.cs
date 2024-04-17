@@ -264,7 +264,7 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(_model);
             
             // Act
-            var response = await model.UploadMedia(filePath, displayName);
+            var response = await model.UploadFile(filePath, displayName);
             
             // Assert
             response.Should().NotBeNull();
