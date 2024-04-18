@@ -34,6 +34,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Specifies that the embeddings will be used for clustering.
         /// </summary>
-        Clustering = 5
+        Clustering = 5,
+        /// <summary>
+        /// Specifies that the given text will be used for question answering.
+        /// </summary>
+        QuestionAnswering = 6,
+        /// <summary>
+        /// Specifies that the given text will be used for fact verification.
+        /// </summary>
+        FactVerification = 7,
     }
 }

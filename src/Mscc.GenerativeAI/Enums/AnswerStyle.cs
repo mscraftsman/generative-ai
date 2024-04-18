@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Unspecified answer style.
         /// </summary>
-        Unspecified = 0,
+        AnswerStyleUnspecified = 0,
         /// <summary>
         /// Succinct but abstract style.
         /// </summary>

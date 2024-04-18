@@ -16,12 +16,13 @@ namespace Mscc.GenerativeAI
         /// </summary>
         BlockedReasonUnspecified = 0,
         /// <summary>
-        /// BlockedReasonSafety means candidates blocked due to safety.
+        /// Safety means candidates blocked due to safety.
+        /// You can inspect <see cref="SafetyRating"/>s to understand which safety category blocked it.
         /// </summary>
-        BlockedReasonSafety = 1,
+        Safety = 1,
         /// <summary>
-        /// BlockedReasonOther means candidates blocked due to other reason.
+        /// Other means candidates blocked due to other reason.
         /// </summary>
-        BlockedReasonOther = 2
+        Other = 2
     }
 }
