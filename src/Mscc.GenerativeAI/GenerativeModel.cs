@@ -491,6 +491,7 @@ namespace Mscc.GenerativeAI
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
         /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<UploadMediaResponse> UploadFile(string uri,
@@ -499,6 +500,8 @@ namespace Mscc.GenerativeAI
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
             if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+            var fileInfo = new FileInfo(uri);
+            if (fileInfo.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(uri));
 
             var mimeType = GenerativeAIExtensions.GetMimeType(uri);
             var totalBytes = new FileInfo(uri).Length;
@@ -519,7 +522,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var multipartContent = new MultipartContent("related");
             multipartContent.Add(new StringContent(json, Encoding.UTF8, MediaType));
-            multipartContent.Add(new StreamContent(new FileStream(uri, FileMode.Open), ChunkSize)
+            multipartContent.Add(new StreamContent(new FileStream(uri, FileMode.Open), (int)Constants.ChunkSize)
             {
                 Headers = { 
                     ContentType = new MediaTypeHeaderValue(mimeType), 
