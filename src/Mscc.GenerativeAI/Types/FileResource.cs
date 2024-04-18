@@ -29,7 +29,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Size of the file in bytes.
         /// </summary>
-        public int SizeBytes { get; set; }
+        public long SizeBytes { get; set; }
         /// <summary>
         /// Output only. The timestamp of when the File was created.
         /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
