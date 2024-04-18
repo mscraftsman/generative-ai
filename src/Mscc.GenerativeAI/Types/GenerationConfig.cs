@@ -41,7 +41,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<string>? StopSequences { get; set; }
         /// <summary>
-        /// Optional. Activate JSON mode.
+        /// Optional. Output response mimetype of the generated candidate text.
+        /// Supported mimetype: `text/plain`: (default) Text output. `application/json`: JSON response in the candidates.
         /// </summary>
         public string? ResponseMimeType { get; set; }
     }

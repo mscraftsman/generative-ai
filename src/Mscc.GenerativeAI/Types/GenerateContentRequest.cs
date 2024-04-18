@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// Request to generate a completion from the model.
     /// </summary>
     public class GenerateContentRequest
     {

@@ -609,7 +609,7 @@ namespace Mscc.GenerativeAI
         #endregion
 
         /// <summary>
-        /// Generates a response from the model given an input GenerateContentRequest.
+        /// Generates a response from the model given an input <see cref="GenerateContentRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
         /// <returns>Response from the model for generated content.</returns>
@@ -1286,7 +1286,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Counts the number of tokens in the content. 
+        /// Runs a model's tokenizer on a string and returns the token count.
         /// </summary>
         /// <param name="request"></param>
         /// <returns>Number of tokens.</returns>

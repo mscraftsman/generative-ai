@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Response from the model for a grounded answer.
+    /// </summary>
     public class GenerateAnswerResponse
     {
         /// <summary>

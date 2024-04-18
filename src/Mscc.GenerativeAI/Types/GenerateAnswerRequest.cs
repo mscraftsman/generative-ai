@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Request to generate a grounded answer from the model.
+    /// </summary>
     public class GenerateAnswerRequest
     {
         /// <summary>
@@ -17,7 +20,7 @@ namespace Mscc.GenerativeAI
         public AnswerStyle AnswerStyle { get; set; }
         /// <summary>
         /// Optional. A list of unique SafetySetting instances for blocking unsafe content.
-        /// This will be enforced on the GenerateAnswerRequest.contents and GenerateAnswerResponse.candidate. There should not be more than one setting for each SafetyCategory type. The API will block any contents and responses that fail to meet the thresholds set by these settings. This list overrides the default settings for each SafetyCategory specified in the safetySettings. If there is no SafetySetting for a given SafetyCategory provided in the list, the API will use the default safety setting for that category. Harm categories HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT, HARM_CATEGORY_HARASSMENT are supported.
+        /// This will be enforced on the GenerateAnswerRequest.Contents and GenerateAnswerResponse.candidate. There should not be more than one setting for each SafetyCategory type. The API will block any contents and responses that fail to meet the thresholds set by these settings. This list overrides the default settings for each SafetyCategory specified in the safetySettings. If there is no SafetySetting for a given SafetyCategory provided in the list, the API will use the default safety setting for that category. Harm categories HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT, HARM_CATEGORY_HARASSMENT are supported.
         /// </summary>
         public List<SafetySetting>? SafetySettings { get; set; }
         
@@ -51,7 +54,7 @@ namespace Mscc.GenerativeAI
                     Text = prompt
                 }}
             }};
-            AnswerStyle = answerStyle ?? AnswerStyle.Unspecified;
+            AnswerStyle = answerStyle ?? AnswerStyle.AnswerStyleUnspecified;
             if (safetySettings != null) SafetySettings = safetySettings;
         }
     }
