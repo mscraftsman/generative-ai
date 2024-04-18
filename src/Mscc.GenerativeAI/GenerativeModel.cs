@@ -543,7 +543,7 @@ namespace Mscc.GenerativeAI
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<List<FileResource>> ListFiles(int? pageSize = 100, 
+        public async Task<ListFilesResponse> ListFiles(int? pageSize = 100, 
             string? pageToken = null)
         {
             this.GuardSupported();
@@ -558,8 +558,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            var files = await Deserialize<ListFilesResponse>(response);
-            return files?.Files!;
+            return await Deserialize<ListFilesResponse>(response);
         }
 
         /// <summary>

@@ -293,8 +293,8 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
-            sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            sut.ForEach(x =>
+            sut.Files.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            sut.Files.ForEach(x =>
             {
                 _output.WriteLine($"Display Name: {x.DisplayName}");
                 _output.WriteLine($"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
@@ -309,7 +309,7 @@ namespace Test.Mscc.GenerativeAI
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var files = await model.ListFiles();
-            var fileName = files.FirstOrDefault().Name;
+            var fileName = files.Files.FirstOrDefault().Name;
 
             // Act
             var sut = await model.GetFile(fileName);
@@ -328,7 +328,7 @@ namespace Test.Mscc.GenerativeAI
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var files = await model.ListFiles();
-            var fileName = files.FirstOrDefault().Name;
+            var fileName = files.Files.FirstOrDefault().Name;
             _output.WriteLine($"File: {fileName}");
             
             // Act
@@ -348,7 +348,7 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            var file = files.Where(x => x.MimeType.StartsWith("image/")).FirstOrDefault();
+            var file = files.Files.Where(x => x.MimeType.StartsWith("image/")).FirstOrDefault();
             _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
@@ -372,7 +372,7 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            foreach (var file in files.Where(x => x.MimeType.StartsWith("image/")))
+            foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("image/")))
             {
                 _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
@@ -398,7 +398,7 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            foreach (var file in files.Where(x => x.MimeType.StartsWith("audio/")))
+            foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("audio/")))
             {
                 _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
@@ -427,7 +427,7 @@ Do not make up any information that is not part of the audio and do not be verbo
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
             _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
@@ -453,7 +453,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
             _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
@@ -487,7 +487,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
             _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
@@ -514,7 +514,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
-            foreach (var file in files.Where(x => x.MimeType.StartsWith("video/")))
+            foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("video/")))
             {
                 _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
@@ -676,7 +676,7 @@ Answer:";
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var files = await model.ListFiles();
-            foreach (var file in files.Where(x => x.MimeType.StartsWith("audio/")))
+            foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("audio/")))
             {
                 _output.WriteLine($"File: {file.Name}");
                 request.Contents.Add(new Content
@@ -703,7 +703,7 @@ Answer:";
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var files = await model.ListFiles();
-            var file = files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
 
             // Act
             var response = await model.CountTokens(file);
