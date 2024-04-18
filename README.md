@@ -165,7 +165,7 @@ var response = model.GenerateContent(prompt).Result;
 Console.WriteLine(response.Text);
 ```
 
-## More examples
+## More examples 🪄
 
 Supported models are accessible via the `Model` class. Since release 0.9.0 there is support for the previous PaLM 2 models and their functionalities.
 
