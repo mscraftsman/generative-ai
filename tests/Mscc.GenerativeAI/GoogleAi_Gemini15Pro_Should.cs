@@ -270,7 +270,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.File.Should().NotBeNull();
             response.File.Name.Should().NotBeNull();
-            // response.File.DisplayName.Should().Be(displayName);
+            response.File.DisplayName.Should().Be(displayName);
             // response.File.MimeType.Should().Be("image/jpeg");
             // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
             // response.File.ExpirationTime.Should().NotBeNull();
@@ -279,6 +279,64 @@ namespace Test.Mscc.GenerativeAI
             response.File.Sha256Hash.Should().NotBeNull();
             response.File.Uri.Should().NotBeNull();
             _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
+        }
+
+        [Fact]
+        public async void Upload_File_TooLarge_ThrowsMaxUploadFileSizeException()
+        {
+            // Arrange
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "toolarge.jpg");
+            var displayName = "Too Large File";
+            using var fs = new FileStream(filePath, FileMode.CreateNew);
+            fs.Seek(2049L * 1024 * 1024, SeekOrigin.Begin);
+            fs.WriteByte(0);
+            fs.Close();
+
+            // Act & Assert
+            await Assert.ThrowsAsync<MaxUploadFileSizeException>(() => model.UploadFile(filePath, displayName));
+            
+            // House keeping
+            File.Delete(filePath);
+        }
+
+        [Fact]
+        public async void Upload_File_WithResume_Using_FileAPI()
+        {
+            // Arrange
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            model.Timeout = TimeSpan.FromMinutes(5);
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "resume.jpg");
+            var displayName = "Resumable File";
+            if (!File.Exists(filePath))
+            {
+                using var fs = new FileStream(filePath, FileMode.CreateNew);
+                fs.Seek(10L * 1024 * 1024, SeekOrigin.Begin);
+                fs.WriteByte(0);
+                fs.Close();
+            }
+            
+            // Act
+            var response = await model.UploadFile(filePath, displayName, resumable: true);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.File.Should().NotBeNull();
+            response.File.Name.Should().NotBeNull();
+            response.File.DisplayName.Should().Be(displayName);
+            // response.File.MimeType.Should().Be("image/jpeg");
+            // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
+            // response.File.ExpirationTime.Should().NotBeNull();
+            // response.File.UpdateTime.Should().NotBeNull();
+            response.File.SizeBytes.Should().BeGreaterThan(0);
+            response.File.Sha256Hash.Should().NotBeNull();
+            response.File.Uri.Should().NotBeNull();
+            _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");            
+
+            // House keeping
+            File.Delete(filePath);
         }
 
         [Fact]

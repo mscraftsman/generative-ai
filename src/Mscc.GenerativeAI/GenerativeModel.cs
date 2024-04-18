@@ -495,7 +495,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="uri">URI or path to the file to upload.</param>
         /// <param name="displayName">A name displazed for the uploaded file.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
         /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
@@ -504,6 +505,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
+            bool resumable = false,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
@@ -522,6 +524,10 @@ namespace Mscc.GenerativeAI
             };
 
             var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
                 ["alt"] = "json", 
