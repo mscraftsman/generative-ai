@@ -10,3 +10,9 @@ Here are simple guidelines that we expect to be followed by contributors:
 - Only contribute with your own work, or if you have a permission from the others to contribute their code.
 
 Thanks for contributing!
+
+## Gemini Wizards (aka Contributors) ✦
+
+<a href="https://github.com/mscraftsman/generative-ai/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=mscraftsman/generative-ai" />
+</a>
