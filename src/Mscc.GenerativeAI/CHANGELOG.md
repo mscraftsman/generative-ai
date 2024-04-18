@@ -12,10 +12,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
 - Feature suggestion: Add logs with LogLevel using the Standard logging in .NET ([#6](https://github.com/mscraftsman/generative-ai/issues/6))
 - implement Automatic Function Call (AFC)
-- implement Server-Sent Events (SSE)
 
 ### Changed
 ### Fixed
+
+## 1.3.0
+
+### Added
+
+- implement Server-Sent Events (SSE)
+- add enum `FunctionCallingMode`
+- implement type `ToolConfig`
+- add model `gemini-1.0-pro-vision-001`
+- implement exception for max file upload size
+- expose `Timeout` property
+
+### Changed
+
+- rename method `UploadMedia` to `UploadFile` (in sync with other SDKs)
+- rename `TaskType` Unspecified property
+- refactor `FileResource.SizeBytes` to long data type (int64)
+- refactor response type of `ListFiles` (discovery)
+- streaming response using SSE format works for other models than gemini-pro (original limitation)
+- specify default values for `pageSize`
+- refactor constants to external file
+- add and amend enum identifiers
+- add and amend XML doc
 
 ## 1.2.0
 
