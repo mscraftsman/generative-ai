@@ -25,7 +25,6 @@ namespace Mscc.GenerativeAI
         private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
         private const string MediaType = "application/json";
-        private const int ChunkSize = 8 * 1024 * 1024;
 
         private readonly bool _useVertexAi;
         private readonly string _region = "us-central1";
