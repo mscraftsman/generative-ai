@@ -204,6 +204,15 @@ namespace Mscc.GenerativeAI
         public bool UseJsonMode { get; set; } = false;
 
         /// <summary>
+        /// Gets or sets the timespan to wait before the request times out.
+        /// </summary>
+        public TimeSpan Timeout
+        {
+            get => Client.Timeout;
+            set => Client.Timeout = value;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
