@@ -1,6 +1,7 @@
 # Gemini AI Client for .NET and ASP.NET Core
 [![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/blob/main/LICENSE)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
+[![GitHub stars](https://img.shields.io/github/stars/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/stargazers)
 
 Access and integrate the Gemini API into your .NET applications. The packages support both Google AI Studio and Google Cloud Vertex AI.
 
