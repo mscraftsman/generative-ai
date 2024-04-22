@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public Parameters? Parameters { get; set; }
+        public ImageGenerationParameters? Parameters { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationRequest"/> class.
@@ -41,7 +41,7 @@ namespace Mscc.GenerativeAI
             if (sampleCount < 1 || sampleCount > 8) throw new ArgumentOutOfRangeException(nameof(sampleCount));
 
             Instances = new[] { new Instances { Prompt = prompt } };
-            Parameters = new Parameters { SampleCount = sampleCount };
+            Parameters = new ImageGenerationParameters { SampleCount = sampleCount };
         }
     }
 }

@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// 
     /// </summary>
-    public class Parameters
+    public class ImageGenerationParameters
     {
         /// <summary>
         /// The number of generated images.
@@ -20,7 +20,13 @@ namespace Mscc.GenerativeAI
         /// Optional. Pseudo random seed for reproducible generated outcome; setting the seed lets you generate deterministic output.
         /// </summary>
         /// <remarks>Version 006 model only: To use the seed field you must also set "addWatermark": false in the list of parameters.</remarks>
-        public uint? Seed { get; set; }
+        public int? Seed { get; set; }
+        
+        /// <summary>
+        /// Optional. The text prompt for guiding the response.
+        /// </summary>
+        /// <remarks>en (default), de, fr, it, es</remarks>
+        public string? Language { get; set; }
 
         /// <summary>
         /// Optional. Prompt strings that force something not to be generated.
