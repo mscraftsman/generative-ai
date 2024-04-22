@@ -61,11 +61,14 @@ The package also defines various helper classes and enums to represent different
 
 The package supports the following use cases to authenticate.
 
-- Google AI: [Authentication with an API key](https://ai.google.dev/tutorials/setup)
-- Google AI: [Authentication with OAuth](https://ai.google.dev/docs/oauth_quickstart)
-- Vertex AI: [Authentication with Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev)
-- Vertex AI: [Authentication with OAuth]() (using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google))
-- Vertex AI: [Authentication with Service Account]() (using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google))
+| API       | Authentication                                                                                                                              | Remarks                                                          |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
+| Google AI | [Authentication with an API key](https://ai.google.dev/tutorials/setup)                                                                     |                                                                  |
+| Google AI | [Authentication with OAuth](https://ai.google.dev/docs/oauth_quickstart)                                                                    | required for tuned models                                        |
+| Vertex AI | [Authentication with Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev) |                                                                  |
+| Vertex AI | [Authentication with Credentials by Metadata Server](https://cloud.google.com/docs/authentication/rest#metadata-server)                     | requires access to a metadata server                             |
+| Vertex AI | [Authentication with OAuth]()                                                                                                               | using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) |
+| Vertex AI | [Authentication with Service Account](https://cloud.google.com/docs/authentication/provide-credentials-adc#service-account)                 | using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) |
 
 This applies mainly to the instantiation procedure.
 
