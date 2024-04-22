@@ -24,7 +24,6 @@ namespace Mscc.GenerativeAI
         private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
         private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
-        private const string MediaType = "application/json";
 
         private readonly bool _useVertexAi;
         private readonly string _region = "us-central1";
@@ -385,7 +384,7 @@ namespace Mscc.GenerativeAI
             var url = "{endpointGoogleAI}/{Version}/{method}";   // v1beta3
             url = ParseUrl(url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CreateTunedModelResponse>(response);
@@ -444,7 +443,7 @@ namespace Mscc.GenerativeAI
             
             url = ParseUrl(url).AddQueryString(queryStringParams);
             string json = Serialize(tunedModel);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             var message = new HttpRequestMessage
             {
@@ -483,8 +482,8 @@ namespace Mscc.GenerativeAI
 
             var method = GenerativeAI.Method.TransferOwnership;
             var url = ParseUrl(Url, method);
-            string json = Serialize(new { EmailAddress = emailAddress });
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            string json = Serialize(new { EmailAddress = emailAddress });   // TransferOwnershipRequest
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
@@ -535,7 +534,7 @@ namespace Mscc.GenerativeAI
             });
             string json = Serialize(request);
             var multipartContent = new MultipartContent("related");
-            multipartContent.Add(new StringContent(json, Encoding.UTF8, MediaType));
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
             multipartContent.Add(new StreamContent(new FileStream(uri, FileMode.Open), (int)Constants.ChunkSize)
             {
                 Headers = { 
@@ -642,10 +641,10 @@ namespace Mscc.GenerativeAI
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
-                request.GenerationConfig.ResponseMimeType = MediaType;
+                request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType); 
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
             var response = await Client.PostAsync(url, payload);
             // ToDo: Handle payload exception like this
             // except google.api_core.exceptions.InvalidArgument as e:
@@ -784,7 +783,7 @@ namespace Mscc.GenerativeAI
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
-                request.GenerationConfig.ResponseMimeType = MediaType;
+                request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
 
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
@@ -799,12 +798,12 @@ namespace Mscc.GenerativeAI
                 RequestUri = new Uri(url),
                 Version = _httpVersion
             };
-            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
 
             using (var payload = new StreamContent(ms))
             {
                 message.Content = payload;
-                payload.Headers.ContentType = new MediaTypeHeaderValue(MediaType);
+                payload.Headers.ContentType = new MediaTypeHeaderValue(Constants.MediaType);
 
                 using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
@@ -877,7 +876,7 @@ namespace Mscc.GenerativeAI
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method).AddQueryString(new Dictionary<string, string?>() { ["alt"] = "sse" });
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var message = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -886,7 +885,7 @@ namespace Mscc.GenerativeAI
                 Version = _httpVersion
             };
             // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
-            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MediaType));
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
 
             using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
             {
@@ -929,7 +928,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
 
@@ -1004,7 +1003,7 @@ namespace Mscc.GenerativeAI
             
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<EmbedContentResponse>(response);
@@ -1037,7 +1036,7 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Method.BatchEmbedContent;
             var url = ParseUrl(Url, method);
             string json = Serialize(requests);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             return await Deserialize<EmbedContentResponse>(response);
         }
@@ -1146,7 +1145,7 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Method.CountTokens;
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1233,7 +1232,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<GenerateTextResponse>(response);
@@ -1261,7 +1260,7 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Method.CountTextTokens;
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1283,7 +1282,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<GenerateMessageResponse>(response);
@@ -1311,7 +1310,7 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Method.CountMessageTokens;
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1334,7 +1333,7 @@ namespace Mscc.GenerativeAI
             
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<EmbedTextResponse>(response);
@@ -1367,7 +1366,7 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Method.CountMessageTokens;
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1391,7 +1390,7 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Method.BatchEmbedText;
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, MediaType);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
             return await Deserialize<EmbedTextResponse>(response);
         }

@@ -4,5 +4,6 @@ namespace Mscc.GenerativeAI
     {
         internal const uint ChunkSize = 8388608;
         internal const long MaxUploadFileSize = 2147483648;
+        internal const string MediaType = "application/json";
     }
 }
