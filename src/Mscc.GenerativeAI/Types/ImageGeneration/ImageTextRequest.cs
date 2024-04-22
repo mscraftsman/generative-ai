@@ -16,7 +16,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public Instances[] Instances { get; set; }
+        public IEnumerable<Instance> Instances { get; set; }
 
         /// <summary>
         /// 
@@ -31,17 +31,36 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationRequest"/> class.
         /// </summary>
-        /// <param name="prompt">The text prompt guides what images the model generates.</param>
-        /// <param name="sampleCount">The number of generated images.</param>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="sampleCount"/> is less than 1 or greater than 8.</exception>
-        public ImageTextRequest(string prompt, int? sampleCount = 4) : this()
+        /// <param name="base64Image">The base64 encoded image to process.</param>
+        /// <param name="question">The question to ask about the image.</param>
+        /// <param name="sampleCount">The number of predictions.</param>
+        /// <param name="language">Language of predicted text. Defaults to "en".</param>
+        /// <param name="storageUri">Optional. Cloud Storage uri where to store the generated predictions.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="sampleCount"/> is less than 1 or greater than 3.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="language"/> is not supported.</exception>
+        public ImageTextRequest(string base64Image,
+            string? question = null,
+            int? sampleCount = null,
+            string? language = null,
+            string? storageUri = null) : this()
         {
-            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (sampleCount < 1 || sampleCount > 8) throw new ArgumentOutOfRangeException(nameof(sampleCount));
+            if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
+            sampleCount ??= 1;
+            if (sampleCount < 1 || sampleCount > 3) throw new ArgumentOutOfRangeException(nameof(sampleCount));
+            language ??= "en";
+            language.GuardSupportedLanguage();
 
-            Instances = new[] { new Instances { Prompt = prompt } };
-            Parameters = new ImageTextParameters { SampleCount = sampleCount };
+            Instances = new[]
+            {
+                new Instance { Prompt = question, Image = new Image() { BytesBase64Encoded = base64Image } }
+            };
+            Parameters = new ImageTextParameters
+            {
+                SampleCount = sampleCount, 
+                Language = language.ToLowerInvariant(),
+                StorageUri = storageUri
+            };
         }
     }
 }

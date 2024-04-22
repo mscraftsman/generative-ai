@@ -45,7 +45,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Response from the model for generated images.</returns>
-        public async Task<ImageTextResponse> Predict(ImageTextRequest request,
+        public async Task<ImageTextResponse> GetCaptions(ImageTextRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -61,28 +61,46 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Generates a response from the model given an input prompt and other parameters.
         /// </summary>
-        /// <param name="prompt">Required. String to process.</param>
+        /// <param name="base64Image">Required. The base64 encoded image to process.</param>
+        /// <param name="numberOfResults">Optional. Number of results to return. Default is 1.</param>
+        /// <param name="language">Optional. Language to use. Default is en.</param>
+        /// <param name="storageUri">Optional. Cloud Storage uri where to store the generated predictions.</param>
         /// <returns>Response from the model for generated content.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageTextResponse> Predict(string prompt)
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="language"/> is not supported by the API.</exception>
+        public async Task<ImageTextResponse> GetCaptions(string base64Image,
+            int? numberOfResults = null,
+            string? language = null,
+            string storageUri = null)
         {
-            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+            if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
 
-            var request = new ImageTextRequest(prompt);
-            return await Predict(request);
+            var request = new ImageTextRequest(base64Image, null, numberOfResults, language,  storageUri);
+            return await GetCaptions(request);
         }
 
         /// <summary>
         /// Generates a response from the model given an input prompt and other parameters.
         /// </summary>
-        /// <param name="prompt">Required. String to process.</param>
+        /// <param name="base64Image">Required. The base64 encoded image to process.</param>
+        /// <param name="question">Required. The question to ask about the image.</param>
+        /// <param name="numberOfResults">Optional. Number of results to return. Default is 1.</param>
+        /// <param name="language">Optional. Language to use. Default is en.</param>
         /// <returns>Response from the model for generated content.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageTextResponse> GenerateContent(string prompt)
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="language"/> is not supported by the API.</exception>
+        public async Task<ImageTextResponse> AskQuestion(string base64Image,
+            string question,
+            int? numberOfResults = null,
+            string? language = null)
         {
-            return await Predict(prompt);
+            if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
+            if (question == null) throw new ArgumentNullException(nameof(question));
+
+            var request = new ImageTextRequest(base64Image, question, numberOfResults, language);
+            return await GetCaptions(request);
         }
     }
 }

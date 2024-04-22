@@ -39,7 +39,18 @@ namespace Mscc.GenerativeAI
             
             if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
         }
-        
+
+        /// <summary>
+        /// Checks if the language is supported by the model.
+        /// </summary>
+        /// <param name="language">Language to use.</param>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="language"/> is not supported by the API.</exception>
+        public static void GuardSupportedLanguage(this string language)
+        {
+            string[] supportedLanguages = { "en", "de", "fr", "it", "es" };
+            if (!supportedLanguages.Contains(language)) throw new NotSupportedException($"The language `{language}` is not supported by the API.");
+        }
+
         public static string? SanitizeModelName(this string? value)
         {
             if (value == null) return value;
