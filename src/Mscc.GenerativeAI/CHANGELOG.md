@@ -16,6 +16,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.4.0
+
+### Added
+
+- implement Imagen 2 model (Vertex AI)
+- implement Image Captioning (Vertex AI)
+- implement Visual question and answering (VQA)
+- add tests for `ImageGenerationModel` and `ImageTextModel`
+
+### Changed
+
+- refactor constant mimetype
+- improve XML doc
+- move types to subfolder
+
 ## 1.3.0
 
 ### Added
