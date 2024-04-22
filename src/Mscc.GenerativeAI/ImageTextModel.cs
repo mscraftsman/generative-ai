@@ -9,10 +9,10 @@ using System.Text;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Name of the model that supports image generation.
-    /// The <see cref="ImageGenerationModel"/> can create high quality visual assets in seconds and brings Google's state-of-the-art vision and multimodal generative AI capabilities to application developers.
+    /// Name of the model that supports image captioning.
+    /// <see cref="ImageTextModel"/> generates a caption from an image you provide based on the language that you specify. The model supports the following languages: English (en), German (de), French (fr), Spanish (es) and Italian (it).
     /// </summary>
-    public class ImageGenerationModel : BaseGeneration
+    public class ImageTextModel : BaseGeneration
     {
         private const string UrlVertexAi =
             "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
@@ -22,30 +22,30 @@ namespace Mscc.GenerativeAI
         private string Method => GenerativeAI.Method.Predict;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
+        /// Initializes a new instance of the <see cref="ImageTextModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public ImageGenerationModel() : base() { }
+        public ImageTextModel() : base() { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Vertex AI Gemini API.
+        /// Initializes a new instance of the <see cref="ImageTextModel"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
-        public ImageGenerationModel(string? projectId = null, string? region = null,
+        public ImageTextModel(string? projectId = null, string? region = null,
             string? model = null) : base(projectId, region, model)
         {
         }
 
         /// <summary>
-        /// Generates images from the specified <see cref="ImageGenerationRequest"/>.
+        /// Generates images from the specified <see cref="ImageTextRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Response from the model for generated images.</returns>
-        public async Task<ImageGenerationResponse> GenerateImages(ImageGenerationRequest request,
+        public async Task<ImageTextResponse> Predict(ImageTextRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -55,7 +55,7 @@ namespace Mscc.GenerativeAI
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload, cancellationToken);
             response.EnsureSuccessStatusCode();
-            return await Deserialize<ImageGenerationResponse>(response);
+            return await Deserialize<ImageTextResponse>(response);
         }
 
         /// <summary>
@@ -65,12 +65,12 @@ namespace Mscc.GenerativeAI
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageGenerationResponse> GenerateImages(string prompt)
+        public async Task<ImageTextResponse> Predict(string prompt)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new ImageGenerationRequest(prompt);
-            return await GenerateImages(request);
+            var request = new ImageTextRequest(prompt);
+            return await Predict(request);
         }
 
         /// <summary>
@@ -80,9 +80,9 @@ namespace Mscc.GenerativeAI
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageGenerationResponse> GenerateContent(string prompt)
+        public async Task<ImageTextResponse> GenerateContent(string prompt)
         {
-            return await GenerateImages(prompt);
+            return await Predict(prompt);
         }
     }
 }
