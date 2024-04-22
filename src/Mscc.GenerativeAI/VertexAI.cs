@@ -20,6 +20,7 @@ namespace Mscc.GenerativeAI
         // private readonly string? _apiEndpoint = "us-central1-aiplatform.googleapis.com";
         // private readonly GoogleAuthOptions? _googleAuthOptions;
         private GenerativeModel? _generativeModel;
+        private ImageGenerationModel? _imageGeneration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
@@ -86,6 +87,20 @@ namespace Mscc.GenerativeAI
         public Task<ModelResponse> GetModel(string model)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <returns></returns>
+        public ImageGenerationModel ImageGenerationModel(string model = Model.ImageGeneration)
+        {
+            if (_projectId is null) throw new ArgumentNullException("projectId");
+            if (_region is null) throw new ArgumentNullException("region");
+
+            _imageGeneration = new ImageGenerationModel(_projectId, _region, model);
+            return _imageGeneration;
         }
     }
 }

@@ -53,5 +53,11 @@ namespace Mscc.GenerativeAI
         public const string TextEmbedding004 = "text-embedding-004";
         public const string TextEmbedding = TextEmbedding004;
         public const string AttributedQuestionAnswering = "aqa";
+        public const string ImageGeneration006 = "imagegeneration@006";
+        public const string ImageGeneration005 = "imagegeneration@005";
+        public const string ImageGeneration002 = "imagegeneration@002";
+        public const string ImageGeneration = ImageGeneration006;
+        public const string ImageText001 = "imagetext@001";
+        public const string ImageText = ImageText001;
     }
 }

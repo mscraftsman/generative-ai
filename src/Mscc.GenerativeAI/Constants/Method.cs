@@ -27,6 +27,9 @@ namespace Mscc.GenerativeAI
         public static string CountMessageTokens = "countMessageTokens";
         public static string CountTextTokens = "countTextTokens";
         public static string EmbedText = "embedText";
-        public static string GenerateMessage = "generateMessage";
+        public static string GenerateMessage = "ge0nerateMessage";
+        
+        // Methods used for Imagen models.
+        public static string Predict = "predict";
     }
 }
