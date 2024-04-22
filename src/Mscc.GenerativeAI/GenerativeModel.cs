@@ -704,7 +704,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Generates a response from the model given an input GenerateContentRequest.
+        /// Generates a response from the model given an input prompt and other parameters.
         /// </summary>
         /// <param name="prompt">Required. String to process.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
