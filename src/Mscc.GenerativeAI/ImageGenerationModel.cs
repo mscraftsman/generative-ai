@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public ImageGenerationModel() : base() { }
+        public ImageGenerationModel() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Vertex AI Gemini API.

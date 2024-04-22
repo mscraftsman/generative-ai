@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public ImageTextModel() : base() { }
+        public ImageTextModel() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageTextModel"/> class with access to Vertex AI Gemini API.
@@ -72,11 +72,11 @@ namespace Mscc.GenerativeAI
         public async Task<ImageTextResponse> GetCaptions(string base64Image,
             int? numberOfResults = null,
             string? language = null,
-            string storageUri = null)
+            string? storageUri = null)
         {
             if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
 
-            var request = new ImageTextRequest(base64Image, null, numberOfResults, language,  storageUri);
+            var request = new ImageTextRequest(base64Image, null, numberOfResults, language, storageUri);
             return await GetCaptions(request);
         }
 
