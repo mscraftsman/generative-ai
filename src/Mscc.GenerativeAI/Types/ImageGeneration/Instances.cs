@@ -8,7 +8,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The text prompt guides what images the model generates. This field is required for both generation and editing.
         /// </summary>
-        public string Prompt { get; set; }
+        public string? Prompt { get; set; }
 
         /// <summary>
         /// Optional. Input image for editing.
