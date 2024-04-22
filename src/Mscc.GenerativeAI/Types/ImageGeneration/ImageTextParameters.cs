@@ -17,9 +17,8 @@ namespace Mscc.GenerativeAI
         public string? StorageUri { get; set; }
 
         /// <summary>
-        /// Optional. Pseudo random seed for reproducible generated outcome; setting the seed lets you generate deterministic output.
+        /// Optional. The seed for random number generator (RNG). If RNG seed is the same for requests with the inputs, the prediction results will be the same.
         /// </summary>
-        /// <remarks>Version 006 model only: To use the seed field you must also set "addWatermark": false in the list of parameters.</remarks>
         public int? Seed { get; set; }
         
         /// <summary>
