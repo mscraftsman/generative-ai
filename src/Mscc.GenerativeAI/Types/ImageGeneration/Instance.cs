@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// 
     /// </summary>
-    public class Instances
+    public class Instance
     {
         /// <summary>
         /// The text prompt guides what images the model generates. This field is required for both generation and editing.

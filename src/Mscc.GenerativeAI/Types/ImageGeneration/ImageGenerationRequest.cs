@@ -16,7 +16,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public Instances[] Instances { get; set; }
+        public IEnumerable<Instance> Instances { get; set; }
 
         /// <summary>
         /// 
@@ -40,7 +40,7 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (sampleCount < 1 || sampleCount > 8) throw new ArgumentOutOfRangeException(nameof(sampleCount));
 
-            Instances = new[] { new Instances { Prompt = prompt } };
+            Instances = new[] { new Instance { Prompt = prompt } };
             Parameters = new ImageGenerationParameters { SampleCount = sampleCount };
         }
     }
