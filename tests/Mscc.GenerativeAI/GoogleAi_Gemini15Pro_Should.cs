@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -256,6 +257,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("animals.mp4", "Zootopia in da house")]
         [InlineData("sample.mp3", "State_of_the_Union_Address_30_January_1961")]
         [InlineData("pixel.mp3", "Pixel Feature Drops: March 2023")]
+        [InlineData("gemini.pdf", "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context")]
         public async void Upload_File_Using_FileAPI(string filename, string displayName)
         {
             // Arrange
@@ -290,12 +292,20 @@ namespace Test.Mscc.GenerativeAI
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "toolarge.jpg");
             var displayName = "Too Large File";
             using var fs = new FileStream(filePath, FileMode.CreateNew);
-            fs.Seek(2049L * 1024 * 1024, SeekOrigin.Begin);
+            fs.Seek(2048L * 1024 * 1024, SeekOrigin.Begin);
             fs.WriteByte(0);
             fs.Close();
 
             // Act & Assert
-            await Assert.ThrowsAsync<MaxUploadFileSizeException>(() => model.UploadFile(filePath, displayName));
+            // await Assert.ThrowsAsync<MaxUploadFileSizeException>(() => model.UploadFile(filePath, displayName));
+            // Act
+            Func<Task> act = async () =>
+            {
+                await model.UploadFile(filePath, displayName);
+            };
+            
+            // Assert
+            await act.Should().ThrowAsync<MaxUploadFileSizeException>();
             
             // House keeping
             File.Delete(filePath);
@@ -486,6 +496,30 @@ Do not make up any information that is not part of the audio and do not be verbo
             var request = new GenerateContentRequest(prompt);
             var files = await model.ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
+            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            request.AddMedia(file);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async void Analyze_Document_PDF_From_FileAPI()
+        {
+            // Arrange
+            var prompt = @"Your are a very professional document summarization specialist. Please summarize the given document.";
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            var files = await model.ListFiles();
+            var file = files.Files.Where(x => x.MimeType.StartsWith("application/pdf")).FirstOrDefault();
             _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
