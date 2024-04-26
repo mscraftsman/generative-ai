@@ -2,12 +2,12 @@ using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
 
 // Get the API key from the configuration
-var Configuration = new ConfigurationBuilder()
+var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true)
     .AddJsonFile("appsettings.user.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
     .Build();
-var apiKey = Configuration["Gemini:Credentials:ApiKey"];
+var apiKey = configuration["Gemini:Credentials:ApiKey"];
 if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("YOUR_API_KEY"))
 {
     apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
