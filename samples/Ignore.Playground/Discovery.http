@@ -1,1 +1,0 @@
-GET https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key={{apiKey}}

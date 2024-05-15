@@ -1,0 +1,4 @@
+#@apiKey={{$dotenv GOOGLE_API_KEY}}
+
+# Get the REST API description from the discovery endpoint.
+GET https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta&key={{apiKey}}
