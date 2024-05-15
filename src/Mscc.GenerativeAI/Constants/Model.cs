@@ -27,6 +27,8 @@ namespace Mscc.GenerativeAI
         // public const string Gemini15ProGfFc = "gemini-1.5-pro-gf-fc";
         public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
         public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
+        public const string Gemini15Flash = Gemini15FlashLatest;
+        public const string Gemini15FlashLatest = "gemini-1.5-flash-latest";
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
         public const string BisonText = BisonText001;
@@ -49,7 +51,8 @@ namespace Mscc.GenerativeAI
         public const string CodeGeckoLatest = "code-gecko@latest";
         public const string CodeGecko = CodeGeckoLatest;
         public const string GeckoEmbedding = "embedding-gecko-001";
-        public const string Embedding = "embedding-001";
+        public const string Embedding001 = "embedding-001";
+        public const string Embedding = Embedding001;
         public const string TextEmbedding004 = "text-embedding-004";
         public const string TextEmbedding = TextEmbedding004;
         public const string AttributedQuestionAnswering = "aqa";
