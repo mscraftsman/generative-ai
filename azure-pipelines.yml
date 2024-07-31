@@ -7,6 +7,7 @@ pool:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+#  publishVstsFeed: ''
 
 steps:
   - task: UseDotNet@2
@@ -17,10 +18,13 @@ steps:
       includePreviewVersions: true # Required for preview versions
 
   - task: DotNetCoreCLI@2
+    displayName: Restore packages
     inputs:
       command: 'restore'
+      projects: './GenerativeAI.sln'
+      restoreArguments: '-c Release'
       feedsToUse: 'select'
-      vstsFeed: 'my-vsts-feed' # A series of numbers and letters
+#      vstsFeed: '$(publishVstsFeed)' # A series of numbers and letters
 
   - task: DotNetCoreCLI@2
     displayName: Build
@@ -33,8 +37,9 @@ steps:
     displayName: Pack for .NET
     inputs:
       command: 'pack'
-      projects: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
-      arguments: '-c $(buildConfiguration) -o output/'
+      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      nobuild: true
+      versioningScheme: 'off'
 #  - task: NuGetCommand@2
 #    displayName: Pack for .NET
 #    inputs:
@@ -46,29 +51,30 @@ steps:
     displayName: Pack for ASP.NET Core
     inputs:
       command: 'pack'
-      projects: './src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj'
-      arguments: '-c $(buildConfiguration) -o output/'
+      packagesToPack: './src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj'
+      nobuild: true
+      versioningScheme: 'off'
 
   - task: DotNetCoreCLI@2
     displayName: Pack for .NET using Google Cloud Client Library
     inputs:
       command: 'pack'
-      projects: './src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj'
-      arguments: '-c $(buildConfiguration) -o output/'
+      packagesToPack: './src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj'
+      nobuild: true
+      versioningScheme: 'off'
 
-  - task: NuGetAuthenticate@1
-    displayName: 'NuGet Authenticate'
+#  - task: DotNetCoreCLI@2
+#    displayName: Push to Azure DevOps feed
+#    inputs:
+#      command: 'push'
+#      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+#      nuGetFeedType: 'internal'
+#      publishVstsFeed: '$(publishVstsFeed)'
   - task: NuGetCommand@2
-    displayName: 'Push to Azure DevOps feed'
+    displayName: Push to Azure DevOps feed
     inputs:
-      command: push
-      publishVstsFeed: '<projectName>/<feed>'
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: '$(publishVstsFeed)'
       allowPackageConflicts: true
-
-  - task: NuGetCommand@2
-    displayName: 'Push to NuGet.org'
-    inputs:
-      command: push
-      arguments: '--skip-duplicate'
-      nuGetFeedType: external
-      publishFeedCredentials: nuget.org
