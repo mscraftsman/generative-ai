@@ -22,7 +22,6 @@ steps:
     inputs:
       command: 'restore'
       projects: './GenerativeAI.sln'
-      restoreArguments: '-c Release'
       feedsToUse: 'select'
 #      vstsFeed: '$(publishVstsFeed)' # A series of numbers and letters
 
