@@ -1,0 +1,74 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      version: 8.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      feedsToUse: 'select'
+      vstsFeed: 'my-vsts-feed' # A series of numbers and letters
+
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: 'build'
+      projects: './GenerativeAI.sln'
+      arguments: '-c $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: Pack for .NET
+    inputs:
+      command: 'pack'
+      projects: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      arguments: '-c $(buildConfiguration) -o output/'
+#  - task: NuGetCommand@2
+#    displayName: Pack for .NET
+#    inputs:
+#      command: pack
+#      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+#      packDestination: '$(Build.ArtifactStagingDirectory)'
+
+  - task: DotNetCoreCLI@2
+    displayName: Pack for ASP.NET Core
+    inputs:
+      command: 'pack'
+      projects: './src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj'
+      arguments: '-c $(buildConfiguration) -o output/'
+
+  - task: DotNetCoreCLI@2
+    displayName: Pack for .NET using Google Cloud Client Library
+    inputs:
+      command: 'pack'
+      projects: './src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj'
+      arguments: '-c $(buildConfiguration) -o output/'
+
+  - task: NuGetAuthenticate@1
+    displayName: 'NuGet Authenticate'
+  - task: NuGetCommand@2
+    displayName: 'Push to Azure DevOps feed'
+    inputs:
+      command: push
+      publishVstsFeed: '<projectName>/<feed>'
+      allowPackageConflicts: true
+
+  - task: NuGetCommand@2
+    displayName: 'Push to NuGet.org'
+    inputs:
+      command: push
+      arguments: '--skip-duplicate'
+      nuGetFeedType: external
+      publishFeedCredentials: nuget.org
