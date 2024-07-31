@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.5.1
+
+### Changed
+
+- Update System.Text.Json to 8.0.4
+
 ## 1.5.0
 
 ### Added
