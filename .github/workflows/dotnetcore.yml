@@ -2,21 +2,44 @@ name: MsccGenerativeAI
 
 on:
   push:
+    paths:
+      - '**'
+      - '!**.md'
+      - '!docs/**'
+      - '!samples/**'
+      - '!tests/**'
+      - '!LICENSE'
     branches:
       - main
   pull_request:
     branches:
       - main
 
+#permissions: {}
+
 jobs:
   build:
+    name: Build, pack and push to GitHub Package Registry (GPR)
     strategy:
       matrix:
         os: [ubuntu-latest]
         dotnet-version: ['8.x']
     runs-on: ${{ matrix.os }}
+
+#    permissions: 
+#      contents: read
+#      packages: write
+#      id-token: write
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Check-out latest sources 
+      uses: actions/checkout@v4
+
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.6.0
+    - name: Check Cosign install!
+      run: cosign version
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -24,6 +47,7 @@ jobs:
         source-url: https://nuget.pkg.github.com/mscraftsman/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
     - name: Build
       run: |
         dotnet build ./GenerativeAI.sln -c Release
