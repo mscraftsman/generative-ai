@@ -35,7 +35,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="1.5.1" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="1.6.0" />
   </ItemGroup>
 ```
 
@@ -107,7 +107,7 @@ Google AI with an API key
 using Mscc.GenerativeAI;
 // Google AI with an API key
 var googleAI = new GoogleAI(apiKey: "your API key");
-var model = googleAI.GenerativeModel(model: Model.GeminiPro);
+var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
 
 // Original approach, still valid.
 // var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
@@ -163,7 +163,7 @@ var accessToken = "your_access_token";      // use `gcloud auth application-defa
 var prompt = "Write a story about a magic backpack.";
 
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.GeminiPro);
+var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
 
 var response = model.GenerateContent(prompt).Result;

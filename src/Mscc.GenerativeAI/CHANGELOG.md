@@ -16,6 +16,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.6.0
+
+### Added
+
+- add tuning model `gemini-1.5-pro-001`
+- add tuning model `gemini-1.5-flash-001`
+- add tuning model `gemini-1.5-flash-001-tuning`
+- add experimental model `gemini-1.5-pro-exp-0801`
+- add experimental model `gemini-1.5-pro-exp-0827`
+- add experimental model `gemini-1.5-flash-exp-0827`
+- add experimental model `gemini-1.5-flash-8b-exp-0827`
+
+### Changed
+
+- removed targeting for .NET 7 (end of support)
+- re-linked constant `Model.Gemini15Pro`
+- re-linked constant `Model.Gemini15Flash`
+
 ## 1.5.1
 
 ### Changed
