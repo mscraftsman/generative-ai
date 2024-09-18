@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.6.1
+
+### Added
+
+- add Imagen 3 model `imagen-3.0-generate-001`
+- add Imagen 3 model `imagen-3.0-fast-generate-001`
+
 ## 1.6.0
 
 ### Added
