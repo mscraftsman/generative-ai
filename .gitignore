@@ -396,3 +396,4 @@ FodyWeavers.xsd
 **/appsettings.Development.json
 **/client_secret*.json
 *.p12
+*.DotSettings
