@@ -227,6 +227,8 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Logger instance used for logging (optional)</param>
         public GenerativeModel(ILogger? logger = null) : base(logger)
         {
+            Logger.LogGenerativeModelInvoking();
+            
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
@@ -771,7 +773,10 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            
+            Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContent), url, json);
+            
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
 
             if (requestOptions != null)
             {
@@ -930,6 +935,8 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
 
+            if (Logger.IsEnabled(LogLevel.Debug)) Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContentStream), url, Serialize(request));
+            
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
             var ms = new MemoryStream();
