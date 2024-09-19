@@ -21,7 +21,7 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public class GenerativeModel : GenerationBase
+    public class GenerativeModel : BaseLogger
     {
         private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
         private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
