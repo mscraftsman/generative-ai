@@ -1,4 +1,5 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -13,7 +14,7 @@ namespace Mscc.GenerativeAI
     public class GenerateContentResponse
     {
         /// <summary>
-        /// Responded text information of first candidate.
+        /// A convenience property to get the responded text information of first candidate.
         /// </summary>
         [JsonIgnore]
 		public string? Text
@@ -26,7 +27,7 @@ namespace Mscc.GenerativeAI
                     FinishReason.Recitation or
                     FinishReason.Other)
                     return string.Empty;
-                return Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
+                return Candidates?.FirstOrDefault()?.Content?.Parts.FirstOrDefault()?.Text;
             }
         }
 
@@ -44,5 +45,14 @@ namespace Mscc.GenerativeAI
         /// Usage metadata about the response(s).
         /// </summary>
         public UsageMetadata? UsageMetadata { get; set; }
+
+        /// <summary>
+        /// A convenience overload to easily access the responded text.
+        /// </summary>
+        /// <returns>The responded text information of first candidate.</returns>
+        public override string ToString()
+        {
+            return Text ?? String.Empty;
+        }
     }
 }

@@ -1,4 +1,5 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #endif
@@ -37,5 +38,14 @@ namespace Mscc.GenerativeAI
         /// Output only. Feedback related to the input data used to answer the question, as opposed to model-generated response to the question.
         /// </summary>
         public PromptFeedback InputFeedback { get; set; }
+
+        /// <summary>
+        /// A convenience overload to easily access the responded text.
+        /// </summary>
+        /// <returns>The responded text information of first candidate.</returns>
+        public override string ToString()
+        {
+            return Text ?? String.Empty;
+        }
     }
 }
