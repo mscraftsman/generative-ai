@@ -53,14 +53,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Create a generative model on Google AI to use.
         /// </summary>
-        /// <param name="model">Model to use (default: "gemini-1.0-pro")</param>
+        /// <param name="model">Model to use (default: "gemini-1.5-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when both <paramref name="apiKey"/> and <paramref name="accessToken"/> are <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
-        public GenerativeModel GenerativeModel(string model = Model.Gemini10Pro,
+        public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,

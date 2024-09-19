@@ -45,5 +45,13 @@ namespace Mscc.GenerativeAI
         /// Supported mimetype: `text/plain`: (default) Text output. `application/json`: JSON response in the candidates.
         /// </summary>
         public string? ResponseMimeType { get; set; }
+        /// <summary>
+        /// Optional. Output response schema of the generated candidate text when response mime type can have schema.
+        /// </summary>
+        /// <remarks>
+        /// Schema can be objects, primitives or arrays and is a subset of [OpenAPI schema](https://spec.openapis.org/oas/v3.0.3#schema).
+        /// If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response.
+        /// </remarks>
+        public string? ResponseSchema { get; set; }
     }
 }

@@ -55,7 +55,7 @@ Add the following configuration to the `appsettings.json` file.
     },
     "ProjectId": "",
     "Region": "us-central1",
-    "Model": "gemini-1.0-pro"   // default value
+    "Model": "gemini-1.5-pro"   // default value
   },
 // any other settings...
   "Logging": {

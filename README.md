@@ -83,7 +83,7 @@ In the cloud most settings are configured via environment variables (EnvVars). T
 
 | Variable Name                  | Description                                                   |
 |--------------------------------|---------------------------------------------------------------|
-| GOOGLE_AI_MODEL                | The name of the model to use (default is *Model.Gemini10Pro*) |
+| GOOGLE_AI_MODEL                | The name of the model to use (default is *Model.Gemini15Pro*) |
 | GOOGLE_API_KEY                 | The API key generated in Google AI Studio                     |
 | GOOGLE_PROJECT_ID              | Project ID in Google Cloud to access the APIs                 |
 | GOOGLE_REGION                  | Region in Google Cloud (default is *us-central1*)             |
@@ -128,7 +128,7 @@ Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` t
 using Mscc.GenerativeAI;
 // Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.Gemini10Pro);
+var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
 ```
 
@@ -199,7 +199,7 @@ Gemini enables you to have freeform conversations across multiple turns. You can
 using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
-var model = new GenerativeModel(apiKey: apiKey);    // using default model: gemini-pro
+var model = new GenerativeModel(apiKey: apiKey);    // using default model: gemini-1.5-pro
 var chat = model.StartChat();
 
 // Instead of discarding you could also use the response and access `response.Text`.

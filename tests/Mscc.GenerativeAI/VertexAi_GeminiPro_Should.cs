@@ -16,7 +16,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
-        private readonly string _model = Model.Gemini10Pro;
+        private readonly string _model = Model.Gemini15Pro;
 
         public VertexAiGeminiProShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
@@ -40,7 +40,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Using_VertexAI()
         {
             // Arrange
-            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini10Pro;
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
@@ -62,7 +62,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.Gemini10Pro.SanitizeModelName()}");
+            model.Name.Should().Be($"{Model.Gemini15Pro.SanitizeModelName()}");
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.Gemini10Pro.SanitizeModelName()}");
+            model.Name.Should().Be($"{Model.Gemini15Pro.SanitizeModelName()}");
         }
 
         [Fact]

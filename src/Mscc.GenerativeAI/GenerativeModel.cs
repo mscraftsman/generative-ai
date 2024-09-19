@@ -48,14 +48,15 @@ namespace Mscc.GenerativeAI
             SslProtocols = SslProtocols.Tls12,
         });
 #else
-        private static readonly Version _httpVersion = HttpVersion.Version30;
+        private static readonly Version _httpVersion = HttpVersion.Version11;
         private static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
         {
             PooledConnectionLifetime = TimeSpan.FromMinutes(30),
-            EnableMultipleHttp2Connections = true,
+            EnableMultipleHttp2Connections = true
         })
         {
-            DefaultRequestVersion = _httpVersion
+            DefaultRequestVersion = _httpVersion,
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
         };
 #endif
 
@@ -230,7 +231,7 @@ namespace Mscc.GenerativeAI
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
-                     GenerativeAI.Model.Gemini10Pro;
+                     GenerativeAI.Model.Gemini15Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
 
@@ -238,7 +239,7 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class with access to Google AI Gemini API.
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
-        /// <param name="model">Model to use (default: "gemini-pro")</param>
+        /// <param name="model">Model to use</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
@@ -624,10 +625,12 @@ namespace Mscc.GenerativeAI
         /// Generates a response from the model given an input <see cref="GenerateContentRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request)
+        public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request,
+            RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -644,7 +647,13 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+
+            if (requestOptions != null)
+            {
+                Client.Timeout = requestOptions.Timeout;
+            }
+            
             var response = await Client.PostAsync(url, payload);
             // ToDo: Handle payload exception like this
             // except google.api_core.exceptions.InvalidArgument as e:
@@ -711,6 +720,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -718,7 +728,8 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null,
+            RequestOptions? requestOptions = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -727,23 +738,26 @@ namespace Mscc.GenerativeAI
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools,
                 toolConfig: toolConfig ?? _toolConfig);
-            return await GenerateContent(request);
+            return await GenerateContent(request, requestOptions);
         }
 
         /// <remarks/>
         public async Task<GenerateContentResponse> GenerateContent(List<IPart>? parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            ToolConfig? toolConfig = null,
+            RequestOptions? requestOptions = null)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
             var request = new GenerateContentRequest(parts, 
                 generationConfig ?? _generationConfig, 
                 safetySettings ?? _safetySettings, 
-                tools ?? _tools);
+                tools ?? _tools,
+                toolConfig: toolConfig ?? _toolConfig);
             request.Contents[0].Role = Role.User;
-            return await GenerateContent(request);
+            return await GenerateContent(request, requestOptions);
         }
 
         /// <summary>
@@ -752,16 +766,18 @@ namespace Mscc.GenerativeAI
         /// It runs asynchronously sending and receiving chunks to and from the API endpoint, which allows non-blocking code execution.
         /// </summary>
         /// <param name="request">The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Stream of GenerateContentResponse with chunks asynchronously.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request, 
+        public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request,
+            RequestOptions? requestOptions = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (UseServerSentEventsFormat)
             {
-                await foreach (var item in GenerateContentStreamSSE(request, cancellationToken))
+                await foreach (var item in GenerateContentStreamSSE(request, requestOptions, cancellationToken))
                 {
                     if (cancellationToken.IsCancellationRequested)
                         yield break;
@@ -829,42 +845,50 @@ namespace Mscc.GenerativeAI
         public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            ToolConfig? toolConfig = null,
+            RequestOptions? requestOptions = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
             var request = new GenerateContentRequest(prompt, 
                 generationConfig ?? _generationConfig, 
                 safetySettings ?? _safetySettings, 
-                tools ?? _tools);
-            return GenerateContentStream(request);
+                tools ?? _tools, 
+                toolConfig: toolConfig ?? _toolConfig);
+            return GenerateContentStream(request, requestOptions);
         }
 
         /// <remarks/>
         public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(List<IPart>? parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null)
+            List<Tool>? tools = null,
+            ToolConfig? toolConfig = null,
+            RequestOptions? requestOptions = null)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
             var request = new GenerateContentRequest(parts, 
                 generationConfig ?? _generationConfig, 
                 safetySettings ?? _safetySettings, 
-                tools ?? _tools);
+                tools ?? _tools,
+                toolConfig: toolConfig ?? _toolConfig);
             request.Contents[0].Role = Role.User;
-            return GenerateContentStream(request);
+            return GenerateContentStream(request, requestOptions);
         }
 
         /// <summary>
         /// Generates a response from the model given an input GenerateContentRequest.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         internal async IAsyncEnumerable<GenerateContentResponse> GenerateContentStreamSSE(GenerateContentRequest? request, 
+            RequestOptions? requestOptions = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1136,9 +1160,11 @@ namespace Mscc.GenerativeAI
         /// Counts the number of tokens in the content. 
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request)
+        public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request,
+            RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -1146,13 +1172,20 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            
+            if (requestOptions != null)
+            {
+                Client.Timeout = requestOptions.Timeout;
+            }
+            
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
         }
 
         /// <remarks/>
-        public async Task<CountTokensResponse> CountTokens(string? prompt)
+        public async Task<CountTokensResponse> CountTokens(string? prompt,
+            RequestOptions? requestOptions = null)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             
@@ -1161,16 +1194,16 @@ namespace Mscc.GenerativeAI
             {
                 case GenerativeAI.Model.BisonChat:
                     var chatRequest = new GenerateMessageRequest(prompt);
-                    return await CountTokens(chatRequest);
+                    return await CountTokens(chatRequest, requestOptions);
                 case GenerativeAI.Model.BisonText:
                     var textRequest = new GenerateTextRequest(prompt);
-                    return await CountTokens(textRequest);
+                    return await CountTokens(textRequest, requestOptions);
                 case GenerativeAI.Model.GeckoEmbedding:
                     var embeddingRequest = new GenerateTextRequest(prompt);
-                    return await CountTokens(embeddingRequest);
+                    return await CountTokens(embeddingRequest, requestOptions);
                 default:
                     var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
-                    return await CountTokens(request);
+                    return await CountTokens(request, requestOptions);
             }
         }
 
@@ -1251,9 +1284,11 @@ namespace Mscc.GenerativeAI
         /// Counts the number of tokens in the content. 
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<CountTokensResponse> CountTokens(GenerateTextRequest? request)
+        public async Task<CountTokensResponse> CountTokens(GenerateTextRequest? request,
+            RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -1261,6 +1296,12 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            
+            if (requestOptions != null)
+            {
+                Client.Timeout = requestOptions.Timeout;
+            }
+            
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1301,9 +1342,11 @@ namespace Mscc.GenerativeAI
         /// Runs a model's tokenizer on a string and returns the token count.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<CountTokensResponse> CountTokens(GenerateMessageRequest request)
+        public async Task<CountTokensResponse> CountTokens(GenerateMessageRequest request,
+                RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -1311,6 +1354,12 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+        
+            if (requestOptions != null)
+            {
+                Client.Timeout = requestOptions.Timeout;
+            }
+            
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1357,9 +1406,11 @@ namespace Mscc.GenerativeAI
         /// Counts the number of tokens in the content. 
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<CountTokensResponse> CountTokens(EmbedTextRequest request)
+        public async Task<CountTokensResponse> CountTokens(EmbedTextRequest request,
+            RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -1367,6 +1418,12 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            
+            if (requestOptions != null)
+            {
+                Client.Timeout = requestOptions.Timeout;
+            }
+            
             var response = await Client.PostAsync(url, payload);
             response.EnsureSuccessStatusCode();
             return await Deserialize<CountTokensResponse>(response);
@@ -1565,7 +1622,7 @@ namespace Mscc.GenerativeAI
         /// <param name="arguments">Optional arguments given to the application to run.</param>
         /// <returns>Output from the application.</returns>
         /// <exception cref="Exception"></exception>
-        private string RunExternalExe(string filename, string arguments = null)
+        private string RunExternalExe(string filename, string? arguments = null)
         {
             var process = new Process();
 
@@ -1626,7 +1683,7 @@ namespace Mscc.GenerativeAI
         /// <param name="filename">The command or application to run.</param>
         /// <param name="arguments">Optional arguments given to the application to run.</param>
         /// <returns>Formatted string containing parameter values.</returns>
-        private string Format(string filename, string arguments)
+        private string Format(string filename, string? arguments)
         {
             return "'" + filename + 
                 ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +

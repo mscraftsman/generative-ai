@@ -147,7 +147,7 @@ namespace Mscc.GenerativeAI
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
-                    GenerativeAI.Model.Gemini10Pro;
+                    GenerativeAI.Model.Gemini15Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
 
@@ -292,7 +292,7 @@ namespace Mscc.GenerativeAI
         /// <param name="arguments">Optional arguments given to the application to run.</param>
         /// <returns>Output from the application.</returns>
         /// <exception cref="Exception"></exception>
-        private string RunExternalExe(string filename, string arguments = null)
+        private string RunExternalExe(string filename, string? arguments = null)
         {
             var process = new Process();
 
@@ -353,7 +353,7 @@ namespace Mscc.GenerativeAI
         /// <param name="filename">The command or application to run.</param>
         /// <param name="arguments">Optional arguments given to the application to run.</param>
         /// <returns>Formatted string containing parameter values.</returns>
-        private string Format(string filename, string arguments)
+        private string Format(string filename, string? arguments)
         {
             return "'" + filename + 
                 ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +

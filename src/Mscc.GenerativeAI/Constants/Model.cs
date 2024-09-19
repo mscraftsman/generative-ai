@@ -11,6 +11,7 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public static class Model
     {
+        // Gemini 1.0
         public const string GeminiPro = "gemini-pro";
         public const string Gemini10Pro = "gemini-1.0-pro";
         public const string Gemini10Pro001 = "gemini-1.0-pro-001";
@@ -23,8 +24,8 @@ namespace Mscc.GenerativeAI
         public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
         public const string GeminiUltra = "gemini-ultra";
         public const string GeminiUltraLatest = "gemini-1.0-ultra-latest";
+        // Gemini 1.5
         public const string Gemini15Pro = "gemini-1.5-pro";
-        // public const string Gemini15ProGfFc = "gemini-1.5-pro-gf-fc";
         public const string Gemini15Pro001 = "gemini-1.5-pro-001";
         public const string Gemini15ProTuning = Gemini15Pro001;
         public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
@@ -38,6 +39,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini15FlashTuning = "gemini-1.5-flash-001-tuning";
         public const string Gemini15FlashExperimental0827 = "gemini-1.5-flash-exp-0827";
         public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
+        // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
         public const string BisonText = BisonText001;
@@ -65,10 +67,30 @@ namespace Mscc.GenerativeAI
         public const string TextEmbedding004 = "text-embedding-004";
         public const string TextEmbedding = TextEmbedding004;
         public const string AttributedQuestionAnswering = "aqa";
+        
+        // Models for Imagen on Vertex AI - image generation and editing
         public const string ImageGeneration006 = "imagegeneration@006";
         public const string ImageGeneration005 = "imagegeneration@005";
+        public const string Imagen2 = ImageGeneration006;
         public const string ImageGeneration002 = "imagegeneration@002";
-        public const string ImageGeneration = ImageGeneration006;
+        public const string Imagen = ImageGeneration002;
+        /// <summary>
+        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
+        /// </summary>
+        public const string ImageGeneration3 = "imagen-3.0-generate-0611";
+        /// <summary>
+        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
+        /// </summary>
+        public const string ImageGeneration3Fast = "imagen-3.0-fast-generate-0611";
+        /// <summary>
+        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
+        /// </summary>
+        public const string Imagen3 = ImageGeneration3;
+        /// <summary>
+        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
+        /// </summary>
+        public const string Imagen3Fast = ImageGeneration3Fast;
+        public const string ImageGeneration = Imagen2;
         public const string ImageText001 = "imagetext@001";
         public const string ImageText = ImageText001;
     }

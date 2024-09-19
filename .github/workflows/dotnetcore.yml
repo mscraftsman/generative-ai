@@ -40,7 +40,7 @@ jobs:
     - name: Check Cosign install!
       run: cosign version
 
-    - name: Setup .NET
+    - name: Set up .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}

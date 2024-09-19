@@ -73,7 +73,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Whether to enable rounded Responsible AI scores for a list of safety attributes in responses for unfiltered input and output.
         /// </summary>
-        /// <remarks>Safety attribute categories: "Death, Harm & Tragedy", "Firearms & Weapons", "Hate", "Health", "Illicit Drugs", "Politics", "Porn","Religion & Belief","Toxic","Violence","Vulgarity","War & Conflict".</remarks>
+        /// <remarks>Safety attribute categories: "Death, Harm and Tragedy", "Firearms and Weapons", "Hate", "Health", "Illicit Drugs", "Politics", "Porn", "Religion and Belief", "Toxic", "Violence", "Vulgarity", "War and Conflict".</remarks>
         public bool? IncludeSafetyAttributes { get; set; }
 
         /// <summary>

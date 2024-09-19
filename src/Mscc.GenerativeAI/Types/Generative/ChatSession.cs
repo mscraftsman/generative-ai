@@ -178,7 +178,7 @@ namespace Mscc.GenerativeAI
             };
 
             var fullText = new StringBuilder();
-            var response = _model.GenerateContentStream(request, cancellationToken);
+            var response = _model.GenerateContentStream(request, cancellationToken:cancellationToken);
             await foreach (var item in response)
             {
                 item.CheckResponse(true);

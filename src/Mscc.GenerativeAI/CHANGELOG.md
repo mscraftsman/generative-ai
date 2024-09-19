@@ -41,6 +41,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - re-linked constant `Model.Gemini15Pro`
 - re-linked constant `Model.Gemini15Flash`
 
+## 1.5.2
+
+### Added
+
+- add model `gemini-1.5-flash-001`
+- add model `gemini-1.5-flash-001-tuning`
+
 ## 1.5.1
 
 ### Changed

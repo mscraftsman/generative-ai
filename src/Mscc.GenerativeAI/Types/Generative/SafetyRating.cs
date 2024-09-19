@@ -20,6 +20,10 @@ namespace Mscc.GenerativeAI
         //public HarmProbability Probability { get; internal set; }
         public HarmProbability Probability { get; set; } = default;
         /// <summary>
+        /// Output only. Indicates whether the content was filtered out because of this rating.
+        /// </summary>
+        public bool? Blocked { get; set; }
+        /// <summary>
         /// Output only. Harm probability scoring in the content.
         /// Vertex AI only
         /// </summary>
@@ -35,10 +39,5 @@ namespace Mscc.GenerativeAI
         /// Vertex AI only
         /// </summary>
         public float? SeverityScore { get; set; }
-        /// <summary>
-        /// Output only. Indicates whether the content was filtered out because of this rating.
-        /// Vertex AI only
-        /// </summary>
-        public bool? Blocked { get; set; }
     }
 }

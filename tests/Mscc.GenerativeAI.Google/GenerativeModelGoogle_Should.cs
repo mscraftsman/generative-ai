@@ -16,7 +16,7 @@ namespace Test.Mscc.GenerativeAI.Google
     {
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
-        private readonly string _model = Model.Gemini10Pro;
+        private readonly string _model = Model.Gemini15Pro;
 
         public GenerativeModelGoogle_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
@@ -101,12 +101,13 @@ namespace Test.Mscc.GenerativeAI.Google
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini10Pro);
+            model.Name.Should().Be(Model.Gemini15Pro);
         }
 
         [Theory]
         [InlineData(Model.Gemini10Pro)]
         [InlineData(Model.Gemini10ProVision)]
+        [InlineData(Model.Gemini15Pro)]
         public void Initiate_Model(string expected)
         {
             // Arrange

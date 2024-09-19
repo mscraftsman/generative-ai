@@ -17,6 +17,7 @@ namespace Mscc.GenerativeAI
         /// Checks if the functionality is supported by the model.
         /// </summary>
         /// <param name="model">Model to use.</param>
+        /// <param name="message">Message to use.</param>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public static void GuardSupported(this GenerativeModel model, string? message = null)
         {

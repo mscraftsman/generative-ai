@@ -18,7 +18,7 @@ Console.WriteLine($"\n\t-=-=- Hiking History -=-=--\n{markdown}");
 
 // Create a new Google AI model client.
 var genai = new GoogleAI(apiKey);
-var generationConfig = new GenerationConfig { Temperature = 1f, TopP = 0.95f, MaxOutputTokens = 1000 };
+var generationConfig = new GenerationConfig { Temperature = 0f, TopP = 0.95f, MaxOutputTokens = 1000 };
 var model = genai.GenerativeModel(model: Model.Gemini15Pro, generationConfig: generationConfig, systemInstruction: systemPrompt);
 
 // == Starting the conversation ==========
