@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -18,7 +19,7 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public abstract class BaseGeneration
+    public abstract class BaseGeneration : GenerationBase
     {
         protected readonly string _region = "us-central1";
         protected readonly string _publisher = "google";
@@ -133,7 +134,11 @@ namespace Mscc.GenerativeAI
             set => Client.Timeout = value;
         }
 
-        public BaseGeneration()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger">Logger instance used for logging (optional)</param>
+        public BaseGeneration(ILogger? logger = null) : base(logger)
         {
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
@@ -151,8 +156,15 @@ namespace Mscc.GenerativeAI
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="region"></param>
+        /// <param name="model"></param>
+        /// <param name="logger">Logger instance used for logging (optional)</param>
         public BaseGeneration(string? projectId = null, string? region = null, 
-            string? model = null) : this()
+            string? model = null, ILogger? logger = null) : this(logger)
         {
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
                           GetAccessTokenFromAdc();
