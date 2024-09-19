@@ -16,6 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.6.2
+
+### Added
+
+- add RequestOptions to override default values
+- add ResponseSchema for JSON response mode
+
+### Changed
+
+- change default model to Gemini 1.5 
+- [.NET] use HTTP/1.1 or higher protocol
+
 ## 1.6.1
 
 ### Added
