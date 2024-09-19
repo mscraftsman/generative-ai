@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Minimal.Api", "Web.Mini
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Mvc", "Web.Mvc\Web.Mvc.csproj", "{982DF347-465F-4310-929D-773347824333}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticKernel.Gemini", "SemanticKernel.Gemini\SemanticKernel.Gemini.csproj", "{3955FD4D-CBC8-4CF6-9BAB-31B02DADEEC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{982DF347-465F-4310-929D-773347824333}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{982DF347-465F-4310-929D-773347824333}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{982DF347-465F-4310-929D-773347824333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3955FD4D-CBC8-4CF6-9BAB-31B02DADEEC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3955FD4D-CBC8-4CF6-9BAB-31B02DADEEC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3955FD4D-CBC8-4CF6-9BAB-31B02DADEEC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3955FD4D-CBC8-4CF6-9BAB-31B02DADEEC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
