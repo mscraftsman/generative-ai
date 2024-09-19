@@ -69,11 +69,8 @@ namespace Mscc.GenerativeAI
         public const string AttributedQuestionAnswering = "aqa";
         
         // Models for Imagen on Vertex AI - image generation and editing
-        public const string ImageGeneration006 = "imagegeneration@006";
-        public const string ImageGeneration005 = "imagegeneration@005";
-        public const string Imagen2 = ImageGeneration006;
-        public const string ImageGeneration002 = "imagegeneration@002";
-        public const string Imagen = ImageGeneration002;
+        public const string Imagen3 = "imagen-3.0-generate-001";
+        public const string Imagen3Fast = "imagen-3.0-fast-generate-001";
         /// <summary>
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
         /// </summary>
@@ -82,14 +79,11 @@ namespace Mscc.GenerativeAI
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
         /// </summary>
         public const string ImageGeneration3Fast = "imagen-3.0-fast-generate-0611";
-        /// <summary>
-        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
-        /// </summary>
-        public const string Imagen3 = ImageGeneration3;
-        /// <summary>
-        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
-        /// </summary>
-        public const string Imagen3Fast = ImageGeneration3Fast;
+        public const string ImageGeneration006 = "imagegeneration@006";
+        public const string ImageGeneration005 = "imagegeneration@005";
+        public const string Imagen2 = ImageGeneration006;
+        public const string ImageGeneration002 = "imagegeneration@002";
+        public const string Imagen = ImageGeneration002;
         public const string ImageGeneration = Imagen2;
         public const string ImageText001 = "imagetext@001";
         public const string ImageText = ImageText001;
