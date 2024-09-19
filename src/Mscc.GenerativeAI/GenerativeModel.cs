@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Text;
@@ -233,6 +234,10 @@ namespace Mscc.GenerativeAI
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
                      GenerativeAI.Model.Gemini15Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
+            
+            var productHeaderValue = new ProductHeaderValue(name:  "Mscc.GenerativeAI", version: Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            var productInfoHeaderValue = new ProductInfoHeaderValue(productHeaderValue);
+            Client.DefaultRequestHeaders.UserAgent.Add(productInfoHeaderValue);
         }
 
         /// <summary>
