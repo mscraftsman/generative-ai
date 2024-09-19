@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace Mscc.GenerativeAI
@@ -26,7 +27,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public ImageGenerationModel() { }
+        public ImageGenerationModel(ILogger? logger = null) : base(logger) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Vertex AI Gemini API.

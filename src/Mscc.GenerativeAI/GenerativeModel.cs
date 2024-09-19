@@ -10,6 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
@@ -20,7 +21,7 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public class GenerativeModel
+    public class GenerativeModel : GenerationBase
     {
         private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
         private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
@@ -216,12 +217,15 @@ namespace Mscc.GenerativeAI
             set => Client.Timeout = value;
         }
 
+        public GenerativeModel() : this(logger: null) { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public GenerativeModel()
+        /// <param name="logger">Logger instance used for logging (optional)</param>
+        public GenerativeModel(ILogger? logger = null) : base(logger)
         {
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
@@ -247,13 +251,15 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
+        /// <param name="logger">Logger instance used for logging (optional)</param>
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
             Content? systemInstruction = null,
-            ToolConfig? toolConfig = null) : this()
+            ToolConfig? toolConfig = null, 
+            ILogger? logger = null) : this(logger)
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
@@ -281,7 +287,8 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
             Content? systemInstruction = null,
-            ToolConfig? toolConfig = null) : this()
+            ToolConfig? toolConfig = null,
+            ILogger? logger = null) : this(logger)
         {
             _useVertexAi = true;
             var credentialsFile = 
