@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.6.3
+
+### Added
+
+- add model `gemini-1.5-pro-002`
+- add model `gemini-1.5-flash-002`
+- add experimental model `gemini-1.5-flash-8b-exp-0924`
+
 ## 1.6.2
 
 ### Added

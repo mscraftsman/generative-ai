@@ -939,6 +939,9 @@ namespace Mscc.GenerativeAI
                 }
             }
         }
+        
+        //ToDo: Implement new endpoint method createCachedContent 
+        //Models: gemini-1.5-pro-001 & gemini-1.5-flash-001 only
 
         /// <summary>
         /// Generates a grounded answer from the model given an input GenerateAnswerRequest.
