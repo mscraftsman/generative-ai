@@ -79,7 +79,7 @@ Use of Gemini API in either Google AI or Vertex AI is almost identical. The majo
 
 ### Using Environment variables
 
-In the cloud most settings are configured via environment variables (EnvVars). The ease of configuration, their wide spread support and the simplicity of environment variables makes them a very interesting option.
+In the cloud most settings are configured via environment variables (EnvVars). The ease of configuration, their widespread support and the simplicity of environment variables makes them a very interesting option.
 
 | Variable Name                  | Description                                                   |
 |--------------------------------|---------------------------------------------------------------|
@@ -91,7 +91,7 @@ In the cloud most settings are configured via environment variables (EnvVars). T
 | GOOGLE_APPLICATION_CREDENTIALS | Path to the application credentials file.                     |
 | GOOGLE_WEB_CREDENTIALS         | Path to a Web credentials file.                               |
 
-Using any environment variable provides a simplified access to a model.
+Using any environment variable provides simplified access to a model.
 
 ```csharp
 using Mscc.GenerativeAI;
@@ -132,7 +132,7 @@ var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
 ```
 
-The `ConfigurationFixture` type in the test project implements multiple options to retrieve sensitive information, ie. API key or access token.
+The `ConfigurationFixture` type in the test project implements multiple options to retrieve sensitive information, i.e. API key or access token.
 
 ### Using Google AI Gemini API
 
@@ -254,7 +254,7 @@ Read more about [Gemini 1.5: Our next-generation model, now available for Privat
 
 The Gemini API lets you tune models on your own data. Since it's your data and your tuned models this needs stricter access controls than API-Keys can provide.
 
-Before you can create a tuned model, you'll need to [setup OAuth for your project](https://ai.google.dev/palm_docs/oauth_quickstart).
+Before you can create a tuned model, you'll need to [set up OAuth for your project](https://ai.google.dev/palm_docs/oauth_quickstart).
 
 ```csharp
 using Mscc.GenerativeAI;
