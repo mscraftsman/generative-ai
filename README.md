@@ -183,7 +183,7 @@ var apiKey = "your_api_key";
 var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
 var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiVisionPro);
 var request = new GenerateContentRequest(prompt);
-await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
+await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
 
 var response = await model.GenerateContent(request);
 Console.WriteLine(response.Text);

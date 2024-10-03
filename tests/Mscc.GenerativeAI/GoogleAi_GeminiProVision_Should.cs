@@ -70,7 +70,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             // Images
-            var board = await TestExtensions.ReadImageFileBase64Async("https://ai.google.dev/static/docs/images/timetable.png");
+            var board = await TestExtensions.ReadImageFileBase64Async("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Parts.Add(
                 new InlineData { MimeType = "image/png", Data = board }
@@ -156,7 +156,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown table";
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
-            await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
+            await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
 
             // Act
             var response = await model.GenerateContent(request);
@@ -176,7 +176,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in JSON";
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
-            await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png");
+            await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
 
             // Act
             var response = await model.GenerateContent(request);
@@ -196,7 +196,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
-            await request.AddMedia("https://ai.google.dev/static/docs/images/timetable.png", useOnline: true);
+            await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png", useOnline: true);
 
             // Act
             var response = await model.GenerateContent(request);
@@ -218,7 +218,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Parts.Add(new FileData
             {
-                FileUri = "https://ai.google.dev/static/docs/images/timetable.png",
+                FileUri = "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png",
                 MimeType = "image/png"
             });
 
