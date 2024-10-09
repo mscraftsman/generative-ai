@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         protected GenerationBase(ILogger? logger)
         {
             this.Logger = logger ?? NullLogger.Instance;

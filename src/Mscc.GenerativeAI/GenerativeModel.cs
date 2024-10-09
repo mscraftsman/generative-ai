@@ -221,7 +221,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public GenerativeModel(ILogger? logger = null) : base(logger)
         {
             Logger.LogGenerativeModelInvoking();
@@ -256,7 +256,7 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
@@ -286,6 +286,7 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         internal GenerativeModel(string? projectId = null, string? region = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 

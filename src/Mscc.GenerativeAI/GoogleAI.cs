@@ -45,7 +45,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">Identifier of the Google Cloud project</param>
         /// <param name="accessToken">Access token for the Google Cloud project</param>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public GoogleAI(string? apiKey = null, string? accessToken = null, ILogger? logger = null) : this(logger)
         {
             _apiKey ??= apiKey;

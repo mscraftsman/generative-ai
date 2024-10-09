@@ -137,7 +137,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public BaseGeneration(ILogger? logger = null) : base(logger)
         {
             _options = DefaultJsonSerializerOptions();
@@ -162,7 +162,7 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId"></param>
         /// <param name="region"></param>
         /// <param name="model"></param>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public BaseGeneration(string? projectId = null, string? region = null, 
             string? model = null, ILogger? logger = null) : this(logger)
         {
