@@ -511,7 +511,7 @@ namespace Mscc.GenerativeAI
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             bool resumable = false,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
             if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
@@ -686,8 +686,8 @@ namespace Mscc.GenerativeAI
                     {
                         case FinishReason.Safety:
                             return content;
-                            break;
-                        case FinishReason.FinishReasonUnspecified:
+                        //     break;
+                        // case FinishReason.FinishReasonUnspecified:
                         default:
                             fullText.Append(content.Text);
                             break;

@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
-        /// <exception cref="ArgumentNullException">Thrown when both <paramref name="apiKey"/> and <paramref name="accessToken"/> are <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
@@ -67,8 +67,7 @@ namespace Mscc.GenerativeAI
             Content? systemInstruction = null)
         {
             if (_apiKey is null && _accessToken is null) 
-                throw new ArgumentNullException("apiKey or accessToken", 
-                    message: "Either API key or access token is required.");
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
             
             _generativeModel = new GenerativeModel(_apiKey,
                 model,
@@ -87,7 +86,7 @@ namespace Mscc.GenerativeAI
         /// <inheritdoc cref="IGenerativeAI"/>
         public async Task<ModelResponse> GetModel(string model)
         {
-            return await _generativeModel?.GetModel(model);
+            return await _generativeModel?.GetModel(model)!;
         }
     }
 }
