@@ -18,7 +18,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Logs <see cref="GenerativeModel"/>
         /// </summary>
-        /// <param name="logger">Logger instance used for logging</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Generative model starting")]
         public static partial void LogGenerativeModelInvoking(
             this ILogger logger);
@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Logs <see cref="GenerativeModel"/>
         /// </summary>
-        /// <param name="logger">Logger instance used for logging</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Generative model started")]
         public static partial void LogGenerativeModelInvoked(
             this ILogger logger);
@@ -34,7 +34,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Logs <see cref="GenerativeModel"/> invoking an API request.
         /// </summary>
-        /// <param name="logger">Logger instance used for logging</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="methodName">Calling method</param>
         /// <param name="url">URL of Gemini API endpoint</param>
         /// <param name="payload">Data sent to the API endpoint</param>

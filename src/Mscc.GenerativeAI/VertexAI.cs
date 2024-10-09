@@ -48,8 +48,8 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
-        /// <param name="region">Region to use (default: "us-central1").</param>
-        /// <param name="logger">Logger instance used for logging (optional)</param>
+        /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
         public VertexAI(string? projectId, string? region = null, ILogger? logger = null) : this(logger)
         {
