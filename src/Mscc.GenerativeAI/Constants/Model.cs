@@ -27,7 +27,8 @@ namespace Mscc.GenerativeAI
         // Gemini 1.5
         public const string Gemini15Pro = "gemini-1.5-pro";
         public const string Gemini15Pro001 = "gemini-1.5-pro-001";
-        public const string Gemini15ProTuning = Gemini15Pro001;
+        public const string Gemini15Pro002 = "gemini-1.5-pro-002";
+        public const string Gemini15ProTuning = Gemini15Pro002;
         public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
         public const string Gemini15ProExperimental0801 = "gemini-1.5-pro-exp-0801";
         public const string Gemini15ProExperimental0827 = "gemini-1.5-pro-exp-0827";
@@ -36,9 +37,12 @@ namespace Mscc.GenerativeAI
         public const string Gemini15Flash = "gemini-1.5-flash";
         public const string Gemini15FlashLatest = "gemini-1.5-flash-latest";
         public const string Gemini15Flash001 = "gemini-1.5-flash-001";
-        public const string Gemini15FlashTuning = "gemini-1.5-flash-001-tuning";
+        public const string Gemini15Flash002 = "gemini-1.5-flash-002";
+        public const string Gemini15Flash001Tuning = "gemini-1.5-flash-001-tuning";
+        public const string Gemini15FlashTuning = Gemini15Flash001Tuning;
         public const string Gemini15FlashExperimental0827 = "gemini-1.5-flash-exp-0827";
         public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
+        public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
