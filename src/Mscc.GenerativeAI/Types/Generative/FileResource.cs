@@ -53,5 +53,9 @@ namespace Mscc.GenerativeAI
         /// Output only. The uri of the File.
         /// </summary>
         public string Uri { get; set; }
+        /// <summary>
+        /// Output only. The state of the File.
+        /// </summary>
+        public string State { get; set; }
     }
 }
