@@ -539,19 +539,22 @@ namespace Mscc.GenerativeAI
                 ["uploadType"] = "multipart"
             });
             string json = Serialize(request);
-            var multipartContent = new MultipartContent("related");
-            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
-            multipartContent.Add(new StreamContent(new FileStream(uri, FileMode.Open), (int)Constants.ChunkSize)
-            {
-                Headers = { 
-                    ContentType = new MediaTypeHeaderValue(mimeType), 
-                    ContentLength = totalBytes 
-                }
-            });
 
-            var response = await Client.PostAsync(url, multipartContent, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            return await Deserialize<UploadMediaResponse>(response);
+            using (var fs = new FileStream(uri, FileMode.Open)){
+                var multipartContent = new MultipartContent("related");
+                multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+                multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+                {
+                    Headers = { 
+                        ContentType = new MediaTypeHeaderValue(mimeType), 
+                        ContentLength = totalBytes 
+                    }
+                });
+
+                var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+                response.EnsureSuccessStatusCode();
+                return await Deserialize<UploadMediaResponse>(response);
+            }
         }
 
         /// <summary>
