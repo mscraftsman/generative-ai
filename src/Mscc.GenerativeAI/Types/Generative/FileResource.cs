@@ -56,6 +56,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Processing state of the File.
         /// </summary>
-        public FileState State { get; set; }
+        public FileState? State { get; set; }
     }
 }
