@@ -54,8 +54,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string Uri { get; set; }
         /// <summary>
-        /// Output only. The state of the File.
+        /// Output only. Processing state of the File.
         /// </summary>
-        public string State { get; set; }
+        public FileState State { get; set; }
     }
 }
