@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net6.0;net7.0;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;net472;net6.0;net8.0</TargetFrameworks>
+        <ProjectType>Library</ProjectType>
         <LangVersion>latest</LangVersion>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -54,7 +55,7 @@
 
     <ItemGroup>
         <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
-        <PackageReference Include="Mscc.GenerativeAI" Version="1.6.3" />
+        <PackageReference Include="Mscc.GenerativeAI" Version="1.6.4" />
         <PackageReference Include="System.Text.Json" Version="8.0.5" />
     </ItemGroup>
 
