@@ -16,6 +16,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.6.5
+
+### Added
+
+- add properties `State`, `Error`, and `VideoMetadata` to type `FileResource`. [#33](https://github.com/mscraftsman/generative-ai/issues/33)
+- overload method of `UploadMedia` to support stream types ([#38](https://github.com/mscraftsman/generative-ai/issues/38))
+
+### Changed
+
+- use of using expression to dispose `FileStream` after upload [#35](https://github.com/mscraftsman/generative-ai/pull/37) - thanks @rsmithsa
+- enhance returned error information [#33](https://github.com/mscraftsman/generative-ai/issues/33)
+- update enums according to $discovery
+- sync target frameworks among projects
+
 ## 1.6.4
 
 ### Changed
