@@ -53,5 +53,17 @@ namespace Mscc.GenerativeAI
         /// Output only. The uri of the File.
         /// </summary>
         public string Uri { get; set; }
+        /// <summary>
+        /// Output only. Processing state of the File.
+        /// </summary>
+        public StateFileResource State { get; set; }
+        /// <summary>
+        /// Output only. Error status if File processing failed.
+        /// </summary>
+        public Status Error { get; set; }
+        /// <summary>
+        /// Output only. Metadata for a video.
+        /// </summary>
+        public VideoMetadata VideoMetadata { get; set; }
     }
 }
