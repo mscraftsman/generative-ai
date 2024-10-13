@@ -746,5 +746,62 @@ namespace Mscc.GenerativeAI
                 default: return "application/octet-stream";
             }
         }
+
+        /// <summary>
+        /// Throws an exception if the IsSuccessStatusCode property for the HTTP response is false.
+        /// </summary>
+        /// <param name="response">The HTTP response message to check.</param>
+        /// <param name="errorMessage">Custom error message to prepend the <see cref="HttpRequestException"/> message."/></param>
+        /// <param name="includeResponseContent">Include the response content in the error message.</param>
+        /// <returns>The HTTP response message if the call is successful.</returns>
+        /// <exception cref="HttpRequestException"></exception>
+        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response,
+            string? errorMessage = null, bool includeResponseContent = true)
+        {
+            if (response.IsSuccessStatusCode) return response;
+
+            errorMessage = !string.IsNullOrEmpty(errorMessage) 
+                ? errorMessage 
+                : Constants.RequestFailed;
+            string? errorMessageContent = includeResponseContent
+                ? Environment.NewLine + await response.Content.ReadAsStringAsync()
+                : string.Empty;
+            
+            throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}");
+        }
+
+        /// <summary>
+        /// Truncates/abbreviates a string and places a user-facing indicator at the end.
+        /// </summary>
+        /// <param name="value">The string to truncate.</param>
+        /// <param name="maxLength">Maximum length of the resulting string.</param>
+        /// <param name="suffix">Optional. Indicator to use, by default the ellipsis …</param>
+        /// <returns>The truncated string</returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="suffix"/> parameter is null or empty.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the length of the <paramref name="suffix"/> is larger than the <paramref name="maxLength"/>.</exception>
+        internal static string Truncate(this string value, 
+            int maxLength = 4096, string suffix = "…")
+        {
+            if (string.IsNullOrWhiteSpace(value)) return value;
+            if (string.IsNullOrEmpty(suffix)) throw new ArgumentException(nameof(suffix));
+            if (suffix.Length > maxLength)
+                throw new ArgumentOutOfRangeException(nameof(suffix),
+                    $"Suffix '{suffix}' (length {suffix.Length} cannot be larger than maximal length {maxLength}.");
+
+            if (maxLength - suffix.Length >= 0 && maxLength - suffix.Length <= value.Length)
+            {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                value = value.Length >= maxLength 
+                    ? value.Substring(0, maxLength - suffix.Length) + suffix
+                    : value;
+#else
+                value = value.Length >= maxLength
+                    ? value[..(maxLength - suffix.Length)] + suffix
+                    : value;
+#endif
+            }
+
+            return value;
+        }
     }
 }

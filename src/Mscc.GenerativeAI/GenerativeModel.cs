@@ -335,7 +335,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             var models = await Deserialize<ListModelsResponse>(response);
             return models?.Models!;
         }
@@ -361,7 +361,7 @@ namespace Mscc.GenerativeAI
             var url = $"{EndpointGoogleAi}/{Version}/{model}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<ModelResponse>(response);
         }
 
@@ -392,7 +392,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<CreateTunedModelResponse>(response);
         }
 
@@ -417,7 +417,7 @@ namespace Mscc.GenerativeAI
             var url = $"{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await response.Content.ReadAsStringAsync();
         }
 
@@ -462,7 +462,7 @@ namespace Mscc.GenerativeAI
 #else
             var response = await Client.PatchAsync(url, payload);
 #endif
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<ModelResponse>(response);
         }
 
@@ -491,7 +491,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(new { EmailAddress = emailAddress });   // TransferOwnershipRequest
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await response.Content.ReadAsStringAsync();
         }
 
@@ -552,7 +552,7 @@ namespace Mscc.GenerativeAI
                 });
 
                 var response = await Client.PostAsync(url, multipartContent, cancellationToken);
-                response.EnsureSuccessStatusCode();
+                await response.EnsureSuccessAsync();
                 return await Deserialize<UploadMediaResponse>(response);
             }
         }
@@ -579,7 +579,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<ListFilesResponse>(response);
         }
 
@@ -601,7 +601,7 @@ namespace Mscc.GenerativeAI
             var url = $"{EndpointGoogleAi}/{Version}/{file}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<FileResource>(response);
         }
 
@@ -623,7 +623,7 @@ namespace Mscc.GenerativeAI
             var url = $"{EndpointGoogleAi}/{Version}/{file}";   // v1beta3
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await response.Content.ReadAsStringAsync();
         }
         
@@ -670,7 +670,7 @@ namespace Mscc.GenerativeAI
             //     " Please upload your files with the File API instead."
             // "`f = genai.upload_file(path); m.generate_content(['tell me about this file:', f])`"
             //     )
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
 
             if (_useVertexAi)
             {
@@ -831,7 +831,7 @@ namespace Mscc.GenerativeAI
 
                 using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
                 {
-                    response.EnsureSuccessStatusCode();
+                    await response.EnsureSuccessAsync();
                     if (response.Content is not null)
                     {
                         using var stream = await response.Content.ReadAsStreamAsync();
@@ -921,7 +921,7 @@ namespace Mscc.GenerativeAI
 
             using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
             {
-                response.EnsureSuccessStatusCode();
+                await response.EnsureSuccessAsync();
                 if (response.Content is not null)
                 {
                     using (var sr = new StreamReader(await response.Content.ReadAsStreamAsync()))
@@ -965,7 +965,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
 
             // if (_useVertexAi)
             // {
@@ -1040,7 +1040,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<EmbedContentResponse>(response);
         }
 
@@ -1190,7 +1190,7 @@ namespace Mscc.GenerativeAI
             }
             
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -1278,7 +1278,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<GenerateTextResponse>(response);
         }
 
@@ -1314,7 +1314,7 @@ namespace Mscc.GenerativeAI
             }
             
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -1336,7 +1336,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<GenerateMessageResponse>(response);
         }
 
@@ -1372,7 +1372,7 @@ namespace Mscc.GenerativeAI
             }
             
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -1395,7 +1395,7 @@ namespace Mscc.GenerativeAI
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<EmbedTextResponse>(response);
 
         }
@@ -1436,7 +1436,7 @@ namespace Mscc.GenerativeAI
             }
             
             var response = await Client.PostAsync(url, payload);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -1499,7 +1499,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var response = await Client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            await response.EnsureSuccessAsync();
             var models = await Deserialize<ListTunedModelResponse>(response);
             return models?.TunedModels!;
         }
@@ -1652,7 +1652,7 @@ namespace Mscc.GenerativeAI
             var stdOutput = new StringBuilder();
             process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
 
-            string stdError = null;
+            string stdError;
             try
             {
                 process.Start();
