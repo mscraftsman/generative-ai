@@ -509,7 +509,7 @@ namespace Mscc.GenerativeAI
         /// Uploads a file to the File API backend.
         /// </summary>
         /// <param name="uri">URI or path to the file to upload.</param>
-        /// <param name="displayName">A name displazed for the uploaded file.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
         /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
         /// <returns>A URI of the uploaded file.</returns>
@@ -565,6 +565,53 @@ namespace Mscc.GenerativeAI
                 await response.EnsureSuccessAsync();
                 return await Deserialize<UploadMediaResponse>(response);
             }
+        }
+
+        public async Task<UploadMediaResponse> UploadFile(Stream stream,
+            string displayName,
+            string mimeType,
+            bool resumable = false,
+            CancellationToken cancellationToken = default)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(stream));
+            if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
+            if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
+
+            var totalBytes = stream.Length;
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName
+                }
+            };
+
+            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            string json = Serialize(request);
+
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(stream, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
+
+            var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<UploadMediaResponse>(response);
         }
 
         /// <summary>

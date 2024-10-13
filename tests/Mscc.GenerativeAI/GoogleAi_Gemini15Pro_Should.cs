@@ -349,6 +349,44 @@ namespace Test.Mscc.GenerativeAI
             File.Delete(filePath);
         }
 
+        [Theory]
+        [InlineData("scones.jpg", "Set of blueberry scones", "image/jpeg")]
+        [InlineData("cat.jpg", "Wildcat on snow", "image/jpeg")]
+        [InlineData("cat.jpg", "Cat in the snow", "image/jpeg")]
+        [InlineData("image.jpg", "Sample drawing", "image/jpeg")]
+        [InlineData("animals.mp4", "Zootopia in da house", "video/mp4")]
+        [InlineData("sample.mp3", "State_of_the_Union_Address_30_January_1961", "audio/mp3")]
+        [InlineData("pixel.mp3", "Pixel Feature Drops: March 2023", "audio/mp3")]
+        [InlineData("gemini.pdf",
+            "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context", "application/pdf")]
+        public async void Upload_Stream_Using_FileAPI(string filename, string displayName, string mimeType)
+        {
+            // Arrange
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", filename);
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+
+            // Act
+            using (var fs = new FileStream(filePath, FileMode.Open))
+            {
+                var response = await model.UploadFile(fs, displayName, mimeType);
+
+                // Assert
+                response.Should().NotBeNull();
+                response.File.Should().NotBeNull();
+                response.File.Name.Should().NotBeNull();
+                response.File.DisplayName.Should().Be(displayName);
+                // response.File.MimeType.Should().Be("image/jpeg");
+                // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
+                // response.File.ExpirationTime.Should().NotBeNull();
+                // response.File.UpdateTime.Should().NotBeNull();
+                response.File.SizeBytes.Should().BeGreaterThan(0);
+                response.File.Sha256Hash.Should().NotBeNull();
+                response.File.Uri.Should().NotBeNull();
+                _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
+            }
+        }
+
         [Fact]
         public async void List_Files()
         {
