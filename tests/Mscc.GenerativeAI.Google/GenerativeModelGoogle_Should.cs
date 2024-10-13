@@ -6,6 +6,7 @@ using System.Linq;
 using FluentAssertions;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Google;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -50,7 +51,7 @@ namespace Test.Mscc.GenerativeAI.Google
         public void Initiate_Static_ServiceAccount()
         {
             // Arrange
-            var serviceAccount = "";
+            //var serviceAccount = "";
             
             // Act
             var vertex = GenerativeModelGoogle.CreateInstance(_fixture.ServiceAccount, passphrase:_fixture.Passphrase);
@@ -126,7 +127,7 @@ namespace Test.Mscc.GenerativeAI.Google
         }
 
         [Fact]
-        public async void List_Models()
+        public async Task List_Models()
         {
             // Arrange
             var vertex = new GenerativeModelGoogle()
@@ -141,7 +142,7 @@ namespace Test.Mscc.GenerativeAI.Google
         }
 
         [Fact]
-        public async void List_Models_With_ServiceAccount()
+        public async Task List_Models_With_ServiceAccount()
         {
             // Arrange
             var vertex = GenerativeModelGoogle.CreateInstance(_fixture.ServiceAccount, passphrase:_fixture.Passphrase)
