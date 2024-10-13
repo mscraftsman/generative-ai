@@ -32,6 +32,10 @@ namespace Mscc.GenerativeAI
         /// HarmCategorySexuallyExplicit means the harm category is sexually explicit content.
         /// </summary>
         HarmCategorySexuallyExplicit = 4,
+        /// <summary>
+        /// Content that may be used to harm civic integrity.
+        /// </summary>
+        HarmCategoryCivicIntegrity = 5,
         
         #region "PaLM 2" safety settings
         

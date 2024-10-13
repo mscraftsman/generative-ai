@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The default value. This value is unused.
         /// </summary>
-        Unspecified = 0,
+        OperatorUnspecified = 0,
         /// <summary>
         /// Supported by numeric.
         /// </summary>
@@ -39,11 +39,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         NotEqual = 6,
         /// <summary>
-        /// Supported by string only when CustomMetadata value type for the given key has a stringListValue.
+        /// Supported by string only when <see cref="CustomMetadata" /> value type for the given key has a stringListValue.
         /// </summary>
         Includes = 7,
         /// <summary>
-        /// Supported by string only when CustomMetadata value type for the given key has a stringListValue.
+        /// Supported by string only when <see cref="CustomMetadata" /> value type for the given key has a stringListValue.
         /// </summary>
         Excludes = 8
     }

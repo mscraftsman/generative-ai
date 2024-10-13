@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Unspecified means not specified, should not be used.
         /// </summary>
-        Unspecified = 0,
+        TypeUnspecified = 0,
         /// <summary>
         /// String means openAPI string type
         /// </summary>
