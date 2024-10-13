@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The default value. This value is unused.
         /// </summary>
-        Unspecified = 0, 
+        StateUnspecified = 0, 
         /// <summary>
         /// The model is being created.
         /// </summary>

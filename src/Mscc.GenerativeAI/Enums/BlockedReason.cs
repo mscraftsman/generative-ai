@@ -8,7 +8,6 @@ namespace Mscc.GenerativeAI
     /// A list of reasons why content may have been blocked.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<BlockedReason>))]
-
     public enum BlockedReason
     {
         /// <summary>
@@ -21,8 +20,16 @@ namespace Mscc.GenerativeAI
         /// </summary>
         Safety = 1,
         /// <summary>
-        /// Other means candidates blocked due to other reason.
+        /// Prompt was blocked due to unknown reasons.
         /// </summary>
-        Other = 2
+        Other = 2,
+        /// <summary>
+        /// Prompt was blocked due to the terms which are included from the terminology blocklist.
+        /// </summary>
+        Blocklist,
+        /// <summary>
+        /// Prompt was blocked due to prohibited content.
+        /// </summary>
+        ProhibitedContent
     }
 }

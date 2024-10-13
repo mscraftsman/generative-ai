@@ -12,24 +12,28 @@ namespace Mscc.GenerativeAI
     public enum HarmBlockThreshold
     {
         /// <summary>
-        /// BlockUnspecified means unspecified harm block threshold.
+        /// Threshold is unspecified.
         /// </summary>
         HarmBlockThresholdUnspecified = 0,
         /// <summary>
-        /// BlockLowAndAbove means block low threshold and above (i.e. block more).
+        /// Content with NEGLIGIBLE will be allowed.
         /// </summary>
         BlockLowAndAbove = 1,
         /// <summary>
-        /// BlockMediumAndAbove means block medium threshold and above.
+        /// Content with NEGLIGIBLE and LOW will be allowed.
         /// </summary>
         BlockMediumAndAbove = 2,
         /// <summary>
-        /// BlockOnlyHigh means block only high threshold (i.e. block less).
+        /// Content with NEGLIGIBLE, LOW, and MEDIUM will be allowed.
         /// </summary>
         BlockOnlyHigh = 3,
         /// <summary>
-        /// BlockNone means block none.
+        /// All content will be allowed.
         /// </summary>
-        BlockNone = 4
+        BlockNone = 4,
+        /// <summary>
+        /// Turn off the safety filter.
+        /// </summary>
+        None
     }
 }
