@@ -29,6 +29,17 @@ namespace Mscc.GenerativeAI
             Content? systemInstruction = null);
 
         /// <summary>
+        /// Create an instance of a generative model to use.
+        /// </summary>
+        /// <param name="cachedContent">Content that has been preprocessed.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <returns>Generative model instance.</returns>
+        public GenerativeModel GenerativeModel(CachedContent cachedContent,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null);
+        
+        /// <summary>
         /// Gets information about a specific Model.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>

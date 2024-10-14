@@ -14,5 +14,9 @@
         /// Number of tokens in the response(s).
         /// </summary>
         public int TotalTokenCount { get; set; } = default;
+        /// <summary>
+        /// Number of tokens in the cached content.
+        /// </summary>
+        public int CachedContentTokenCount { get; set; } = default;
     }
 }
