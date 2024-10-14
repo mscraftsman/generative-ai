@@ -81,13 +81,10 @@ namespace Mscc.GenerativeAI
                 generationConfig,
                 safetySettings,
                 tools,
-                systemInstruction);
-            if (_apiKey is null)
-            {
-                _generativeModel.AccessToken = _accessToken;
-            }
                 systemInstruction); 
             _generativeModel.AccessToken = _apiKey is null ? _accessToken : null;
+            return _generativeModel;
+        }
 
             return _generativeModel;
         }
@@ -96,6 +93,21 @@ namespace Mscc.GenerativeAI
         public async Task<ModelResponse> GetModel(string model)
         {
             return await _generativeModel?.GetModel(model)!;
+        }
+
+        /// <summary>
+        /// Returns an instance of CachedContent to use with a model.
+        /// </summary>
+        /// <returns>Cached content instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
+        public CachedContentModel CachedContent()
+        {
+            var cachedContent = new CachedContentModel() 
+            {
+                ApiKey = _apiKey,
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return cachedContent;
         }
 
         /// <summary>

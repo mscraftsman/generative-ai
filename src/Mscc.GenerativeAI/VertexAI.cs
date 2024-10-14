@@ -65,8 +65,8 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
-        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -97,6 +97,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public ImageGenerationModel ImageGenerationModel(string model = Model.ImageGeneration)
         {
             if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
@@ -106,6 +107,12 @@ namespace Mscc.GenerativeAI
             return _imageGenerationModel;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model">Model to use (default: "imagetext")</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public ImageTextModel ImageTextModel(string model = Model.ImageText)
         {
             if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
