@@ -79,6 +79,30 @@ namespace Mscc.GenerativeAI
             return value;
         }
         
+        public static string? SanitizeGeneratedFileName(this string? value)
+        {
+            if (value == null) return value;
+
+            if (!value.StartsWith("generatedFile", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"generatedFiles/{value}";
+            }
+
+            return value;
+        }
+        
+        public static string? SanitizeCachedContentName(this string? value)
+        {
+            if (value == null) return value;
+
+            if (!value.StartsWith("cachedContent", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"cachedContents/{value}";
+            }
+
+            return value;
+        }
+        
         public static string? GetValue(this JsonElement element, string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
