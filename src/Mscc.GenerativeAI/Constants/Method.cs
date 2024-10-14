@@ -22,6 +22,9 @@ namespace Mscc.GenerativeAI
         public static string TransferOwnership = "transferOwnership";
         public static string TunedModels = "tunedModels";
         
+        // Methods for cached content.
+        public static string CachedContents = "cachedContents";
+        
         // Methods used for PaLM models.
         public static string BatchEmbedText = "batchEmbedText";
         public static string CountMessageTokens = "countMessageTokens";
