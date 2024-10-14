@@ -498,6 +498,10 @@ namespace Mscc.GenerativeAI
             return await response.Content.ReadAsStringAsync();
         }
 
+        #endregion
+
+        #region Obsolete methods
+
         /// <summary>
         /// Uploads a file to the File API backend.
         /// </summary>
@@ -511,6 +515,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             bool resumable = false,
@@ -574,6 +579,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<UploadMediaResponse> UploadFile(Stream stream,
             string displayName,
             string mimeType,
@@ -629,6 +635,7 @@ namespace Mscc.GenerativeAI
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<ListFilesResponse> ListFiles(int? pageSize = 100, 
             string? pageToken = null)
         {
@@ -655,6 +662,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<FileResource> GetFile(string file)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
@@ -677,6 +685,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<string> DeleteFile(string file)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
