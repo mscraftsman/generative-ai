@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The interface shall be used to write generic implementations using either
+    /// Google AI Gemini API or Vertex AI Gemini API as backends.
+    /// </summary>
     public interface IGenerativeAI
     {
         /// <summary>
