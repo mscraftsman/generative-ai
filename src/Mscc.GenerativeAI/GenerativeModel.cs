@@ -557,6 +557,20 @@ namespace Mscc.GenerativeAI
             }
         }
 
+
+        /// <summary>
+        /// Uploads a stream to the File API backend.
+        /// </summary>
+        /// <param name="stream">Stream to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="mimeType">The MIME type of the stream content.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <returns>A URI of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<UploadMediaResponse> UploadFile(Stream stream,
             string displayName,
             string mimeType,
