@@ -84,6 +84,28 @@ namespace Mscc.GenerativeAI
             return _generativeModel;
         }
 
+        /// <summary>
+        /// Create a generative model on Google AI to use.
+        /// </summary>
+        /// <param name="cachedContent">Content that has been preprocessed.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <returns>Generative model instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
+        public GenerativeModel GenerativeModel(CachedContent cachedContent,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null)
+        {
+            if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
+
+            _generativeModel = new GenerativeModel(cachedContent,
+                generationConfig,
+                safetySettings)
+            {
+                ApiKey = _apiKey,
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
             return _generativeModel;
         }
 

@@ -84,6 +84,33 @@ namespace Mscc.GenerativeAI
             return _generativeModel;
         }
 
+        /// <summary>
+        /// Create a generative model on Vertex AI to use.
+        /// </summary>
+        /// <param name="cachedContent">Content that has been preprocessed.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <returns>Generative model instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
+        public GenerativeModel GenerativeModel(CachedContent cachedContent,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null)
+        {
+            if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
+            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
+            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+
+            _generativeModel = new GenerativeModel(cachedContent,
+                generationConfig,
+                safetySettings)
+            {
+                ProjectId = _projectId,
+                Region = _region,
+            };
+            return _generativeModel;
+        }
+
         /// <inheritdoc cref="IGenerativeAI"/>
         public Task<ModelResponse> GetModel(string model)
         {

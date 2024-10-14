@@ -30,6 +30,7 @@ namespace Mscc.GenerativeAI
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
         private readonly Credentials? _credentials;
+        private readonly CachedContent _cachedContent;
 
         private string _model;
         private string? _apiKey;
@@ -303,6 +304,27 @@ namespace Mscc.GenerativeAI
             _tools = tools;
             _toolConfig = toolConfig;
             _systemInstruction = systemInstruction;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class given cached content.
+        /// </summary>
+        /// <param name="cachedContent">Content that has been preprocessed.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
+        internal GenerativeModel(CachedContent cachedContent, 
+            GenerationConfig? generationConfig = null, 
+            List<SafetySetting>? safetySettings = null) : this()
+        {
+            _cachedContent = cachedContent ?? throw new ArgumentNullException(nameof(cachedContent));
+            
+            Model = cachedContent.Model;
+            _tools = cachedContent.Tools;
+            _toolConfig = cachedContent.ToolConfig;
+            _systemInstruction = cachedContent.SystemInstruction;
+            _generationConfig = generationConfig;
+            _safetySettings = safetySettings;
         }
 
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
