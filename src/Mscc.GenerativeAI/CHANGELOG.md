@@ -16,6 +16,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.7.0
+
+### Added
+
+- add methods using File API to class `GoogleAI`
+- mark methods using File API as obsolete/deprecated
+- add types and functionality for `CachedContents`
+- add types and functionality for `GeneratedFile`
+- add extension methods for `GeneratedFiles` and `CachedContents`
+- add more XMLdoc
+
+### Changed
+
+- change access modifier of some properties
+
 ## 1.6.5
 
 ### Added
@@ -252,7 +267,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Assigning a API_KEY using model.ApiKey is not working ([#20](https://github.com/mscraftsman/generative-ai/issues/20))
+- Assigning an API_KEY using model.ApiKey is not working ([#20](https://github.com/mscraftsman/generative-ai/issues/20))
 
 ## 0.9.3
 
