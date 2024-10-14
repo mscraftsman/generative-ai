@@ -22,8 +22,6 @@ namespace Mscc.GenerativeAI
         /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
         /// <returns>Generative model instance.</returns>
-        /// <remarks>The interface shall be used to write generic implementations using either
-        /// Google AI Gemini API or Vertex AI Gemini API as backends.</remarks>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
