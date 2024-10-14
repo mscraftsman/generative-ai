@@ -46,6 +46,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Response from the model for generated images.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<ImageGenerationResponse> GenerateImages(ImageGenerationRequest request,
             CancellationToken cancellationToken = default)
         {
