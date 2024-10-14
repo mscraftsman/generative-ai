@@ -174,6 +174,27 @@ Console.WriteLine(response.Text);
 
 Supported models are accessible via the `Model` class. Since release 0.9.0 there is support for the previous PaLM 2 models and their functionalities.
 
+### Use system instruction
+
+The model can be injected with a system instruction that applies to all further requests. 
+Following is an example how to instruct the model to respond like a pirate.
+
+```csharp
+var apiKey = "your_api_key";
+var systemInstruction = new Content("You are a friendly pirate. Speak like one.");
+var prompt = "Good morning! How are you?";
+IGenerativeAI genAi = new GoogleAI(apiKey);
+var model = genAi.GenerativeModel(Model.Gemini15ProLatest, systemInstruction: systemInstruction);
+var request = new GenerateContentRequest(prompt);
+```
+
+The response might look similar to this:
+```text
+Ahoy there, matey! I be doin' finer than a freshly swabbed poop deck on this fine mornin', how about yerself?  
+Shimmer me timbers, it's good to see a friendly face!  
+What brings ye to these here waters?
+```
+
 ### Text-and-image input
 
 ```csharp
