@@ -1,6 +1,9 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
@@ -18,6 +21,8 @@ namespace Mscc.GenerativeAI
         private readonly string? _apiKey;
         private readonly string? _accessToken;
         private GenerativeModel? _generativeModel;
+        private FilesModel? _filesModel;
+        private MediaModel? _mediaModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleAI"/> class with access to Google AI Gemini API.
@@ -60,8 +65,8 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
-        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
         /// <returns>Generative model instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -81,6 +86,8 @@ namespace Mscc.GenerativeAI
             {
                 _generativeModel.AccessToken = _accessToken;
             }
+                systemInstruction); 
+            _generativeModel.AccessToken = _apiKey is null ? _accessToken : null;
 
             return _generativeModel;
         }
@@ -89,6 +96,135 @@ namespace Mscc.GenerativeAI
         public async Task<ModelResponse> GetModel(string model)
         {
             return await _generativeModel?.GetModel(model)!;
+        }
+
+        /// <summary>
+        /// Uploads a file to the File API backend.
+        /// </summary>
+        /// <param name="uri">URI or path to the file to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <returns>A URI of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UploadMediaResponse> UploadFile(string uri,
+            string? displayName = null,
+            bool resumable = false,
+            CancellationToken cancellationToken = default)
+        {
+            _mediaModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _mediaModel?.UploadFile(uri, displayName, resumable, cancellationToken)!;
+        }
+
+        /// <summary>
+        /// Uploads a stream to the File API backend.
+        /// </summary>
+        /// <param name="stream">Stream to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="mimeType">The MIME type of the stream content.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <returns>A URI of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UploadMediaResponse> UploadFile(Stream stream,
+            string displayName,
+            string mimeType,
+            bool resumable = false,
+            CancellationToken cancellationToken = default)
+        {
+            _mediaModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _mediaModel?.UploadFile(stream, displayName, mimeType, resumable, cancellationToken)!;
+        }
+
+        /// <summary>
+        /// Gets a generated file.
+        /// </summary>
+        /// <remarks>
+        /// When calling this method via REST, only the metadata of the generated file is returned.
+        /// To retrieve the file content via REST, add alt=media as a query parameter.
+        /// </remarks>
+        /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <returns>Metadata for the given file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GeneratedFile> DownloadFile(string file)
+        {
+            _mediaModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _mediaModel.DownloadFile(file);
+        }
+
+        /// <summary>
+        /// Lists the metadata for Files owned by the requesting project.
+        /// </summary>
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <returns>List of files in File API.</returns>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<ListFilesResponse> ListFiles(int? pageSize = 100,
+            string? pageToken = null)
+        {
+            _filesModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _filesModel?.ListFiles(pageSize, pageToken)!;
+        }
+
+        /// <summary>
+        /// Gets the metadata for the given File.
+        /// </summary>
+        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <returns>Metadata for the given file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<FileResource> GetFile(string file)
+        {
+            _filesModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _filesModel?.GetFile(file)!;
+        }
+
+        /// <summary>
+        /// Deletes a file.
+        /// </summary>
+        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <returns>If successful, the response body is empty.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<string> DeleteFile(string file)
+        {
+            _filesModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _filesModel?.DeleteFile(file)!;
         }
     }
 }

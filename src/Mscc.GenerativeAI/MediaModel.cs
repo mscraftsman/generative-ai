@@ -1,0 +1,169 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Authentication;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
+#endif
+using System.Net.Http.Headers;
+using System.Text;
+
+namespace Mscc.GenerativeAI
+{
+    public class MediaModel : BaseGeneration
+    {
+        protected override string Version => ApiVersion.V1Beta;
+        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+        
+        /// <summary>
+        /// Uploads a file to the File API backend.
+        /// </summary>
+        /// <param name="uri">URI or path to the file to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <returns>A URI of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UploadMediaResponse> UploadFile(string uri,
+            string? displayName = null,
+            bool resumable = false,
+            CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+            var fileInfo = new FileInfo(uri);
+            if (fileInfo.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(uri));
+
+            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            var totalBytes = new FileInfo(uri).Length;
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                }
+            };
+
+            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            string json = Serialize(request);
+
+            using (var fs = new FileStream(uri, FileMode.Open)){
+                var multipartContent = new MultipartContent("related");
+                multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+                multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+                {
+                    Headers = { 
+                        ContentType = new MediaTypeHeaderValue(mimeType), 
+                        ContentLength = totalBytes 
+                    }
+                });
+
+                var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+                await response.EnsureSuccessAsync();
+                return await Deserialize<UploadMediaResponse>(response);
+            }
+        }
+
+        /// <summary>
+        /// Uploads a stream to the File API backend.
+        /// </summary>
+        /// <param name="stream">Stream to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="mimeType">The MIME type of the stream content.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <returns>A URI of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UploadMediaResponse> UploadFile(Stream stream,
+            string displayName,
+            string mimeType,
+            bool resumable = false,
+            CancellationToken cancellationToken = default)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(stream));
+            if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
+            if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
+
+            var totalBytes = stream.Length;
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName
+                }
+            };
+
+            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            string json = Serialize(request);
+
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(stream, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
+
+            var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<UploadMediaResponse>(response);
+        }
+
+        /// <summary>
+        /// Gets a generated file.
+        /// </summary>
+        /// <remarks>
+        /// When calling this method via REST, only the metadata of the generated file is returned.
+        /// To retrieve the file content via REST, add alt=media as a query parameter.
+        /// </remarks>
+        /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <returns>Metadata for the given file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GeneratedFile> DownloadFile(string file)
+        {
+            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
+
+            file = file.SanitizeGeneratedFileName();
+
+            var url = $"{EndpointGoogleAi}/{Version}/{file}";
+            url = ParseUrl(url);
+            var response = await Client.GetAsync(url);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<GeneratedFile>(response);
+        }
+    }
+}
