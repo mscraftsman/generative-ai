@@ -21,6 +21,8 @@ namespace Mscc.GenerativeAI
 {
     public abstract class BaseGeneration : GenerationBase
     {
+        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+
         protected readonly string _region = "us-central1";
         protected readonly string _publisher = "google";
         protected readonly JsonSerializerOptions _options;
@@ -35,31 +37,27 @@ namespace Mscc.GenerativeAI
         protected static readonly Version _httpVersion = HttpVersion.Version11;
         protected static readonly HttpClient Client = new HttpClient(new HttpClientHandler
         {
-            SslProtocols = SslProtocols.Tls12,
+            SslProtocols = SslProtocols.Tls12
         });
 #else
-        protected static readonly Version _httpVersion = HttpVersion.Version30;
+        protected static readonly Version _httpVersion = HttpVersion.Version11;
         protected static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
         {
             PooledConnectionLifetime = TimeSpan.FromMinutes(30),
-            EnableMultipleHttp2Connections = true,
+            EnableMultipleHttp2Connections = true
         })
         {
-            DefaultRequestVersion = _httpVersion
+            DefaultRequestVersion = _httpVersion,
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
         };
 #endif
 
-        protected string Version => ApiVersion.V1;
+        protected virtual string Version => ApiVersion.V1;
 
-        protected string Model
+        internal string Model
         {
-            set
-            {
-                if (value != null)
-                {
-                    _model = value;
-                }
-            }
+            get => _model;
+            set => _model = value.SanitizeModelName() ?? throw new ArgumentNullException();
         }
 
         /// <summary>
@@ -198,6 +196,7 @@ namespace Mscc.GenerativeAI
             {
                 return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
+                    { "endpointGoogleAI", EndpointGoogleAi },
                     { "version", Version },
                     { "model", _model },
                     { "apikey", _apiKey },
