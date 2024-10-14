@@ -17,7 +17,7 @@ namespace Mscc.GenerativeAI
         /// Required. The content of the current conversation with the model.
         /// For single-turn queries, this is a single instance. For multi-turn queries, this is a repeated field that contains conversation history + latest request.
         /// </summary>
-        public List<Content>? Contents { get; set; }
+        public List<Content> Contents { get; set; }
         /// <summary>
         /// Optional. Configuration options for model generation and outputs.
         /// </summary>
