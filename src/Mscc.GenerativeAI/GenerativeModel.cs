@@ -27,7 +27,6 @@ namespace Mscc.GenerativeAI
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
 
         private readonly bool _useVertexAi;
-        private readonly string _region = "us-central1";
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
         private readonly Credentials? _credentials;
@@ -36,6 +35,7 @@ namespace Mscc.GenerativeAI
         private string? _apiKey;
         private string? _accessToken;
         private string? _projectId;
+        private string _region = "us-central1";
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
@@ -46,7 +46,7 @@ namespace Mscc.GenerativeAI
         private static readonly Version _httpVersion = HttpVersion.Version11;
         private static readonly HttpClient Client = new HttpClient(new HttpClientHandler
         {
-            SslProtocols = SslProtocols.Tls12,
+            SslProtocols = SslProtocols.Tls12
         });
 #else
         private static readonly Version _httpVersion = HttpVersion.Version11;
@@ -119,13 +119,7 @@ namespace Mscc.GenerativeAI
 
         private string Model
         {
-            set
-            {
-                if (value != null)
-                {
-                    _model = value.SanitizeModelName();
-                }
-            }
+            set => _model = value.SanitizeModelName() ?? throw new ArgumentNullException();
         }
 
         /// <summary>
@@ -170,6 +164,15 @@ namespace Mscc.GenerativeAI
                     Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the region to use for the request.
+        /// </summary>
+        public string Region
+        {
+            get => _region;
+            set => _region = value;
         }
 
         /// <summary>
