@@ -32,6 +32,9 @@ jobs:
 #      id-token: write
 
     steps:
+    - name: enable windows longpaths
+      run: |
+        git config --global core.longpaths true
     - name: Check-out latest sources 
       uses: actions/checkout@v4
 
