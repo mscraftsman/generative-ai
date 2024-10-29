@@ -101,6 +101,14 @@ namespace Mscc.GenerativeAI
                 {
                     _partTypes.Add(new Part { VideoMetadata = video });
                 }
+                if (part is ExecutableCode code)
+                {
+                    _partTypes.Add(new Part { ExecutableCode = code });
+                }
+                if (part is CodeExecutionResult result)
+                {
+                    _partTypes.Add(new Part { CodeExecutionResult = result });
+                }
             }
         }
 
