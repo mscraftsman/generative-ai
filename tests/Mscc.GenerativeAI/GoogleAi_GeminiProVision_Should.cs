@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -38,7 +39,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Text_From_Image()
+        public async Task Generate_Text_From_Image()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -64,7 +65,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Describe_Image_From_InlineData()
+        public async Task Describe_Image_From_InlineData()
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
@@ -92,7 +93,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("cat.jpg", "image/jpeg", "Describe this image", "snow")]
         [InlineData("cat.jpg", "image/jpeg", "Is it a cat?", "Yes")]
         //[InlineData("animals.mp4", "video/mp4", "What's in the video?", "Zootopia")]
-        public async void Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
+        public async Task Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -124,7 +125,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("cat.jpg", "Describe this image", "snow")]
         [InlineData("cat.jpg", "Is it a cat?", "Yes")]
         //[InlineData("animals.mp4", "video/mp4", "What's in the video?", "Zootopia")]
-        public async void Describe_AddMedia_From_ImageFile(string filename, string prompt, string expected)
+        public async Task Describe_AddMedia_From_ImageFile(string filename, string prompt, string expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -135,7 +136,7 @@ namespace Test.Mscc.GenerativeAI
                     Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024
                 }
             };
-            request.AddMedia(Path.Combine(Environment.CurrentDirectory, "payload", filename));
+            await request.AddMedia(Path.Combine(Environment.CurrentDirectory, "payload", filename));
 
             // Act
             var response = await model.GenerateContent(request);
@@ -150,7 +151,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Describe_AddMedia_From_Url_Markdown()
+        public async Task Describe_AddMedia_From_Url_Markdown()
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown table";
@@ -170,7 +171,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Describe_AddMedia_From_Url_JSON()
+        public async Task Describe_AddMedia_From_Url_JSON()
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in JSON";
@@ -190,7 +191,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
-        public async void Describe_AddMedia_From_UrlRemote()
+        public async Task Describe_AddMedia_From_UrlRemote()
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
@@ -210,7 +211,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
-        public async void Describe_Image_From_FileData()
+        public async Task Describe_Image_From_FileData()
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
@@ -234,7 +235,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact(Skip = "URL scheme not supported")]
-        public async void Multimodal_Video_Input()
+        public async Task Multimodal_Video_Input()
         {
             // Arrange
             var prompt = "What's in the video?";

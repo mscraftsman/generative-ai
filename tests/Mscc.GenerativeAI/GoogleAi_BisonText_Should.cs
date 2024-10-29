@@ -1,6 +1,7 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -93,7 +94,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Models()
+        public async Task List_Models()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey);
@@ -112,7 +113,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Models_Using_OAuth()
+        public async Task List_Models_Using_OAuth()
         {
             // Arrange
             var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
@@ -131,7 +132,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Tuned_Models()
+        public async Task List_Tuned_Models()
         {
             // Arrange
             var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
@@ -156,7 +157,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        public async void Get_Model_Information(string modelName)
+        public async Task Get_Model_Information(string modelName)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey);
@@ -173,7 +174,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        public async void Get_TunedModel_Information_Using_ApiKey(string modelName)
+        public async Task Get_TunedModel_Information_Using_ApiKey(string modelName)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey);
@@ -189,7 +190,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        public async void Get_Model_Information_Using_OAuth(string modelName)
+        public async Task Get_Model_Information_Using_OAuth(string modelName)
         {
             // Arrange
             var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
@@ -215,7 +216,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content()
+        public async Task Generate_Content()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -232,7 +233,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Request()
+        public async Task Generate_Content_Request()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -256,7 +257,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_RequestConstructor()
+        public async Task Generate_Content_RequestConstructor()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -278,7 +279,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens(string prompt, int expected)
+        public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -297,7 +298,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens_Request(string prompt, int expected)
+        public async Task Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -313,7 +314,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Create_Tuned_Model()
+        public async Task Create_Tuned_Model()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: _model)
@@ -362,7 +363,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Create_Tuned_Model_Simply()
+        public async Task Create_Tuned_Model_Simply()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: _model)
@@ -401,7 +402,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void Delete_Tuned_Model()
+        public async Task Delete_Tuned_Model()
         {
             // Arrange
             var modelName = "tunedModels/number-generator-model-psx3d3gljyko";     // see List_Tuned_Models for available options.
@@ -424,7 +425,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("41", "42")]
         // [InlineData("five", "six")]
         // [InlineData("Six hundred thirty nine", "Six hundred forty")]
-        public async void Generate_Content_TunedModel(string prompt, string expected)
+        public async Task Generate_Content_TunedModel(string prompt, string expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: "tunedModels/autogenerated-test-model-48gob9c9v54p")

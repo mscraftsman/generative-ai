@@ -96,7 +96,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Models()
+        public async Task List_Models()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey);
@@ -115,7 +115,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Models_Using_OAuth()
+        public async Task List_Models_Using_OAuth()
         {
             // Arrange
             var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
@@ -134,7 +134,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Tuned_Models()
+        public async Task List_Tuned_Models()
         {
             // Arrange
             var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
@@ -159,7 +159,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        public async void Get_Model_Information(string modelName)
+        public async Task Get_Model_Information(string modelName)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey);
@@ -176,7 +176,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        public async void Get_TunedModel_Information_Using_ApiKey(string modelName)
+        public async Task Get_TunedModel_Information_Using_ApiKey(string modelName)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey);
@@ -192,7 +192,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        public async void Get_Model_Information_Using_OAuth(string modelName)
+        public async Task Get_Model_Information_Using_OAuth(string modelName)
         {
             // Arrange
             var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
@@ -218,7 +218,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content()
+        public async Task Generate_Content()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -235,7 +235,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void GenerateContent_WithEmptyPrompt_ThrowsArgumentNullException()
+        public async Task GenerateContent_WithEmptyPrompt_ThrowsArgumentNullException()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -246,7 +246,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void GenerateContent_WithInvalidAPIKey_ChangingBeforeRequest()
+        public async Task GenerateContent_WithInvalidAPIKey_ChangingBeforeRequest()
         {
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
@@ -265,7 +265,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void GenerateContent_WithInvalidAPIKey_ChangingAfterRequest()
+        public async Task GenerateContent_WithInvalidAPIKey_ChangingAfterRequest()
         {
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
@@ -285,7 +285,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_MaxTokens()
+        public async Task Generate_Content_MaxTokens()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -304,7 +304,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream_MaxTokens()
+        public async Task Generate_Content_Stream_MaxTokens()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -330,7 +330,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void Generate_Content_MultiplePrompt()
+        public async Task Generate_Content_MultiplePrompt()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -351,7 +351,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Request()
+        public async Task Generate_Content_Request()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -374,7 +374,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void GenerateContent_WithRequest_MultipleCandidates_ThrowsHttpRequestException()
+        public async Task GenerateContent_WithRequest_MultipleCandidates_ThrowsHttpRequestException()
         {
             // Arrange
             var prompt = "Write a short poem about koi fish.";
@@ -398,7 +398,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void GenerateContent_WithNullRequest_ThrowsArgumentNullException()
+        public async Task GenerateContent_WithNullRequest_ThrowsArgumentNullException()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -409,7 +409,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void Generate_Content_RequestConstructor()
+        public async Task Generate_Content_RequestConstructor()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -428,7 +428,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void GenerateContent_WithRequest_UseServerSentEvents()
+        public async Task GenerateContent_WithRequest_UseServerSentEvents()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -448,7 +448,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void GenerateContent_Stream_WithRequest_ServerSentEvents()
+        public async Task GenerateContent_Stream_WithRequest_ServerSentEvents()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -469,7 +469,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream()
+        public async Task Generate_Content_Stream()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -494,7 +494,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream_Request()
+        public async Task Generate_Content_Stream_Request()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -525,7 +525,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void GenerateAnswer_WithValidRequest_ReturnsAnswerResponse()
+        public async Task GenerateAnswer_WithValidRequest_ReturnsAnswerResponse()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: "YOUR_API_KEY", model: Model.AttributedQuestionAnswering);
@@ -545,7 +545,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens(string prompt, int expected)
+        public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -564,7 +564,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 8)]
         [InlineData("Write a story about a magic backpack.", 9)]
         [InlineData("Write an extended story about a magic backpack.", 10)]
-        public async void Count_Tokens_Request(string prompt, int expected)
+        public async Task Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -585,7 +585,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Start_Chat()
+        public async Task Start_Chat()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -603,7 +603,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Start_Chat_With_History()
+        public async Task Start_Chat_With_History()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -630,7 +630,7 @@ namespace Test.Mscc.GenerativeAI
         [Fact]
         // Refs:
         // https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/send-chat-prompts-gemini
-        public async void Start_Chat_Multiple_Prompts()
+        public async Task Start_Chat_Multiple_Prompts()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -659,7 +659,7 @@ namespace Test.Mscc.GenerativeAI
         [Fact]
         // Refs:
         // https://ai.google.dev/tutorials/python_quickstart#chat_conversations
-        public async void Start_Chat_Conversations()
+        public async Task Start_Chat_Conversations()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -682,7 +682,7 @@ namespace Test.Mscc.GenerativeAI
         [Fact]
         // Refs:
         // https://ai.google.dev/tutorials/python_quickstart#chat_conversations
-        public async void Start_Chat_Rewind_Conversation()
+        public async Task Start_Chat_Rewind_Conversation()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -717,7 +717,7 @@ namespace Test.Mscc.GenerativeAI
         [Fact]
         // Refs:
         // https://ai.google.dev/tutorials/python_quickstart#chat_conversations
-        public async void Start_Chat_Conversations_Get_Last()
+        public async Task Start_Chat_Conversations_Get_Last()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -736,7 +736,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Start_Chat_Streaming()
+        public async Task Start_Chat_Streaming()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -794,7 +794,7 @@ namespace Test.Mscc.GenerativeAI
         
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling
-        public async void Function_Calling()
+        public async Task Function_Calling()
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
@@ -906,7 +906,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
-        public async void Function_Calling_MultiTurn()
+        public async Task Function_Calling_MultiTurn()
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
@@ -1051,7 +1051,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#multi-turn-example-2
-        public async void Function_Calling_MultiTurn_Multiple()
+        public async Task Function_Calling_MultiTurn_Multiple()
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
@@ -1212,7 +1212,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact(Skip = "Work in progress")]
-        public async void Function_Calling_Chat()
+        public Task Function_Calling_Chat()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -1230,10 +1230,11 @@ namespace Test.Mscc.GenerativeAI
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Text.Should().NotBeEmpty();
             //output.WriteLine(response?.Text);
+            return Task.FromResult(Task.CompletedTask);
         }
 
         [Fact(Skip = "Work in progress")]
-        public async void Function_Calling_ContentStream()
+        public Task Function_Calling_ContentStream()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
@@ -1269,10 +1270,11 @@ namespace Test.Mscc.GenerativeAI
             // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
             // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
             // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            return Task.FromResult(Task.CompletedTask);
         }
 
         [Fact]
-        public async void Create_Tuned_Model()
+        public async Task Create_Tuned_Model()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: Model.Gemini10Pro001)
@@ -1321,7 +1323,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Create_Tuned_Model_Simply()
+        public async Task Create_Tuned_Model_Simply()
         {
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: Model.Gemini10Pro001)
@@ -1360,7 +1362,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async void Delete_Tuned_Model()
+        public async Task Delete_Tuned_Model()
         {
             // Arrange
             var modelName = "tunedModels/number-generator-model-psx3d3gljyko";     // see List_Tuned_Models for available options.
@@ -1383,7 +1385,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("41", "42")]
         // [InlineData("five", "six")]
         // [InlineData("Six hundred thirty nine", "Six hundred forty")]
-        public async void Generate_Content_TunedModel(string prompt, string expected)
+        public async Task Generate_Content_TunedModel(string prompt, string expected)
         {
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: "tunedModels/autogenerated-test-model-48gob9c9v54p")

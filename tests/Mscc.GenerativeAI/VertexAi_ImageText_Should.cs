@@ -1,10 +1,11 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.Net.Http;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -82,7 +83,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("scones.jpg", "muffin")]
         [InlineData("cat.jpg", "snow")]
         [InlineData("image.jpg", "jetpack")]
-        public async void Get_Image_Captions(string filename, string expected)
+        public async Task Get_Image_Captions(string filename, string expected)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -118,7 +119,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("scones.jpg", "es", "galletas")]
         [InlineData("scones.jpg", "fr", "biscuits")]
         [InlineData("scones.jpg", "it", "biscotti")]
-        public async void Get_Image_Captions_Language(string filename, string language, string expected)
+        public async Task Get_Image_Captions_Language(string filename, string language, string expected)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -142,7 +143,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Ask_Questions()
+        public async Task Ask_Questions()
         {
             // Arrange
             var prompt = "Is this in the mountains?";

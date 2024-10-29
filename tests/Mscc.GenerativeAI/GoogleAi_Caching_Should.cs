@@ -53,11 +53,6 @@ namespace Test.Mscc.GenerativeAI
             await sut.Should().ThrowAsync<HttpRequestException>();
         }
 
-        public async Task Initialize_Caching()
-        {
-            
-        }
-
         [Theory(Skip = "Skipped due to the configured HttpClient.Timeout of 100 seconds elapsing.")]
         [InlineData("Sherlock_Jr_FullMovie.mp4", "sherlock jr movie")]
         public async Task Initialize_Model_from_Caching(string filename, string displayName)
