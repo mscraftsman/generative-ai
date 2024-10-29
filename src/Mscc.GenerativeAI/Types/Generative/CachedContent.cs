@@ -21,7 +21,8 @@ namespace Mscc.GenerativeAI
     
     public class CachedContent
     {
-        protected string _model;
+        private string _model;
+        private string _name;
         
         /// <summary>
         /// Required. Immutable. The name of the `Model` to use for cached content Format: `models/{model}`
@@ -31,10 +32,15 @@ namespace Mscc.GenerativeAI
             get => _model; 
             set => _model = value.SanitizeModelName() ?? throw new InvalidOperationException();
         }
+
         /// <summary>
         /// Optional. Identifier. The resource name referring to the cached content. Format: `cachedContents/{id}`
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name; 
+            set => _name = value.SanitizeCachedContentName() ?? throw new InvalidOperationException();
+        }
         /// <summary>
         /// Optional. Immutable. The user-generated meaningful display name of the cached content. Maximum 128 Unicode characters.
         /// </summary>
