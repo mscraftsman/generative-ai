@@ -102,7 +102,7 @@ namespace Test.Mscc.GenerativeAI.Google
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini15Pro);
+            model.Name.Should().Be(Model.Gemini15Pro.SanitizeModelName());
         }
 
         [Theory]
@@ -123,7 +123,7 @@ namespace Test.Mscc.GenerativeAI.Google
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(expected);
+            model.Name.Should().Be(expected.SanitizeModelName());
         }
 
         [Fact]
