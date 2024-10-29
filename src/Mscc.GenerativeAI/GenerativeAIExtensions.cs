@@ -29,14 +29,38 @@ namespace Mscc.GenerativeAI
         /// Checks if the IANA standard MIME type is supported by the model.
         /// </summary>
         /// <remarks>
-        /// See <see href="https://ai.google.dev/api/rest/v1beta/Content#blob"/> for a list of supported mime types.
+        /// See <see href="https://ai.google.dev/gemini-api/docs/vision"/> for a list of supported image data and video format MIME types.
+        /// See <see href="https://ai.google.dev/gemini-api/docs/audio"/> for a list of supported audio format MIME types.
+        /// </remarks>
+        /// <param name="mimeType">The IANA standard MIME type to check.</param>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
+        public static void GuardInlineDataMimeType(string mimeType)
+        {
+            string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
+                "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac"
+            ];
+            
+            if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
+        }
+
+        /// <summary>
+        /// Checks if the IANA standard MIME type is supported by the model.
+        /// </summary>
+        /// <remarks>
+        /// See <see href="https://ai.google.dev/gemini-api/docs/vision"/> for a list of supported image data and video format MIME types.
+        /// See <see href="https://ai.google.dev/gemini-api/docs/audio"/> for a list of supported audio format MIME types.
+        /// See also <seealso href="https://ai.google.dev/gemini-api/docs/document-processing"/> for a list of supported MIME types for document processing.
         /// </remarks>
         /// <param name="mimeType">The IANA standard MIME type to check.</param>
         /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
         public static void GuardMimeType(string mimeType)
         {
             string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
-                "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac"];
+                "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac",
+                "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp",
+                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python", 
+                "text/x-python", "text/plain", "text/html", "text/css","text/md","text/csv", "text/xml", "text/rtf"
+            ];
             
             if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
         }

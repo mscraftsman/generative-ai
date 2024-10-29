@@ -237,7 +237,7 @@ namespace Mscc.GenerativeAI
                 base64data =  await GenerativeAIExtensions.ReadImageFileBase64Async(uri);
             }
 
-            GenerativeAIExtensions.GuardMimeType(mimeType);
+            GenerativeAIExtensions.GuardInlineDataMimeType(mimeType);
             Contents[0].Parts.Add(
                 new InlineData { MimeType = mimeType, Data = base64data }
             );
