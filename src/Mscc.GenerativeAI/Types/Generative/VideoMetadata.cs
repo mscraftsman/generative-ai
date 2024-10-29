@@ -13,6 +13,13 @@ namespace Mscc.GenerativeAI
     public class VideoMetadata : IPart
     {
         /// <summary>
+        /// Duration of the video.
+        /// </summary>
+        /// <remarks>
+        /// A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s".
+        /// </remarks>
+        public string? VideoDuration { get; set; }
+        /// <summary>
         /// Starting offset of a video.
         /// </summary>
         public Duration StartOffset { get; set; }
