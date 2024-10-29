@@ -82,9 +82,52 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateContent_Using_JsonMode()
         {
             // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            model.UseJsonMode = true;
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task GenerateContent_Using_JsonMode_SchemaPrompt()
+        {
+            // Arrange
             var prompt = "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
+            model.UseJsonMode = true;
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+        
+        [Fact]
+        public async Task? GenerateContent_Using_JsonMode_Schema()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = "{\"type\": \"ARRAY\",\n          \"items\": {\n            \"type\": \"OBJECT\",\n            \"properties\": {\n              \"recipe_name\": {\"type\":\"STRING\"},\n            }\n          }"
+            };
             model.UseJsonMode = true;
 
             // Act
