@@ -40,6 +40,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini15Flash002 = "gemini-1.5-flash-002";
         public const string Gemini15Flash001Tuning = "gemini-1.5-flash-001-tuning";
         public const string Gemini15FlashTuning = Gemini15Flash001Tuning;
+        public const string Gemini15Flash8B = "gemini-1.5-flash-8b-001";
         public const string Gemini15FlashExperimental0827 = "gemini-1.5-flash-exp-0827";
         public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
         public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
