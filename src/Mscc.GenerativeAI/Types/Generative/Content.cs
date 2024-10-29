@@ -27,7 +27,6 @@ namespace Mscc.GenerativeAI
         /// </summary>
         [JsonPropertyOrder(-1)]
         public string? Role { get; set; }
-
         /// <summary>
         /// Ordered Parts that constitute a single message. Parts may have different MIME types.
         /// </summary>
@@ -46,7 +45,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="Content"/> class.
         /// </summary>
-        internal Content() { }
+        internal Content()
+        {
+            Parts = new List<IPart>();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Content"/> class.
@@ -54,14 +56,23 @@ namespace Mscc.GenerativeAI
         /// <param name="text">String to process.</param>
         public Content(string text) : this()
         {
-            Parts = new List<IPart>();
-            Parts.Add(new TextData { Text = text });
+            Parts?.Add(new TextData { Text = text });
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        /// <param name="file">File to process.</param>
+        public Content(FileData file) : this()
+        {
+            Role = GenerativeAI.Role.User;
+            Parts?.Add(new FileData { FileUri = file.FileUri, MimeType = file.MimeType });
         }
 
         private void SynchronizeParts()
         {
             // partTypes = null;
-            if (Parts == null) return;
+            if (Parts?.Count == 0) return;
 
             _partTypes = new List<Part>();
             foreach (var part in Parts)
@@ -142,11 +153,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="text">String to process.</param>
         /// <param name="role">Role of the content. Must be either 'user' or 'model'.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> or <paramref name="role"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="text"/> or <paramref name="role"/> is empty or null.</exception>
         public ContentResponse(string text, string role = GenerativeAI.Role.User) : this()
         {
-            // if (text == null) throw new ArgumentNullException(nameof(text));
-            // if (role == null) throw new ArgumentNullException(nameof(role));
+            // if (string.IsNullOrEmpty(text)) throw new ArgumentException(nameof(text));
+            // if (string.IsNullOrEmpty(role)) throw new ArgumentException(nameof(role));
 
             Parts.Add(new Part() { Text = text });
             Role = role;
