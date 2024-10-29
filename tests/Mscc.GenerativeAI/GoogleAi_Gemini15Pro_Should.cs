@@ -259,6 +259,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("sample.mp3", "State_of_the_Union_Address_30_January_1961")]
         [InlineData("pixel.mp3", "Pixel Feature Drops: March 2023")]
         [InlineData("gemini.pdf", "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context")]
+        [InlineData("Big_Buck_Bunny.mp4", "Video clip (CC BY 3.0) from https://peach.blender.org/download/")]
         public async Task Upload_File_Using_FileAPI(string filename, string displayName)
         {
             // Arrange
@@ -635,9 +636,34 @@ Use speaker A, speaker B, etc. to identify the speakers.
             }
         }
 
-        [Fact(Skip = "Bad Request due to FileData part")]
-        // [Fact]
+        [Fact]
         public async Task Describe_Videos_From_FileAPI()
+        {
+            // Arrange
+            var prompt = "Describe this video clip.";
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            var files = await ((GoogleAI)genAi).ListFiles();
+            foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("video/")))
+            {
+                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+                request.AddMedia(file);
+            }
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task Make_Story_using_Videos_From_FileAPI()
         {
             // Arrange
             var prompt = "Make a short story from the media resources. The media resources are:";
