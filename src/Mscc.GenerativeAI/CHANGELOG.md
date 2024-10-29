@@ -16,11 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
-## 1.7.1
+## 1.8.0
 
 ### Added
 
-- add context caching
+- add context caching: https://ai.google.dev/gemini-api/docs/caching
+- add code execution: https://ai.google.dev/gemini-api/docs/code-execution
 - add model `gemini-1.5-flash-8b-001`
 - add Logprobs handling
 - add required model name and optional cached content to request
@@ -28,8 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - sanitize name of cached content
+- extend list of supported MIME types
 - extend `FinishReason`
 - extend `VideoMetadata`
+
+### Fixed
+
+- disable HTTP/3 (Quic) due to issue [#34](https://github.com/mscraftsman/generative-ai/issues/34)
 
 ## 1.7.0
 
