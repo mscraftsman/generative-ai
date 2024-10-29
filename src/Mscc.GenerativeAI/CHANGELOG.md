@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - add model `gemini-1.5-flash-8b-001`
+- add Logprobs handling
+
+### Changed
+
+- extend `FinishReason`
 
 ## 1.7.0
 
