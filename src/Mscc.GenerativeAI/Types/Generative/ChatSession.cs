@@ -74,30 +74,43 @@ namespace Mscc.GenerativeAI
         /// Sends the conversation history with the added message and returns the model's response.
         /// Appends the request and response to the conversation history.
         /// </summary>
-        /// <param name="prompt">The message sent.</param>
+        /// <param name="content">The message or content sent.</param>
         /// <param name="generationConfig">Optional. Overrides for the model's generation config.</param>
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
         /// <returns>The model's response.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="content"/> is <see langword="null"/>.</exception>
         /// <exception cref="BlockedPromptException">Thrown when the model's response is blocked by a reason.</exception>
         /// <exception cref="StopCandidateException">Thrown when the model's response is stopped by the model's safety settings.</exception>
-        public async Task<GenerateContentResponse> SendMessage(string prompt,
+        /// <exception cref="ValueErrorException">Thrown when the candidate count is larger than 1.</exception>
+        public async Task<GenerateContentResponse> SendMessage(object content,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
             ToolConfig? toolConfig = null)
         {
-            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (string.IsNullOrEmpty(prompt)) throw new ArgumentException(prompt, nameof(prompt));
-
-            _lastSent = new() { Role = Role.User, Text = prompt };
-            History.Add(_lastSent);
+            if (content == null) throw new ArgumentNullException(nameof(content));
+            if (!(content is String || content is List<Part>)) throw new ArgumentException(content.ToString(), nameof(content));
 
             generationConfig ??= _generationConfig;
             if (generationConfig?.CandidateCount > 1)
                 throw new ValueErrorException("Can't chat with `CandidateCount > 1`");
+
+            var role = Role.User;
+            var parts = new List<Part>();
+            if (content is String prompt)
+            {
+                parts.Add(new Part { Text = prompt });
+            }
+            if (content is List<Part> contentParts)
+            {
+                // role = Role.Function;
+                parts = contentParts;
+            }
+
+            _lastSent = new ContentResponse { Role = role, Parts = parts };
+            History.Add(_lastSent);
             
             var request = new GenerateContentRequest
             {
@@ -141,6 +154,7 @@ namespace Mscc.GenerativeAI
         /// <returns>The model's response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="content"/> is <see langword="null"/></exception>
         /// <exception cref="BlockedPromptException">Thrown when the <paramref name="content"/> is blocked by a reason.</exception>
+        /// <exception cref="ValueErrorException">Thrown when the candidate count is larger than 1.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(object content,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -150,6 +164,10 @@ namespace Mscc.GenerativeAI
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
             if (!(content is String || content is List<Part>)) throw new ArgumentException(content.ToString(), nameof(content));
+
+            generationConfig ??= _generationConfig;
+            if (generationConfig?.CandidateCount > 1)
+                throw new ValueErrorException("Can't chat with `CandidateCount > 1`");
 
             var role = Role.User;
             var parts = new List<Part>();
