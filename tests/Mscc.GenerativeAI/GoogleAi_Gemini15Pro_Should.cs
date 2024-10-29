@@ -183,6 +183,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("scones.jpg", "What is this picture?", "blueberries")]
         [InlineData("cat.jpg", "Describe this image", "snow")]
         [InlineData("cat.jpg", "Is it a feline?", "Yes")]
+        [InlineData("organ.jpg", "Tell me about this instrument", "pipe organ")]
         //[InlineData("animals.mp4", "video/mp4", "What's in the video?", "Zootopia")]
         public async Task Describe_AddMedia_From_ImageFile(string filename, string prompt, string expected)
         {
