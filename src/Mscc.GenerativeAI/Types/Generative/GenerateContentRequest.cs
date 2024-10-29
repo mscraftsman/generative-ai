@@ -14,6 +14,11 @@ namespace Mscc.GenerativeAI
     public class GenerateContentRequest
     {
         /// <summary>
+        /// Required. The name of the Model to use for generating the completion.
+        /// Format: name=models/{model}.
+        /// </summary>
+        public string Model { get; set; }
+        /// <summary>
         /// Required. The content of the current conversation with the model.
         /// For single-turn queries, this is a single instance. For multi-turn queries, this is a repeated field that contains conversation history + latest request.
         /// </summary>
@@ -43,6 +48,11 @@ namespace Mscc.GenerativeAI
         /// Optional. Configuration of tools used by the model.
         /// </summary>
         public ToolConfig? ToolConfig { get; set; }
+        /// <summary>
+        /// Optional. The name of the content cached to use as context to serve the prediction.
+        /// Format: cachedContents/{cachedContent}
+        /// </summary>
+        public string? CachedContent { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
