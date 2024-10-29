@@ -26,7 +26,7 @@
 		<Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
+	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<EnableAotAnalyzer>true</EnableAotAnalyzer>
@@ -42,7 +42,12 @@
 	  <DocumentationFile>bin\Release\Mscc.GenerativeAI.xml</DocumentationFile>
 	</PropertyGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0'))">
+		<RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support"
+										Value="false" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net9.0'))">
 		<RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support"
 										Value="true" />
 	</ItemGroup>
