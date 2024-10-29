@@ -53,5 +53,38 @@ namespace Mscc.GenerativeAI
         /// If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response.
         /// </remarks>
         public string? ResponseSchema { get; set; }
+        /// <summary>
+        /// Optional. Presence penalty applied to the next token's logprobs if the token has already been seen in the response.
+        /// </summary>
+        /// <remarks>
+        /// This penalty is binary on/off and not dependant on the number of times the token is used (after the first).
+        /// Use frequencyPenalty for a penalty that increases with each use. A positive penalty will discourage
+        /// the use of tokens that have already been used in the response, increasing the vocabulary. A negative
+        /// penalty will encourage the use of tokens that have already been used in the response, decreasing
+        /// the vocabulary.
+        /// </remarks>
+        public float? PresencePenalty { get; set; }
+        /// <summary>
+        /// Optional. Frequency penalty applied to the next token's logprobs, multiplied by the number of times each token has been seen in the respponse so far.
+        /// </summary>
+        /// <remarks>
+        /// A positive penalty will discourage the use of tokens that have already been used, proportional to the number
+        /// of times the token has been used: The more a token is used, the more difficult it is for the model to use
+        /// that token again increasing the vocabulary of responses.
+        /// Caution: A negative penalty will encourage the model to reuse tokens proportional to the number of times
+        /// the token has been used. Small negative values will reduce the vocabulary of a response.
+        /// Larger negative values will cause the model to start repeating a common token until it hits the
+        /// maxOutputTokens limit: "...the the the the the...".
+        /// </remarks>
+        public float? FrequencyPenalty { get; set; }
+        /// <summary>
+        /// Optional. If true, export the logprobs results in response.
+        /// </summary>
+        public bool? ResponseLogprobs { get; set; }
+        /// <summary>
+        /// Optional. Only valid if responseLogprobs=True.
+        /// This sets the number of top logprobs to return at each decoding step in the Candidate.logprobs_result.
+        /// </summary>
+        public int? Logprobs { get; set; }
     }
 }
