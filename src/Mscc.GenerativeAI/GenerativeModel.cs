@@ -1377,6 +1377,12 @@ namespace Mscc.GenerativeAI
             var config = generationConfig ?? _generationConfig;
             var safety = safetySettings ?? _safetySettings;
             var tool = tools ?? _tools;
+            
+            if (_cachedContent is not null)
+            {
+                history ??= _cachedContent.Contents?.Cast<ContentResponse>().ToList();
+            }
+            
             return new ChatSession(this, history, config, safety, tool, enableAutomaticFunctionCalling);
         }
         
