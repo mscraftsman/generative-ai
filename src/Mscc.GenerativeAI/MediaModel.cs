@@ -33,6 +33,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the MIME type of the URI is not supported by the API.</exception>
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             bool resumable = false,
@@ -44,6 +45,8 @@ namespace Mscc.GenerativeAI
             if (fileInfo.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(uri));
 
             var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            GenerativeAIExtensions.GuardMimeType(mimeType);
+            
             var totalBytes = new FileInfo(uri).Length;
             var request = new UploadMediaRequest()
             {
@@ -95,6 +98,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
         public async Task<UploadMediaResponse> UploadFile(Stream stream,
             string displayName,
             string mimeType,
@@ -105,6 +109,7 @@ namespace Mscc.GenerativeAI
             if (stream.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(stream));
             if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
             if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
+            GenerativeAIExtensions.GuardMimeType(mimeType);
 
             var totalBytes = stream.Length;
             var request = new UploadMediaRequest()
