@@ -747,6 +747,10 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            request.Tools ??= _tools;
+            request.ToolConfig ??= _toolConfig;
+            request.SystemInstruction ??= _systemInstruction;
+
             if (_cachedContent is not null)
             {
                 request.CachedContent = _cachedContent.Name;
@@ -755,17 +759,15 @@ namespace Mscc.GenerativeAI
                 {
                     request.Contents.AddRange(_cachedContent.Contents);
                 }
-                request.Tools ??= _cachedContent.Tools;
-                request.ToolConfig ??= _cachedContent.ToolConfig;
-                request.SystemInstruction ??= _cachedContent.SystemInstruction;
+                // "CachedContent can not be used with GenerateContent request setting system_instruction, tools or tool_config."
+                request.Tools = null;
+                request.ToolConfig = null;
+                request.SystemInstruction = null;
             }
 
             request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-            request.Tools ??= _tools;
-            request.ToolConfig ??= _toolConfig;
-            request.SystemInstruction ??= _systemInstruction;
             
             var url = ParseUrl(Url, Method);
             if (UseJsonMode)
@@ -918,6 +920,10 @@ namespace Mscc.GenerativeAI
 
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            request.Tools ??= _tools;
+            request.ToolConfig ??= _toolConfig;
+            request.SystemInstruction ??= _systemInstruction;
+
             if (_cachedContent is not null)
             {
                 request.CachedContent = _cachedContent.Name;
@@ -926,17 +932,15 @@ namespace Mscc.GenerativeAI
                 {
                     request.Contents.AddRange(_cachedContent.Contents);
                 }
-                request.Tools ??= _cachedContent.Tools;
-                request.ToolConfig ??= _cachedContent.ToolConfig;
-                request.SystemInstruction ??= _cachedContent.SystemInstruction;
+                // "CachedContent can not be used with GenerateContent request setting system_instruction, tools or tool_config."
+                request.Tools = null;
+                request.ToolConfig = null;
+                request.SystemInstruction = null;
             }
             
             request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-            request.Tools ??= _tools;
-            request.ToolConfig ??= _toolConfig;
-            request.SystemInstruction ??= _systemInstruction;
 
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
@@ -1392,10 +1396,12 @@ namespace Mscc.GenerativeAI
             var config = generationConfig ?? _generationConfig;
             var safety = safetySettings ?? _safetySettings;
             var tool = tools ?? _tools;
-            
+
             if (_cachedContent is not null)
             {
-                history ??= _cachedContent.Contents?.Cast<ContentResponse>().ToList();
+                history ??= _cachedContent.Contents?.Select(c =>
+                    new ContentResponse { Role = c.Role, Parts = c.PartTypes }
+                ).ToList();
             }
             
             return new ChatSession(this, history, config, safety, tool, enableAutomaticFunctionCalling);
