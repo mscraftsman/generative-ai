@@ -124,13 +124,13 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async Task Delete_ShouldThrowArgumentNullException_WhenCachedContentNameIsNull()
+        public async Task Delete_ShouldThrowArgumentException_WhenCachedContentNameIsNull()
         {
             // Act
             Func<Task> action = async () => await _cachedContent.Delete(null);
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentNullException>().WithParameterName("cachedContentName");
+            await action.Should().ThrowAsync<ArgumentException>().WithParameterName("cachedContentName");
         }
 
         [Fact]
