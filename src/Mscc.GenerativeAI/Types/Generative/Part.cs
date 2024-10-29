@@ -27,6 +27,11 @@ namespace Mscc.GenerativeAI
             Text = text;
         }
 
+        public Part(FileData fileData) : this()
+        {
+            FileData = fileData;
+        }
+
         /// <summary>
         /// A text part of a conversation with the model.
         /// </summary>
