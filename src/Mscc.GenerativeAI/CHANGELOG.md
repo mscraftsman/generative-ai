@@ -20,14 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- add context caching
 - add model `gemini-1.5-flash-8b-001`
 - add Logprobs handling
 - add required model name and optional cached content to request
 
 ### Changed
 
-- extend `FinishReason`
 - sanitize name of cached content
+- extend `FinishReason`
+- extend `VideoMetadata`
 
 ## 1.7.0
 

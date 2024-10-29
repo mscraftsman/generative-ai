@@ -50,7 +50,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string Sha256Hash { get; set; }
         /// <summary>
-        /// Output only. The uri of the File.
+        /// Output only. The URI of the File.
         /// </summary>
         public string Uri { get; set; }
         /// <summary>
@@ -64,6 +64,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Metadata for a video.
         /// </summary>
-        public VideoMetadata VideoMetadata { get; set; }
+        public VideoMetadata Metadata { get; set; }
     }
 }
