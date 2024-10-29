@@ -737,6 +737,20 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            if (_cachedContent is not null)
+            {
+                request.CachedContent = _cachedContent.Name;
+                Model = _cachedContent.Model;
+                if (_cachedContent.Contents != null)
+                {
+                    request.Contents.AddRange(_cachedContent.Contents);
+                }
+                request.Tools ??= _cachedContent.Tools;
+                request.ToolConfig ??= _cachedContent.ToolConfig;
+                request.SystemInstruction ??= _cachedContent.SystemInstruction;
+            }
+
+            request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             request.Tools ??= _tools;
@@ -891,6 +905,20 @@ namespace Mscc.GenerativeAI
 
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            if (_cachedContent is not null)
+            {
+                request.CachedContent = _cachedContent.Name;
+                Model = _cachedContent.Model;
+                if (_cachedContent.Contents != null)
+                {
+                    request.Contents.AddRange(_cachedContent.Contents);
+                }
+                request.Tools ??= _cachedContent.Tools;
+                request.ToolConfig ??= _cachedContent.ToolConfig;
+                request.SystemInstruction ??= _cachedContent.SystemInstruction;
+            }
+            
+            request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             request.Tools ??= _tools;
