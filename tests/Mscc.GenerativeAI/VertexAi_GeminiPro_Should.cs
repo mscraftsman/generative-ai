@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -80,7 +81,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Models()
+        public async Task List_Models()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -96,7 +97,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.GeminiProVision)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
-        public async void Get_Model_Information(string modelName)
+        public async Task Get_Model_Information(string modelName)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -108,7 +109,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content()
+        public async Task Generate_Content()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -131,7 +132,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_With_SafetySettings()
+        public async Task Generate_Content_With_SafetySettings()
         {
             // Arrange
             var prompt = "Tell me something dangerous.";
@@ -161,7 +162,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_MultiplePrompt()
+        public async Task Generate_Content_MultiplePrompt()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -184,7 +185,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Request()
+        public async Task Generate_Content_Request()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -209,7 +210,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_WithRequest_MultipleCandidates_ThrowsHttpRequestException()
+        public async Task Generate_Content_WithRequest_MultipleCandidates_ThrowsHttpRequestException()
         {
             // Arrange
             var prompt = "Write a short poem about koi fish.";
@@ -235,7 +236,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream()
+        public async Task Generate_Content_Stream()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -262,7 +263,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream_With_SafetySettings()
+        public async Task Generate_Content_Stream_With_SafetySettings()
         {
             // Arrange
             var prompt = "Tell me something dangerous.";
@@ -304,7 +305,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream_Request()
+        public async Task Generate_Content_Stream_Request()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -337,7 +338,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_WithGrounding_GoogleSearch()
+        public async Task Generate_Content_WithGrounding_GoogleSearch()
         {
             // Arrange
             var prompt = "Why is the sky blue?";
@@ -375,7 +376,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_WithGrounding_VertexAiSearch()
+        public async Task Generate_Content_WithGrounding_VertexAiSearch()
         {
             // Arrange
             var prompt = "Why is the sky blue?";
@@ -424,7 +425,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens(string prompt, int expected)
+        public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -451,7 +452,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens_Request(string prompt, int expected)
+        public async Task Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -474,7 +475,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Start_Chat()
+        public async Task Start_Chat()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -496,7 +497,7 @@ namespace Test.Mscc.GenerativeAI
         [Fact]
         // Refs:
         // https://cloud.google.com/vertexAI-ai/generative-ai/docs/multimodal/send-chat-prompts-gemini
-        public async void Start_Chat_Multiple_Prompts()
+        public async Task Start_Chat_Multiple_Prompts()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -525,7 +526,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Start_Chat_Streaming()
+        public async Task Start_Chat_Streaming()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -553,7 +554,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Function_Calling_Chat()
+        public async Task Function_Calling_Chat()
         {
             // Arrange
             var prompt = "What is the weather in Boston?";
@@ -620,7 +621,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Function_Calling_ContentStream()
+        public async Task Function_Calling_ContentStream()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);

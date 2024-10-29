@@ -1,3 +1,8 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+#endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
 using Xunit;
@@ -33,7 +38,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Embed_Content()
+        public async Task Embed_Content()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -54,7 +59,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Embed_Content_Batches()
+        public async Task Embed_Content_Batches()
         {
             // Arrange
             var prompts = new[] {

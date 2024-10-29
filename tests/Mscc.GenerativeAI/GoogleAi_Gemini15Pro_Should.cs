@@ -239,7 +239,7 @@ namespace Test.Mscc.GenerativeAI
                     Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024
                 }
             };
-            request.AddMedia(Path.Combine(Environment.CurrentDirectory, "payload", filename));
+            await request.AddMedia(Path.Combine(Environment.CurrentDirectory, "payload", filename));
 
             // Act
             var response = await model.GenerateContent(request);
@@ -868,8 +868,8 @@ Answer:";
         }
 
         [Theory]
-        [InlineData("https://generativelanguage.googleapis.com/v1beta/files/e2bq1yd67zfb", 78330)]
-        public async Task Count_Tokens_Audio(string prompt, int expected)
+        [InlineData(78330)]
+        public async Task Count_Tokens_Audio(int expected)
         {
             // Arrange
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);

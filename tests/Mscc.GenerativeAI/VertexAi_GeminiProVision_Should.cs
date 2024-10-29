@@ -1,6 +1,7 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -49,7 +50,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content()
+        public async Task Generate_Content()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -74,7 +75,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_With_SafetySettings()
+        public async Task Generate_Content_With_SafetySettings()
         {
             // Arrange
             var prompt = "Tell me something dangerous.";
@@ -104,7 +105,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Streaming_Content()
+        public Task Generate_Streaming_Content()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -121,10 +122,11 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async void Analyze_Image_From_Uri()
+        public async Task Analyze_Image_From_Uri()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -151,7 +153,7 @@ namespace Test.Mscc.GenerativeAI
         [Theory]
         [InlineData("gs://cloud-samples-data/generative-ai/image/320px-Felis_catus-cat_on_snow.jpg")]
         [InlineData("gs://cloud-samples-data/ai-platform/flowers/daisy/10559679065_50d2b16f6d.jpg")]
-        public async void Analyze_Image_From_Cloud_Storage(string uri)
+        public Task Analyze_Image_From_Cloud_Storage(string uri)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -169,6 +171,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
+            return Task.CompletedTask;
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
@@ -193,7 +196,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Text_From_Cloud_Storage()
+        public Task Generate_Text_From_Cloud_Storage()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -211,10 +214,11 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async void Provide_Image_Description()
+        public Task Provide_Image_Description()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -233,6 +237,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
+            return Task.CompletedTask;
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
@@ -240,7 +245,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Analyze_Video_From_Cloud_Storage()
+        public async Task Analyze_Video_From_Cloud_Storage()
         {
             // Arrange
             var prompt = "What's in the video?";
@@ -248,7 +253,7 @@ namespace Test.Mscc.GenerativeAI
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
             var model = vertexAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt);
-            request.AddMedia(videoUrl, useOnline: true);
+            await request.AddMedia(videoUrl, useOnline: true);
 
             // Act
             var responseStream = model.GenerateContentStream(request);
@@ -269,7 +274,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Start_Chat_Streaming()
+        public async Task Start_Chat_Streaming()
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -300,7 +305,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens(string prompt, int expected)
+        public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);

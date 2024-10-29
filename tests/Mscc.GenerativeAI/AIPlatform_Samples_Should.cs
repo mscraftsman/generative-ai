@@ -1,5 +1,6 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -27,7 +28,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Gemini_QuickStart()
+        public async Task Gemini_QuickStart()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -66,7 +67,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact(Skip = "Skipped due to the configured HttpClient.Timeout of 100 seconds elapsing.")]
-        public async void Multimodal_Multi_Image()
+        public async Task Multimodal_Multi_Image()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -125,7 +126,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Multimodal_Video_Input()
+        public async Task Multimodal_Video_Input()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -169,7 +170,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void With_SafetySettings()
+        public async Task With_SafetySettings()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);

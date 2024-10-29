@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -64,7 +65,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void List_Models()
+        public async Task List_Models()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -80,7 +81,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.GeminiProVision)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
-        public async void Get_Model_Information(string modelName)
+        public async Task Get_Model_Information(string modelName)
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -92,7 +93,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content()
+        public async Task Generate_Content()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -111,7 +112,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_MultiplePrompt()
+        public async Task Generate_Content_MultiplePrompt()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -134,7 +135,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Request()
+        public async Task Generate_Content_Request()
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
@@ -159,7 +160,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_Stream()
+        public Task Generate_Content_Stream()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -178,10 +179,11 @@ namespace Test.Mscc.GenerativeAI
             // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
             // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
             // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async void Generate_Content_Stream_Request()
+        public Task Generate_Content_Stream_Request()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -206,10 +208,11 @@ namespace Test.Mscc.GenerativeAI
             // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
             // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
             // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async void Generate_Content_With_SafetySettings()
+        public async Task Generate_Content_With_SafetySettings()
         {
             // Arrange
             var prompt = "Tell me something dangerous.";
@@ -239,7 +242,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public async void Generate_Content_SystemInstruction()
+        public async Task Generate_Content_SystemInstruction()
         {
             // Load a example model with system instructions
             // Arrange
@@ -286,7 +289,7 @@ Answer:";
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens(string prompt, int expected)
+        public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -313,7 +316,7 @@ Answer:";
         [InlineData("What kind of fish is this?", 7)]
         [InlineData("Write a story about a magic backpack.", 8)]
         [InlineData("Write an extended story about a magic backpack.", 9)]
-        public async void Count_Tokens_Request(string prompt, int expected)
+        public async Task Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -336,7 +339,7 @@ Answer:";
         }
 
         [Fact]
-        public async void Start_Chat_Streaming()
+        public Task Start_Chat_Streaming()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -350,10 +353,11 @@ Answer:";
 
             //// Assert
             //response.Should().NotBeNull();
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async void Function_Calling_Chat()
+        public Task Function_Calling_Chat()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -372,10 +376,11 @@ Answer:";
             //response1.Should().NotBeNull();
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Text.Should().NotBeEmpty();
+            return Task.CompletedTask;
         }
 
         [Fact]
-        public async void Function_Calling_ContentStream()
+        public Task Function_Calling_ContentStream()
         {
             // Arrange
             var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
@@ -407,6 +412,7 @@ Answer:";
 
             // Assert
             response.Should().NotBeNull();
+            return Task.CompletedTask;
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Text.Should().NotBeEmpty();
         }
