@@ -10,5 +10,9 @@ namespace Mscc.GenerativeAI
         /// Metadata for the created file.
         /// </summary>
         public FileResource File { get; set; }
+
+        public string Name => File.Name;
+        public string Uri => File.Uri;
+        public string MimeType => File.MimeType;
     }
 }
