@@ -47,6 +47,20 @@ namespace Mscc.GenerativeAI
         public string? DisplayName { get; set; }
 
         /// <summary>
+        /// Specifies when this resource will expire.
+        /// </summary>
+        [JsonIgnore]
+        public string Expiration
+        {
+            get
+            {
+                var value = ExpireTime?.ToString("o");
+                value ??= TtlString;
+                return value;
+            }
+        }
+
+        /// <summary>
         /// Input only. New TTL for this resource, input only.
         /// </summary>
         [JsonIgnore]
@@ -74,7 +88,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public DateTime? UpdateTime { get; set; }
         /// <summary>
-        /// Timestamp in UTC of when this resource is considered expired. This is *always* provided on output, regardless of what was sent on input.
+        /// Timestamp in UTC of when this resource is considered expired.
+        /// This is *always* provided on output, regardless of what was sent on input.
         /// </summary>
         public DateTime? ExpireTime { get; set; }
         /// <summary>
