@@ -21,6 +21,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<FunctionDeclaration>? FunctionDeclarations { get; set; }
         /// <summary>
+        /// Optional. Enables the model to execute code as part of generation.
+        /// </summary>
+        public CodeExecution? CodeExecution { get; set; }
+        /// <summary>
         /// Optional. Retrieval tool type. System will always execute the provided retrieval tool(s)
         /// to get external knowledge to answer the prompt. Retrieval results are presented
         /// to the model for generation.

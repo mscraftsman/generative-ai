@@ -1,7 +1,9 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
@@ -767,6 +769,29 @@ namespace Test.Mscc.GenerativeAI
             });
         }
 
+        [Fact]
+        // Ref: https://ai.google.dev/api/generate-content#code-execution
+        public async Task Code_Execution()
+        {
+            // Arrange
+            var prompt = "What is the sum of the first 50 prime numbers?";
+            var genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel(Model.Gemini15Flash,
+                tools: [new Tool { CodeExecution = new() }]);
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates[0].Content.Parts.Select(x => 
+                    x.Text)
+//                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToArray()));
+        }
+        
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling
         public async void Function_Calling()
