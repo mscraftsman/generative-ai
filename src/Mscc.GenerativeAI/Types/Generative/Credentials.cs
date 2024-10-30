@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI
     /// It de/serializes the content of the client_secret.json file for OAuth 2.0
     /// using either Desktop or Web approach, and supports Service Accounts on Google Cloud Platform.
     /// </summary>
-    internal class Credentials : ClientSecrets
+    public sealed class Credentials : ClientSecrets
     {
         private string _projectId;
         
@@ -47,7 +47,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Project ID (quota) in Google Cloud Platform.
         /// </summary>
-        public virtual string QuotaProjectId
+        public string QuotaProjectId
         {
             get => _projectId;
             set => _projectId = value;
@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI
     /// Represents the content of a client_secret.json file used in Google Cloud Platform
     /// to authenticate a user or service account.
     /// </summary>
-    internal class ClientSecrets
+    public class ClientSecrets
     {
         /// <summary>
         /// Client ID
