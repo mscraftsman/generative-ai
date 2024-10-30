@@ -20,6 +20,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. A readable block reason message.
         /// </summary>
-        public string BlockReasonMessage { get; set; } = default;
+        public string BlockReasonMessage { get; set; } = "";
     }
 }

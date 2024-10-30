@@ -14,11 +14,11 @@ namespace Test.Mscc.GenerativeAI
     {
         private IConfiguration Configuration { get; }
 
-        public string ApiKey { get; set; } = default;
-        public string ProjectId { get; set; } = default;
-        public string Region { get; set; } = default;
-        public string AccessToken { get; set; } = default;
-        public string ServiceAccount { get; set; }
+        public string? ApiKey { get; set; }
+        public string? ProjectId { get; set; }
+        public string? Region { get; set; }
+        public string? AccessToken { get; set; }
+        public string? ServiceAccount { get; set; }
 
 
         // Todo: Handle envVar GOOGLE_APPLICATION_CREDENTIALS
@@ -68,7 +68,7 @@ namespace Test.Mscc.GenerativeAI
             ServiceAccount = Configuration["service_account"];
         }
 
-        private string RunExternalExe(string filename, string arguments = null)
+        private string RunExternalExe(string filename, string arguments)
         {
             var process = new Process();
 

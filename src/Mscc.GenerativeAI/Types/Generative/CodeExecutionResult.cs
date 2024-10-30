@@ -12,6 +12,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Contains stdout when code execution is successful, stderr or other description otherwise.
         /// </summary>
-        public string Output { get; set; }
+        public string? Output { get; set; }
     }
 }

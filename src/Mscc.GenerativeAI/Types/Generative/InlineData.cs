@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI
         /// When including media inline, you must also specify MIMETYPE.
         /// Size limit: 20MB
         /// </remarks>
-        public string Data { get; set; } = default;
+        public string Data { get; set; } = "";
         /// <summary>
         /// The IANA standard MIME type of the source data.
         /// </summary>
@@ -41,6 +41,6 @@ namespace Mscc.GenerativeAI
         /// Maximum video length: 2 minutes. No limit on image resolution. 
         ///</remarks>
         // [JsonPropertyName("mime_type")]
-        public string MimeType { get; set; } = default;
+        public string MimeType { get; set; } = "";
     }
 }

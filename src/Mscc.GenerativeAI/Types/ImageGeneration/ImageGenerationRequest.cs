@@ -16,7 +16,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<Instance> Instances { get; set; }
+        public IEnumerable<Instance>? Instances { get; set; }
 
         /// <summary>
         /// 

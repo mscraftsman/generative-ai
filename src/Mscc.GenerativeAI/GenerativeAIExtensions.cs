@@ -76,9 +76,9 @@ namespace Mscc.GenerativeAI
             if (!supportedLanguages.Contains(language)) throw new NotSupportedException($"The language `{language}` is not supported by the API.");
         }
 
-        public static string? SanitizeModelName(this string? value)
+        public static string SanitizeModelName(this string value)
         {
-            if (value == null) return value;
+            if (string.IsNullOrEmpty(value)) return value;
 
             if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
                 return value;
@@ -91,9 +91,9 @@ namespace Mscc.GenerativeAI
             return value;
         }
         
-        public static string? SanitizeFileName(this string? value)
+        public static string SanitizeFileName(this string value)
         {
-            if (value == null) return value;
+            if (string.IsNullOrEmpty(value)) return value;
 
             if (!value.StartsWith("file", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -103,9 +103,9 @@ namespace Mscc.GenerativeAI
             return value;
         }
         
-        public static string? SanitizeGeneratedFileName(this string? value)
+        public static string SanitizeGeneratedFileName(this string value)
         {
-            if (value == null) return value;
+            if (string.IsNullOrEmpty(value)) return value;
 
             if (!value.StartsWith("generatedFile", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -115,9 +115,9 @@ namespace Mscc.GenerativeAI
             return value;
         }
         
-        public static string? SanitizeCachedContentName(this string? value)
+        public static string SanitizeCachedContentName(this string value)
         {
-            if (value == null) return value;
+            if (string.IsNullOrEmpty(value)) return value;
 
             if (!value.StartsWith("cachedContent", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -127,17 +127,17 @@ namespace Mscc.GenerativeAI
             return value;
         }
         
-        public static string? GetValue(this JsonElement element, string key)
+        public static string GetValue(this JsonElement element, string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            string result = null;
+            string? result = "";
             if (element.TryGetProperty(key, out JsonElement value))
             {
                 result = value.GetString();
             }
 
-            return result;
+            return result ?? "";
         }
 
         public static void ReadDotEnv(string dotEnvFile = ".env")
@@ -183,7 +183,7 @@ namespace Mscc.GenerativeAI
 
             if (!stream)
             {
-                if (response.Candidates[0].FinishReason is
+                if (response.Candidates![0].FinishReason is
                     FinishReason.Safety or
                     FinishReason.Recitation or
                     FinishReason.Other)
@@ -811,7 +811,7 @@ namespace Mscc.GenerativeAI
             errorMessage = !string.IsNullOrEmpty(errorMessage) 
                 ? errorMessage 
                 : Constants.RequestFailed;
-            string? errorMessageContent = includeResponseContent
+            string errorMessageContent = includeResponseContent
                 ? Environment.NewLine + await response.Content.ReadAsStringAsync()
                 : string.Empty;
             

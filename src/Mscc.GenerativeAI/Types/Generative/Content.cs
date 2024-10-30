@@ -1,14 +1,14 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 #endif
-using System;
 using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The base structured datatype containing multi-part content of a message.
+    /// The base structured datatype containing multipart content of a message.
     /// Ref: https://ai.google.dev/api/rest/v1beta/Content
     /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
@@ -72,10 +72,10 @@ namespace Mscc.GenerativeAI
         private void SynchronizeParts()
         {
             // partTypes = null;
-            if (Parts?.Count == 0) return;
+            if (Parts is null || Parts?.Count == 0) return;
 
-            _partTypes = new List<Part>();
-            foreach (var part in Parts)
+            _partTypes = [];
+            foreach (var part in Parts!)
             {
                 if (part is TextData text)
                 {
@@ -154,7 +154,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentResponse"/> class.
         /// </summary>
-        internal ContentResponse() => Parts = new List<Part>();
+        internal ContentResponse() => Parts = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContentResponse"/> class.

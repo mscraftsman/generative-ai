@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI
             BaseModel = model.SanitizeModelName();
             DisplayName = name.Trim();
             TuningTask.Hyperparameters = parameters;
-            TuningTask.TrainingData.Examples.Examples = dataset ?? new();
+            TuningTask.TrainingData!.Examples!.Examples = dataset ?? new();
         }
     }
 }

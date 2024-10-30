@@ -17,11 +17,11 @@ namespace Mscc.GenerativeAI
         ///  for NUMBER type: float, double
         ///  for INTEGER type: int32, int64
         /// </summary>
-        public string Format { get; set; } = default;
+        public string Format { get; set; } = "";
         /// <summary>
         /// Optional. A brief description of the parameter. This could contain examples of use. Parameter description may be formatted as Markdown.
         /// </summary>
-        public string Description { get; set; } = default;
+        public string Description { get; set; } = "";
         /// <summary>
         /// Optional. Indicates if the value may be null.
         /// </summary>

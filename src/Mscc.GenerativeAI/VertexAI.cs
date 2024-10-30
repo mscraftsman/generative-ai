@@ -49,7 +49,7 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
         /// <param name="region">Region to use (default: "us-central1").</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
-        public VertexAI(string projectId, string? region = null) : this()
+        public VertexAI(string? projectId, string? region = null) : this()
         {
             _projectId ??= projectId ?? throw new ArgumentNullException(nameof(projectId));
             _region = region ?? _region;

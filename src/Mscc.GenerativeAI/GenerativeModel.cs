@@ -30,7 +30,7 @@ namespace Mscc.GenerativeAI
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
         private readonly Credentials? _credentials;
-        private readonly CachedContent _cachedContent;
+        private readonly CachedContent? _cachedContent;
 
         private string _model;
         private string? _apiKey;
@@ -335,7 +335,7 @@ namespace Mscc.GenerativeAI
         /// <returns>List of available models.</returns>
         /// <param name="tuned">Flag, whether models or tuned models shall be returned.</param>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
-        /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -368,7 +368,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Gets information about a specific Model.
         /// </summary>
-        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
+        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the ListModels method. Format: models/model-id or tunedModels/my-model-id</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -570,21 +570,20 @@ namespace Mscc.GenerativeAI
             });
             string json = Serialize(request);
 
-            using (var fs = new FileStream(uri, FileMode.Open)){
-                var multipartContent = new MultipartContent("related");
-                multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
-                multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
-                {
-                    Headers = { 
-                        ContentType = new MediaTypeHeaderValue(mimeType), 
-                        ContentLength = totalBytes 
-                    }
-                });
+            using var fs = new FileStream(uri, FileMode.Open);
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
 
-                var response = await Client.PostAsync(url, multipartContent, cancellationToken);
-                await response.EnsureSuccessAsync();
-                return await Deserialize<UploadMediaResponse>(response);
-            }
+            var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<UploadMediaResponse>(response);
         }
 
 
@@ -653,7 +652,7 @@ namespace Mscc.GenerativeAI
         /// Lists the metadata for Files owned by the requesting project.
         /// </summary>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
-        /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="pageToken">A page token, received from a previous ListFiles call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -679,7 +678,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Gets the metadata for the given File.
         /// </summary>
-        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the ListFiles method. Format: files/file-id.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
@@ -702,7 +701,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Deletes a file.
         /// </summary>
-        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the ListFiles method. Format: files/file-id.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
@@ -786,7 +785,7 @@ namespace Mscc.GenerativeAI
             if (_useVertexAi)
             {
                 var fullText = new StringBuilder();
-                GroundingMetadata groundingMetadata = null;
+                GroundingMetadata? groundingMetadata = null;
                 var contents = await Deserialize<List<GenerateContentResponse>>(response);
                 foreach (var content in contents)
                 {
@@ -808,22 +807,10 @@ namespace Mscc.GenerativeAI
                     }
                 }
                 var result = contents.LastOrDefault();
-                if (result.Candidates is null)
-                {
-                    result.Candidates = new()
-                    {
-                        new()
-                        {
-                            Content = new()
-                            {
-                                Parts = new()
-                                {
-                                    new()
-                                }
-                            }
-                        }
-                    };
-                }
+                result.Candidates ??=
+                [
+                    new() { Content = new() { Parts = [new()] } }
+                ];
                 result.Candidates[0].GroundingMetadata = groundingMetadata;
                 result.Candidates[0].Content.Parts[0].Text = fullText.ToString();
                 return result;
@@ -951,27 +938,23 @@ namespace Mscc.GenerativeAI
             };
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
 
-            using (var payload = new StreamContent(ms))
-            {
-                message.Content = payload;
-                payload.Headers.ContentType = new MediaTypeHeaderValue(Constants.MediaType);
+            using var payload = new StreamContent(ms);
+            message.Content = payload;
+            payload.Headers.ContentType = new MediaTypeHeaderValue(Constants.MediaType);
 
-                using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            using var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            await response.EnsureSuccessAsync();
+            if (response.Content is not null)
+            {
+                using var stream = await response.Content.ReadAsStreamAsync();
+                // Ref: https://github.com/dotnet/runtime/issues/97128 - HttpIOException
+                // https://github.com/grpc/grpc-dotnet/issues/2361#issuecomment-1895805167 
+                await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(
+                                   stream, _options, cancellationToken))
                 {
-                    await response.EnsureSuccessAsync();
-                    if (response.Content is not null)
-                    {
-                        using var stream = await response.Content.ReadAsStreamAsync();
-                        // Ref: https://github.com/dotnet/runtime/issues/97128 - HttpIOException
-                        // https://github.com/grpc/grpc-dotnet/issues/2361#issuecomment-1895805167 
-                        await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(
-                                           stream, _options, cancellationToken))
-                        {
-                            if (cancellationToken.IsCancellationRequested)
-                                yield break;
-                            yield return item;
-                        }
-                    }
+                    if (cancellationToken.IsCancellationRequested)
+                        yield break;
+                    yield return item;
                 }
             }
         }
@@ -1046,26 +1029,22 @@ namespace Mscc.GenerativeAI
             // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
 
-            using (var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+            using var response = await Client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            await response.EnsureSuccessAsync();
+            if (response.Content is not null)
             {
-                await response.EnsureSuccessAsync();
-                if (response.Content is not null)
+                using var sr = new StreamReader(await response.Content.ReadAsStreamAsync());
+                while (!sr.EndOfStream)
                 {
-                    using (var sr = new StreamReader(await response.Content.ReadAsStreamAsync()))
-                    {
-                        while (!sr.EndOfStream)
-                        {
-                            var data = await sr.ReadLineAsync();
-                            if (string.IsNullOrWhiteSpace(data)) 
-                                continue;
+                    var data = await sr.ReadLineAsync();
+                    if (string.IsNullOrWhiteSpace(data)) 
+                        continue;
                             
-                            var item = JsonSerializer.Deserialize<GenerateContentResponse>(
-                                data.Substring("data:".Length).Trim(), _options);
-                            if (cancellationToken.IsCancellationRequested)
-                                yield break;
-                            yield return item;
-                        }
-                    }
+                    var item = JsonSerializer.Deserialize<GenerateContentResponse>(
+                        data.Substring("data:".Length).Trim(), _options);
+                    if (cancellationToken.IsCancellationRequested)
+                        yield break;
+                    yield return item;
                 }
             }
         }
@@ -1607,7 +1586,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <returns>List of available tuned models.</returns>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
-        /// <param name="pageToken">A page token, received from a previous models.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
         /// <exception cref="NotSupportedException"></exception>
         private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
@@ -1647,7 +1626,7 @@ namespace Mscc.GenerativeAI
         /// <param name="url">API endpoint to parse.</param>
         /// <param name="method">Method part of the URL to inject</param>
         /// <returns></returns>
-        private string ParseUrl(string url, string? method = default)
+        private string ParseUrl(string url, string method = "")
         {
             var replacements = GetReplacements();
             replacements.Add("method", method);
@@ -1664,8 +1643,8 @@ namespace Mscc.GenerativeAI
                     { "endpointGoogleAI", EndpointGoogleAi },
                     { "version", Version },
                     { "model", _model },
-                    { "apikey", _apiKey },
-                    { "projectid", _projectId },
+                    { "apikey", _apiKey ?? "" },
+                    { "projectid", _projectId ?? "" },
                     { "region", _region },
                     { "location", _region },
                     { "publisher", _publisher }
@@ -1734,10 +1713,8 @@ namespace Mscc.GenerativeAI
             {
                 var options = DefaultJsonSerializerOptions();
                 options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-                using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
-                {
-                    credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
-                }
+                using var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read);
+                credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
             }
 
             return credentials;
@@ -1768,7 +1745,7 @@ namespace Mscc.GenerativeAI
         /// <param name="arguments">Optional arguments given to the application to run.</param>
         /// <returns>Output from the application.</returns>
         /// <exception cref="Exception"></exception>
-        private string RunExternalExe(string filename, string? arguments = null)
+        private string RunExternalExe(string filename, string arguments)
         {
             var process = new Process();
 

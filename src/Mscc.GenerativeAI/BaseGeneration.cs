@@ -170,7 +170,7 @@ namespace Mscc.GenerativeAI
         /// <param name="url">API endpoint to parse.</param>
         /// <param name="method">Method part of the URL to inject</param>
         /// <returns></returns>
-        protected string ParseUrl(string url, string? method = default)
+        protected string ParseUrl(string url, string method = "")
         {
             var replacements = GetReplacements();
             replacements.Add("method", method);
@@ -187,8 +187,8 @@ namespace Mscc.GenerativeAI
                     { "endpointGoogleAI", EndpointGoogleAi },
                     { "version", Version },
                     { "model", _model },
-                    { "apikey", _apiKey },
-                    { "projectid", _projectId },
+                    { "apikey", _apiKey ?? "" },
+                    { "projectid", _projectId ?? "" },
                     { "region", _region },
                     { "location", _region },
                     { "publisher", _publisher }
@@ -212,7 +212,7 @@ namespace Mscc.GenerativeAI
         /// <typeparam name="T"></typeparam>
         /// <param name="response"></param>
         /// <returns></returns>
-        protected async Task<T> Deserialize<T>(HttpResponseMessage? response)
+        protected async Task<T> Deserialize<T>(HttpResponseMessage response)
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
             var json = await response.Content.ReadAsStringAsync();
@@ -291,7 +291,7 @@ namespace Mscc.GenerativeAI
         /// <param name="arguments">Optional arguments given to the application to run.</param>
         /// <returns>Output from the application.</returns>
         /// <exception cref="Exception"></exception>
-        private string RunExternalExe(string filename, string? arguments = null)
+        private string RunExternalExe(string filename, string arguments)
         {
             var process = new Process();
 
@@ -310,7 +310,7 @@ namespace Mscc.GenerativeAI
             var stdOutput = new StringBuilder();
             process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
 
-            string stdError = null;
+            string stdError;
             try
             {
                 process.Start();
