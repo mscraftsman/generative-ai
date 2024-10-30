@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
     /// Name of the model that supports image generation.
     /// The <see cref="ImageGenerationModel"/> can create high quality visual assets in seconds and brings Google's state-of-the-art vision and multimodal generative AI capabilities to application developers.
     /// </summary>
-    public class ImageGenerationModel : BaseGeneration
+    public sealed class ImageGenerationModel : BaseModel
     {
         private const string UrlVertexAi =
             "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
@@ -35,8 +35,9 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageGenerationModel(string? projectId = null, string? region = null,
-            string? model = null) : base(projectId, region, model)
+            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger)
         {
         }
 

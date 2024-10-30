@@ -17,19 +17,20 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public abstract class BaseGeneration : GenerationBase
+    public abstract class BaseModel : BaseLogger
     {
-        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+        protected virtual string Version => ApiVersion.V1;
+        protected virtual string EndpointGoogleAi => "https://generativelanguage.googleapis.com";
 
-        protected readonly string _region = "us-central1";
         protected readonly string _publisher = "google";
         protected readonly JsonSerializerOptions _options;
-        internal readonly Credentials? _credentials;
+        internal Credentials? _credentials;
 
         protected string _model;
         protected string? _apiKey;
         protected string? _accessToken;
         protected string? _projectId;
+        protected string _region = "us-central1";
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         protected static readonly Version _httpVersion = HttpVersion.Version11;
@@ -49,8 +50,6 @@ namespace Mscc.GenerativeAI
             DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
         };
 #endif
-
-        protected virtual string Version => ApiVersion.V1;
 
         internal string Model
         {
@@ -107,6 +106,15 @@ namespace Mscc.GenerativeAI
                 }
             }
         }
+
+        /// <summary>
+        /// Returns the region to use for the request.
+        /// </summary>
+        public string Region
+        {
+            get => _region;
+            set => _region = value;
+        }
         
         /// <summary>
         /// Sets the access token to use for the request.
@@ -134,7 +142,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseGeneration(ILogger? logger = null) : base(logger)
+        public BaseModel(ILogger? logger = null) : base(logger)
         {
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
@@ -159,7 +167,7 @@ namespace Mscc.GenerativeAI
         /// <param name="region"></param>
         /// <param name="model"></param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseGeneration(string? projectId = null, string? region = null, 
+        public BaseModel(string? projectId = null, string? region = null, 
             string? model = null, ILogger? logger = null) : this(logger)
         {
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
@@ -237,7 +245,7 @@ namespace Mscc.GenerativeAI
         /// Get default options for JSON serialization.
         /// </summary>
         /// <returns>default options for JSON serialization.</returns>
-        private JsonSerializerOptions DefaultJsonSerializerOptions()
+        protected JsonSerializerOptions DefaultJsonSerializerOptions()
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -261,7 +269,7 @@ namespace Mscc.GenerativeAI
         /// <remarks>This would usually be the secret.json file from Google Cloud Platform.</remarks>
         /// <param name="credentialsFile">File with credentials to read.</param>
         /// <returns>Credentials read from file.</returns>
-        private Credentials? GetCredentialsFromFile(string credentialsFile)
+        protected Credentials? GetCredentialsFromFile(string credentialsFile)
         {
             Credentials? credentials = null;
             if (File.Exists(credentialsFile))

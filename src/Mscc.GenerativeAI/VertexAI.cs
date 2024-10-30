@@ -14,7 +14,7 @@ namespace Mscc.GenerativeAI
     /// See <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview">Model reference</a>.
     /// See also https://cloud.google.com/nodejs/docs/reference/vertexai/latest/vertexai/vertexinit
     /// </remarks>
-    public sealed class VertexAI : GenerationBase, IGenerativeAI
+    public sealed class VertexAI : BaseLogger, IGenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";

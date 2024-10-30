@@ -16,7 +16,7 @@ namespace Mscc.GenerativeAI
     /// <remarks>
     /// See <a href="https://ai.google.dev/api/rest">Model reference</a>.
     /// </remarks>
-    public sealed class GoogleAI : GenerationBase, IGenerativeAI
+    public sealed class GoogleAI : BaseLogger, IGenerativeAI
     {
         private readonly string? _apiKey;
         private readonly string? _accessToken;

@@ -1,22 +1,27 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Security.Authentication;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 
 namespace Mscc.GenerativeAI
 {
-    public class FilesModel : BaseGeneration
+    public sealed class FilesModel : BaseModel
     {
         protected override string Version => ApiVersion.V1Beta;
-        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilesModel"/> class.
+        /// </summary>
+        public FilesModel() : this(logger: null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilesModel"/> class.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        public FilesModel(ILogger? logger) : base(logger) { }
         
         /// <summary>
         /// Lists the metadata for Files owned by the requesting project.
