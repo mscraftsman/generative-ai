@@ -14,7 +14,7 @@ namespace Mscc.GenerativeAI
     /// See <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview">Model reference</a>.
     /// See also https://cloud.google.com/nodejs/docs/reference/vertexai/latest/vertexai/vertexinit
     /// </remarks>
-    public sealed class VertexAI : GenerationBase, IGenerativeAI
+    public sealed class VertexAI : BaseLogger, IGenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";
@@ -51,7 +51,7 @@ namespace Mscc.GenerativeAI
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
-        public VertexAI(string projectId, string? region = null, ILogger? logger = null) : this(logger)
+        public VertexAI(string? projectId, string? region = null, ILogger? logger = null) : this(logger)
         {
             _projectId ??= projectId ?? throw new ArgumentNullException(nameof(projectId));
             _region = region ?? _region;

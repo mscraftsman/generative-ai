@@ -111,6 +111,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Metadata on the usage of the cached content.
         /// </summary>
-        public CachedContentUsageMetadata UsageMetadata { get; set; }
+        public CachedContentUsageMetadata? UsageMetadata { get; set; }
     }
 }

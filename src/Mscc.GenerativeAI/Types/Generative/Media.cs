@@ -103,7 +103,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public Blobstore2Info Blobstore2Info { get; set; }
         /// <summary>
-        /// Deprecated, use one of explicit hash type fields instead. These two hash related fields will only be populated on Scotty based media uploads and will contain the content of the hash group in the NotificationRequest: <see href="http://cs/#google3/blobstore2/api/scotty/service/proto/upload_listener.proto&q=class:Hash" /> Hex encoded hash value of the uploaded media.
+        /// Deprecated, use one of explicit hash type fields instead. These two hash related fields will only be populated on Scotty based media uploads and will contain the content of the hash group in the NotificationRequest: Hex encoded hash value of the uploaded media.
         /// </summary>
         public string Hash { get; set; }
         /// <summary>

@@ -239,9 +239,9 @@ namespace Mscc.GenerativeAI
         private (List<ContentResponse> history, ContentResponse content, GenerateContentResponse response) HandleAutomaticFunctionCalling(
             GenerateContentResponse response, 
             List<ContentResponse> history, 
-            GenerationConfig generationConfig, 
-            List<SafetySetting> safetySettings, 
-            List<Tool> tools)
+            GenerationConfig? generationConfig, 
+            List<SafetySetting>? safetySettings, 
+            List<Tool>? tools)
         {
             throw new NotImplementedException();
             // var functionResponseParts = new List<Part>();

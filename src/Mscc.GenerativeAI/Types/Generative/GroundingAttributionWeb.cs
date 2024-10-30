@@ -1,8 +1,17 @@
 ﻿namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GroundingAttributionWeb
     {
-        public string Title { get; set; } = default;
-        public string Uri { get; set; } = default;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? Title { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string? Uri { get; set; }
     }
 }

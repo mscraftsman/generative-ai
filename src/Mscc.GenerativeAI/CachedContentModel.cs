@@ -25,15 +25,6 @@ namespace Mscc.GenerativeAI
         public CachedContentModel()
         {
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cachedContentName"></param>
-        public CachedContentModel(string cachedContentName) : this()
-        {
-            cachedContentName = cachedContentName.SanitizeCachedContentName();
-        }
 
         /// <summary>
         /// Creates CachedContent resource.
@@ -62,7 +53,7 @@ namespace Mscc.GenerativeAI
         /// <remarks>The minimum input token count for context caching is 32,768, and the maximum is the same as the maximum for the given model.</remarks>
         /// <param name="model">Required. The name of the `Model` to use for cached content Format: `models/{model}`</param>
         /// <param name="displayName">Optional. The user-generated meaningful display name of the cached content. Maximum 128 Unicode characters.</param>
-        /// <param name="systemInstruction">Optional. Input only. Developer set system instruction. Currently text only.</param>
+        /// <param name="systemInstruction">Optional. Input only. Developer set system instruction. Currently, text only.</param>
         /// <param name="contents">Optional. Input only. The content to cache.</param>
         /// <param name="history">Optional. A chat history to initialize the session with.</param>
         /// <param name="ttl">Optional. Input only. New TTL for this resource, input only. A duration in seconds with up to nine fractional digits, ending with 's'</param>
@@ -113,7 +104,7 @@ namespace Mscc.GenerativeAI
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
             var cachedContents = await Deserialize<ListCachedContentsResponse>(response);
-            return cachedContents?.CachedContents!;
+            return cachedContents.CachedContents;
         }
         
         /// <summary>
@@ -140,6 +131,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request">The cached content resource to update.</param>
         /// <param name="ttl">Optional. Input only. New TTL for this resource, input only. A duration in seconds with up to nine fractional digits, ending with 's'</param>
+        /// <param name="updateMask">Optional. The list of fields to update.</param>
         /// <returns>The updated cached content resource.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="request.Name"/> is <see langword="null"/> or empty.</exception>
