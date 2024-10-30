@@ -6,7 +6,7 @@
 		<LangVersion>latest</LangVersion>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-		<NoWarn>$(NoWarn);CS1591</NoWarn>
+		<NoWarn>$(NoWarn);CS1591;IL3050;IL2026</NoWarn>
 		<PackageId>Mscc.GenerativeAI</PackageId>
 		<Title>MSCC GenerativeAI</Title>
 		<Product>MSCC GenerativeAI</Product>
