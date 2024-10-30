@@ -29,7 +29,6 @@ namespace Mscc.GenerativeAI
         private readonly bool _useVertexAi;
         private readonly string _publisher = "google";
         private readonly JsonSerializerOptions _options;
-        private readonly Credentials? _credentials;
         private readonly CachedContent? _cachedContent;
 
         private string _model;
@@ -120,7 +119,7 @@ namespace Mscc.GenerativeAI
 
         private string Model
         {
-            set => _model = value.SanitizeModelName() ?? throw new ArgumentNullException();
+            set => _model = value.SanitizeModelName();
         }
 
         /// <summary>
@@ -290,12 +289,12 @@ namespace Mscc.GenerativeAI
                 Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
                     "application_default_credentials.json");
-            _credentials = GetCredentialsFromFile(credentialsFile);
+            Credentials? credentials = GetCredentialsFromFile(credentialsFile);
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
                           GetAccessTokenFromAdc();
             ProjectId = projectId ??
                 Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                _credentials?.ProjectId ?? 
+                credentials?.ProjectId ?? 
                 _projectId;
             _region = region ?? _region;
             Model = model ?? _model;
@@ -1668,7 +1667,7 @@ namespace Mscc.GenerativeAI
         /// <typeparam name="T"></typeparam>
         /// <param name="response"></param>
         /// <returns></returns>
-        private async Task<T> Deserialize<T>(HttpResponseMessage? response)
+        private async Task<T> Deserialize<T>(HttpResponseMessage response)
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
             var json = await response.Content.ReadAsStringAsync();
@@ -1748,6 +1747,8 @@ namespace Mscc.GenerativeAI
         private string RunExternalExe(string filename, string arguments)
         {
             var process = new Process();
+            var stdOutput = new StringBuilder();
+            var stdError = new StringBuilder();
 
             process.StartInfo.FileName = filename;
             if (!string.IsNullOrEmpty(arguments))
@@ -1761,20 +1762,20 @@ namespace Mscc.GenerativeAI
 
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
-            var stdOutput = new StringBuilder();
-            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+            // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data);
+            process.ErrorDataReceived += (sender, args) => stdError.AppendLine(args.Data);
 
-            string stdError;
             try
             {
                 process.Start();
                 process.BeginOutputReadLine();
-                stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
             }
             catch (Exception e)
             {
-                throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+                // throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+                return string.Empty;
             }
 
             if (process.ExitCode == 0)
@@ -1785,9 +1786,10 @@ namespace Mscc.GenerativeAI
             {
                 var message = new StringBuilder();
 
-                if (!string.IsNullOrEmpty(stdError))
+                if (stdError.Length > 0)
                 {
-                    message.AppendLine(stdError);
+                    message.AppendLine("Err output:");
+                    message.AppendLine(stdError.ToString());
                 }
 
                 if (stdOutput.Length != 0)

@@ -2,12 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 #endif
 using System.Diagnostics;
@@ -56,7 +54,7 @@ namespace Mscc.GenerativeAI
         internal string Model
         {
             get => _model;
-            set => _model = value.SanitizeModelName() ?? throw new ArgumentNullException();
+            set => _model = value.SanitizeModelName();
         }
 
         /// <summary>
@@ -209,9 +207,9 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Return deserialized object from JSON response.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Type to deserialize response into.</typeparam>
+        /// <param name="response">Response from an API call in JSON format.</param>
+        /// <returns>An instance of type T.</returns>
         protected async Task<T> Deserialize<T>(HttpResponseMessage response)
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
@@ -226,8 +224,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Get default options for JSON serialization.
         /// </summary>
-        /// <returns></returns>
-        internal JsonSerializerOptions DefaultJsonSerializerOptions()
+        /// <returns>default options for JSON serialization.</returns>
+        private JsonSerializerOptions DefaultJsonSerializerOptions()
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -246,10 +244,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// 
+        /// Get credentials from specified file.
         /// </summary>
-        /// <param name="credentialsFile"></param>
-        /// <returns></returns>
+        /// <remarks>This would usually be the secret.json file from Google Cloud Platform.</remarks>
+        /// <param name="credentialsFile">File with credentials to read.</param>
+        /// <returns>Credentials read from file.</returns>
         private Credentials? GetCredentialsFromFile(string credentialsFile)
         {
             Credentials? credentials = null;
@@ -294,6 +293,8 @@ namespace Mscc.GenerativeAI
         private string RunExternalExe(string filename, string arguments)
         {
             var process = new Process();
+            var stdOutput = new StringBuilder();
+            var stdError = new StringBuilder();
 
             process.StartInfo.FileName = filename;
             if (!string.IsNullOrEmpty(arguments))
@@ -307,20 +308,20 @@ namespace Mscc.GenerativeAI
 
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
-            var stdOutput = new StringBuilder();
-            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+            // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data);
+            process.ErrorDataReceived += (sender, args) => stdError.AppendLine(args.Data);
 
-            string stdError;
             try
             {
                 process.Start();
                 process.BeginOutputReadLine();
-                stdError = process.StandardError.ReadToEnd();
                 process.WaitForExit();
             }
             catch (Exception e)
             {
-                throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+                // throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+                return string.Empty;
             }
 
             if (process.ExitCode == 0)
@@ -331,9 +332,10 @@ namespace Mscc.GenerativeAI
             {
                 var message = new StringBuilder();
 
-                if (!string.IsNullOrEmpty(stdError))
+                if (stdError.Length > 0)
                 {
-                    message.AppendLine(stdError);
+                    message.AppendLine("Err output:");
+                    message.AppendLine(stdError.ToString());
                 }
 
                 if (stdOutput.Length != 0)
