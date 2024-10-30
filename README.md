@@ -221,7 +221,7 @@ using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
 var model = new GenerativeModel(apiKey: apiKey);    // using default model: gemini-1.5-pro
-var chat = model.StartChat();
+var chat = model.StartChat();   // optionally pass a previous history in the constructor.
 
 // Instead of discarding you could also use the response and access `response.Text`.
 _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
