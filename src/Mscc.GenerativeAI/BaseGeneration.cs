@@ -268,10 +268,8 @@ namespace Mscc.GenerativeAI
             {
                 var options = DefaultJsonSerializerOptions();
                 options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-                using (var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read))
-                {
-                    credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
-                }
+                using var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read);
+                credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
             }
 
             return credentials;
@@ -283,7 +281,7 @@ namespace Mscc.GenerativeAI
         /// Reference: https://cloud.google.com/docs/authentication 
         /// </summary>
         /// <returns>The access token.</returns>
-        protected string GetAccessTokenFromAdc()
+        private string GetAccessTokenFromAdc()
         {
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
             {
