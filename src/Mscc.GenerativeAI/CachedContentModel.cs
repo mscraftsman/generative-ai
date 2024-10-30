@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace Mscc.GenerativeAI
@@ -14,17 +15,20 @@ namespace Mscc.GenerativeAI
     /// Content that has been preprocessed and can be used in subsequent request to GenerativeService.
     /// Cached content can be only used with model it was created for.
     /// </summary>
-    public class CachedContentModel : BaseGeneration
+    public sealed class CachedContentModel : BaseModel
     {
         protected override string Version => ApiVersion.V1Beta;
-        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
         
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="CachedContentModel"/> class.
         /// </summary>
-        public CachedContentModel()
-        {
-        }
+        public CachedContentModel() : this(logger: null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CachedContentModel"/> class.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        public CachedContentModel(ILogger? logger = null) : base(logger) { }
 
         /// <summary>
         /// Creates CachedContent resource.

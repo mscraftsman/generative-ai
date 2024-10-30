@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
     /// Name of the model that supports image captioning.
     /// <see cref="ImageTextModel"/> generates a caption from an image you provide based on the language that you specify. The model supports the following languages: English (en), German (de), French (fr), Spanish (es) and Italian (it).
     /// </summary>
-    public class ImageTextModel : BaseGeneration
+    public sealed class ImageTextModel : BaseModel
     {
         private const string UrlVertexAi =
             "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
@@ -35,8 +35,9 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageTextModel(string? projectId = null, string? region = null,
-            string? model = null) : base(projectId, region, model)
+            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger)
         {
         }
 
