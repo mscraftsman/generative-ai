@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - fix Application Default Credentials (ADC) has been loaded automatically even I use API Key auth. [#9](https://github.com/mscraftsman/generative-ai/issues/9)
+- fix Exception thrown in Google App Engine [#26](https://github.com/mscraftsman/generative-ai/issues/26)
 
 ## 1.8.0
 
