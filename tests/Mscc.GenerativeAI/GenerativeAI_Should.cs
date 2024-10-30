@@ -1,8 +1,8 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -13,24 +13,15 @@ namespace Test.Mscc.GenerativeAI
     /// https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/main/aiplatform/api/AIPlatform.Samples
     /// </summary>
     [Collection(nameof(ConfigurationFixture))]
-    public class GenerativeAiShould
+    public class GenerativeAiShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
-        private readonly string _model = Model.Gemini10ProVision;
-
-        public GenerativeAiShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
+        private readonly string _model = Model.Gemini15Flash;
 
         [Fact]
         public void Initialize_Interface_GoogleAI()
         {
             // Arrange
-            IGenerativeAI genAi;
-            genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var expected = _model.SanitizeModelName();
             
             // Act
@@ -43,11 +34,43 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public void Initialize_Interface_VertexAI()
+        {
+            // Arrange
+            IGenerativeAI genAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var expected = _model.SanitizeModelName();
+            
+            // Act
+            var model = genAi.GenerativeModel(model: _model);
+            
+            // Assert
+            genAi.Should().NotBeNull();
+            model.Should().NotBeNull();
+            model.Name.Should().Be($"{expected}");
+        }
+
+        [Fact]
+        public async Task GoogleAI_Should_Not_Load_Credentials()
+        {
+            // Arrange
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = genAi.GenerativeModel(model: _model);
+            var prompt = "I love Taipei. Give me a 15 words summary about it.";
+            
+            // Act
+            var response = await model.GenerateContent(prompt);
+            
+            // Assert
+            genAi.Should().NotBeNull();
+            model.Should().NotBeNull();
+            output.WriteLine($"{response.Text}");
+        }
+
+        [Fact]
         public async Task GetModel()
         {
             // Arrange
-            IGenerativeAI genAi;
-            genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var expected = Model.Embedding.SanitizeModelName();
 
             // Act
@@ -55,24 +78,11 @@ namespace Test.Mscc.GenerativeAI
             var getModel = await model.GetModel();
 
             // Assert
-            getModel.Name.SanitizeModelName().Should().Be(expected);
-        }
-
-        [Fact]
-        public void Initialize_Interface_VertexAI()
-        {
-            // Arrange
-            IGenerativeAI genAi;
-            genAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var expected = _model.SanitizeModelName();
-            
-            // Act
-            var model = genAi.GenerativeModel(model: _model);
-            
-            // Assert
             genAi.Should().NotBeNull();
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected}");
+            getModel.Should().NotBeNull();
+            getModel.Name.Should().NotBeNull();
+            getModel.Name!.SanitizeModelName().Should().Be(expected);
         }
     }
 }

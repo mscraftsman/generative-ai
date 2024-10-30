@@ -226,20 +226,14 @@ namespace Mscc.GenerativeAI
         {
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
-            var credentialsFile = 
-                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
-                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
-                    "application_default_credentials.json");
-            _credentials = GetCredentialsFromFile(credentialsFile);
-            
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
                      GenerativeAI.Model.Gemini15Pro;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
             
-            var productHeaderValue = new ProductHeaderValue(name:  "Mscc.GenerativeAI", version: Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            var productHeaderValue = new ProductHeaderValue(name: "Mscc.GenerativeAI", 
+                version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
             var productInfoHeaderValue = new ProductInfoHeaderValue(productHeaderValue);
             Client.DefaultRequestHeaders.UserAgent.Add(productInfoHeaderValue);
         }
@@ -291,6 +285,12 @@ namespace Mscc.GenerativeAI
             ToolConfig? toolConfig = null) : this()
         {
             _useVertexAi = true;
+            var credentialsFile = 
+                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
+                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
+                    "application_default_credentials.json");
+            _credentials = GetCredentialsFromFile(credentialsFile);
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
                           GetAccessTokenFromAdc();
             ProjectId = projectId ??
