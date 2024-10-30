@@ -21,6 +21,11 @@ namespace Mscc.GenerativeAI
         private string Url => UrlVertexAi;
 
         private string Method => GenerativeAI.Method.Predict;
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
+        /// </summary>
+        public ImageGenerationModel() : this(logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
@@ -37,9 +42,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageGenerationModel(string? projectId = null, string? region = null,
-            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger)
-        {
-        }
+            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger) { }
 
         /// <summary>
         /// Generates images from the specified <see cref="ImageGenerationRequest"/>.

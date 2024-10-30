@@ -17,19 +17,18 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public abstract class BaseGeneration : BaseLogger
+    public abstract class BaseModel : BaseLogger
     {
-        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+        protected const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
 
-        protected readonly string _region = "us-central1";
         protected readonly string _publisher = "google";
         protected readonly JsonSerializerOptions _options;
-        internal readonly Credentials? _credentials;
 
         protected string _model;
         protected string? _apiKey;
         protected string? _accessToken;
         protected string? _projectId;
+        protected string _region = "us-central1";
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         protected static readonly Version _httpVersion = HttpVersion.Version11;
@@ -87,6 +86,19 @@ namespace Mscc.GenerativeAI
         }
         
         /// <summary>
+        /// Sets the access token to use for the request.
+        /// </summary>
+        public string? AccessToken
+        {
+            set
+            {
+                _accessToken = value;
+                if (value != null)
+                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+            }
+        }
+        
+        /// <summary>
         /// Sets the project ID to use for the request.
         /// </summary>
         /// <remarks>
@@ -107,18 +119,14 @@ namespace Mscc.GenerativeAI
                 }
             }
         }
-        
+
         /// <summary>
-        /// Sets the access token to use for the request.
+        /// Returns the region to use for the request.
         /// </summary>
-        public string? AccessToken
+        public string Region
         {
-            set
-            {
-                _accessToken = value;
-                if (value != null)
-                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-            }
+            get => _region;
+            set => _region = value;
         }
 
         /// <summary>
@@ -134,17 +142,10 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseGeneration(ILogger? logger = null) : base(logger)
+        public BaseModel(ILogger? logger = null) : base(logger)
         {
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
-            var credentialsFile = 
-                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
-                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
-                    "application_default_credentials.json");
-            _credentials = GetCredentialsFromFile(credentialsFile);
-            
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
@@ -159,14 +160,20 @@ namespace Mscc.GenerativeAI
         /// <param name="region"></param>
         /// <param name="model"></param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseGeneration(string? projectId = null, string? region = null, 
+        public BaseModel(string? projectId = null, string? region = null, 
             string? model = null, ILogger? logger = null) : this(logger)
         {
-            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
+            var credentialsFile = 
+                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
+                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
+                    "application_default_credentials.json");
+            var credentials = GetCredentialsFromFile(credentialsFile);
+            AccessToken = _accessToken ?? 
                           GetAccessTokenFromAdc();
             ProjectId = projectId ??
                         Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                        _credentials?.ProjectId ?? 
+                        credentials?.ProjectId ?? 
                         _projectId;
             _region = region ?? _region;
             Model = model ?? _model;
