@@ -12,25 +12,17 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class ImageTextShould
+    public class ImageTextShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.ImageText;
 
-        public ImageTextShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
-        
         [Fact]
         public void Initialize_VertexAI()
         {
             // Arrange
 
             // Act
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Assert
             vertexAi.Should().NotBeNull();
@@ -41,7 +33,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.ImageText;
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Act
             var model = vertexAi.ImageTextModel();
@@ -55,7 +47,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Act
             var model = vertexAi.ImageTextModel();
@@ -69,7 +61,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Act
             var model = vertexAi.ImageTextModel(model: _model);
@@ -86,9 +78,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Image_Captions(string filename, string expected)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertexAi.ImageTextModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
 
             // Act
@@ -102,7 +94,7 @@ namespace Test.Mscc.GenerativeAI
             response.Predictions[0].Should().Contain(expected);
             foreach (var item in response.Predictions)
             {
-                _output.WriteLine($"Information: {item}");
+                output.WriteLine($"Information: {item}");
             }
         }
 
@@ -122,9 +114,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Image_Captions_Language(string filename, string language, string expected)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertexAi.ImageTextModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
 
             // Act
@@ -138,7 +130,7 @@ namespace Test.Mscc.GenerativeAI
             response.Predictions[0].Should().Contain(expected);
             foreach (var item in response.Predictions)
             {
-                _output.WriteLine($"Information: {item}");
+                output.WriteLine($"Information: {item}");
             }
         }
 
@@ -148,9 +140,9 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Is this in the mountains?";
             var filename = "cat.jpg";
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertexAi.ImageTextModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
 
             // Act
@@ -163,7 +155,7 @@ namespace Test.Mscc.GenerativeAI
                 .And.HaveCountLessThanOrEqualTo(8);
             foreach (var item in response.Predictions)
             {
-                _output.WriteLine($"Answer: {item}");
+                output.WriteLine($"Answer: {item}");
             }
         }
     }

@@ -11,17 +11,9 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAiEmbeddingShould
+    public class GoogleAiEmbeddingShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Embedding;
-
-        public GoogleAiEmbeddingShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
 
         [Fact]
         public void Initialize_Model()
@@ -30,7 +22,7 @@ namespace Test.Mscc.GenerativeAI
             var expected = Model.Embedding.SanitizeModelName();
 
             // Act
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -42,7 +34,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = genAi.GenerativeModel(model: _model);
 
             // Act
@@ -54,7 +46,7 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                _output.WriteLine(x.ToString());
+                output.WriteLine(x.ToString());
             });
         }
 
@@ -87,7 +79,7 @@ namespace Test.Mscc.GenerativeAI
                 "What is the meaning of life?",
                 "How much wood would a woodchuck chuck?",
                 "How does the brain work?"};
-            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = genAi.GenerativeModel(model: _model);
 
             // Act
@@ -101,7 +93,7 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                _output.WriteLine(x.ToString());
+                output.WriteLine(x.ToString());
             });
         }
     }

@@ -13,17 +13,9 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAiGeminiProShould
+    public class GoogleAiGeminiProShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini15Pro;
-
-        public GoogleAiGeminiProShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
 
         [Fact]
         public void Initialize_GoogleAI()
@@ -31,7 +23,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             
             // Act
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             
             // Assert
             googleAi.Should().NotBeNull();
@@ -42,7 +34,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             
             // Act
             var model = googleAi.GenerativeModel();
@@ -56,7 +48,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_EnvVars()
         {
             // Arrange
-            Environment.SetEnvironmentVariable("GOOGLE_API_KEY", _fixture.ApiKey);
+            Environment.SetEnvironmentVariable("GOOGLE_API_KEY", fixture.ApiKey);
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
 
             // Act
@@ -74,7 +66,7 @@ namespace Test.Mscc.GenerativeAI
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
 
             // Act
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             // Assert
             model.Should().NotBeNull();
@@ -88,7 +80,7 @@ namespace Test.Mscc.GenerativeAI
             var expected = _model;
 
             // Act
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -99,7 +91,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Models()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             // Act
             var sut = await model.ListModels();
@@ -109,8 +101,8 @@ namespace Test.Mscc.GenerativeAI
             sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.ForEach(x =>
             {
-                _output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
-                x.SupportedGenerationMethods.ForEach(m => _output.WriteLine($"  Method: {m}"));
+                output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
+                x.SupportedGenerationMethods.ForEach(m => output.WriteLine($"  Method: {m}"));
             });
         }
 
@@ -118,7 +110,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Models_Using_OAuth()
         {
             // Arrange
-            var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
+            var model = new GenerativeModel { AccessToken = fixture.AccessToken };
 
             // Act
             var sut = await model.ListModels();
@@ -128,8 +120,8 @@ namespace Test.Mscc.GenerativeAI
             sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.ForEach(x =>
             {
-                _output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
-                x.SupportedGenerationMethods.ForEach(m => _output.WriteLine($"  Method: {m}"));
+                output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
+                x.SupportedGenerationMethods.ForEach(m => output.WriteLine($"  Method: {m}"));
             });
         }
 
@@ -137,7 +129,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Tuned_Models()
         {
             // Arrange
-            var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
+            var model = new GenerativeModel { AccessToken = fixture.AccessToken };
 
             // Act
             var sut = await model.ListModels(true);
@@ -148,8 +140,8 @@ namespace Test.Mscc.GenerativeAI
             sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.ForEach(x =>
             {
-                _output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
-                x.TuningTask.Snapshots.ForEach(m => _output.WriteLine($"  Snapshot: {m}"));
+                output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
+                x.TuningTask.Snapshots.ForEach(m => output.WriteLine($"  Snapshot: {m}"));
             });
         }
 
@@ -162,7 +154,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             // Act
             var sut = await model.GetModel(model: modelName);
@@ -170,8 +162,8 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             sut.Should().NotBeNull();
             // sut.Name.Should().Be($"{modelName.SanitizeModelName()}");
-            _output.WriteLine($"Model: {sut.DisplayName} ({sut.Name})");
-            sut.SupportedGenerationMethods.ForEach(m => _output.WriteLine($"  Method: {m}"));
+            output.WriteLine($"Model: {sut.DisplayName} ({sut.Name})");
+            sut.SupportedGenerationMethods.ForEach(m => output.WriteLine($"  Method: {m}"));
         }
 
         [Theory]
@@ -179,7 +171,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_TunedModel_Information_Using_ApiKey(string modelName)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey);
 
             
             // Act & Assert
@@ -195,7 +187,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Model_Information_Using_OAuth(string modelName)
         {
             // Arrange
-            var model = new GenerativeModel { AccessToken = _fixture.AccessToken };
+            var model = new GenerativeModel { AccessToken = fixture.AccessToken };
             var expected = modelName;
             if (!expected.Contains("/"))
                 expected = $"{expected.SanitizeModelName()}";
@@ -206,14 +198,14 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             sut.Should().NotBeNull();
             sut.Name.Should().Be(expected);
-            _output.WriteLine($"Model: {sut.DisplayName} ({sut.Name})");
+            output.WriteLine($"Model: {sut.DisplayName} ({sut.Name})");
             if (sut.State is null)
             {
-                sut?.SupportedGenerationMethods?.ForEach(m => _output.WriteLine($"  Method: {m}"));
+                sut?.SupportedGenerationMethods?.ForEach(m => output.WriteLine($"  Method: {m}"));
             }
             else
             {
-                _output.WriteLine($"State: {sut.State}");
+                output.WriteLine($"State: {sut.State}");
             }
         }
 
@@ -222,7 +214,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -231,14 +223,14 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
         public async Task GenerateContent_WithEmptyPrompt_ThrowsArgumentNullException()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             string prompt = null;
 
             // Act & Assert
@@ -252,7 +244,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
             var model = googleAi.GenerativeModel(model: Model.Gemini10Pro001);
-            model.ApiKey = _fixture.ApiKey;
+            model.ApiKey = fixture.ApiKey;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -261,7 +253,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
         
         [Fact]
@@ -274,14 +266,14 @@ namespace Test.Mscc.GenerativeAI
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
             
             // Act
-            model.ApiKey = _fixture.ApiKey;
+            model.ApiKey = fixture.ApiKey;
             var response = await model.GenerateContent(prompt);
 
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -289,7 +281,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: Model.Gemini10Pro001);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
@@ -308,7 +300,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: Model.Gemini10Pro001);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
@@ -323,9 +315,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
                 if (response.Candidates[0].FinishReason is FinishReason.MaxTokens)
-                    _output.WriteLine("...");
+                    output.WriteLine("...");
                 else
-                    _output.WriteLine(response?.Text);
+                    output.WriteLine(response?.Text);
             }
         }
         
@@ -333,7 +325,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_MultiplePrompt()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is x multiplied by 2?" },
@@ -346,7 +338,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
             response.Text.Should().Be("84");
         }
 
@@ -355,7 +347,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -370,7 +362,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -378,7 +370,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a short poem about koi fish.";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(), 
@@ -401,7 +393,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateContent_WithNullRequest_ThrowsArgumentNullException()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             GenerateContentRequest request = null;
 
             // Act & Assert
@@ -413,7 +405,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = Role.User;
 
@@ -424,7 +416,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -432,7 +424,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
             model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
@@ -444,7 +436,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -452,7 +444,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
             model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
@@ -464,7 +456,7 @@ namespace Test.Mscc.GenerativeAI
             responseEvents.Should().NotBeNull();
             await foreach (var response in responseEvents)
             {
-                _output.WriteLine($"{response.Text}");
+                output.WriteLine($"{response.Text}");
             }
         }
 
@@ -473,7 +465,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
 
             // Act
             var responseStream = model.GenerateContentStream(prompt);
@@ -485,7 +477,7 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                _output.WriteLine(response?.Text);
+                output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -498,7 +490,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -516,7 +508,7 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                _output.WriteLine(response?.Text);
+                output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -528,7 +520,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateAnswer_WithValidRequest_ReturnsAnswerResponse()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: "YOUR_API_KEY", model: Model.AttributedQuestionAnswering);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: Model.AttributedQuestionAnswering);
             var request = new GenerateAnswerRequest("What is the capital of France?", AnswerStyle.Abstractive);
 
             // Act
@@ -548,7 +540,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
 
             // Act
             var response = await model.CountTokens(prompt);
@@ -556,7 +548,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.TotalTokens.Should().BeGreaterThanOrEqualTo(expected);
-            _output.WriteLine($"Tokens: {response?.TotalTokens}");
+            output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
         [Theory]
@@ -567,7 +559,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -581,14 +573,14 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.TotalTokens.Should().BeGreaterOrEqualTo(expected);
-            _output.WriteLine($"Tokens: {response?.TotalTokens}");
+            output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
         [Fact]
         public async Task Start_Chat()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -599,14 +591,14 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
         public async Task Start_Chat_With_History()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var history = new List<ContentResponse>
             {
                 new() { Role = Role.User, Text = "Hello" },
@@ -622,8 +614,8 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(prompt);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
             //output.WriteLine(response?.PromptFeedback);
         }
 
@@ -633,22 +625,22 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Multiple_Prompts()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat();
 
             // Act
             var prompt = "Hello, let's talk a bit about nature.";
             var response = await chat.SendMessage(prompt);
-            _output.WriteLine(prompt);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
             prompt = "What are all the colors in a rainbow?";
             response = await chat.SendMessage(prompt);
-            _output.WriteLine(prompt);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
             prompt = "Why does it appear when it rains?";
             response = await chat.SendMessage(prompt);
-            _output.WriteLine(prompt);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(prompt);
+            output.WriteLine(response?.Text);
 
             // Assert
             response.Should().NotBeNull();
@@ -662,7 +654,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Conversations()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat();
 
             // Act
@@ -674,8 +666,8 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             chat.History.ForEach(c =>
             {
-                _output.WriteLine($"{new string('-', 20)}");
-                _output.WriteLine($"{c.Role}: {c.Text}");
+                output.WriteLine($"{new string('-', 20)}");
+                output.WriteLine($"{c.Role}: {c.Text}");
             });
         }
 
@@ -685,7 +677,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Rewind_Conversation()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat();
             _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
             _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
@@ -699,18 +691,18 @@ namespace Test.Mscc.GenerativeAI
             entries.Should().NotBeNull();
             entries.Sent.Should().NotBeNull();
             entries.Received.Should().NotBeNull();
-            _output.WriteLine("------ Rewind ------");
-            _output.WriteLine($"{entries.Sent.Role}: {entries.Sent.Text}");
-            _output.WriteLine($"{new string('-', 20)}");
-            _output.WriteLine($"{entries.Received.Role}: {entries.Received.Text}");
-            _output.WriteLine($"{new string('-', 20)}");
+            output.WriteLine("------ Rewind ------");
+            output.WriteLine($"{entries.Sent.Role}: {entries.Sent.Text}");
+            output.WriteLine($"{new string('-', 20)}");
+            output.WriteLine($"{entries.Received.Role}: {entries.Received.Text}");
+            output.WriteLine($"{new string('-', 20)}");
             
             chat.History.Count.Should().Be(6);
-            _output.WriteLine("------ History -----");
+            output.WriteLine("------ History -----");
             chat.History.ForEach(c =>
             {
-                _output.WriteLine($"{new string('-', 20)}");
-                _output.WriteLine($"{c.Role}: {c.Text}");
+                output.WriteLine($"{new string('-', 20)}");
+                output.WriteLine($"{c.Role}: {c.Text}");
             });
         }
 
@@ -720,7 +712,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Conversations_Get_Last()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat();
             _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
             _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
@@ -732,14 +724,14 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
-            _output.WriteLine($"{sut.Role}: {sut.Text}");
+            output.WriteLine($"{sut.Role}: {sut.Text}");
         }
 
         [Fact]
         public async Task Start_Chat_Streaming()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -753,19 +745,19 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                _output.WriteLine(response?.Text);
+                output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
                 // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
             chat.History.Count.Should().Be(2);
-            _output.WriteLine($"{new string('-', 20)}");
-            _output.WriteLine("------ History -----");
+            output.WriteLine($"{new string('-', 20)}");
+            output.WriteLine("------ History -----");
             chat.History.ForEach(c =>
             {
-                _output.WriteLine($"{new string('-', 20)}");
-                _output.WriteLine($"{c.Role}: {c.Text}");
+                output.WriteLine($"{new string('-', 20)}");
+                output.WriteLine($"{c.Role}: {c.Text}");
             });
         }
 
@@ -775,7 +767,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "What is the sum of the first 50 prime numbers?";
-            var genAi = new GoogleAI(_fixture.ApiKey);
+            var genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(Model.Gemini15Flash,
                 tools: [new Tool { CodeExecution = new() }]);
 
@@ -785,7 +777,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            _output.WriteLine(string.Join(Environment.NewLine,
+            output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates[0].Content.Parts.Select(x => 
                     x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
@@ -864,7 +856,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             List<Tool> tools =
             [
                 new Tool()
@@ -966,8 +958,8 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
-            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
-            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
         [Fact]
@@ -976,7 +968,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             List<Tool> tools =
             [
                 new Tool()
@@ -1112,7 +1104,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -1121,7 +1113,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             List<Tool> tools =
             [
                 new Tool()
@@ -1273,15 +1265,15 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
-            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
-            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
         [Fact(Skip = "Work in progress")]
         public Task Function_Calling_Chat()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var chat = model.StartChat(tools: new List<Tool>());
             var chatInput1 = "What is the weather in Boston?";
 
@@ -1303,7 +1295,7 @@ namespace Test.Mscc.GenerativeAI
         public Task Function_Calling_ContentStream()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
@@ -1345,7 +1337,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: Model.Gemini10Pro001)
             {
-                AccessToken = _fixture.AccessToken, ProjectId = _fixture.ProjectId
+                AccessToken = fixture.AccessToken, ProjectId = fixture.ProjectId
             };
             var request = new CreateTunedModelRequest()
             {
@@ -1384,8 +1376,8 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Name.Should().NotBeNull();
             response.Metadata.Should().NotBeNull();
-            _output.WriteLine($"Name: {response.Name}");
-            _output.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Metadata.TotalSteps})");
+            output.WriteLine($"Name: {response.Name}");
+            output.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Metadata.TotalSteps})");
         }
 
         [Fact]
@@ -1394,7 +1386,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: Model.Gemini10Pro001)
             {
-                AccessToken = _fixture.AccessToken, ProjectId = _fixture.ProjectId
+                AccessToken = fixture.AccessToken, ProjectId = fixture.ProjectId
             };
             var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
@@ -1423,8 +1415,8 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Name.Should().NotBeNull();
             response.Metadata.Should().NotBeNull();
-            _output.WriteLine($"Name: {response.Name}");
-            _output.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Metadata.TotalSteps})");
+            output.WriteLine($"Name: {response.Name}");
+            output.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Metadata.TotalSteps})");
         }
         
         [Fact]
@@ -1434,8 +1426,8 @@ namespace Test.Mscc.GenerativeAI
             var modelName = "tunedModels/number-generator-model-psx3d3gljyko";     // see List_Tuned_Models for available options.
             var model = new GenerativeModel()
             {
-                AccessToken = _fixture.AccessToken,
-                ProjectId = _fixture.ProjectId
+                AccessToken = fixture.AccessToken,
+                ProjectId = fixture.ProjectId
             };
             
             // Act
@@ -1443,7 +1435,7 @@ namespace Test.Mscc.GenerativeAI
             
             // Assert
             response.Should().NotBeNull();
-            _output.WriteLine(response);
+            output.WriteLine(response);
         }
 
         [Theory]
@@ -1456,8 +1448,8 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = new GenerativeModel(apiKey: null, model: "tunedModels/autogenerated-test-model-48gob9c9v54p")
             {
-                AccessToken = _fixture.AccessToken,
-                ProjectId = _fixture.ProjectId
+                AccessToken = fixture.AccessToken,
+                ProjectId = fixture.ProjectId
             };
 
             // Act
@@ -1467,7 +1459,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
             response?.Text.Should().Be(expected);
         }
     }

@@ -87,6 +87,13 @@ namespace Test.Mscc.GenerativeAI
         {
             // Act
             var result = await _cachedContent.List();
+
+            // Assert
+            result.Should().NotBeNull();
+            foreach (CachedContent item in result)
+            {
+                _output.WriteLine($"{item.Name} ({item.Expiration})");
+            }
         }
 
         [Theory]
@@ -109,6 +116,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var cachedContents = await _cachedContent.List();
             var name = cachedContents.FirstOrDefault()?.Name;
+            _output.WriteLine(name);
             
             // Act
             var response = await _cachedContent.Delete(name);
@@ -154,7 +162,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"{response?.Text}");
+            _output.WriteLine($"{response.Text}");
         }
 
         [Fact]
@@ -185,7 +193,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"{response?.Text}");
+            _output.WriteLine($"{response.Text}");
         }        
 
         [Fact]
@@ -204,9 +212,9 @@ namespace Test.Mscc.GenerativeAI
             ];
 
             var response = await chat.SendMessage(parts);
-            _output.WriteLine($"model: {response?.Text}");
+            _output.WriteLine($"model: {response.Text}");
             response = await chat.SendMessage("Okay, could you tell me more about the trans-lunar injection");
-            _output.WriteLine($"model: {response?.Text}");
+            _output.WriteLine($"model: {response.Text}");
             
             var cache = await _cachedContent.Create(
                 _model,
@@ -225,7 +233,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"model: {response?.Text}");
+            _output.WriteLine($"model: {response.Text}");
         }        
     }
 }

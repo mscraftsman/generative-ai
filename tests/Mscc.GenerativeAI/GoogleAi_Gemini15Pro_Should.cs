@@ -14,17 +14,9 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAiGemini15ProShould
+    public class GoogleAiGemini15ProShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini15ProLatest;
-
-        public GoogleAiGemini15ProShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
 
         [Fact]
         public void Initialize_Gemini15Pro()
@@ -32,7 +24,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -46,7 +38,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
             var model = googleAi.GenerativeModel(model: _model);
-            model.ApiKey = _fixture.ApiKey;
+            model.ApiKey = fixture.ApiKey;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -55,7 +47,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -68,14 +60,14 @@ namespace Test.Mscc.GenerativeAI
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
 
             // Act
-            model.ApiKey = _fixture.ApiKey;
+            model.ApiKey = fixture.ApiKey;
             var response = await model.GenerateContent(prompt);
 
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -83,7 +75,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
             model.UseJsonMode = true;
 
@@ -94,7 +86,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -102,7 +94,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
             model.UseJsonMode = true;
 
@@ -113,7 +105,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
         
         [Fact]
@@ -121,7 +113,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
@@ -137,14 +129,14 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
         public async Task Generate_Text_From_Image()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
@@ -163,7 +155,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain("red");
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -171,7 +163,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
             var request = new GenerateContentRequest(prompt);
@@ -187,7 +179,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Theory]
@@ -198,7 +190,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
             var parts = new List<IPart>
             {
@@ -219,7 +211,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain(expected);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Theory]
@@ -231,7 +223,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Describe_AddMedia_From_ImageFile(string filename, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt)
             {
                 GenerationConfig = new GenerationConfig()
@@ -250,7 +242,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain(expected);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -258,7 +250,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
 
@@ -270,7 +262,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -278,7 +270,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png", useOnline: true);
 
@@ -290,7 +282,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Theory]
@@ -307,7 +299,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", filename);
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             
             // Act
@@ -325,14 +317,14 @@ namespace Test.Mscc.GenerativeAI
             response.File.SizeBytes.Should().BeGreaterThan(0);
             response.File.Sha256Hash.Should().NotBeNull();
             response.File.Uri.Should().NotBeNull();
-            _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
+            output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
         }
 
         [Fact]
         public async Task Upload_File_TooLarge_ThrowsMaxUploadFileSizeException()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "toolarge.jpg");
             var displayName = "Too Large File";
@@ -360,7 +352,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Upload_File_WithResume_Using_FileAPI()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             model.Timeout = TimeSpan.FromMinutes(5);
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "resume.jpg");
@@ -388,7 +380,7 @@ namespace Test.Mscc.GenerativeAI
             response.File.SizeBytes.Should().BeGreaterThan(0);
             response.File.Sha256Hash.Should().NotBeNull();
             response.File.Uri.Should().NotBeNull();
-            _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");            
+            output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");            
 
             // House keeping
             File.Delete(filePath);
@@ -408,7 +400,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", filename);
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
 
             // Act
@@ -428,7 +420,7 @@ namespace Test.Mscc.GenerativeAI
                 response.File.SizeBytes.Should().BeGreaterThan(0);
                 response.File.Sha256Hash.Should().NotBeNull();
                 response.File.Uri.Should().NotBeNull();
-                _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
+                output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
             }
         }
 
@@ -436,7 +428,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Files()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
 
             // Act
@@ -447,9 +439,9 @@ namespace Test.Mscc.GenerativeAI
             sut.Files.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.Files.ForEach(x =>
             {
-                _output.WriteLine($"Display Name: {x.DisplayName}");
-                _output.WriteLine($"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
-                _output.WriteLine($"Uri: {x.Uri}");
+                output.WriteLine($"Display Name: {x.DisplayName}");
+                output.WriteLine($"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
+                output.WriteLine($"Uri: {x.Uri}");
             });
         }
 
@@ -457,7 +449,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_File()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var files = await ((GoogleAI)genAi).ListFiles();
             var fileName = files.Files.FirstOrDefault().Name;
@@ -467,27 +459,27 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
-            _output.WriteLine($"Retrieved file '{sut.DisplayName}'");
-            _output.WriteLine($"File: {sut.Name} (MimeType: {sut.MimeType}, Size: {sut.SizeBytes} bytes, Created: {sut.CreateTime} UTC, Updated: {sut.UpdateTime} UTC)");
-            _output.WriteLine(($"Uri: {sut.Uri}"));
+            output.WriteLine($"Retrieved file '{sut.DisplayName}'");
+            output.WriteLine($"File: {sut.Name} (MimeType: {sut.MimeType}, Size: {sut.SizeBytes} bytes, Created: {sut.CreateTime} UTC, Updated: {sut.UpdateTime} UTC)");
+            output.WriteLine(($"Uri: {sut.Uri}"));
         }
         
         [Fact]
         public async Task Delete_File()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var files = await ((GoogleAI)genAi).ListFiles();
             var fileName = files.Files.FirstOrDefault().Name;
-            _output.WriteLine($"File: {fileName}");
+            output.WriteLine($"File: {fileName}");
             
             // Act
             var response = await model.DeleteFile(fileName);
             
             // Assert
             response.Should().NotBeNull();
-            _output.WriteLine(response);
+            output.WriteLine(response);
         }
 
         [Fact]
@@ -495,12 +487,12 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Describe the image with a creative description";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("image/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -511,7 +503,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -519,13 +511,13 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Make a short story from the media resources. The media resources are:";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("image/")))
             {
-                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+                output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -537,7 +529,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -545,13 +537,13 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Listen carefully to the following audio file. Provide a brief summary.";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("audio/")))
             {
-                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+                output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -563,7 +555,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -574,12 +566,12 @@ namespace Test.Mscc.GenerativeAI
 Provide chapter titles with timestamps, be concise and short, no need to provide chapter summaries.
 Do not make up any information that is not part of the audio and do not be verbose.
 ";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -590,7 +582,7 @@ Do not make up any information that is not part of the audio and do not be verbo
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -598,12 +590,12 @@ Do not make up any information that is not part of the audio and do not be verbo
         {
             // Arrange
             var prompt = @"Your are a very professional document summarization specialist. Please summarize the given document.";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("application/pdf")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -614,7 +606,7 @@ Do not make up any information that is not part of the audio and do not be verbo
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -624,12 +616,12 @@ Do not make up any information that is not part of the audio and do not be verbo
             var prompt = @"Can you transcribe this interview, in the format of timecode, speaker, caption.
 Use speaker A, speaker B, etc. to identify the speakers.
 ";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -642,7 +634,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 // response.Text.Should().NotBeEmpty();
-                _output.WriteLine(response?.Text);
+                output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
                 // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -657,13 +649,13 @@ Use speaker A, speaker B, etc. to identify the speakers.
             var prompt = @"Can you transcribe this interview, in the format of timecode, speaker, caption.
 Use speaker A, speaker B, etc. to identify the speakers.
 ";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("audio/")).FirstOrDefault();
-            _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
             // Act
@@ -675,7 +667,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             {
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                _output.WriteLine(response?.Text);
+                output.WriteLine(response?.Text);
             }
         }
 
@@ -684,13 +676,13 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Describe this video clip.";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("video/")))
             {
-                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+                output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -702,7 +694,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -710,13 +702,13 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Make a short story from the media resources. The media resources are:";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("video/")))
             {
-                _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+                output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
 
@@ -728,7 +720,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
         
         [Fact(Skip = "Bad Request due to FileData part")]
@@ -736,7 +728,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Describe the image with a creative description";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var generationConfig = new GenerationConfig
             {
                 Temperature = 0.4f,
@@ -760,7 +752,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact(Skip = "Bad Request due to FileData part")]
@@ -768,7 +760,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Parts.Add(new FileData
             {
@@ -784,7 +776,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -793,7 +785,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             // Arrange
             var systemInstruction = new Content("You are a friendly pirate. Speak like one.");
             var prompt = "Good morning! How are you?";
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
             var request = new GenerateContentRequest(prompt);
 
@@ -804,7 +796,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"{response?.Text}");
+            output.WriteLine($"{response?.Text}");
         }
 
         [Fact]
@@ -831,7 +823,7 @@ Answer:";
                 new() { Category = HarmCategory.HarmCategorySexuallyExplicit, Threshold = HarmBlockThreshold.BlockLowAndAbove },
                 new() { Category = HarmCategory.HarmCategoryDangerousContent, Threshold = HarmBlockThreshold.BlockLowAndAbove }
             };
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
             var request = new GenerateContentRequest(prompt, generationConfig, safetySettings);
 
@@ -842,14 +834,14 @@ Answer:";
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"{prompt} {response?.Text}");
+            output.WriteLine($"{prompt} {response?.Text}");
         }
 
         [Fact(Skip = "The 'gs' scheme is not supported.")]
         public async Task Multimodal_Video_Input()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: _fixture.ApiKey, model: _model);
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var video = await TestExtensions.ReadImageFileBase64Async("gs://cloud-samples-data/video/animals.mp4");
             var request = new GenerateContentRequest("What's in the video?");
             request.Contents[0].Role = Role.User;
@@ -864,7 +856,7 @@ Answer:";
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Text.Should().Contain("Zootopia");
-            _output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
         }
 
         [Theory]
@@ -872,13 +864,13 @@ Answer:";
         public async Task Count_Tokens_Audio(int expected)
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var files = await ((GoogleAI)genAi).ListFiles();
             foreach (var file in files.Files.Where(x => x.MimeType.StartsWith("audio/")))
             {
-                _output.WriteLine($"File: {file.Name}");
+                output.WriteLine($"File: {file.Name}");
                 request.Contents.Add(new Content
                 {
                     Role = Role.User,
@@ -892,14 +884,14 @@ Answer:";
             // Assert
             response.Should().NotBeNull();
             response.TotalTokens.Should().BeGreaterOrEqualTo(expected);
-            _output.WriteLine($"Tokens: {response?.TotalTokens}");
+            output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
         [Fact]
         public async Task Count_Tokens_Audio_FileApi()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel(_model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var files = await ((GoogleAI)genAi).ListFiles();
@@ -910,7 +902,7 @@ Answer:";
 
             // Assert
             response.Should().NotBeNull();
-            _output.WriteLine($"Tokens: {response?.TotalTokens}");
+            output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
     }
 }
