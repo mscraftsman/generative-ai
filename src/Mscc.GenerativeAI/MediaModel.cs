@@ -2,24 +2,31 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Security.Authentication;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public class MediaModel : BaseGeneration
+    public sealed class MediaModel : BaseModel
     {
         protected override string Version => ApiVersion.V1Beta;
-        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
         
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaModel"/> class.
+        /// </summary>
+        public MediaModel() : this(logger: null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaModel"/> class.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        public MediaModel(ILogger? logger) : base(logger) { }
+
         /// <summary>
         /// Uploads a file to the File API backend.
         /// </summary>
@@ -68,21 +75,20 @@ namespace Mscc.GenerativeAI
             });
             string json = Serialize(request);
 
-            using (var fs = new FileStream(uri, FileMode.Open)){
-                var multipartContent = new MultipartContent("related");
-                multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
-                multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
-                {
-                    Headers = { 
-                        ContentType = new MediaTypeHeaderValue(mimeType), 
-                        ContentLength = totalBytes 
-                    }
-                });
+            using var fs = new FileStream(uri, FileMode.Open);
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
 
-                var response = await Client.PostAsync(url, multipartContent, cancellationToken);
-                await response.EnsureSuccessAsync();
-                return await Deserialize<UploadMediaResponse>(response);
-            }
+            var response = await Client.PostAsync(url, multipartContent, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<UploadMediaResponse>(response);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace Mscc.GenerativeAI
@@ -12,7 +13,7 @@ namespace Mscc.GenerativeAI
     /// Name of the model that supports image generation.
     /// The <see cref="ImageGenerationModel"/> can create high quality visual assets in seconds and brings Google's state-of-the-art vision and multimodal generative AI capabilities to application developers.
     /// </summary>
-    public class ImageGenerationModel : BaseGeneration
+    public sealed class ImageGenerationModel : BaseModel
     {
         private const string UrlVertexAi =
             "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
@@ -20,13 +21,18 @@ namespace Mscc.GenerativeAI
         private string Url => UrlVertexAi;
 
         private string Method => GenerativeAI.Method.Predict;
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
+        /// </summary>
+        public ImageGenerationModel() : this(logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public ImageGenerationModel() { }
+        public ImageGenerationModel(ILogger? logger = null) : base(logger) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Vertex AI Gemini API.
@@ -34,10 +40,9 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageGenerationModel(string? projectId = null, string? region = null,
-            string? model = null) : base(projectId, region, model)
-        {
-        }
+            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger) { }
 
         /// <summary>
         /// Generates images from the specified <see cref="ImageGenerationRequest"/>.

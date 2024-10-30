@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 
 namespace Mscc.GenerativeAI
 {
@@ -13,7 +14,7 @@ namespace Mscc.GenerativeAI
     /// See <a href="https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/overview">Model reference</a>.
     /// See also https://cloud.google.com/nodejs/docs/reference/vertexai/latest/vertexai/vertexinit
     /// </remarks>
-    public sealed class VertexAI : IGenerativeAI
+    public sealed class VertexAI : BaseLogger, IGenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";
@@ -36,7 +37,7 @@ namespace Mscc.GenerativeAI
         /// <description>Identifier of the Google Cloud region to use (default: "us-central1").</description></item>
         /// </list>
         /// </remarks>
-        private VertexAI()
+        private VertexAI(ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
             _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
@@ -47,9 +48,10 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
-        /// <param name="region">Region to use (default: "us-central1").</param>
+        /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
-        public VertexAI(string? projectId, string? region = null) : this()
+        public VertexAI(string? projectId, string? region = null, ILogger? logger = null) : this(logger)
         {
             _projectId ??= projectId ?? throw new ArgumentNullException(nameof(projectId));
             _region = region ?? _region;

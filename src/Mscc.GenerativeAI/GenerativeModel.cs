@@ -4,62 +4,31 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Authentication;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
-using System.Diagnostics;
-using System.Net;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public class GenerativeModel
+    public class GenerativeModel : BaseModel
     {
-        private const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
         private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
 
         private readonly bool _useVertexAi;
-        private readonly string _publisher = "google";
-        private readonly JsonSerializerOptions _options;
         private readonly CachedContent? _cachedContent;
 
-        private string _model;
-        private string? _apiKey;
-        private string? _accessToken;
-        private string? _projectId;
-        private string _region = "us-central1";
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
         private List<Tool>? _tools;
         private ToolConfig? _toolConfig;
         private Content? _systemInstruction;
-
-#if NET472_OR_GREATER || NETSTANDARD2_0
-        private static readonly Version _httpVersion = HttpVersion.Version11;
-        private static readonly HttpClient Client = new HttpClient(new HttpClientHandler
-        {
-            SslProtocols = SslProtocols.Tls12
-        });
-#else
-        private static readonly Version _httpVersion = HttpVersion.Version11;
-        private static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
-        {
-            PooledConnectionLifetime = TimeSpan.FromMinutes(30),
-            EnableMultipleHttp2Connections = true
-        })
-        {
-            DefaultRequestVersion = _httpVersion,
-            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
-        };
-#endif
 
         private string Url
         {
@@ -75,7 +44,7 @@ namespace Mscc.GenerativeAI
             }
         }
 
-        private string Version
+        protected override string Version
         {
             get
             {
@@ -117,83 +86,6 @@ namespace Mscc.GenerativeAI
         
         internal bool IsVertexAI => _useVertexAi;
 
-        private string Model
-        {
-            set => _model = value.SanitizeModelName();
-        }
-
-        /// <summary>
-        /// Sets the API key to use for the request.
-        /// </summary>
-        /// <remarks>
-        /// The value can only be set or modified before the first request is made.
-        /// </remarks>
-        public string? ApiKey
-        {
-            set
-            {
-                _apiKey = value;
-                if (!string.IsNullOrEmpty(_apiKey))
-                {
-                    if (Client.DefaultRequestHeaders.Contains("x-goog-api-key"))
-                    {
-                        Client.DefaultRequestHeaders.Remove("x-goog-api-key");
-                    }
-                    Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Sets the project ID to use for the request.
-        /// </summary>
-        /// <remarks>
-        /// The value can only be set or modified before the first request is made.
-        /// </remarks>
-        public string? ProjectId
-        {
-            set
-            {
-                _projectId = value;
-                if (!string.IsNullOrEmpty(_projectId))
-                {
-                    if (Client.DefaultRequestHeaders.Contains("x-goog-user-project"))
-                    {
-                        Client.DefaultRequestHeaders.Remove("x-goog-user-project");
-                    }
-                    Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns the region to use for the request.
-        /// </summary>
-        public string Region
-        {
-            get => _region;
-            set => _region = value;
-        }
-
-        /// <summary>
-        /// Returns the name of the model. 
-        /// </summary>
-        /// <returns>Name of the model.</returns>
-        public string Name => _model;
-        
-        /// <summary>
-        /// Sets the access token to use for the request.
-        /// </summary>
-        public string? AccessToken
-        {
-            set
-            {
-                _accessToken = value;
-                if (value != null)
-                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-            }
-        }
-
         /// <summary>
         /// You can enable Server Sent Events (SSE) for gemini-1.0-pro
         /// </summary>
@@ -206,30 +98,21 @@ namespace Mscc.GenerativeAI
         /// Activate JSON Mode (default = no)
         /// </summary>
         public bool UseJsonMode { get; set; } = false;
-
+        
         /// <summary>
-        /// Gets or sets the timespan to wait before the request times out.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// </summary>
-        public TimeSpan Timeout
-        {
-            get => Client.Timeout;
-            set => Client.Timeout = value;
-        }
+        public GenerativeModel() : this(logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public GenerativeModel()
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        public GenerativeModel(ILogger? logger = null) : base(logger)
         {
-            _options = DefaultJsonSerializerOptions();
-            GenerativeAIExtensions.ReadDotEnv();
-            ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
-            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
-                     GenerativeAI.Model.Gemini15Pro;
-            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
+            Logger.LogGenerativeModelInvoking();
             
             var productHeaderValue = new ProductHeaderValue(name: "Mscc.GenerativeAI", 
                 version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
@@ -247,21 +130,25 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
             Content? systemInstruction = null,
-            ToolConfig? toolConfig = null) : this()
+            ToolConfig? toolConfig = null, 
+            ILogger? logger = null) : this(logger)
         {
+            Logger.LogGenerativeModelInvoking();
+
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
             _generationConfig ??= generationConfig;
             _safetySettings ??= safetySettings;
-            _tools = tools;
-            _toolConfig = toolConfig;
-            _systemInstruction = systemInstruction;
+            _tools ??= tools;
+            _toolConfig ??= toolConfig;
+            _systemInstruction ??= systemInstruction;
         }
 
         /// <summary>
@@ -275,29 +162,19 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         internal GenerativeModel(string? projectId = null, string? region = null, 
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
             Content? systemInstruction = null,
-            ToolConfig? toolConfig = null) : this()
+            ToolConfig? toolConfig = null,
+            ILogger? logger = null) : base(projectId, region, model, logger)
         {
+            Logger.LogGenerativeModelInvoking();
+
             _useVertexAi = true;
-            var credentialsFile = 
-                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
-                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
-                    "application_default_credentials.json");
-            Credentials? credentials = GetCredentialsFromFile(credentialsFile);
-            AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ?? 
-                          GetAccessTokenFromAdc();
-            ProjectId = projectId ??
-                Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                credentials?.ProjectId ?? 
-                _projectId;
-            _region = region ?? _region;
-            Model = model ?? _model;
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
             _tools = tools;
@@ -311,10 +188,12 @@ namespace Mscc.GenerativeAI
         /// <param name="cachedContent">Content that has been preprocessed.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
         internal GenerativeModel(CachedContent cachedContent, 
             GenerationConfig? generationConfig = null, 
-            List<SafetySetting>? safetySettings = null) : this()
+            List<SafetySetting>? safetySettings = null,
+            ILogger? logger = null) : this(logger)
         {
             _cachedContent = cachedContent ?? throw new ArgumentNullException(nameof(cachedContent));
             
@@ -327,6 +206,43 @@ namespace Mscc.GenerativeAI
         }
 
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
+
+        /// <summary>
+        /// Get a list of available tuned models and description.
+        /// </summary>
+        /// <returns>List of available tuned models.</returns>
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <exception cref="NotSupportedException"></exception>
+        private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
+            string? pageToken = null, 
+            string? filter = null)
+        {
+            if (_useVertexAi)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
+            }
+
+            var url = "{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken,
+                [nameof(filter)] = filter
+            };
+
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            var response = await Client.GetAsync(url);
+            await response.EnsureSuccessAsync();
+            var models = await Deserialize<ListTunedModelResponse>(response);
+            return models?.TunedModels!;
+        }
 
         /// <summary>
         /// Lists models available through the API.
@@ -764,7 +680,10 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            
+            Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContent), url, json);
+            
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
 
             if (requestOptions != null)
             {
@@ -923,6 +842,8 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
 
+            if (Logger.IsEnabled(LogLevel.Debug)) Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContentStream), url, Serialize(request));
+            
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
             var ms = new MemoryStream();
@@ -1576,245 +1497,6 @@ namespace Mscc.GenerativeAI
             return await Deserialize<EmbedTextResponse>(response);
         }
 
-        #endregion
-
-        #region "Private methods"
-
-        /// <summary>
-        /// Get a list of available tuned models and description.
-        /// </summary>
-        /// <returns>List of available tuned models.</returns>
-        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
-        /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
-        /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
-        /// <exception cref="NotSupportedException"></exception>
-        private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
-            string? pageToken = null, 
-            string? filter = null)
-        {
-            if (_useVertexAi)
-            {
-                throw new NotSupportedException();
-            }
-
-            if (!string.IsNullOrEmpty(_apiKey))
-            {
-                throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
-            }
-
-            var url = "{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
-            var queryStringParams = new Dictionary<string, string?>()
-            {
-                [nameof(pageSize)] = Convert.ToString(pageSize), 
-                [nameof(pageToken)] = pageToken,
-                [nameof(filter)] = filter
-            };
-
-            url = ParseUrl(url).AddQueryString(queryStringParams);
-            var response = await Client.GetAsync(url);
-            await response.EnsureSuccessAsync();
-            var models = await Deserialize<ListTunedModelResponse>(response);
-            return models?.TunedModels!;
-        }
-        
-        /// <summary>
-        /// Parses the URL template and replaces the placeholder with current values.
-        /// Given two API endpoints for Google AI Gemini and Vertex AI Gemini this
-        /// method uses regular expressions to replace placeholders in a URL template with actual values.
-        /// </summary>
-        /// <param name="url">API endpoint to parse.</param>
-        /// <param name="method">Method part of the URL to inject</param>
-        /// <returns></returns>
-        private string ParseUrl(string url, string method = "")
-        {
-            var replacements = GetReplacements();
-            replacements.Add("method", method);
-
-            var urlParsed = Regex.Replace(url, @"\{(?<name>.*?)\}",
-                match => replacements.TryGetValue(match.Groups["name"].Value, out var value) ? value : "");
-
-            return urlParsed;
-
-            Dictionary<string, string> GetReplacements()
-            {
-                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                {
-                    { "endpointGoogleAI", EndpointGoogleAi },
-                    { "version", Version },
-                    { "model", _model },
-                    { "apikey", _apiKey ?? "" },
-                    { "projectid", _projectId ?? "" },
-                    { "region", _region },
-                    { "location", _region },
-                    { "publisher", _publisher }
-                };
-            }
-        }
-
-        /// <summary>
-        /// Return serialized JSON string of request payload.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        private string Serialize<T>(T request)
-        {
-            return JsonSerializer.Serialize(request, _options);
-        }
-
-        /// <summary>
-        /// Return deserialized object from JSON response.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response"></param>
-        /// <returns></returns>
-        private async Task<T> Deserialize<T>(HttpResponseMessage response)
-        {
-#if NET472_OR_GREATER || NETSTANDARD2_0
-            var json = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(json, _options);
-#else
-            var json = await response.Content.ReadAsStringAsync();
-            return await response.Content.ReadFromJsonAsync<T>(_options);
-#endif
-        }
-
-        /// <summary>
-        /// Get default options for JSON serialization.
-        /// </summary>
-        /// <returns></returns>
-        internal JsonSerializerOptions DefaultJsonSerializerOptions()
-        {
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-                NumberHandling = JsonNumberHandling.AllowReadingFromString,
-                PropertyNameCaseInsensitive = true,
-                ReadCommentHandling = JsonCommentHandling.Skip,
-                AllowTrailingCommas = true,
-                //WriteIndented = true,
-            };
-            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
-
-            return options;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="credentialsFile"></param>
-        /// <returns></returns>
-        private Credentials? GetCredentialsFromFile(string credentialsFile)
-        {
-            Credentials? credentials = null;
-            if (File.Exists(credentialsFile))
-            {
-                var options = DefaultJsonSerializerOptions();
-                options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-                using var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read);
-                credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
-            }
-
-            return credentials;
-        }
-
-        /// <summary>
-        /// This method uses the gcloud command-line tool to retrieve an access token from the Application Default Credentials (ADC).
-        /// It is specific to Google Cloud Platform and allows easy authentication with the Gemini API on Google Cloud.
-        /// Reference: https://cloud.google.com/docs/authentication 
-        /// </summary>
-        /// <returns>The access token.</returns>
-        private string GetAccessTokenFromAdc()
-        {
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-            {
-                return RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token").TrimEnd();
-            }
-            else
-            {
-                return RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
-            }
-        }
-        
-        /// <summary>
-        /// Run an external application as process in the underlying operating system, if possible.
-        /// </summary>
-        /// <param name="filename">The command or application to run.</param>
-        /// <param name="arguments">Optional arguments given to the application to run.</param>
-        /// <returns>Output from the application.</returns>
-        /// <exception cref="Exception"></exception>
-        private string RunExternalExe(string filename, string arguments)
-        {
-            var process = new Process();
-            var stdOutput = new StringBuilder();
-            var stdError = new StringBuilder();
-
-            process.StartInfo.FileName = filename;
-            if (!string.IsNullOrEmpty(arguments))
-            {
-                process.StartInfo.Arguments = arguments;
-            }
-
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.UseShellExecute = false;
-
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
-            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data);
-            process.ErrorDataReceived += (sender, args) => stdError.AppendLine(args.Data);
-
-            try
-            {
-                process.Start();
-                process.BeginOutputReadLine();
-                process.WaitForExit();
-            }
-            catch (Exception e)
-            {
-                // throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
-                return string.Empty;
-            }
-
-            if (process.ExitCode == 0)
-            {
-                return stdOutput.ToString();
-            }
-            else
-            {
-                var message = new StringBuilder();
-
-                if (stdError.Length > 0)
-                {
-                    message.AppendLine("Err output:");
-                    message.AppendLine(stdError.ToString());
-                }
-
-                if (stdOutput.Length != 0)
-                {
-                    message.AppendLine("Std output:");
-                    message.AppendLine(stdOutput.ToString());
-                }
-
-                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode + ": " + message);
-            }
-        }
-
-        /// <summary>
-        /// Formatting string for logging purpose.
-        /// </summary>
-        /// <param name="filename">The command or application to run.</param>
-        /// <param name="arguments">Optional arguments given to the application to run.</param>
-        /// <returns>Formatted string containing parameter values.</returns>
-        private string Format(string filename, string? arguments)
-        {
-            return "'" + filename + 
-                ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
-                "'";
-        }
-        
         #endregion
     }
 }

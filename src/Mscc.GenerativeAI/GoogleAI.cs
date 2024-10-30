@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 
 namespace Mscc.GenerativeAI
 {
@@ -15,7 +16,7 @@ namespace Mscc.GenerativeAI
     /// <remarks>
     /// See <a href="https://ai.google.dev/api/rest">Model reference</a>.
     /// </remarks>
-    public sealed class GoogleAI : IGenerativeAI
+    public sealed class GoogleAI : BaseLogger, IGenerativeAI
     {
         private readonly string? _apiKey;
         private readonly string? _accessToken;
@@ -36,7 +37,7 @@ namespace Mscc.GenerativeAI
         /// <description>Optional. Access token provided by OAuth 2.0 or Application Default Credentials (ADC).</description></item>
         /// </list>
         /// </remarks>
-        private GoogleAI()
+        private GoogleAI(ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
@@ -49,7 +50,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">Identifier of the Google Cloud project</param>
         /// <param name="accessToken">Access token for the Google Cloud project</param>
-        public GoogleAI(string? apiKey = null, string? accessToken = null) : this()
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        public GoogleAI(string? apiKey = null, string? accessToken = null, ILogger? logger = null) : this(logger)
         {
             _apiKey ??= apiKey;
             _accessToken ??= accessToken;
