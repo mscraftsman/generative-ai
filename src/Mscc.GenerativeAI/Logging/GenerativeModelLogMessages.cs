@@ -44,5 +44,15 @@ namespace Mscc.GenerativeAI
             string methodName,
             string url,
             string payload);
+
+        /// <summary>
+        /// Logs <see cref="BaseModel"/> when exception thrown to run an external application.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="message">Message of <see cref="System.Exception"/> to log.</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Warning, Message = "{Message}")]
+        public static partial void LogRunExternalExe(
+            this ILogger logger,
+            string message);
     }
 }

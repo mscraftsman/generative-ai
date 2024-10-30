@@ -330,7 +330,7 @@ namespace Mscc.GenerativeAI
             }
             catch (Exception e)
             {
-                // throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+                Logger.LogRunExternalExe("OS error while executing " + Format(filename, arguments)+ ": " + e.Message);
                 return string.Empty;
             }
 
