@@ -7,7 +7,7 @@
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
         <NoWarn>$(NoWarn);CS1591</NoWarn>
-        <PackageId>Mscc.GenerativeAI.Google</PackageId>
+        <PackageId>Mscc.GenerativeAI.Microsoft</PackageId>
         <Title>MSCC GenerativeAI for .NET integrating with Microsoft.Extensions.AI and Semantic Kernel.</Title>
         <Product>MSCC GenerativeAI for .NET integrating with Microsoft.Extensions.AI and Semantic Kernel.</Product>
         <Description>Gemini AI Client for .NET</Description>
