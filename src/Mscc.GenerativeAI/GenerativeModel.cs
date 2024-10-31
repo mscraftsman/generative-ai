@@ -72,6 +72,8 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Method.EmbedText;
                     case GenerativeAI.Model.Embedding:
                         return GenerativeAI.Method.EmbedContent;
+                    case GenerativeAI.Model.TextEmbedding:
+                        return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
                 }
