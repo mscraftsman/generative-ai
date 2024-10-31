@@ -19,16 +19,27 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public ContentResponse? Content { get; set; }
         /// <summary>
-        /// Optional. Optional task type for which the embeddings will be used. Can only be set for `models/embedding-001`.
+        /// Optional. Optional task type for which the embeddings will be used.
         /// </summary>
+        /// <remarks>
+        /// Can only be set for `models/embedding-001`.
+        /// </remarks>
         public TaskType? TaskType { get; set; }
         /// <summary>
-        /// Optional. An optional title for the text. Only applicable when TaskType is `RETRIEVAL_DOCUMENT`. Note: Specifying a `title` for `RETRIEVAL_DOCUMENT` provides better quality embeddings for retrieval.
+        /// Optional. An optional title for the text.
         /// </summary>
+        /// <remarks>
+        /// Only applicable when TaskType is `RETRIEVAL_DOCUMENT`.
+        /// Note: Specifying a `title` for `RETRIEVAL_DOCUMENT` provides better quality embeddings for retrieval.
+        /// </remarks>
         public string? Title { get; set; }
         /// <summary>
-        /// Optional. Optional reduced dimension for the output embedding. If set, excessive values in the output embedding are truncated from the end. Supported by newer models since 2024, and the earlier model (`models/embedding-001`) cannot specify this value.
+        /// Optional. Optional reduced dimension for the output embedding.
         /// </summary>
+        /// <remarks>
+        /// If set, excessive values in the output embedding are truncated from the end.
+        /// Supported by newer models since 2024, and the earlier model (`models/embedding-001`) cannot specify this value.
+        /// </remarks>
         public int? OutputDimensionality { get; set; } 
 
         /// <summary>
@@ -42,7 +53,7 @@ namespace Mscc.GenerativeAI
         /// <param name="prompt"></param>
         public EmbedContentRequest(string prompt)
         {
-            Content = new() { Text = prompt };
+            Content = new() { Text = prompt, Role = GenerativeAI.Role.User};
         }
 
         /// <summary>
