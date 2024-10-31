@@ -47,10 +47,10 @@ namespace Test.Mscc.GenerativeAI
         public async Task Initialize_Caching_with_Exception()
         {
             // Act
-            Func<Task> sut = async () => await _cachedContent.Create(_model);
+            Func<Task> action = async () => await _cachedContent.Create(_model);
             
             // Assert
-            await sut.Should().ThrowAsync<HttpRequestException>();
+            await action.Should().ThrowAsync<HttpRequestException>();
         }
 
         [Theory(Skip = "Skipped due to the configured HttpClient.Timeout of 100 seconds elapsing.")]
