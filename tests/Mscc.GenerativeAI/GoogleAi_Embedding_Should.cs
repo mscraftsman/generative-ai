@@ -59,6 +59,27 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Embed_Content_TextEmbedding()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = genAi.GenerativeModel(model: Model.TextEmbedding);
+
+            // Act
+            var response = await model.EmbedContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Embedding.Should().NotBeNull();
+            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.Embedding.Values.ForEach(x =>
+            {
+                _output.WriteLine(x.ToString());
+            });
+        }
+
+        [Fact]
         public async Task Embed_Content_Batches()
         {
             // Arrange
