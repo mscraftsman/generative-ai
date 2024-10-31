@@ -51,7 +51,10 @@ namespace Mscc.GenerativeAI
 
         protected virtual string Version => ApiVersion.V1;
 
-        internal string Model
+        /// <summary>
+        /// Gets or sets the name of the model to use.
+        /// </summary>
+        public string Model
         {
             get => _model;
             set => _model = value.SanitizeModelName();
