@@ -69,6 +69,9 @@ jobs:
     - name: Pack for .NET using Google Cloud Client Library
       run: |
         dotnet pack -c Release ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj -o output/
+    - name: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
+      run: |
+        dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -o output/
     - name: Push to GitHub Package Registry (GPR)
       run: |
         dotnet nuget push output/*.nupkg --skip-duplicate

@@ -15,6 +15,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.8.2
+
+### Added
+
+- new NuGet package `Mscc.GenerativeAI.Microsoft` leveraging Microsoft.Extensions.AI abstractions to build a unified AI client
+
+### Changed
+
+- set role for embedding request
+
+### Fixed
+
+- fix endpoint method of `text-embedding-004`
+
 ## 1.8.1
 
 ### Added
