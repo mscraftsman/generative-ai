@@ -3,7 +3,7 @@ using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
 
 GenerativeAIExtensions.ReadDotEnv();
-var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY")!;
 var model = "gemini-1.5-pro-latest";
 var prompt = "What is AI?";
 
