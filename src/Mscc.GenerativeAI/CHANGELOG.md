@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.8.3
+
+### Added 
+
+- add Grounding with Google Search
+- add `ModelVersion` property
+
 ## 1.8.2
 
 ### Added

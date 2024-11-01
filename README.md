@@ -36,7 +36,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="1.8.1" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="1.8.3" />
   </ItemGroup>
 ```
 
@@ -147,7 +147,7 @@ var prompt = "Write a story about a magic backpack.";
 
 var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiPro);
 
-var response = model.GenerateContent(prompt).Result;
+var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
 ```
 
@@ -167,7 +167,7 @@ var vertex = new VertexAI(projectId: projectId, region: region);
 var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
 
-var response = model.GenerateContent(prompt).Result;
+var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
 ```
 
@@ -187,6 +187,9 @@ var prompt = "Good morning! How are you?";
 IGenerativeAI genAi = new GoogleAI(apiKey);
 var model = genAi.GenerativeModel(Model.Gemini15ProLatest, systemInstruction: systemInstruction);
 var request = new GenerateContentRequest(prompt);
+
+var response = await model.GenerateContent(prompt);
+Console.WriteLine(response.Text);
 ```
 
 The response might look similar to this:
@@ -194,6 +197,20 @@ The response might look similar to this:
 Ahoy there, matey! I be doin' finer than a freshly swabbed poop deck on this fine mornin', how about yerself?  
 Shimmer me timbers, it's good to see a friendly face!  
 What brings ye to these here waters?
+```
+
+### Grounding with Google Search
+
+```csharp
+var apiKey = "your_api_key";
+var prompt = "Who won Wimbledon this year?";
+IGenerativeAI genAi = new GoogleAI(apiKey);
+var model = genAi.GenerativeModel("gemini-1.5-pro-002",
+    tools: [new Tool { GoogleSearchRetrieval = 
+        new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
+
+var response = await model.GenerateContent(prompt);
+Console.WriteLine(response.Text);
 ```
 
 ### Text-and-image input
