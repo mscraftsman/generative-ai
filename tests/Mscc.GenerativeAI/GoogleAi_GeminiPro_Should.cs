@@ -771,7 +771,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Fact]
         // Ref: https://ai.google.dev/api/generate-content#code-execution
-        public async Task Code_Execution()
+        public async Task Generate_Content_Code_Execution()
         {
             // Arrange
             var prompt = "What is the sum of the first 50 prime numbers?";
@@ -790,6 +790,72 @@ namespace Test.Mscc.GenerativeAI
                     x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
+        }
+
+        [Fact]
+        // Ref: https://ai.google.dev/gemini-api/docs/grounding
+        public async Task Generate_Content_Grounding_Search()
+        {
+            // Arrange
+            var prompt = "Who won Wimbledon this year?";
+            var genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel("gemini-1.5-pro-002",
+                tools: [new Tool { GoogleSearchRetrieval = new() }]);
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].GroundingMetadata.Should().NotBeNull();
+            response.Candidates![0].GroundingMetadata!.SearchEntryPoint.Should().NotBeNull();
+            response.Candidates![0].GroundingMetadata!.WebSearchQueries.Should().NotBeNull();
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Select(x => x.Text)
+//                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToArray()));
+            response.Candidates![0].GroundingMetadata!.GroundingChunks!
+                .ForEach(c => 
+                    _output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].GroundingMetadata!.WebSearchQueries!
+                    .Select(w => w)
+                    .ToArray()));
+            _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+        }
+
+        [Fact]
+        // Ref: https://ai.google.dev/gemini-api/docs/grounding
+        public async Task Generate_Content_Grounding_Search_Dictionary()
+        {
+            // Arrange
+            var prompt = "Who won Wimbledon this year?";
+            var genAi = new GoogleAI(_fixture.ApiKey);
+            var model = genAi.GenerativeModel("gemini-1.5-pro-002",
+                tools: [new Tool { GoogleSearchRetrieval = 
+                    new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Select(x => x.Text)
+//                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToArray()));
+            response.Candidates![0].GroundingMetadata!.GroundingChunks!
+                .ForEach(c => 
+                    _output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].GroundingMetadata!.WebSearchQueries!
+                    .Select(w => w)
+                    .ToArray()));
+            _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
         
         [Fact]
