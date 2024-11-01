@@ -45,6 +45,10 @@ namespace Mscc.GenerativeAI
         /// Usage metadata about the response(s).
         /// </summary>
         public UsageMetadata? UsageMetadata { get; set; }
+        /// <summary>
+        /// Output only. The model version used to generate the response.
+        /// </summary>
+        public string? ModelVersion { get; set; }
 
         /// <summary>
         /// A convenience overload to easily access the responded text.
