@@ -13,7 +13,7 @@ steps:
   - task: UseDotNet@2
     displayName: 'Install .NET SDK'
     inputs:
-      version: 8.x
+      version: 9.x
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
 

@@ -1,43 +1,43 @@
 # outline the steps to build a .NET project, pack it as Nuget package and push it to Nuget source feed
 steps:
 # Build the projects
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Build for .NET
   entrypoint: 'dotnet'
   args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj']
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Build for ASP.NET Core
   entrypoint: 'dotnet'
   args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj']
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Build for .NET using Google Cloud Client Library
   entrypoint: 'dotnet'
   args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj']
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Build for Microsoft.Extension.AI and Microsoft Semantic Kernel
   entrypoint: 'dotnet'
   args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj']
 
 # Pack the NuGet packages
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Pack for .NET
   entrypoint: 'dotnet'
   args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj', '-o', 'output/']
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Pack for ASP.NET Core
   entrypoint: 'dotnet'
   args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', '-o', 'output/']
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Pack for .NET using Google Cloud Client Library
   entrypoint: 'dotnet'
   args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', '-o', 'output/']
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
   entrypoint: 'dotnet'
   args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj', '-o', 'output/']
 
 # Push the packages to NuGet source feed
-- name: 'mcr.microsoft.com/dotnet/sdk:8.0'
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Push
   entrypoint: 'dotnet'
   args: ['nuget', 'push', 'output/*.nupkg', '--skip-duplicate', '-s', 'https://api.nuget.org/v3/index.json', '-k', '${_NUGET_API_KEY}']
