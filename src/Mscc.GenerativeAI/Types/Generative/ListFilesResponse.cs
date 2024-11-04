@@ -1,8 +1,6 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
 using System.Collections.Generic;
 #endif
-using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
@@ -21,10 +19,4 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string? NextPageToken { get; set; }
     }
-
-    /// <summary>
-    /// A file uploaded to the API.
-    /// </summary>
-    [DebuggerDisplay("{Name} ({MimeType})")]
-    public class FileResponse : FileResource { }
 }
