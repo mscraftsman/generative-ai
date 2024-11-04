@@ -1304,7 +1304,47 @@ namespace Mscc.GenerativeAI
             
             return new ChatSession(this, history, config, safety, tool, enableAutomaticFunctionCalling);
         }
+
+        /// <summary>
+        /// Performs a prediction request.
+        /// </summary>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <returns>Prediction response.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<PredictResponse> Predict(PredictRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var method = GenerativeAI.Method.Predict;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            var response = await Client.PostAsync(url, payload);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<PredictResponse>(response);
+        }
         
+        /// <summary>
+        /// Same as Predict but returns an LRO.
+        /// </summary>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <returns>Prediction response.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<Operation> PredictLongRunning(PredictLongRunningRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var method = GenerativeAI.Method.PredictLongRunning;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            var response = await Client.PostAsync(url, payload);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<Operation>(response);
+        }
+      
         #region "PaLM 2" methods
 
         /// <summary>
