@@ -239,7 +239,6 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="tuningJob"/> is null.</exception>
-        // Todo: Review parameters to configure model.
         internal GenerativeModel(TuningJob tuningJob,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
