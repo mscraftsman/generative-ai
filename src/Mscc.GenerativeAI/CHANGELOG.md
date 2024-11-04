@@ -8,12 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
 - implement Automatic Function Call (AFC)
-
 ### Changed
 ### Fixed
+
+## 1.9.0
+
+### Added
+
+- add .NET 9.0 targeting
+- add feature: Interact with Vertex Tuned Models ([#36](https://github.com/mscraftsman/generative-ai/issues/36))
+- add model/service for generated files
+- add method(s) to call Predict endpoints
+
+### Changed
+
+- refactor handling of base URLs and API endpoints
+- check request(s) for unsupported combination of options
+- update method to batch embeddings
 
 ## 1.8.3
 
