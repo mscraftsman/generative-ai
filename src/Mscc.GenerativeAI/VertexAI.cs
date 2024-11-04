@@ -23,6 +23,7 @@ namespace Mscc.GenerativeAI
         private GenerativeModel? _generativeModel;
         private ImageGenerationModel? _imageGenerationModel;
         private ImageTextModel? _imageTextModel;
+        private SupervisedTuningJobModel? _tuningJobModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
