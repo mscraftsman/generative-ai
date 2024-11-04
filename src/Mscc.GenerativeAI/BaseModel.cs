@@ -19,7 +19,8 @@ namespace Mscc.GenerativeAI
 {
     public abstract class BaseModel : BaseLogger
     {
-        protected const string EndpointGoogleAi = "https://generativelanguage.googleapis.com";
+        protected const string BaseUrlGoogleAi = "https://generativelanguage.googleapis.com/{version}";
+        protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}";
 
         protected readonly string _publisher = "google";
         protected readonly JsonSerializerOptions _options;
@@ -205,11 +206,12 @@ namespace Mscc.GenerativeAI
             {
                 return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    { "endpointGoogleAI", EndpointGoogleAi },
+                    { "BaseUrlGoogleAi", BaseUrlGoogleAi },
+                    { "BaseUrlVertexAi", BaseUrlVertexAi },
                     { "version", Version },
                     { "model", _model },
                     { "apikey", _apiKey ?? "" },
-                    { "projectid", _projectId ?? "" },
+                    { "projectId", _projectId ?? "" },
                     { "region", _region },
                     { "location", _region },
                     { "publisher", _publisher },

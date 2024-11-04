@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var url = $"{EndpointGoogleAi}/{Version}/cachedContents";
+            var url = $"{BaseUrlGoogleAi}/cachedContents";
             url = ParseUrl(url);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -97,7 +97,7 @@ namespace Mscc.GenerativeAI
         public async Task<List<CachedContent>> List(int? pageSize = 50, 
             string? pageToken = null)
         {
-            var url = $"{EndpointGoogleAi}/{Version}/cachedContents";
+            var url = $"{BaseUrlGoogleAi}/cachedContents";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
@@ -123,7 +123,7 @@ namespace Mscc.GenerativeAI
 
             cachedContentName = cachedContentName.SanitizeCachedContentName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{cachedContentName}";
+            var url = $"{BaseUrlGoogleAi}/{cachedContentName}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
@@ -144,7 +144,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrEmpty(request.Name)) throw new ArgumentException("Value cannot be null or empty.", nameof(request.Name));
 
-            var url = $"{EndpointGoogleAi}/{Version}/{request.Name}";
+            var url = $"{BaseUrlGoogleAi}/{request.Name}";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(updateMask)] = updateMask
@@ -181,7 +181,7 @@ namespace Mscc.GenerativeAI
 
             cachedContentName = cachedContentName.SanitizeCachedContentName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{cachedContentName}";
+            var url = $"{BaseUrlGoogleAi}/{cachedContentName}";
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
             await response.EnsureSuccessAsync();

@@ -18,7 +18,7 @@ namespace Mscc.GenerativeAI
 {
     public class GenerativeModel : BaseModel
     {
-        private const string UrlGoogleAi = "{endpointGoogleAI}/{version}/{model}:{method}";
+        private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
         private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
 
         private readonly bool _useVertexAi;
@@ -39,6 +39,10 @@ namespace Mscc.GenerativeAI
                 if (_useVertexAi)
                 {
                     url = UrlVertexAi;
+                    if (!string.IsNullOrEmpty(_endpointId))
+                    {
+                        url = $"{BaseUrlVertexAi}/{_endpointId}";
+                    }
                 }
 
                 return url;
@@ -235,7 +239,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = "{endpointGoogleAI}/{Version}/tunedModels";   // v1beta3
+            var url = "{BaseUrlGoogleAi}/tunedModels";   // v1beta3
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
@@ -272,7 +276,7 @@ namespace Mscc.GenerativeAI
                 return await ListTunedModels(pageSize, pageToken, filter);
             }
 
-            var url = "{endpointGoogleAI}/{Version}/models";
+            var url = "{BaseUrlGoogleAi}/models";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
@@ -304,7 +308,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"{EndpointGoogleAi}/{Version}/{model}";
+            var url = $"{BaseUrlGoogleAi}/{model}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
@@ -333,7 +337,7 @@ namespace Mscc.GenerativeAI
             // var method = "createTunedModel";
             // if (_model is (string)Model.BisonText001)
             //     method = "createTunedTextModel";
-            var url = "{endpointGoogleAI}/{Version}/{method}";   // v1beta3
+            var url = "{BaseUrlGoogleAi}/{method}";   // v1beta3
             url = ParseUrl(url, method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -360,7 +364,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
+            var url = $"{BaseUrlGoogleAi}/{model}";   // v1beta3
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
             await response.EnsureSuccessAsync();
@@ -387,7 +391,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"{EndpointGoogleAi}/{Version}/{model}";   // v1beta3
+            var url = $"{BaseUrlGoogleAi}/{model}";   // v1beta3
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(updateMask)] = updateMask
@@ -583,7 +587,7 @@ namespace Mscc.GenerativeAI
         {
             this.GuardSupported();
             
-            var url = "{endpointGoogleAI}/{Version}/files";
+            var url = "{BaseUrlGoogleAi}/files";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
@@ -612,7 +616,7 @@ namespace Mscc.GenerativeAI
 
             file = file.SanitizeFileName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{file}";
+            var url = $"{BaseUrlGoogleAi}/{file}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
@@ -635,7 +639,7 @@ namespace Mscc.GenerativeAI
 
             file = file.SanitizeFileName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{file}";   // v1beta3
+            var url = $"{BaseUrlGoogleAi}/{file}";   // v1beta3
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
             await response.EnsureSuccessAsync();

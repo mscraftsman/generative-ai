@@ -36,7 +36,7 @@ namespace Mscc.GenerativeAI
         {
             // this.GuardSupported();
             
-            var url = "{endpointGoogleAI}/{Version}/files";
+            var url = $"{BaseUrlGoogleAi}/files";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 
@@ -64,7 +64,7 @@ namespace Mscc.GenerativeAI
 
             file = file.SanitizeFileName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{file}";
+            var url = $"{BaseUrlGoogleAi}/{file}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
@@ -86,7 +86,7 @@ namespace Mscc.GenerativeAI
 
             file = file.SanitizeFileName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{file}";   // v1beta3
+            var url = $"{BaseUrlGoogleAi}/{file}";   // v1beta3
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
             await response.EnsureSuccessAsync();

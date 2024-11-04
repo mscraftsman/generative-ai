@@ -170,7 +170,7 @@ namespace Mscc.GenerativeAI
 
             file = file.SanitizeGeneratedFileName();
 
-            var url = $"{EndpointGoogleAi}/{Version}/{file}";
+            var url = $"{BaseUrlGoogleAi}/{file}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
