@@ -7,12 +7,12 @@ using System.Diagnostics;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Response from ListFiles method containing a paginated list of Files.
+    /// Response from ListFiles method containing a paginated list of files.
     /// </summary>
     public class ListFilesResponse
     {
         /// <summary>
-        /// The list of Files.
+        /// The list of files.
         /// </summary>
         public List<FileResource>? Files { get; set; }
         /// <summary>

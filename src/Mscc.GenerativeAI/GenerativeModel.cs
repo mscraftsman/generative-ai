@@ -23,6 +23,7 @@ namespace Mscc.GenerativeAI
 
         private readonly bool _useVertexAi;
         private readonly CachedContent? _cachedContent;
+        private readonly TuningJob? _tuningJob;
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
@@ -79,6 +80,9 @@ namespace Mscc.GenerativeAI
                 }
                 if (_useVertexAi)
                 {
+                    if (!string.IsNullOrEmpty(_endpointId))
+                        return GenerativeAI.Method.GenerateContent;
+                    
                     return GenerativeAI.Method.StreamGenerateContent;
                 }
 
@@ -247,11 +251,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Lists models available through the API.
+        /// Lists the [`Model`s](https://ai.google.dev/gemini-api/docs/models/gemini) available through the Gemini API.
         /// </summary>
         /// <returns>List of available models.</returns>
         /// <param name="tuned">Flag, whether models or tuned models shall be returned.</param>
-        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageSize">The maximum number of `Models` to return (per page). If unspecified, 50 models will be returned per page. This method returns at most 1000 models per page, even if you pass a larger page_size.</param>
         /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
@@ -283,7 +287,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Gets information about a specific Model.
+        /// Gets information about a specific `Model` such as its version number, token limits, [parameters](https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters) and other metadata. Refer to the [Gemini models guide](https://ai.google.dev/gemini-api/docs/models/gemini) for detailed model information.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the ListModels method. Format: models/model-id or tunedModels/my-model-id</param>
         /// <returns></returns>
@@ -641,8 +645,13 @@ namespace Mscc.GenerativeAI
         #endregion
 
         /// <summary>
-        /// Generates a response from the model given an input <see cref="GenerateContentRequest"/>.
+        /// Generates a model response given an input <see cref="GenerateContentRequest"/>.
         /// </summary>
+        /// <remarks>
+        /// Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information.
+        /// Input capabilities differ between models, including tuned models.
+        /// Refer to the [model guide](https://ai.google.dev/gemini-api/docs/models/gemini) and [tuning guide](https://ai.google.dev/gemini-api/docs/model-tuning) for details.
+        /// </remarks>
         /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Response from the model for generated content.</returns>
@@ -1033,7 +1042,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Generates an embedding from the model given an input Content.
+        /// Generates a text embedding vector from the input `Content` using the specified [Gemini Embedding model](https://ai.google.dev/gemini-api/docs/models/gemini#text-embedding).
         /// </summary>
         /// <param name="request">Required. EmbedContentRequest to process. The content to embed. Only the parts.text fields will be counted.</param>
         /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
@@ -1073,7 +1082,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Generates multiple embeddings from the model given input text in a synchronous call.
+        /// Generates multiple embedding vectors from the input `Content` which consists of a batch of strings represented as `EmbedContentRequest` objects.
         /// </summary>
         /// <param name="requests">Required. Embed requests for the batch. The model in each of these requests must match the model specified BatchEmbedContentsRequest.model.</param>
         /// <param name="model">Optional. The model used to generate embeddings. Defaults to models/embedding-001.</param>
@@ -1196,8 +1205,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Counts the number of tokens in the content. 
+        /// Runs a model's tokenizer on input `Content` and returns the token count.
         /// </summary>
+        /// <remarks>
+        /// Refer to the [tokens guide](https://ai.google.dev/gemini-api/docs/tokens) to learn more about tokens.
+        /// </remarks>
         /// <param name="request"></param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Number of tokens.</returns>

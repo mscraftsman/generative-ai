@@ -29,6 +29,7 @@ namespace Mscc.GenerativeAI
         protected string? _accessToken;
         protected string? _projectId;
         protected string _region = "us-central1";
+        protected string? _endpointId;
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
         protected static readonly Version _httpVersion = HttpVersion.Version11;
@@ -211,7 +212,8 @@ namespace Mscc.GenerativeAI
                     { "projectid", _projectId ?? "" },
                     { "region", _region },
                     { "location", _region },
-                    { "publisher", _publisher }
+                    { "publisher", _publisher },
+                    { "endpointId", _endpointId }
                 };
             }
         }

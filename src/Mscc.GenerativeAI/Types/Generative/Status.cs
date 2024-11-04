@@ -1,4 +1,7 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
+#endif
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
@@ -12,6 +15,7 @@ namespace Mscc.GenerativeAI
     /// error message, and error details. You can find out more about
     /// this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).
     /// </remarks>
+    [DebuggerDisplay("{Code} - {Message}")]
     public class Status
     {
         /// <summary>

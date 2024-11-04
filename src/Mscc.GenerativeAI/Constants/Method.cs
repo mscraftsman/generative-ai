@@ -21,6 +21,7 @@ namespace Mscc.GenerativeAI
         public static string Patch = "patch";
         public static string TransferOwnership = "transferOwnership";
         public static string TunedModels = "tunedModels";
+        public static string TuningJobs = "tuningJobs";
         
         // Methods for cached content.
         public static string CachedContents = "cachedContents";

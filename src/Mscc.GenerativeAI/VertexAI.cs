@@ -122,6 +122,21 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="model">Model to use.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
+        public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.Gemini15Pro002)
+        {
+            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
+            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+
+            _tuningJobModel = new SupervisedTuningJobModel(_projectId, _region, model);
+            return _tuningJobModel;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
