@@ -733,8 +733,6 @@ namespace Mscc.GenerativeAI
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
-                request.GenerationConfig.ResponseMimeType = Constants.MediaType;
-            }
                 request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
             }
 
