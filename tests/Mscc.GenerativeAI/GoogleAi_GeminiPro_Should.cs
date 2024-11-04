@@ -292,7 +292,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().BeEmpty();
-            // _output.WriteLine(response?.Text);
+            // output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -790,7 +790,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Who won Wimbledon this year?";
-            var genAi = new GoogleAI(_fixture.ApiKey);
+            var genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel("gemini-1.5-pro-002",
                 tools: [new Tool { GoogleSearchRetrieval = new() }]);
 
@@ -803,19 +803,19 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates![0].GroundingMetadata.Should().NotBeNull();
             response.Candidates![0].GroundingMetadata!.SearchEntryPoint.Should().NotBeNull();
             response.Candidates![0].GroundingMetadata!.WebSearchQueries.Should().NotBeNull();
-            _output.WriteLine(string.Join(Environment.NewLine,
+            output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].Content!.Parts
                     .Select(x => x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks!
                 .ForEach(c => 
-                    _output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
-            _output.WriteLine(string.Join(Environment.NewLine,
+                    output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
+            output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
                     .Select(w => w)
                     .ToArray()));
-            _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+            output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
 
         [Fact]
@@ -824,7 +824,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Who won Wimbledon this year?";
-            var genAi = new GoogleAI(_fixture.ApiKey);
+            var genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel("gemini-1.5-pro-002",
                 tools: [new Tool { GoogleSearchRetrieval = 
                     new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
@@ -835,19 +835,19 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            _output.WriteLine(string.Join(Environment.NewLine,
+            output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].Content!.Parts
                     .Select(x => x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks!
                 .ForEach(c => 
-                    _output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
-            _output.WriteLine(string.Join(Environment.NewLine,
+                    output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
+            output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
                     .Select(w => w)
                     .ToArray()));
-            _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+            output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
         
         [Fact]

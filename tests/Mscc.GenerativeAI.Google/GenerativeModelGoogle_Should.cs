@@ -13,17 +13,9 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI.Google
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GenerativeModelGoogle_Should
+    public class GenerativeModelGoogle_Should(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini15Pro;
-
-        public GenerativeModelGoogle_Should(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
 
         [Fact]
         public void Initiate()
@@ -54,7 +46,7 @@ namespace Test.Mscc.GenerativeAI.Google
             //var serviceAccount = "";
             
             // Act
-            var vertex = GenerativeModelGoogle.CreateInstance(_fixture.ServiceAccount, passphrase:_fixture.Passphrase);
+            var vertex = GenerativeModelGoogle.CreateInstance(fixture.ServiceAccount, passphrase:fixture.Passphrase);
             
             // Assert
             vertex.Should().NotBeNull();
@@ -67,8 +59,8 @@ namespace Test.Mscc.GenerativeAI.Google
             // Act
             var vertex = new GenerativeModelGoogle()
             {
-                ProjectId = _fixture.ProjectId, 
-                Region = _fixture.Region
+                ProjectId = fixture.ProjectId, 
+                Region = fixture.Region
             };
 
             // Assert
@@ -79,9 +71,9 @@ namespace Test.Mscc.GenerativeAI.Google
         public void Initiate_With_ServiceAccount()
         {
             // Arrange & Act
-            var vertex = GenerativeModelGoogle.CreateInstance(_fixture.ServiceAccount, passphrase:_fixture.Passphrase)
-                .WithProjectId(_fixture.ProjectId)
-                .WithRegion(_fixture.Region);
+            var vertex = GenerativeModelGoogle.CreateInstance(fixture.ServiceAccount, passphrase:fixture.Passphrase)
+                .WithProjectId(fixture.ProjectId)
+                .WithRegion(fixture.Region);
         
             // Assert
             vertex.Should().NotBeNull();
@@ -93,8 +85,8 @@ namespace Test.Mscc.GenerativeAI.Google
             // Arrange
             var vertex = new GenerativeModelGoogle()
             {
-                ProjectId = _fixture.ProjectId, 
-                Region = _fixture.Region
+                ProjectId = fixture.ProjectId, 
+                Region = fixture.Region
             };
             
             // Act
@@ -114,8 +106,8 @@ namespace Test.Mscc.GenerativeAI.Google
             // Arrange
             var vertex = new GenerativeModelGoogle()
             {
-                ProjectId = _fixture.ProjectId, 
-                Region = _fixture.Region
+                ProjectId = fixture.ProjectId, 
+                Region = fixture.Region
             };
             
             // Act
@@ -132,8 +124,8 @@ namespace Test.Mscc.GenerativeAI.Google
             // Arrange
             var vertex = new GenerativeModelGoogle()
             {
-                ProjectId = _fixture.ProjectId, 
-                Region = _fixture.Region
+                ProjectId = fixture.ProjectId, 
+                Region = fixture.Region
             };
             var model = vertex.CreateModel(model: _model);
 
@@ -145,9 +137,9 @@ namespace Test.Mscc.GenerativeAI.Google
         public async Task List_Models_With_ServiceAccount()
         {
             // Arrange
-            var vertex = GenerativeModelGoogle.CreateInstance(_fixture.ServiceAccount, passphrase:_fixture.Passphrase)
-                .WithProjectId(_fixture.ProjectId)
-                .WithRegion(_fixture.Region);
+            var vertex = GenerativeModelGoogle.CreateInstance(fixture.ServiceAccount, passphrase:fixture.Passphrase)
+                .WithProjectId(fixture.ProjectId)
+                .WithRegion(fixture.Region);
             var model = vertex.CreateModel(model: _model);
 
             // Act & Assert

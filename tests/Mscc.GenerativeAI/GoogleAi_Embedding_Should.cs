@@ -55,7 +55,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = genAi.GenerativeModel(model: Model.TextEmbedding);
 
             // Act
@@ -67,7 +67,7 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                _output.WriteLine(x.ToString());
+                output.WriteLine(x.ToString());
             });
         }
 

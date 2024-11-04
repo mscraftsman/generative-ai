@@ -15,25 +15,17 @@ namespace Test.Mscc.GenerativeAI
     /// https://github.com/GoogleCloudPlatform/dotnet-docs-samples/tree/main/aiplatform/api/AIPlatform.Samples
     /// </summary>
     [Collection(nameof(ConfigurationFixture))]
-    public class AiPlatformSamplesShould
+    public class AiPlatformSamplesShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
         private readonly string _model = Model.Gemini10ProVision;
-
-        public AiPlatformSamplesShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        {
-            _output = output;
-            _fixture = fixture;
-        }
 
         [Fact]
         public async Task Gemini_QuickStart()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
             var generationConfig = new GenerationConfig
             {
                 Temperature = 0.4f,
@@ -63,16 +55,16 @@ namespace Test.Mscc.GenerativeAI
                 fullText.Append(response?.Text);
             }
             fullText.ToString().Should().Contain("blueberry");
-            _output.WriteLine(fullText.ToString());
+            output.WriteLine(fullText.ToString());
         }
 
         [Fact(Skip = "Skipped due to the configured HttpClient.Timeout of 100 seconds elapsing.")]
         public async Task Multimodal_Multi_Image()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
 
             // Images
             var colosseum = await TestExtensions.ReadImageFileBase64Async(
@@ -110,7 +102,7 @@ namespace Test.Mscc.GenerativeAI
                 fullText.Append(response?.Text);
             }
             fullText.ToString().Should().Contain("redeemer");
-            _output.WriteLine(fullText.ToString());
+            output.WriteLine(fullText.ToString());
 
             // // Act
             // var response = await model.GenerateContent(request);
@@ -129,9 +121,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Multimodal_Video_Input()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest("What's in the video?");
             request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(new FileData
@@ -154,7 +146,7 @@ namespace Test.Mscc.GenerativeAI
                 fullText.Append(response?.Text);
             }
             fullText.ToString().Should().Contain("Zootopia");
-            _output.WriteLine(fullText.ToString());
+            output.WriteLine(fullText.ToString());
 
             // Act
             // var response = await model.GenerateContent(request);
@@ -173,9 +165,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task With_SafetySettings()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
+            model.AccessToken = fixture.AccessToken;
             var generationConfig = new GenerationConfig
             {
                 Temperature = 0.4f,
@@ -213,7 +205,7 @@ namespace Test.Mscc.GenerativeAI
                 fullText.Append(response?.Text);
             }
             fullText.ToString().Should().Contain("assist");
-            _output.WriteLine(fullText.ToString());
+            output.WriteLine(fullText.ToString());
 
             // Act
             // var response = await model.GenerateContent(request);

@@ -17,22 +17,19 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAi_Caching_Should
     {
-        private readonly ITestOutputHelper _output;
-        private readonly ConfigurationFixture _fixture;
+        private readonly ITestOutputHelper output;
+        private readonly ConfigurationFixture fixture;
         private readonly string _model = Model.Gemini15Flash001;
-        private readonly IGenerativeAI _genAi;
+        private readonly GoogleAI _genAi;
         private readonly CachedContentModel _cachedContent;
 
         public GoogleAi_Caching_Should(ITestOutputHelper output, ConfigurationFixture fixture)
         {
-            // AppContext.SetSwitch("System.Net.SocketsHttpHandler.Http3Support", false);
-            
-            _output = output;
-            _fixture = fixture;
-            _genAi = new GoogleAI(_fixture.ApiKey);
-            _cachedContent = ((GoogleAI)_genAi).CachedContent();
+            this.output = output;
+            this.fixture = fixture;
+            _genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            _cachedContent = _genAi.CachedContent();
         }
-
         [Fact]
         public async Task Create_ShouldThrowArgumentNullException_WhenRequestIsNull()
         {
@@ -63,7 +60,7 @@ namespace Test.Mscc.GenerativeAI
             var file = response.File;
             while (file.State == StateFileResource.Processing)
             {
-                _output.WriteLine("Waiting for video to be processed");
+                output.WriteLine("Waiting for video to be processed");
                 Thread.Sleep(200);
                 file = await _genAi.GenerativeModel().GetFile(file.Name);
             }
@@ -85,6 +82,8 @@ namespace Test.Mscc.GenerativeAI
         [Fact]
         public async Task List_CachedContents()
         {
+            // Arrange
+            
             // Act
             var result = await _cachedContent.List();
 
@@ -92,7 +91,7 @@ namespace Test.Mscc.GenerativeAI
             result.Should().NotBeNull();
             foreach (CachedContent item in result)
             {
-                _output.WriteLine($"{item.Name} ({item.Expiration})");
+                output.WriteLine($"{item.Name} ({item.Expiration})");
             }
         }
 
@@ -116,19 +115,21 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var cachedContents = await _cachedContent.List();
             var name = cachedContents.FirstOrDefault()?.Name;
-            _output.WriteLine(name);
+            output.WriteLine(name);
             
             // Act
             var response = await _cachedContent.Delete(name);
             
             // Assert
             response.Should().NotBeNull();
-            _output.WriteLine(response);
+            output.WriteLine(response);
         }
         
         [Fact]
         public async Task Delete_ShouldThrowArgumentException_WhenCachedContentNameIsNull()
         {
+            // Arrange
+
             // Act
             Func<Task> action = async () => await _cachedContent.Delete(null);
 
@@ -162,7 +163,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"{response.Text}");
+            output.WriteLine($"{response.Text}");
         }
 
         [Fact]
@@ -193,7 +194,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"{response.Text}");
+            output.WriteLine($"{response.Text}");
         }        
 
         [Fact]
@@ -212,9 +213,9 @@ namespace Test.Mscc.GenerativeAI
             ];
 
             var response = await chat.SendMessage(parts);
-            _output.WriteLine($"model: {response.Text}");
+            output.WriteLine($"model: {response.Text}");
             response = await chat.SendMessage("Okay, could you tell me more about the trans-lunar injection");
-            _output.WriteLine($"model: {response.Text}");
+            output.WriteLine($"model: {response.Text}");
             
             var cache = await _cachedContent.Create(
                 _model,
@@ -233,7 +234,7 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
-            _output.WriteLine($"model: {response.Text}");
+            output.WriteLine($"model: {response.Text}");
         }        
     }
 }
