@@ -108,6 +108,13 @@ namespace Mscc.GenerativeAI
         /// Activate JSON Mode (default = no)
         /// </summary>
         public bool UseJsonMode { get; set; } = false;
+
+        /// <inheritdoc/>
+        protected override void ThrowIfUnsupportedRequest<T>(T request)
+        {
+            if (_cachedContent is not null && UseGrounding) throw new NotSupportedException("Grounding is not supported with CachedContent.");
+            if (UseJsonMode && UseGrounding) throw new NotSupportedException("Grounding is not supported wit JSON mode.");
+        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
@@ -688,11 +695,13 @@ namespace Mscc.GenerativeAI
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request,
             RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-
+            ThrowIfUnsupportedRequest<GenerateContentRequest>(request);
+            
             request.Tools ??= _tools;
             request.ToolConfig ??= _toolConfig;
             request.SystemInstruction ??= _systemInstruction;
@@ -841,6 +850,9 @@ namespace Mscc.GenerativeAI
             RequestOptions? requestOptions = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            ThrowIfUnsupportedRequest<GenerateContentRequest>(request);
+
             if (UseServerSentEventsFormat)
             {
                 await foreach (var item in GenerateContentStreamSSE(request, requestOptions, cancellationToken))
@@ -851,8 +863,6 @@ namespace Mscc.GenerativeAI
                 }
                 yield break;
             }
-
-            if (request == null) throw new ArgumentNullException(nameof(request));
 
             request.Tools ??= _tools;
             request.ToolConfig ??= _toolConfig;

@@ -144,6 +144,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Throws a <see cref="NotSupportedException"/>, if the functionality is not supported by combination of settings.
+        /// </summary>
+        protected virtual void ThrowIfUnsupportedRequest<T>(T request) { }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
