@@ -69,9 +69,23 @@ namespace Mscc.GenerativeAI
         public const string GeckoEmbedding = "embedding-gecko-001";
         public const string Embedding001 = "embedding-001";
         public const string Embedding = Embedding001;
+        public const string AttributedQuestionAnswering = "aqa";
+        
+        // Text Embeddings on Vertex AI
         public const string TextEmbedding004 = "text-embedding-004";
         public const string TextEmbedding = TextEmbedding004;
-        public const string AttributedQuestionAnswering = "aqa";
+        public const string TextEmbeddingPreview0815 = "text-embedding-preview-0815";
+        public const string TextEmbeddingPreview = TextEmbeddingPreview0815;
+        public const string TextMultilingualEmbedding = "text-multilingual-embedding-002";
+        public const string GeckoTextEmbedding001 = "textembedding-gecko@001";
+        public const string GeckoTextEmbedding003 = "textembedding-gecko@003";
+        public const string GeckoTextEmbedding = GeckoTextEmbedding003;
+        public const string GeckoTextMultilingualEmbedding001 = "textembedding-gecko-multilingual@001";
+        public const string GeckoTextMultilingualEmbedding = GeckoTextMultilingualEmbedding001;
+
+        // Multimodal Embeddings on Vertex AI
+        public const string MultimodalEmbedding001 = "multimodalembedding@001";
+        public const string MultimodalEmbedding = MultimodalEmbedding001;
         
         // Models for Imagen on Vertex AI - image generation and editing
         public const string Imagen3 = "imagen-3.0-generate-001";
