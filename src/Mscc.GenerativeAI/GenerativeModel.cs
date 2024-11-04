@@ -224,6 +224,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="tuningJob"/> is null.</exception>
+        // Todo: Review parameters to configure model.
         internal GenerativeModel(TuningJob tuningJob,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -505,10 +506,11 @@ namespace Mscc.GenerativeAI
                 }
             };
 
-            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
-                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+                url = $"{baseUri}/resumable/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
             }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
@@ -568,10 +570,11 @@ namespace Mscc.GenerativeAI
                 }
             };
 
-            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
-                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+                url = $"{baseUri}/resumable/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
             }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
@@ -968,9 +971,27 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            request.Tools ??= _tools;
+            request.ToolConfig ??= _toolConfig;
+            request.SystemInstruction ??= _systemInstruction;
+
+            if (_cachedContent is not null)
+            {
+                request.CachedContent = _cachedContent.Name;
+                Model = _cachedContent.Model;
+                if (_cachedContent.Contents != null)
+                {
+                    request.Contents.AddRange(_cachedContent.Contents);
+                }
+                // "CachedContent can not be used with GenerateContent request setting system_instruction, tools or tool_config."
+                request.Tools = null;
+                request.ToolConfig = null;
+                request.SystemInstruction = null;
+            }
+            
+            request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-            request.Tools ??= _tools;
             
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method).AddQueryString(new Dictionary<string, string?>() { ["alt"] = "sse" });

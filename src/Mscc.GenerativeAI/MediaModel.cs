@@ -63,10 +63,11 @@ namespace Mscc.GenerativeAI
                 }
             };
 
-            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
-                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+                url = $"{baseUri}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
             }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
@@ -126,10 +127,11 @@ namespace Mscc.GenerativeAI
                 }
             };
 
-            var url = $"{EndpointGoogleAi}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
-                url = $"{EndpointGoogleAi}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
+                url = $"{baseUri}/resumable/upload/{Version}/files";   // v1beta3 // ?key={apiKey}
             }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
