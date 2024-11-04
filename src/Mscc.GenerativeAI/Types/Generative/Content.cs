@@ -173,7 +173,7 @@ namespace Mscc.GenerativeAI
 
         private string GetDebuggerDisplay()
         {
-            return $"Role: {Role} - Parts: {Parts.Count}";
+            return $"Role: {Role} - Parts: {Parts.Count} - {Text}";
         }
     }
 }
