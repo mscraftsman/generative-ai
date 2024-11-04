@@ -215,6 +215,28 @@ namespace Mscc.GenerativeAI
             _safetySettings = safetySettings;
         }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class given cached content.
+        /// </summary>
+        /// <param name="tuningJob">Tuning Job to use with the model.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="tuningJob"/> is null.</exception>
+        internal GenerativeModel(TuningJob tuningJob,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null,
+            ILogger? logger = null) : this(logger)
+        {
+            _tuningJob = tuningJob ?? throw new ArgumentNullException(nameof(tuningJob));
+
+            _model = _tuningJob.TunedModel!.Model;
+            _endpointId = _tuningJob.TunedModel!.Endpoint;
+            _generationConfig = generationConfig;
+            _safetySettings = safetySettings;
+        }
+
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
 
         /// <summary>

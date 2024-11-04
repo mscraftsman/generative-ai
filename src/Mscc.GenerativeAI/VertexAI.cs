@@ -114,6 +114,29 @@ namespace Mscc.GenerativeAI
             return _generativeModel;
         }
 
+        /// <summary>
+        /// Create a generative model on Vertex AI to use.
+        /// </summary>
+        /// <param name="tuningJob">Tuning Job to use with the model.</param>
+        /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
+        /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <returns>Generative model instance.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="tuningJob"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
+        public GenerativeModel GenerativeModel(TuningJob tuningJob,
+            GenerationConfig? generationConfig = null,
+            List<SafetySetting>? safetySettings = null)
+        {
+            if (tuningJob == null) throw new ArgumentNullException(nameof(tuningJob));
+            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
+            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+
+            _generativeModel = new GenerativeModel(tuningJob,
+                generationConfig,
+                safetySettings) { ProjectId = _projectId, Region = _region, };
+            return _generativeModel;
+        }
+
         /// <inheritdoc cref="IGenerativeAI"/>
         public Task<ModelResponse> GetModel(string model)
         {
