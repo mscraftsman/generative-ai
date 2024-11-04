@@ -19,7 +19,7 @@ namespace Mscc.GenerativeAI
     public class GenerativeModel : BaseModel
     {
         private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
-        private const string UrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/{model}:{method}";
+        private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/{model}:{method}";
 
         private readonly bool _useVertexAi;
         private readonly CachedContent? _cachedContent;
@@ -41,7 +41,7 @@ namespace Mscc.GenerativeAI
                     url = UrlVertexAi;
                     if (!string.IsNullOrEmpty(_endpointId))
                     {
-                        url = $"{BaseUrlVertexAi}/{_endpointId}";
+                        url = "{BaseUrlVertexAi}/{_endpointId}";
                     }
                 }
 

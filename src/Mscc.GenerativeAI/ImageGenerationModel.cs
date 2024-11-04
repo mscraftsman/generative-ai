@@ -15,8 +15,7 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public sealed class ImageGenerationModel : BaseModel
     {
-        private const string UrlVertexAi =
-            "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}/publishers/{publisher}/models/{model}:{method}";
+        private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/models/{model}:{method}";
 
         private string Url => UrlVertexAi;
 

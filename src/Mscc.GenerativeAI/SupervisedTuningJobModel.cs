@@ -15,8 +15,6 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public sealed class SupervisedTuningJobModel : BaseModel
     {
-        private const string UrlVertexAi = "projects/{projectId}/locations/{region}/tuningJobs";
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="SupervisedTuningJobModel"/> class.
         /// </summary>
@@ -56,7 +54,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException();
             }
 
-            var url = $"{BaseUrlVertexAi}/{UrlVertexAi}";
+            var url = $"{BaseUrlVertexAi}/tuningJobs";
             url = ParseUrl(url);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -67,7 +65,7 @@ namespace Mscc.GenerativeAI
 
         public async Task<List<TuningJob>> List()
         {
-            var url = $"{BaseUrlVertexAi}/{UrlVertexAi}";
+            var url = $"{BaseUrlVertexAi}/tuningJobs";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
@@ -75,13 +73,19 @@ namespace Mscc.GenerativeAI
             return tuningJobs.TuningJobs;
         }
 
-        public async Task<TuningJob> Get(string name)
+        /// <summary>
+        /// Gets metadata of a tuning job.
+        /// </summary>
+        /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
+        /// <returns>The details of a tuning job.</returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
+        public async Task<TuningJob> Get(string tuningJobId)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
             // name = name.SanitizeCachedContentName();
 
-            var url = $"{BaseUrlVertexAi}/{name}";
+            var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
@@ -91,18 +95,18 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Cancels a tuning job.
         /// </summary>
-        /// <param name="name">Required. The resource name referring to the content cache entry. Format: `cachedContents/{id}`</param>
+        /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
         /// <returns>If successful, the response body is empty.</returns>
-        /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is <see langword="null"/> or empty.</exception>
-        public async Task<string> Cancel(string name,
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
+        public async Task<string> Cancel(string tuningJobId,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
             // name = name.SanitizeCachedContentName();
 
             var method = "cancel";
-            var url = $"{BaseUrlVertexAi}/{name}:{method}";
+            var url = $"{BaseUrlVertexAi}/{tuningJobId}:{method}";
             url = ParseUrl(url, method);
             var payload = new StringContent(string.Empty, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload, cancellationToken);
@@ -113,16 +117,16 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Deletes a tuning job.
         /// </summary>
-        /// <param name="name">Required. The resource name referring to the content cache entry. Format: `cachedContents/{id}`</param>
+        /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
         /// <returns>If successful, the response body is empty.</returns>
-        /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is <see langword="null"/> or empty.</exception>
-        public async Task<string> Delete(string name)
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
+        public async Task<string> Delete(string tuningJobId)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
             // name = name.SanitizeCachedContentName();
 
-            var url = $"{BaseUrlVertexAi}/{name}";
+            var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
             var response = await Client.DeleteAsync(url);
             await response.EnsureSuccessAsync();

@@ -20,7 +20,7 @@ namespace Mscc.GenerativeAI
     public abstract class BaseModel : BaseLogger
     {
         protected const string BaseUrlGoogleAi = "https://generativelanguage.googleapis.com/{version}";
-        protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}";
+        protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}";
 
         protected readonly string _publisher = "google";
         protected readonly JsonSerializerOptions _options;
