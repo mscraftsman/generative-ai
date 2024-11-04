@@ -18,13 +18,19 @@ namespace Mscc.GenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";
-        // private readonly string? _apiEndpoint = "us-central1-aiplatform.googleapis.com";
-        // private readonly GoogleAuthOptions? _googleAuthOptions;
+
+        private string _endpointId;
         private GenerativeModel? _generativeModel;
         private ImageGenerationModel? _imageGenerationModel;
         private ImageTextModel? _imageTextModel;
         private SupervisedTuningJobModel? _tuningJobModel;
 
+        public string EndpointId
+        {
+            get => _endpointId;
+            set => _endpointId = value.SanitizeEndpointName();
+        }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
@@ -80,6 +86,7 @@ namespace Mscc.GenerativeAI
             _generativeModel = new GenerativeModel(_projectId,
                 _region,
                 model,
+                _endpointId,
                 generationConfig,
                 safetySettings,
                 tools,
@@ -133,7 +140,11 @@ namespace Mscc.GenerativeAI
 
             _generativeModel = new GenerativeModel(tuningJob,
                 generationConfig,
-                safetySettings) { ProjectId = _projectId, Region = _region, };
+                safetySettings)
+            {
+                ProjectId = _projectId, 
+                Region = _region,
+            };
             return _generativeModel;
         }
 

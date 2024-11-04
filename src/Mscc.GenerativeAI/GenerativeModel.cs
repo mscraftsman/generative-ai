@@ -167,6 +167,7 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="endpoint">Optional. Endpoint ID of the tuned model to use.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
@@ -174,7 +175,7 @@ namespace Mscc.GenerativeAI
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         internal GenerativeModel(string? projectId = null, string? region = null, 
-            string? model = null, 
+            string? model = null, string? endpoint = null,
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
@@ -185,14 +186,12 @@ namespace Mscc.GenerativeAI
             Logger.LogGenerativeModelInvoking();
 
             _useVertexAi = true;
+            _endpointId = endpoint.SanitizeEndpointName();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
             _tools = tools;
             _toolConfig = toolConfig;
             _systemInstruction = systemInstruction;
-
-            if (model is not null && model.StartsWith("endpoint", StringComparison.InvariantCultureIgnoreCase))
-                _endpointId = model;
         }
 
         /// <summary>
@@ -236,7 +235,7 @@ namespace Mscc.GenerativeAI
             _tuningJob = tuningJob ?? throw new ArgumentNullException(nameof(tuningJob));
 
             _model = _tuningJob.TunedModel!.Model;
-            _endpointId = _tuningJob.TunedModel!.Endpoint;
+            _endpointId = _tuningJob.TunedModel!.Endpoint.SanitizeEndpointName();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
         }

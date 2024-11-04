@@ -80,11 +80,10 @@ namespace Mscc.GenerativeAI
         {
             if (string.IsNullOrEmpty(value)) return value;
 
-            if (value.StartsWith("endpoint", StringComparison.InvariantCultureIgnoreCase))
-                return value;
-
             if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
+            {
                 return value;
+            }
 
             if (!value.StartsWith("model", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -139,6 +138,18 @@ namespace Mscc.GenerativeAI
                 return $"tuningJobs/{value}";
             }
 
+            return value;
+        }
+
+        public static string SanitizeEndpointName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (value.StartsWith("endpoint", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return value;
+            }
+        
             return value;
         }
         
