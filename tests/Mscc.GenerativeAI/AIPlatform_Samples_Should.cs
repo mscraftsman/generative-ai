@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
+#if NET9_0
+using System.Collections.Generic;
+using System.Threading.Tasks;
+#endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
 using System.Text;

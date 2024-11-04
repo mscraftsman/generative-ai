@@ -7,6 +7,15 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+#if NET9_0
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
 using Xunit;

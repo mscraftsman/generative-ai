@@ -2,6 +2,10 @@
 using System;
 using System.IO;
 #endif
+#if NET9_0
+using System;
+using System.IO;
+#endif
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using System.Text;

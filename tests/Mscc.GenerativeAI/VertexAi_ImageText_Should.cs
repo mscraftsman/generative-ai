@@ -4,6 +4,11 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 #endif
+#if NET9_0
+using System;
+using System.IO;
+using System.Threading.Tasks;
+#endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
 using Xunit;
