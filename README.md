@@ -280,7 +280,7 @@ var request = new GenerateContentRequest(prompt);
 var files = await model.ListFiles();
 foreach (var file in files.Where(x => x.MimeType.StartsWith("image/")))
 {
-    _output.WriteLine($"File: {file.Name}");
+    Console.WriteLine($"File: {file.Name}");
     request.AddMedia(file);
 }
 var response = await model.GenerateContent(request);
