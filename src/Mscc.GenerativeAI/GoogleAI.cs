@@ -23,6 +23,7 @@ namespace Mscc.GenerativeAI
         private GenerativeModel? _generativeModel;
         private FilesModel? _filesModel;
         private MediaModel? _mediaModel;
+        private GeneratedFilesModel? _generatedFilesModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleAI"/> class with access to Google AI Gemini API.
@@ -259,6 +260,25 @@ namespace Mscc.GenerativeAI
                 AccessToken = _apiKey is null ? _accessToken : null
             };
             return await _filesModel?.DeleteFile(file)!;
+        }
+
+        /// <summary>
+        /// Lists the metadata for Files owned by the requesting project.
+        /// </summary>
+        /// <param name="pageSize">The maximum number of Models to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <returns>List of files in File API.</returns>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<ListGeneratedFilesResponse> ListGeneratedFiles(int? pageSize = 100,
+            string? pageToken = null)
+        {
+            _generatedFilesModel ??= new()
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return await _generatedFilesModel?.ListFiles(pageSize, pageToken)!;
         }
     }
 }

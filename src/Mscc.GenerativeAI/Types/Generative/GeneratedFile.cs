@@ -13,10 +13,9 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// The blob reference of the generated file to download.
-        /// Only set when the GeneratedFiles.get request url has the \"?alt=media\" query param.
+        /// MIME type of the generatedFile.
         /// </summary>
-        public Media Blob { get; set; }
+        public string MimeType { get; set; }
         /// <summary>
         /// Error details if the GeneratedFile ends up in the STATE_FAILED state.
         /// </summary>
@@ -25,5 +24,11 @@ namespace Mscc.GenerativeAI
         /// Output only. The state of the GeneratedFile.
         /// </summary>
         public StateGeneratedFile State { get; set; }
+        
+        /// <summary>
+        /// The blob reference of the generated file to download.
+        /// Only set when the GeneratedFiles.get request url has the \"?alt=media\" query param.
+        /// </summary>
+        public Media Blob { get; set; }
     }
 }
