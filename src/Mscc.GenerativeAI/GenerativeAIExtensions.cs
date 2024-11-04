@@ -80,6 +80,9 @@ namespace Mscc.GenerativeAI
         {
             if (string.IsNullOrEmpty(value)) return value;
 
+            if (value.StartsWith("endpoint", StringComparison.InvariantCultureIgnoreCase))
+                return value;
+
             if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
                 return value;
 

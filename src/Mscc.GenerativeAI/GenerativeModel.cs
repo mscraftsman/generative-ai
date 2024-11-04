@@ -190,6 +190,9 @@ namespace Mscc.GenerativeAI
             _tools = tools;
             _toolConfig = toolConfig;
             _systemInstruction = systemInstruction;
+
+            if (model is not null && model.StartsWith("endpoint", StringComparison.InvariantCultureIgnoreCase))
+                _endpointId = model;
         }
 
         /// <summary>
