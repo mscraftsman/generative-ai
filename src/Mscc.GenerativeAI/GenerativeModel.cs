@@ -1131,7 +1131,7 @@ namespace Mscc.GenerativeAI
             if (!allowedModels.Contains(_model.SanitizeModelName())) throw new NotSupportedException();
             if (!string.IsNullOrEmpty(title) && taskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
 
-            var method = GenerativeAI.Method.BatchEmbedContent;
+            var method = GenerativeAI.Method.BatchEmbedContents;
             var url = ParseUrl(Url, method);
             string json = Serialize(requests);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
