@@ -1,0 +1,24 @@
+#@apiKey={{$dotenv GOOGLE_API_KEY}}
+
+# Get a list of available models.
+GET https://generativelanguage.googleapis.com/v1beta/models
+x-goog-api-key: {{apiKey}}
+
+###
+
+# Get information a model.
+GET https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash
+x-goog-api-key: {{apiKey}}
+
+###
+
+GET https://generativelanguage.googleapis.com/v1beta/models?pageSize=50
+x-goog-api-key: {{apiKey}}
+
+###
+
+GET https://generativelanguage.googleapis.com/v1beta/models?key={{apiKey}}
+
+###
+
+GET https://generativelanguage.googleapis.com/v1beta/models?key={{apiKey}}&pageSize=50
