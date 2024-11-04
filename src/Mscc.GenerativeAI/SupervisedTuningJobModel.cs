@@ -83,7 +83,7 @@ namespace Mscc.GenerativeAI
         {
             if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
-            // name = name.SanitizeCachedContentName();
+            tuningJobId = tuningJobId.SanitizeTuningJobsName();
 
             var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
@@ -103,7 +103,7 @@ namespace Mscc.GenerativeAI
         {
             if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
-            // name = name.SanitizeCachedContentName();
+            tuningJobId = tuningJobId.SanitizeTuningJobsName();
 
             var method = "cancel";
             var url = $"{BaseUrlVertexAi}/{tuningJobId}:{method}";
@@ -124,7 +124,7 @@ namespace Mscc.GenerativeAI
         {
             if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
-            // name = name.SanitizeCachedContentName();
+            tuningJobId = tuningJobId.SanitizeTuningJobsName();
 
             var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);

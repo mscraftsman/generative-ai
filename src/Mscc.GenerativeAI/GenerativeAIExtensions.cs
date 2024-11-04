@@ -127,6 +127,18 @@ namespace Mscc.GenerativeAI
             return value;
         }
         
+        public static string SanitizeTuningJobsName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (!value.StartsWith("tuningJob", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"tuningJobs/{value}";
+            }
+
+            return value;
+        }
+        
         public static string GetValue(this JsonElement element, string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
