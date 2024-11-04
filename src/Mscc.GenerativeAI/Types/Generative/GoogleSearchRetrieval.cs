@@ -18,7 +18,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Creates an instance of <see cref="GoogleSearchRetrieval"/>
         /// </summary>
-        public GoogleSearchRetrieval() { }
+        public GoogleSearchRetrieval() 
+            : this(DynamicRetrievalConfigMode.ModeDynamic, 0.3f) { }
         
         /// <summary>
         /// Creates an instance of <see cref="GoogleSearchRetrieval"/> with Mode and DynamicThreshold.

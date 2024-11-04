@@ -796,6 +796,40 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_Grounding_Search()
         {
             // Arrange
+            var prompt = "What is the current Google stock price?";
+            var genAi = new GoogleAI(fixture.ApiKey);
+            var model = genAi.GenerativeModel("gemini-1.5-pro-002");
+            model.UseGrounding = true;
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].GroundingMetadata.Should().NotBeNull();
+            response.Candidates![0].GroundingMetadata!.SearchEntryPoint.Should().NotBeNull();
+            response.Candidates![0].GroundingMetadata!.WebSearchQueries.Should().NotBeNull();
+            output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Select(x => x.Text)
+//                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToArray()));
+            response.Candidates![0].GroundingMetadata!.GroundingChunks?
+                .ForEach(c => 
+                    output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
+            output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].GroundingMetadata!.WebSearchQueries!
+                    .Select(w => w)
+                    .ToArray()));
+            output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+        }
+
+        [Fact]
+        // Ref: https://ai.google.dev/gemini-api/docs/grounding
+        public async Task Generate_Content_Grounding_Search_by_String()
+        {
+            // Arrange
             var prompt = "Who won Wimbledon this year?";
             var genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel("gemini-1.5-pro-002",
@@ -815,7 +849,7 @@ namespace Test.Mscc.GenerativeAI
                     .Select(x => x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
-            response.Candidates![0].GroundingMetadata!.GroundingChunks!
+            response.Candidates![0].GroundingMetadata!.GroundingChunks?
                 .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
@@ -827,7 +861,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Fact]
         // Ref: https://ai.google.dev/gemini-api/docs/grounding
-        public async Task Generate_Content_Grounding_Search_Dictionary()
+        public async Task Generate_Content_Grounding_Search_by_Dictionary()
         {
             // Arrange
             var prompt = "Who won Wimbledon this year?";
@@ -835,6 +869,7 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel("gemini-1.5-pro-002",
                 tools: [new Tool { GoogleSearchRetrieval = 
                     new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
+            model.UseGrounding = true;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -847,7 +882,38 @@ namespace Test.Mscc.GenerativeAI
                     .Select(x => x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
-            response.Candidates![0].GroundingMetadata!.GroundingChunks!
+            response.Candidates![0].GroundingMetadata!.GroundingChunks?
+                .ForEach(c => 
+                    output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
+            output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].GroundingMetadata!.WebSearchQueries!
+                    .Select(w => w)
+                    .ToArray()));
+            output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+        }
+
+        [Fact]
+        // Ref: https://ai.google.dev/gemini-api/docs/grounding
+        public async Task Generate_Content_Grounding_Search_Default()
+        {
+            // Arrange
+            var prompt = "Who won Wimbledon this year?";
+            var genAi = new GoogleAI(fixture.ApiKey);
+            var model = genAi.GenerativeModel("gemini-1.5-pro-002",
+                tools: [new Tool { GoogleSearchRetrieval = new() }]);
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Select(x => x.Text)
+//                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToArray()));
+            response.Candidates![0].GroundingMetadata!.GroundingChunks?
                 .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,

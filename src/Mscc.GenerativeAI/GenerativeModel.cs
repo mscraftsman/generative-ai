@@ -24,6 +24,7 @@ namespace Mscc.GenerativeAI
         private readonly bool _useVertexAi;
         private readonly CachedContent? _cachedContent;
         private readonly TuningJob? _tuningJob;
+        private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
@@ -108,6 +109,11 @@ namespace Mscc.GenerativeAI
         /// Activate JSON Mode (default = no)
         /// </summary>
         public bool UseJsonMode { get; set; } = false;
+
+        /// <summary>
+        /// Activate Grounding with Google Search (default = no)
+        /// </summary>
+        public bool UseGrounding { get; set; } = false;
 
         /// <inheritdoc/>
         protected override void ThrowIfUnsupportedRequest<T>(T request)
@@ -724,12 +730,24 @@ namespace Mscc.GenerativeAI
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
             
-            var url = ParseUrl(Url, Method);
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
                 request.GenerationConfig.ResponseMimeType = Constants.MediaType;
             }
+                request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
+            }
+
+            if (UseGrounding)
+            {
+                request.Tools ??= defaultGoogleSearchRetrieval;
+                if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
+                {
+                    request.Tools = defaultGoogleSearchRetrieval;
+                }
+            }
+            
+            var url = ParseUrl(Url, Method);
             string json = Serialize(request);
             
             Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContent), url, json);
@@ -846,6 +864,7 @@ namespace Mscc.GenerativeAI
         /// <returns>Stream of GenerateContentResponse with chunks asynchronously.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request,
             RequestOptions? requestOptions = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -885,14 +904,24 @@ namespace Mscc.GenerativeAI
             request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-
-            var method = "streamGenerateContent";
-            var url = ParseUrl(Url, method);
+            
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
-                request.GenerationConfig.ResponseMimeType = Constants.MediaType;
+                request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
             }
+
+            if (UseGrounding)
+            {
+                request.Tools ??= defaultGoogleSearchRetrieval;
+                if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
+                {
+                    request.Tools = defaultGoogleSearchRetrieval;
+                }
+            }
+
+            var method = "streamGenerateContent";
+            var url = ParseUrl(Url, method);
 
             if (Logger.IsEnabled(LogLevel.Debug)) Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContentStream), url, Serialize(request));
             
