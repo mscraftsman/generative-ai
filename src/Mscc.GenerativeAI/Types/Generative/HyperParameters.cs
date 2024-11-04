@@ -9,7 +9,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Immutable. The batch size hyperparameter for tuning. If not set, a default of 4 or 16 will be used based on the number of training examples.
         /// </summary>
-        public int BatchSize { get; set; }
+        public int? BatchSize { get; set; }
         /// <summary>
         /// Optional. Immutable. The learning rate hyperparameter for tuning. If not set, a default of 0.001 or 0.0002 will be calculated based on the number of training examples.
         /// </summary>
@@ -19,8 +19,17 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public float? LearningRateMultiplier { get; set; }
         /// <summary>
-        /// Immutable. The number of training epochs. An epoch is one pass through the training data. If not set, a default of 5 will be used.
+        /// Optional. Immutable. The number of training epochs. An epoch is one pass through the training data. If not set, a default of 5 will be used.
         /// </summary>
-        public int EpochCount { get; set; }
+        public int? EpochCount { get; set; }
+        /// <summary>
+        /// Optional: The Adapter size to use for the tuning job.
+        /// </summary>
+        /// <remarks>
+        /// The adapter size influences the number of trainable parameters for the tuning job.
+        /// A larger adapter size implies that the model can learn more complex tasks,
+        /// but it requires a larger training dataset and longer training times.
+        /// </remarks>
+        public AdapterSize? AdapterSize { get; set; }
     }
 }
