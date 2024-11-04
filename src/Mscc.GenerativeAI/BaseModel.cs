@@ -197,10 +197,13 @@ namespace Mscc.GenerativeAI
             var replacements = GetReplacements();
             replacements.Add("method", method);
 
-            var urlParsed = Regex.Replace(url, @"\{(?<name>.*?)\}",
-                match => replacements.TryGetValue(match.Groups["name"].Value, out var value) ? value : "");
+            do
+            {
+                url = Regex.Replace(url, @"\{(?<name>.*?)\}",
+                    match => replacements.TryGetValue(match.Groups["name"].Value, out var value) ? value : "");
+            } while (url.Contains("{"));
 
-            return urlParsed;
+            return url;
 
             Dictionary<string, string> GetReplacements()
             {
