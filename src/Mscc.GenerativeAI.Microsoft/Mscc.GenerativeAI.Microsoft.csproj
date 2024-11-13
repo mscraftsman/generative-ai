@@ -23,7 +23,7 @@
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
         <PackageReleaseNotes>(Package release notes are in CHANGELOG.md)</PackageReleaseNotes>
-        <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))-preview</Version>
+        <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
@@ -53,7 +53,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.AI" Version="9.0.0-preview.9.24556.5" />
-      <PackageReference Include="Mscc.GenerativeAI" Version="1.8.3" />
+      <PackageReference Include="Mscc.GenerativeAI" Version="1.9.0" />
     </ItemGroup>
 
     <Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">

@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.9.1
+
+### Changed
+
+- PR: Update Microsoft.Extensions.AI to 9.0.0-preview.9.24556.5 [#44](https://github.com/mscraftsman/generative-ai/pull/44) - thanks to @stephentoub
+
 ## 1.9.0
 
 ### Changed
