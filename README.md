@@ -201,6 +201,21 @@ What brings ye to these here waters?
 
 ### Grounding with Google Search
 
+The simplest version is to toggle the boolean property `UseGrounding`, like so.
+
+```csharp
+var apiKey = "your_api_key";
+var prompt = "What is the current Google stock price?";
+var genAi = new GoogleAI(apiKey);
+var model = genAi.GenerativeModel("gemini-1.5-pro-002");
+model.UseGrounding = true;
+
+var response = await model.GenerateContent(prompt);
+Console.WriteLine(response.Text);
+```
+
+In case that you would like to have more control over the Google Search retrieval parameters, use the following approach.
+
 ```csharp
 var apiKey = "your_api_key";
 var prompt = "Who won Wimbledon this year?";
@@ -212,6 +227,8 @@ var model = genAi.GenerativeModel("gemini-1.5-pro-002",
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
 ```
+
+In either case, the returned `Candidates` item type has an additional property `GroundingMetadata` which provides the details of the Google Search based grounding
 
 ### Text-and-image input
 
