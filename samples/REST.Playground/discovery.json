@@ -220,6 +220,29 @@
         }
       }
     },
+    "chat": {
+      "methods": {
+        "completions": {
+          "description": "Generates a set of responses from the model given a chat history input.",
+          "flatPath": "v1beta/chat/completions",
+          "httpMethod": "POST",
+          "id": "generativelanguage.chat.completions",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/chat/completions",
+          "request": {
+            "$ref": "ChatCompletionsRequest"
+          },
+          "response": {
+            "$ref": "HttpBody"
+          }
+        }
+      }
+    },
     "corpora": {
       "methods": {
         "create": {
@@ -894,6 +917,29 @@
         }
       }
     },
+    "embeddings": {
+      "methods": {
+        "generate": {
+          "description": "Generates embeddings from the model given an input.",
+          "flatPath": "v1beta/embeddings:generate",
+          "httpMethod": "POST",
+          "id": "generativelanguage.embeddings.generate",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/embeddings:generate",
+          "request": {
+            "$ref": "GenerateEmbeddingsRequest"
+          },
+          "response": {
+            "$ref": "GenerateEmbeddingsResponse"
+          }
+        }
+      }
+    },
     "files": {
       "methods": {
         "delete": {
@@ -1302,7 +1348,7 @@
           ],
           "parameters": {
             "model": {
-              "description": "Required. The name of the `Model` to use for generating the completion. Format: `name=models/{model}`.",
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
               "location": "path",
               "pattern": "^models/[^/]+$",
               "required": true,
@@ -1475,7 +1521,7 @@
           ],
           "parameters": {
             "model": {
-              "description": "Required. The name of the `Model` to use for generating the completion. Format: `name=models/{model}`.",
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
               "location": "path",
               "pattern": "^models/[^/]+$",
               "required": true,
@@ -1558,6 +1604,54 @@
         }
       }
     },
+    "openai": {
+      "methods": {
+        "embeddings": {
+          "description": "Generates embeddings from the model given an input.",
+          "flatPath": "v1beta/openai/embeddings",
+          "httpMethod": "POST",
+          "id": "generativelanguage.openai.embeddings",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/openai/embeddings",
+          "request": {
+            "$ref": "GenerateEmbeddingsRequest"
+          },
+          "response": {
+            "$ref": "GenerateEmbeddingsResponse"
+          }
+        }
+      },
+      "resources": {
+        "chat": {
+          "methods": {
+            "completions": {
+              "description": "Generates a set of responses from the model given a chat history input.",
+              "flatPath": "v1beta/openai/chat/completions",
+              "httpMethod": "POST",
+              "id": "generativelanguage.openai.chat.completions",
+              "parameterOrder": [
+
+              ],
+              "parameters": {
+
+              },
+              "path": "v1beta/openai/chat/completions",
+              "request": {
+                "$ref": "ChatCompletionsRequest"
+              },
+              "response": {
+                "$ref": "HttpBody"
+              }
+            }
+          }
+        }
+      }
+    },
     "tunedModels": {
       "methods": {
         "create": {
@@ -1615,7 +1709,7 @@
           ],
           "parameters": {
             "model": {
-              "description": "Required. The name of the `Model` to use for generating the completion. Format: `name=models/{model}`.",
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
               "location": "path",
               "pattern": "^tunedModels/[^/]+$",
               "required": true,
@@ -1749,7 +1843,7 @@
           ],
           "parameters": {
             "model": {
-              "description": "Required. The name of the `Model` to use for generating the completion. Format: `name=models/{model}`.",
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
               "location": "path",
               "pattern": "^tunedModels/[^/]+$",
               "required": true,
@@ -1993,9 +2087,51 @@
           }
         }
       }
+    },
+    "v1beta": {
+      "methods": {
+        "chatCompletions": {
+          "description": "Generates a set of responses from the model given a chat history input.",
+          "flatPath": "v1beta:chatCompletions",
+          "httpMethod": "POST",
+          "id": "generativelanguage.chatCompletions",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta:chatCompletions",
+          "request": {
+            "$ref": "ChatCompletionsRequest"
+          },
+          "response": {
+            "$ref": "HttpBody"
+          }
+        },
+        "embeddings": {
+          "description": "Generates embeddings from the model given an input.",
+          "flatPath": "v1beta/embeddings",
+          "httpMethod": "POST",
+          "id": "generativelanguage.embeddings",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/embeddings",
+          "request": {
+            "$ref": "GenerateEmbeddingsRequest"
+          },
+          "response": {
+            "$ref": "GenerateEmbeddingsResponse"
+          }
+        }
+      }
     }
   },
-  "revision": "20241031",
+  "revision": "20241112",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -2331,6 +2467,122 @@
           "format": "int32",
           "readOnly": true,
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ChatCompletionsRequest": {
+      "description": "Request for chat completions.",
+      "id": "ChatCompletionsRequest",
+      "properties": {
+        "maxCompletionTokens": {
+          "description": "Optional. The maximum number of tokens to include in a response candidate. Must be a positive integer.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "maxTokens": {
+          "description": "Optional. The maximum number of tokens to include in a response candidate. Must be a positive integer. This field is deprecated by the SDK.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "messages": {
+          "description": "Required. The chat history to use for generating the completion. Supports single and multi-turn queries. Note: This is a polymorphic field, it is deserialized to a InternalChatMessage.",
+          "items": {
+            "additionalProperties": {
+              "description": "Properties of the object.",
+              "type": "any"
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "model": {
+          "description": "Required. The name of the `Model` to use for generating the completion. The model name will prefixed by \"models/\" if no slash appears in it.",
+          "type": "string"
+        },
+        "n": {
+          "description": "Optional. Amount of candidate completions to generate. Must be a positive integer. Defaults to 1 if not set.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "responseFormat": {
+          "$ref": "ResponseFormat",
+          "description": "Optional. Defines the format of the response. If not set, the response will be formatted as text."
+        },
+        "stop": {
+          "description": "Optional. The set of character sequences that will stop output generation. Note: This is a polymorphic field. It is meant to contain a string or repeated strings.",
+          "type": "any"
+        },
+        "stream": {
+          "description": "Optional. Whether to stream the response or return a single response. If true, the \"object\" field in the response will be \"chat.completion.chunk\". Otherwise it will be \"chat.completion\".",
+          "type": "boolean"
+        },
+        "streamOptions": {
+          "$ref": "StreamOptions",
+          "description": "Optional. Options for streaming requests."
+        },
+        "temperature": {
+          "description": "Optional. Controls the randomness of the output.",
+          "format": "float",
+          "type": "number"
+        },
+        "toolChoice": {
+          "description": "Optional. Controls whether the model should use a tool or not, and which tool to use. Can be either: - The string \"none\", to disable tools. - The string \"auto\", to let the model decide. - The string \"required\", to force the model to use a tool. - A function name descriptor object, specifying the tool to use. The last option follows the following schema: { \"type\": \"function\", \"function\": {\"name\" : \"the_function_name\"} }",
+          "type": "any"
+        },
+        "tools": {
+          "description": "Optional. The set of tools the model can generate calls for. Each tool declares its signature.",
+          "items": {
+            "$ref": "ChatTool"
+          },
+          "type": "array"
+        },
+        "topP": {
+          "description": "Optional. The maximum cumulative probability of tokens to consider when sampling.",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "ChatFunction": {
+      "description": "A function that the model can generate calls for.",
+      "id": "ChatFunction",
+      "properties": {
+        "description": {
+          "description": "Optional. A description of the function.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Required. The name of the function.",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Optional. The parameters of the function.",
+          "type": "object"
+        },
+        "strict": {
+          "description": "Optional. Whether the schema validation is strict. If true, the model will fail if the schema is not valid. NOTE: This parameter is currently ignored.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ChatTool": {
+      "description": "A tool that the model can generate calls for.",
+      "id": "ChatTool",
+      "properties": {
+        "function": {
+          "$ref": "ChatFunction",
+          "description": "Required. The name of the tool."
+        },
+        "type": {
+          "description": "Required. Required, must be \"function\".",
+          "type": "string"
         }
       },
       "type": "object"
@@ -3244,7 +3496,7 @@
           "description": "Optional. Configuration options for model generation and outputs."
         },
         "model": {
-          "description": "Required. The name of the `Model` to use for generating the completion. Format: `name=models/{model}`.",
+          "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
           "type": "string"
         },
         "safetySettings": {
@@ -3296,6 +3548,78 @@
           "$ref": "UsageMetadata",
           "description": "Output only. Metadata on the generation requests' token usage.",
           "readOnly": true
+        }
+      },
+      "type": "object"
+    },
+    "GenerateEmbeddingsEmbedding": {
+      "description": "An embedding vector generated by the model.",
+      "id": "GenerateEmbeddingsEmbedding",
+      "properties": {
+        "embedding": {
+          "description": "Output only. The embedding vector generated for the input. Can be either a list of floats or a base64 string encoding the a list of floats with C-style layout (Numpy compatible).",
+          "readOnly": true,
+          "type": "any"
+        },
+        "index": {
+          "description": "Output only. Index of the embedding in the list of embeddings.",
+          "format": "int32",
+          "readOnly": true,
+          "type": "integer"
+        },
+        "object": {
+          "description": "Output only. Always \"embedding\", required by the SDK.",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GenerateEmbeddingsRequest": {
+      "description": "Request for embedding generation.",
+      "id": "GenerateEmbeddingsRequest",
+      "properties": {
+        "dimensions": {
+          "description": "Optional. Dimensional size of the generated embeddings.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "encodingFormat": {
+          "description": "Optional. The format of the encoding. Must be either \"float\" or \"base64\".",
+          "type": "string"
+        },
+        "input": {
+          "description": "Required. The input to generate embeddings for. Can be a string, or a list of strings. The SDK supports a list of numbers and list of list of numbers, but this is not yet implemented.",
+          "type": "any"
+        },
+        "model": {
+          "description": "Required. Model to generate the embeddings for.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GenerateEmbeddingsResponse": {
+      "description": "Response for embedding generation.",
+      "id": "GenerateEmbeddingsResponse",
+      "properties": {
+        "data": {
+          "description": "Output only. A list of the requested embeddings.",
+          "items": {
+            "$ref": "GenerateEmbeddingsEmbedding"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "model": {
+          "description": "Output only. Model used to generate the embeddings.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Output only. Always \"embedding\", required by the SDK.",
+          "readOnly": true,
+          "type": "string"
         }
       },
       "type": "object"
@@ -3481,6 +3805,10 @@
           "description": "Optional. Number of generated responses to return. Currently, this value can only be set to 1. If unset, this will default to 1.",
           "format": "int32",
           "type": "integer"
+        },
+        "enableEnhancedCivicAnswers": {
+          "description": "Optional. Enables enhanced civic answers. It may not be available for all models.",
+          "type": "boolean"
         },
         "frequencyPenalty": {
           "description": "Optional. Frequency penalty applied to the next token's logprobs, multiplied by the number of times each token has been seen in the respponse so far. A positive penalty will discourage the use of tokens that have already been used, proportional to the number of times the token has been used: The more a token is used, the more dificult it is for the model to use that token again increasing the vocabulary of responses. Caution: A _negative_ penalty will encourage the model to reuse tokens proportional to the number of times the token has been used. Small negative values will reduce the vocabulary of a response. Larger negative values will cause the model to start repeating a common token until it hits the max_output_tokens limit.",
@@ -3683,6 +4011,33 @@
         "segment": {
           "$ref": "Segment",
           "description": "Segment of the content this support belongs to."
+        }
+      },
+      "type": "object"
+    },
+    "HttpBody": {
+      "description": "Message that represents an arbitrary HTTP body. It should only be used for payload formats that can't be represented as JSON, such as raw binary or an HTML page. This message can be used both in streaming and non-streaming API methods in the request as well as the response. It can be used as a top-level request field, which is convenient if one wants to extract parameters from either the URL or HTTP template into the request fields and also want access to the raw HTTP body. Example: message GetResourceRequest { // A unique request id. string request_id = 1; // The raw HTTP body is bound to this field. google.api.HttpBody http_body = 2; } service ResourceService { rpc GetResource(GetResourceRequest) returns (google.api.HttpBody); rpc UpdateResource(google.api.HttpBody) returns (google.protobuf.Empty); } Example with streaming methods: service CaldavService { rpc GetCalendar(stream google.api.HttpBody) returns (stream google.api.HttpBody); rpc UpdateCalendar(stream google.api.HttpBody) returns (stream google.api.HttpBody); } Use of this type only changes how the request and response bodies are handled, all other features will continue to work unchanged.",
+      "id": "HttpBody",
+      "properties": {
+        "contentType": {
+          "description": "The HTTP Content-Type header value specifying the content type of the body.",
+          "type": "string"
+        },
+        "data": {
+          "description": "The HTTP request/response body as raw binary.",
+          "format": "byte",
+          "type": "string"
+        },
+        "extensions": {
+          "description": "Application specific response metadata. Must be set in the first response for streaming APIs.",
+          "items": {
+            "additionalProperties": {
+              "description": "Properties of the object. Contains field @type with type URL.",
+              "type": "any"
+            },
+            "type": "object"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -4381,6 +4736,48 @@
       },
       "type": "object"
     },
+    "ResponseFormat": {
+      "description": "Defines the format of the response.",
+      "id": "ResponseFormat",
+      "properties": {
+        "jsonSchema": {
+          "$ref": "ResponseFormatSchema",
+          "description": "Optional. The JSON schema to follow. Only used if type is \"json_schema\"."
+        },
+        "type": {
+          "description": "Required. Type of the response. Can be either: - \"text\": Format the response as text. - \"json_object\": Format the response as a JSON object. - \"json_schema\": Format the response as a JSON object following the given schema.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ResponseFormatSchema": {
+      "description": "Schema for the response.",
+      "id": "ResponseFormatSchema",
+      "properties": {
+        "description": {
+          "description": "Optional. Description of the object represented by the schema.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Required. Name of the object type represented by the schema.",
+          "type": "string"
+        },
+        "schema": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Optional. The JSON schema to follow.",
+          "type": "object"
+        },
+        "strict": {
+          "description": "Optional. Whether the schema validation is strict. If true, the model will fail if the schema is not valid. NOTE: This parameter is currently ignored.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "RetrievalMetadata": {
       "description": "Metadata related to retrieval in the grounding flow.",
       "id": "RetrievalMetadata",
@@ -4722,6 +5119,17 @@
         "message": {
           "description": "A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the google.rpc.Status.details field, or localized by the client.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "StreamOptions": {
+      "description": "Options for streaming requests.",
+      "id": "StreamOptions",
+      "properties": {
+        "includeUsage": {
+          "description": "Optional. If set, include usage statistics in the response.",
+          "type": "boolean"
         }
       },
       "type": "object"
