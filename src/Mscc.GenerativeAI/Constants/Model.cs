@@ -12,6 +12,7 @@ namespace Mscc.GenerativeAI
     public static class Model
     {
         // Gemini 1.0
+        // Gemini 1.0 Pro will be discontinued on February 15, 2025.
         public const string GeminiPro = "gemini-pro";
         public const string Gemini10Pro = "gemini-1.0-pro";
         public const string Gemini10Pro001 = "gemini-1.0-pro-001";
