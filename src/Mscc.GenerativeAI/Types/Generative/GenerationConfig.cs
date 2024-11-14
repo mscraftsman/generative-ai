@@ -86,5 +86,9 @@ namespace Mscc.GenerativeAI
         /// This sets the number of top logprobs to return at each decoding step in the Candidate.logprobs_result.
         /// </summary>
         public int? Logprobs { get; set; }
+        /// <summary>
+        /// Optional. Enables enhanced civic answers. It may not be available for all models.
+        /// </summary>
+        public bool? EnableEnhancedCivicAnswers { get; set; }
     }
 }
