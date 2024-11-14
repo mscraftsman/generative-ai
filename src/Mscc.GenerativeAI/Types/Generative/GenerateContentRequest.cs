@@ -15,7 +15,7 @@ namespace Mscc.GenerativeAI
     {
         /// <summary>
         /// Required. The name of the Model to use for generating the completion.
-        /// Format: name=models/{model}.
+        /// Format: models/{model}.
         /// </summary>
         public string Model { get; set; }
         /// <summary>
