@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 
+- add services for `Chat`, `Embeddings`, and `OpenAI`
 - add `EnableEnhancedCivicAnswers` property
 
 ## 1.9.1
