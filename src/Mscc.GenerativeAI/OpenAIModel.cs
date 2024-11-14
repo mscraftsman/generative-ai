@@ -55,7 +55,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var url = $"{BaseUrlGoogleAi}/openai/chat/completions";
+            var url = $"{BaseUrlGoogleAi}/openai/embeddings";
             url = ParseUrl(url);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
