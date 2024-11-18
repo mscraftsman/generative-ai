@@ -17,6 +17,9 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         private readonly GenerativeModel _client;
 
+        /// <inheritdoc/>
+        public EmbeddingGeneratorMetadata Metadata { get; }
+
         public GeminiEmbeddingGenerator(string apiKey, string model = "")
         {
             var genAi = new GoogleAI(apiKey);
@@ -25,15 +28,8 @@ namespace Mscc.GenerativeAI.Microsoft
         }
 
         /// <inheritdoc/>
-        public EmbeddingGeneratorMetadata Metadata { get; }
-
-        /// <inheritdoc/>
-        public TService? GetService<TService>(object? key) 
-            where TService : class
-            => key is null ? this as TService : null;
-
-        /// <inheritdoc/>
-        public async Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(IEnumerable<string> values, 
+        public async Task<GeneratedEmbeddings<Embedding<float>>> GenerateAsync(
+            IEnumerable<string> values, 
             EmbeddingGenerationOptions? options = null,
             CancellationToken cancellationToken = default)
         {
@@ -43,10 +39,13 @@ namespace Mscc.GenerativeAI.Microsoft
             var response = await _client.EmbedContent(request);
             return MicrosoftAi.AbstractionMapper.ToGeneratedEmbeddings(request, response);
         }
+
+        /// <inheritdoc/>
+        public TService? GetService<TService>(object? key) 
+            where TService : class
+            => key is null ? this as TService : null;
         
         /// <inheritdoc/>
-        public void Dispose()
-        {
-        }
+        public void Dispose() { }
     }
 }

@@ -17,6 +17,9 @@ public sealed class GeminiChatClient : IChatClient
     /// Gets the Gemini model that is used to communicate with.
     /// </summary>
     private readonly GenerativeModel _client;
+    
+    /// <inheritdoc/>
+    public ChatClientMetadata Metadata { get; }
 
     /// <summary>
     /// Creates an instance of the Gemini API client.
@@ -29,17 +32,10 @@ public sealed class GeminiChatClient : IChatClient
         _client = genAi.GenerativeModel(model);
         Metadata = new(providerName, null, model);
     }
-    
-    /// <inheritdoc/>
-    public ChatClientMetadata Metadata { get; }
 
     /// <inheritdoc/>
-    public TService? GetService<TService>(object? key) 
-        where TService : class
-        => key is null ? this as TService : null;
-
-    /// <inheritdoc/>
-    public async Task<ChatCompletion> CompleteAsync(IList<ChatMessage> chatMessages, 
+    public async Task<ChatCompletion> CompleteAsync(
+        IList<ChatMessage> chatMessages, 
         ChatOptions? options = null,
         CancellationToken cancellationToken = default)
     {
@@ -52,7 +48,8 @@ public sealed class GeminiChatClient : IChatClient
     }
 
     /// <inheritdoc/>
-    public async IAsyncEnumerable<StreamingChatCompletionUpdate> CompleteStreamingAsync(IList<ChatMessage> chatMessages, 
+    public async IAsyncEnumerable<StreamingChatCompletionUpdate> CompleteStreamingAsync(
+        IList<ChatMessage> chatMessages, 
         ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -63,9 +60,12 @@ public sealed class GeminiChatClient : IChatClient
 		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
 			yield return MicrosoftAi.AbstractionMapper.ToStreamingChatCompletionUpdate(response);
     }
+
+    /// <inheritdoc/>
+    public TService? GetService<TService>(object? key) 
+        where TService : class
+        => key is null ? this as TService : null;
         
     /// <inheritdoc/>
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
 }
