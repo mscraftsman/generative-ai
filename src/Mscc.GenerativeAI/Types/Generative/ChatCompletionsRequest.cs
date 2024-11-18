@@ -13,6 +13,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string Model { get; set; }
         /// <summary>
+        /// Required. The chat history to use for generating the completion.
+        /// Supports single and multi-turn queries.
+        /// Note: This is a polymorphic field, it is deserialized to a InternalChatMessage.
+        /// </summary>
+        public List<object> Messages { get; set; }
+        /// <summary>
         /// Optional. The maximum number of tokens to include in a response candidate.
         /// Must be a positive integer.
         /// </summary>
@@ -23,16 +29,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public int? MaxTokens { get; set; }
         /// <summary>
-        /// Required. The chat history to use for generating the completion.
-        /// Supports single and multi-turn queries.
-        /// Note: This is a polymorphic field, it is deserialized to a InternalChatMessage.
-        /// </summary>
-        public List<object> Messages { get; set; }
-        /// <summary>
         /// Optional. Amount of candidate completions to generate.
         /// Must be a positive integer. Defaults to 1 if not set.
         /// </summary>
-        public int N { get; set; } = 1;
+        public int? N { get; set; } = 1;
         /// <summary>
         /// Optional. Defines the format of the response. If not set, the response will be formatted as text.
         /// </summary>

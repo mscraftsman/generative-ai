@@ -5,10 +5,16 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public class GenerateEmbeddingsRequest
     {
+        private string _model;
+
         /// <summary>
         /// Required. Model to generate the embeddings for.
         /// </summary>
-        public string Model { get; set; }
+        public string Model
+        {
+            get => _model;
+            set => _model = value.SanitizeModelName();
+        }
         /// <summary>
         /// Required. The input to generate embeddings for.
         /// Can be a string, or a list of strings.

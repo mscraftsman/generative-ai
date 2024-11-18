@@ -99,5 +99,31 @@ namespace Test.Mscc.GenerativeAI
                 output.WriteLine(x.ToString());
             });
         }
+
+        [Fact]
+        public async Task Use_EmbeddingsEndpoint()
+        {
+            // Arrange
+            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = new EmbeddingsModel()
+            {
+                ApiKey = fixture.ApiKey, 
+                AccessToken = fixture.ApiKey is null ? fixture.AccessToken : null
+            };
+            var request = new GenerateEmbeddingsRequest()
+            {
+                Model = _model,
+                Input = new[] {
+                    "What is the meaning of life?",
+                    "How much wood would a woodchuck chuck?",
+                    "How does the brain work?"}
+            };
+            
+            // Act
+            var response = await model.Embeddings(request);
+            
+            // Assert
+            response.Should().NotBeNull();
+        }
     }
 }
