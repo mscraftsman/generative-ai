@@ -47,6 +47,10 @@ namespace Mscc.GenerativeAI
         public const string Gemini15FlashExperimental0827 = "gemini-1.5-flash-exp-0827";
         public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
         public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
+
+        public const string GeminiExperimental1114 = "gemini-exp-1114";
+        public const string GeminiExperimental = GeminiExperimental1114;
+        
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
