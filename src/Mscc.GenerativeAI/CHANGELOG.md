@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 
-- add model `gemini-exp-1114`
+- add model `gemini-exp-1114` - [#45](https://github.com/mscraftsman/generative-ai/issues/45) thanks to @shankarvashist
 - add models `gemini-1.5-flash-8b` and `gemini-1.5-flash-8b-latest`
 - add services for `Chat`, `Embeddings`, and `OpenAI`
 - add `EnableEnhancedCivicAnswers` property
