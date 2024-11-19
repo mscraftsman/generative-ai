@@ -32,7 +32,7 @@ namespace Mscc.GenerativeAI
         /// Optional. Amount of candidate completions to generate.
         /// Must be a positive integer. Defaults to 1 if not set.
         /// </summary>
-        public int? N { get; set; } = 1;
+        public int? N { get; set; }
         /// <summary>
         /// Optional. Defines the format of the response. If not set, the response will be formatted as text.
         /// </summary>
@@ -47,7 +47,7 @@ namespace Mscc.GenerativeAI
         /// If true, the \"object\" field in the response will be \"chat.completion.chunk\".
         /// Otherwise it will be \"chat.completion\".
         /// </summary>
-        public bool Stream { get; set; }
+        public bool? Stream { get; set; }
         /// <summary>
         /// Optional. Options for streaming requests.
         /// </summary>
