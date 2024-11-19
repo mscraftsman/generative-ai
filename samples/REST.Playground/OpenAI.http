@@ -1,0 +1,14 @@
+
+POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+Authorization: Bearer {{apiKey}}
+Content-Type: application/json
+
+{
+  "model": "gemini-1.5-flash",
+  "messages": [
+    { "role": "system", "content": "You are a helpful assistant."},
+    { "role": "user", "content": "Explain to me how AI works"}
+  ]
+}
+
+###
