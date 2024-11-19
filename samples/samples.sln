@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mscc.GenerativeAI.Microsoft
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftExtensions.Gemini", "MicrosoftExtensions.Gemini\MicrosoftExtensions.Gemini.csproj", "{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAI.Gemini", "OpenAI.Gemini\OpenAI.Gemini.csproj", "{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

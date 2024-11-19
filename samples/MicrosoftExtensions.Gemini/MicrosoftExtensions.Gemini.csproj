@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Mscc.GenerativeAI" Version="1.8.2" />
-        <PackageReference Include="Mscc.GenerativeAI.Microsoft" Version="1.8.2-preview" />
+        <PackageReference Include="Mscc.GenerativeAI.Microsoft" Version="1.9.2" />
     </ItemGroup>
 
 <!--    <ItemGroup>-->
