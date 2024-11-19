@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="cancellationToken"></param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<HttpBody> Completions(ChatCompletionsRequest request,
+        public async Task<ChatCompletionsResponse> Completions(ChatCompletionsRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -53,7 +53,7 @@ namespace Mscc.GenerativeAI
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload, cancellationToken);
             await response.EnsureSuccessAsync();
-            return await Deserialize<HttpBody>(response);
+            return await Deserialize<ChatCompletionsResponse>(response);
         }
 
         /// <summary>
