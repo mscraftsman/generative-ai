@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.9.3
+
+### Changed
+
+- overwrite HTTP handling of API key
+- mark properties as optional
+- deserialize and return chat completions response
+
 ## 1.9.2
 
 ### Added 
