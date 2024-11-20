@@ -1,0 +1,21 @@
+curl https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{$dotenv GOOGLE_API_KEY}} \
+    -H 'Content-Type: application/json' \
+    -X POST \
+    -d '{
+      "contents": [{
+        "parts":[{
+          "text": "Write a story about a magic backpack."}]}]}' 2> /dev/null
+
+###
+
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
+x-goog-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "contents": [{
+    "parts":[{
+      "text": "Write a story about a magic backpack."
+    }]
+  }]
+}
