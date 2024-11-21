@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Text;
 
@@ -154,6 +155,7 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public BaseModel(ILogger? logger = null) : base(logger)
         {
+            SetDefaultRequestHeaders();
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
@@ -253,6 +255,21 @@ namespace Mscc.GenerativeAI
             var json = await response.Content.ReadAsStringAsync();
             return await response.Content.ReadFromJsonAsync<T>(_options);
 #endif
+        }
+
+        /// <summary>
+        /// Set default request headers of <see cref="HttpClient"/>.
+        /// </summary>
+        private void SetDefaultRequestHeaders()
+        {
+            // ('x-goog-api-client', 'genai-py/0.8.2 gl-python/3.12.3 grpc/1.68.0 gax/2.23.0')
+            // ('x-goog-request-params', 'model=models/imagen-3.0-generate-001')
+            var productHeaderValue = new ProductHeaderValue(
+                name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI", 
+                version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
+            var productInfoHeaderValue = new ProductInfoHeaderValue(productHeaderValue);
+            Client.DefaultRequestHeaders.UserAgent.Add(productInfoHeaderValue);
+            Client.DefaultRequestHeaders.Add(name: "x-goog-api-client", productInfoHeaderValue.ToString());
         }
 
         /// <summary>

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -136,11 +135,6 @@ namespace Mscc.GenerativeAI
         public GenerativeModel(ILogger? logger = null) : base(logger)
         {
             Logger.LogGenerativeModelInvoking();
-            
-            var productHeaderValue = new ProductHeaderValue(name: "Mscc.GenerativeAI", 
-                version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
-            var productInfoHeaderValue = new ProductInfoHeaderValue(productHeaderValue);
-            Client.DefaultRequestHeaders.UserAgent.Add(productInfoHeaderValue);
         }
 
         /// <summary>
