@@ -50,6 +50,9 @@ namespace Mscc.GenerativeAI
 
         public const string GeminiExperimental1114 = "gemini-exp-1114";
         public const string GeminiExperimental = GeminiExperimental1114;
+        public const string LearnLM = LearnLMExperimental;
+        public const string LearnLM15 = LearnLMExperimental;
+        public const string LearnLMExperimental = "learnlm-1.5-pro-experimental";
         
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";

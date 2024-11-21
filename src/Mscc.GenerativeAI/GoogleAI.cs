@@ -101,6 +101,8 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null)
         {
             if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
 
             _generativeModel = new GenerativeModel(cachedContent,
                 generationConfig,
@@ -125,12 +127,33 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
         public CachedContentModel CachedContent()
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             var cachedContent = new CachedContentModel() 
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
             };
             return cachedContent;
+        }
+
+        /// <summary>
+        /// Returns an instance of <see cref="ImageGenerationModel"/> to use with a model.
+        /// </summary>
+        /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <returns>Imagen model</returns>
+        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
+        public ImageGenerationModel ImageGenerationModel(string model = Model.Imagen3)
+        {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
+            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model)
+            {
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return imageGenerationModel;
         }
 
         /// <summary>
@@ -151,6 +174,9 @@ namespace Mscc.GenerativeAI
             bool resumable = false,
             CancellationToken cancellationToken = default)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _mediaModel ??= new()
             {
                 ApiKey = _apiKey, 
@@ -178,6 +204,9 @@ namespace Mscc.GenerativeAI
             bool resumable = false,
             CancellationToken cancellationToken = default)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _mediaModel ??= new()
             {
                 ApiKey = _apiKey, 
@@ -199,6 +228,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GeneratedFile> DownloadFile(string file)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _mediaModel ??= new()
             {
                 ApiKey = _apiKey, 
@@ -218,6 +250,9 @@ namespace Mscc.GenerativeAI
         public async Task<ListFilesResponse> ListFiles(int? pageSize = 100,
             string? pageToken = null)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _filesModel ??= new()
             {
                 ApiKey = _apiKey, 
@@ -236,6 +271,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<FileResource> GetFile(string file)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _filesModel ??= new()
             {
                 ApiKey = _apiKey, 
@@ -254,6 +292,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<string> DeleteFile(string file)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _filesModel ??= new()
             {
                 ApiKey = _apiKey, 
@@ -273,6 +314,9 @@ namespace Mscc.GenerativeAI
         public async Task<ListGeneratedFilesResponse> ListGeneratedFiles(int? pageSize = 100,
             string? pageToken = null)
         {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
             _generatedFilesModel ??= new()
             {
                 ApiKey = _apiKey, 

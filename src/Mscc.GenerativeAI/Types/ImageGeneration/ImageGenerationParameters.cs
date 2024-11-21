@@ -34,8 +34,12 @@ namespace Mscc.GenerativeAI
         public string? NegativePrompt { get; set; }
 
         /// <summary>
-        /// Optional. For model version 006 and greater use editConfig.guidanceScale. Controls how much the model adheres to the text prompt. Large values increase output and prompt alignment, but may compromise image quality.
+        /// Optional. For model version 006 and greater use editConfig.guidanceScale.
         /// </summary>
+        /// <remarks>
+        /// Controls how much the model adheres to the text prompt.
+        /// Large values increase output and prompt alignment, but may compromise image quality.
+        /// </remarks>
         public int? GuidanceScale { get; set; }
 
         /// <summary>

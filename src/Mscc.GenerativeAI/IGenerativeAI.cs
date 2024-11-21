@@ -47,5 +47,11 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when model parameter is null.</exception>
         /// <exception cref="NotSupportedException">Thrown when the backend does not support this method or the model.</exception>
         public Task<ModelResponse> GetModel(string model);
+
+        /// <summary>
+        /// Returns an instance of an image generation model.
+        /// </summary>
+        /// <param name="model">Model to use (default: "imagegeneration")</param>
+        public ImageGenerationModel ImageGenerationModel(string model);
     }
 }
