@@ -16,12 +16,12 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<Instance>? Instances { get; set; }
+        public IEnumerable<Instance> Instances { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public ImageGenerationParameters? Parameters { get; set; }
+        public ImageGenerationParameters Parameters { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationRequest"/> class.

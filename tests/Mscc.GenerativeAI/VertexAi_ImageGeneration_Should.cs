@@ -19,9 +19,9 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class ImageGenerationShould(ITestOutputHelper output, ConfigurationFixture fixture)
+    public class VertexAi_ImageGeneration_Should(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.ImageGeneration;
+        private readonly string _model = Model.Imagen3;
 
         [Fact]
         public void Initialize_VertexAI()
@@ -47,7 +47,7 @@ namespace Test.Mscc.GenerativeAI
             
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected}");
+            model.Name.Should().Be($"{expected.SanitizeModelName()}");
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageGeneration}");
+            model.Name.Should().Be($"{Model.ImageGeneration.SanitizeModelName()}");
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageGeneration}");
+            model.Name.Should().Be($"{Model.Imagen3.SanitizeModelName()}");
         }
 
         [Fact]
