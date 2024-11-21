@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.9.4
+
+### Added
+
+- add LearnLM model `learnlm-1.5-pro-experimental`
+- add Imagen3 on Google AI
+- extend interface for Imagen Generation Model
+
+### Changed
+
+- guard initialisation of models/services (Google AI)
+ 
 ## 1.9.3
 
 ### Changed
