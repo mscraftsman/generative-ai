@@ -139,6 +139,24 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Returns an instance of <see cref="ImageGenerationModel"/> to use with a model.
+        /// </summary>
+        /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <returns>Imagen model</returns>
+        /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
+        public ImageGenerationModel ImageGenerationModel(string model = Model.Imagen3)
+        {
+            if (_apiKey is null && _accessToken is null) 
+                throw new ArgumentNullException(message: "Either API key or access token is required.", null);
+
+            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model)
+            {
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return imageGenerationModel;
+        }
+
+        /// <summary>
         /// Uploads a file to the File API backend.
         /// </summary>
         /// <param name="uri">URI or path to the file to upload.</param>
