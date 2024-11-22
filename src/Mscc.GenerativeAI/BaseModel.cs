@@ -75,7 +75,7 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// The value can only be set or modified before the first request is made.
         /// </remarks>
-        public string? ApiKey
+        public virtual string? ApiKey
         {
             set
             {

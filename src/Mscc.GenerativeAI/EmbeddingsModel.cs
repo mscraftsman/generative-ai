@@ -18,7 +18,7 @@ namespace Mscc.GenerativeAI
         protected override string Version => ApiVersion.V1Beta;
         
         /// <inheritdoc cref="BaseModel"/>
-        public string? ApiKey
+        public override string? ApiKey
         {
             set
             {
