@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.9.5
+
+### Added
+
+- add model `gemini-exp-1121` - [#47](https://github.com/mscraftsman/generative-ai/issues/47) thanks to @doggy8088
+- set package identifier as User-Agent and Google API Client
+
+### Changed
+
+- improve inheritance modifiers
+
 ## 1.9.4
 
 ### Added
