@@ -39,6 +39,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use.</param>
         /// <param name="datasetUri">URI of dataset for training.</param>
         /// <param name="validationUri">URI of dataset for validation.</param>
+        /// <param name="displayName"></param>
         /// <param name="parameters">Immutable. Hyperparameters controlling the tuning process. If not provided, default values will be used.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="model"/> is empty or null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="datasetUri"/> is empty or null.</exception>

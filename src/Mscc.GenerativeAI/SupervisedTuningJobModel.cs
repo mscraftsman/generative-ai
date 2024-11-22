@@ -96,6 +96,7 @@ namespace Mscc.GenerativeAI
         /// Cancels a tuning job.
         /// </summary>
         /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
         public async Task<string> Cancel(string tuningJobId,
