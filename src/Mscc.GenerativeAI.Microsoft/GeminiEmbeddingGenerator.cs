@@ -41,10 +41,9 @@ namespace Mscc.GenerativeAI.Microsoft
         }
 
         /// <inheritdoc/>
-        public TService? GetService<TService>(object? key) 
-            where TService : class
-            => key is null ? this as TService : null;
-        
+        public object? GetService(Type serviceType, object? key)
+            => key is null && serviceType?.IsInstanceOfType(this) is true ? this : null;
+
         /// <inheritdoc/>
         public void Dispose() { }
     }
