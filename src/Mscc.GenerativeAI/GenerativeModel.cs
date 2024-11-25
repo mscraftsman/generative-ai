@@ -407,7 +407,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
         /// <param name="tunedModel">The tuned model to update.</param>
-        /// <param name="updateMask">Required. The list of fields to update. This is a comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".</param>
+        /// <param name="updateMask">Optional. The list of fields to update. This is a comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>

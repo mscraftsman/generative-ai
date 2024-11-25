@@ -1819,7 +1819,7 @@
               "type": "string"
             },
             "updateMask": {
-              "description": "Required. The list of fields to update.",
+              "description": "Optional. The list of fields to update.",
               "format": "google-fieldmask",
               "location": "query",
               "type": "string"
@@ -2131,7 +2131,7 @@
       }
     }
   },
-  "revision": "20241115",
+  "revision": "20241122",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
