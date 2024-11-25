@@ -408,6 +408,27 @@ To run the tests, either enter the relevant information into the [appsettings.js
 
 The test cases should provide more insights and use cases on how to use the [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) package in your .NET projects.
 
+## Try it out 🤩
+
+The following link opens an instance of the code repository in Google Project IDX.
+
+<a href="https://idx.google.com/import?url=https%3A%2F%2Fgithub.com%2Fmscraftsman%2Fgenerative-ai">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://cdn.idx.dev/btn/try_dark_32.svg">
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://cdn.idx.dev/btn/try_light_32.svg">
+    <img
+      height="32"
+      alt="Try in IDX"
+      src="https://cdn.idx.dev/btn/try_purple_32.svg">
+  </picture>
+</a>
+
+This lets you work instantly with the code base without having to install anything.
+
 ## Feedback ✨
 
 For support and feedback kindly create issues at the <https://github.com/mscraftsman/generative-ai> repository.
