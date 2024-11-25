@@ -6,9 +6,6 @@
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.dotnetCorePackages.sdk_9_0
-    (pkgs.google-cloud-sdk.withExtraComponents [
-      pkgs.google-cloud-sdk.components.cloud-run-proxy
-    ])
   ];
 
   # Sets environment variables in the workspace
@@ -20,6 +17,7 @@
 
   # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
+    "ms-dotnettools.csharp"
     "ms-azuretools.vscode-docker"
     "humao.rest-client"
     "rangav.vscode-thunder-client"
