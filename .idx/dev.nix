@@ -17,7 +17,7 @@
 
   # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
-    "ms-dotnettools.csharp"
+    "muhammad-sammy.csharp"
     "ms-azuretools.vscode-docker"
     "humao.rest-client"
     "rangav.vscode-thunder-client"
