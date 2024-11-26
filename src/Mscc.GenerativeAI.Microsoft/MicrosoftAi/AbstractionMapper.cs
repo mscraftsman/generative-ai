@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 #endif
-using Microsoft.Extensions.AI;
+using mea = Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
 {
@@ -18,9 +18,9 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// <param name="chatMessages">A list of chat messages.</param>
         /// <param name="options">Optional. Chat options to configure the request.</param>
         /// <returns></returns>
-        public static GenerateContentRequest? ToGeminiGenerateContentRequest(IList<ChatMessage> chatMessages, ChatOptions? options)
+        public static GenerateContentRequest? ToGeminiGenerateContentRequest(IList<mea.ChatMessage> chatMessages, mea.ChatOptions? options)
         {
-            var prompt = string.Join<ChatMessage>(" ", chatMessages.ToArray()) ?? "";
+            var prompt = string.Join<mea.ChatMessage>(" ", chatMessages.ToArray()) ?? "";
             
             GenerationConfig? generationConfig = null;
             if (options?.AdditionalProperties?.Any() ?? false)
@@ -47,11 +47,11 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         }
 
         /// <summary>
-        /// Converts a <see cref="ChatOptions"/> to a <see cref="RequestOptions"/>.
+        /// Converts a <see cref="mea.ChatOptions"/> to a <see cref="RequestOptions"/>.
         /// </summary>
         /// <param name="options">Chat options to configure the request.</param>
         /// <returns></returns>
-        public static RequestOptions? ToGeminiGenerateContentRequestOptions(ChatOptions? options)
+        public static RequestOptions? ToGeminiGenerateContentRequestOptions(mea.ChatOptions? options)
         {
             if (options is null) return null;
 
@@ -79,7 +79,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// </summary>
         /// <param name="values">The values to get embeddings for</param>
         /// <param name="options">The options for the embeddings</param>
-        public static EmbedContentRequest ToGeminiEmbedContentRequest(IEnumerable<string> values, EmbeddingGenerationOptions? options)
+        public static EmbedContentRequest ToGeminiEmbedContentRequest(IEnumerable<string> values, mea.EmbeddingGenerationOptions? options)
         {
             return new EmbedContentRequest(string.Join(" ", values))
             {
@@ -88,17 +88,17 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         }
         
         /// <summary>
-        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="ChatCompletion"/>.
+        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatCompletion"/>.
         /// </summary>
         /// <param name="response">The response with completion data.</param>
         /// <returns></returns>
-        public static ChatCompletion? ToChatCompletion(GenerateContentResponse? response)
+        public static mea.ChatCompletion? ToChatCompletion(GenerateContentResponse? response)
         {
             if (response is null) return null;
 
             var chatMessage = ToChatMessage(response);
 
-            return new ChatCompletion(chatMessage)
+            return new mea.ChatCompletion(chatMessage)
             {
                 FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
                 AdditionalProperties = null,
@@ -112,35 +112,35 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         }
 
         /// <summary>
-        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="StreamingChatCompletionUpdate"/>.
+        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.StreamingChatCompletionUpdate"/>.
         /// </summary>
         /// <param name="response">The response stream to convert.</param>
-        public static StreamingChatCompletionUpdate ToStreamingChatCompletionUpdate(GenerateContentResponse? response)
+        public static mea.StreamingChatCompletionUpdate ToStreamingChatCompletionUpdate(GenerateContentResponse? response)
         {
-            return new StreamingChatCompletionUpdate
+            return new mea.StreamingChatCompletionUpdate
             {
                 // no need to set "Contents" as we set the text
                 CompletionId = null,
                 ChoiceIndex = 0, // should be left at 0 as Mscc.GenerativeAI does not support this
                 CreatedAt = null,
                 AdditionalProperties = null,
-                FinishReason = response?.Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Other ? ChatFinishReason.Stop : null,
+                FinishReason = response?.Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Other ? mea.ChatFinishReason.Stop : null,
                 RawRepresentation = response,
                 Text = response?.Text,
                 Role = ToAbstractionRole(response?.Candidates?.FirstOrDefault()?.Content?.Role)
             };
         }
 
-        public static GeneratedEmbeddings<Embedding<float>> ToGeneratedEmbeddings(EmbedContentRequest request, EmbedContentResponse response)
+        public static mea.GeneratedEmbeddings<mea.Embedding<float>> ToGeneratedEmbeddings(EmbedContentRequest request, EmbedContentResponse response)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (response == null) throw new ArgumentNullException(nameof(response));
 
-            AdditionalPropertiesDictionary? responseProps = null;
-            UsageDetails? usage = null;
+            mea.AdditionalPropertiesDictionary? responseProps = null;
+            mea.UsageDetails? usage = null;
 
-            return new GeneratedEmbeddings<Embedding<float>>([
-                new Embedding<float>(response.Embedding?.Values.ToArray() ?? [])
+            return new mea.GeneratedEmbeddings<mea.Embedding<float>>([
+                new mea.Embedding<float>(response.Embedding?.Values.ToArray() ?? [])
                 {
                     CreatedAt = DateTimeOffset.Now,
                     ModelId = request.Model
@@ -155,54 +155,54 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// Maps a <see cref="GenerateContentResponse"/> to a <see cref="ChatMessage"/>.
         /// </summary>
         /// <param name="response">The response to map.</param>
-        private static ChatMessage ToChatMessage(GenerateContentResponse response)
+        private static mea.ChatMessage ToChatMessage(GenerateContentResponse response)
         {
-            var contents = new List<AIContent>();
+            var contents = new List<mea.AIContent>();
             if (response.Text?.Length > 0)
-                contents.Insert(0, new TextContent(response.Text));
+                contents.Insert(0, new mea.TextContent(response.Text));
 
-            return new ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role), contents)
+            return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role), contents)
             {
                 RawRepresentation = response
             };
         }
 
         /// <summary>
-        /// Maps a <see cref="Mscc.GenerativeAI.Role"/> to a <see cref="ChatRole"/>.
+        /// Maps a <see cref="Mscc.GenerativeAI.Role"/> to a <see cref="mea.ChatRole"/>.
         /// </summary>
         /// <param name="role">The role to map.</param>
-        private static ChatRole ToAbstractionRole(string? role)
+        private static mea.ChatRole ToAbstractionRole(string? role)
         {
-            if (string.IsNullOrEmpty(role)) return new ChatRole("unknown");
+            if (string.IsNullOrEmpty(role)) return new mea.ChatRole("unknown");
 
             return role switch
             {
-                Role.User => ChatRole.User,
-                Role.Model => ChatRole.Assistant,
-                Role.System => ChatRole.System,
-                Role.Function => ChatRole.Tool,
-                _ => new ChatRole(role)
+                Role.User => mea.ChatRole.User,
+                Role.Model => mea.ChatRole.Assistant,
+                Role.System => mea.ChatRole.System,
+                Role.Function => mea.ChatRole.Tool,
+                _ => new mea.ChatRole(role)
             };
         }
 
         /// <summary>
-        /// Maps a <see cref="FinishReason"/> to a <see cref="ChatFinishReason"/>.
+        /// Maps a <see cref="FinishReason"/> to a <see cref="mea.ChatFinishReason"/>.
         /// </summary>
         /// <param name="finishReason">The finish reason to map.</param>
-        private static ChatFinishReason? ToFinishReason(FinishReason? finishReason)
+        private static mea.ChatFinishReason? ToFinishReason(FinishReason? finishReason)
         {
             return finishReason switch
             {
                 null => null,
-                FinishReason.MaxTokens => ChatFinishReason.Length,
-                FinishReason.Stop => ChatFinishReason.Stop,
-                FinishReason.Safety => ChatFinishReason.ContentFilter,
-                FinishReason.ProhibitedContent => ChatFinishReason.ContentFilter,
-                FinishReason.Recitation => ChatFinishReason.ContentFilter,
-                FinishReason.Spii => ChatFinishReason.ContentFilter,
-                FinishReason.Blocklist => ChatFinishReason.ContentFilter,
-                FinishReason.MalformedFunctionCall => ChatFinishReason.ToolCalls,
-                _ => new ChatFinishReason(Enum.GetName(typeof(FinishReason), finishReason)!)
+                FinishReason.MaxTokens => mea.ChatFinishReason.Length,
+                FinishReason.Stop => mea.ChatFinishReason.Stop,
+                FinishReason.Safety => mea.ChatFinishReason.ContentFilter,
+                FinishReason.ProhibitedContent => mea.ChatFinishReason.ContentFilter,
+                FinishReason.Recitation => mea.ChatFinishReason.ContentFilter,
+                FinishReason.Spii => mea.ChatFinishReason.ContentFilter,
+                FinishReason.Blocklist => mea.ChatFinishReason.ContentFilter,
+                FinishReason.MalformedFunctionCall => mea.ChatFinishReason.ToolCalls,
+                _ => new mea.ChatFinishReason(Enum.GetName(typeof(FinishReason), finishReason)!)
             };
         }
 
@@ -210,8 +210,8 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// Parses usage details from a <see cref="GenerateContentResponse"/>
         /// </summary>
         /// <param name="response">The response to parse.</param>
-        /// <returns>A <see cref="UsageDetails"/> instance containing the parsed usage details.</returns>
-        private static UsageDetails? ParseContentResponseUsage(GenerateContentResponse response)
+        /// <returns>A <see cref="mea.UsageDetails"/> instance containing the parsed usage details.</returns>
+        private static mea.UsageDetails? ParseContentResponseUsage(GenerateContentResponse response)
         {
             if (response.UsageMetadata is null) return null;
 
@@ -230,7 +230,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// <param name="option">The Gemini setting to add</param>
         /// <param name="optionSetter">The <see cref="Action"/> to set the Gemini option, if available in the chat options</param>
         /// <typeparam name="T">The type of the option</typeparam>
-        private static void TryAddOption<T>(ChatOptions chatOptions, string option, Action<T> optionSetter)
+        private static void TryAddOption<T>(mea.ChatOptions chatOptions, string option, Action<T> optionSetter)
         {
             if (chatOptions.AdditionalProperties?.TryGetValue(option, out var value) ?? false)
                 optionSetter((T)value);
