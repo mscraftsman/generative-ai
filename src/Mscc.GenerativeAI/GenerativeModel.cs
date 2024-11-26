@@ -1291,7 +1291,7 @@ namespace Mscc.GenerativeAI
         /// <param name="requestOptions">Options for the request.</param>
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<CountTokensResponse> CountTokens(GenerateContentRequest? request,
+        public async Task<CountTokensResponse> CountTokens(GenerateContentRequest request,
             RequestOptions? requestOptions = null)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
