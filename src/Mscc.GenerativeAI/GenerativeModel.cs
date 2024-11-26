@@ -41,7 +41,7 @@ namespace Mscc.GenerativeAI
                     url = UrlVertexAi;
                     if (!string.IsNullOrEmpty(_endpointId))
                     {
-                        url = "{BaseUrlVertexAi}/{_endpointId}";
+                        url = "{BaseUrlVertexAi}/{endpointId}";
                     }
                 }
 
