@@ -1352,6 +1352,26 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request);
         }
 
+        public async Task<ComputeTokensResponse> ComputeTokens(ComputeTokensRequest request,
+            RequestOptions? requestOptions = null)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            
+            var method = GenerativeAI.Method.CountTokens;
+            var url = ParseUrl(Url, method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            
+            if (requestOptions != null)
+            {
+                Client.Timeout = requestOptions.Timeout;
+            }
+            
+            var response = await Client.PostAsync(url, payload);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<ComputeTokensResponse>(response);
+        }
+
         // Todo: Implementation missing
         /// <summary>
         /// Starts a chat session. 
