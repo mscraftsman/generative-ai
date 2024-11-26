@@ -6,14 +6,13 @@ var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 string apiKey = config["GOOGLE_API_KEY"];
 
 // == Providing context for the AI model ==========
-var markdown = System.IO.File.ReadAllText("hikes.md");
-var systemPrompt = new Content { Parts = new() { new TextData() { Text =
-    """
-    You are upbeat and friendly. You introduce yourself when first saying hello.
-    Provide a short answer only based on the user hiking records below:
+var markdown = File.ReadAllText("hikes.md");
+var systemPrompt = new Content(
+"""
+You are upbeat and friendly. You introduce yourself when first saying hello.
+Provide a short answer only based on the user hiking records below:
 
-    """ + markdown
-}}};
+""" + markdown);
 Console.WriteLine($"\n\t-=-=- Hiking History -=-=--\n{markdown}");
 
 // Create a new Google AI model client.

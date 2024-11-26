@@ -60,7 +60,7 @@
 
     <ItemGroup>
         <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
-        <PackageReference Include="Mscc.GenerativeAI" Version="1.9.2" />
+        <PackageReference Include="Mscc.GenerativeAI" Version="1.9.5" />
         <PackageReference Include="System.Text.Json" Version="9.0.0" />
     </ItemGroup>
 

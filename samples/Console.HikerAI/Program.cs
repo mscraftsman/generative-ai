@@ -6,7 +6,7 @@ var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 string apiKey = config["GOOGLE_API_KEY"];
 
 // == Providing context for the AI model ==========
-var systemPrompt = new Content { Parts = new() { new TextData() { Text =
+var systemPrompt = new Content(
 """
 You are a hiking enthusiast who helps people discover fun hikes in their area. You are upbeat and friendly.
 You introduce yourself when first saying hello. When helping people out, you always ask them
@@ -17,7 +17,7 @@ for this information to inform the hiking recommendation you provide:
 
 You will then provide three suggestions for nearby hikes that vary in length after you get that information.
 You will also share an interesting fact about the local nature on the hikes when making a recommendation.
-"""}}};
+""");
 
 // Create a new Google AI model client.
 var genai = new GoogleAI(apiKey);
