@@ -15,6 +15,7 @@ Access and integrate the Gemini API into your .NET applications. The packages su
 
 Read more about [Mscc.GenerativeAI.Web](./src/Mscc.GenerativeAI.Web) and how to add it to your ASP.NET (Core) web applications.
 Read more about [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google).
+Read more about [Mscc.GenerativeAI.Microsoft](./src/Mscc.GenerativeAI.Microsoft) and how to use it with Semantic Kernel.
 
 ## Install the package 🖥️
 
@@ -36,7 +37,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="1.9.5" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="1.9.6" />
   </ItemGroup>
 ```
 
@@ -119,7 +120,7 @@ Google AI with OAuth. Use `gcloud auth application-default print-access-token` t
 ```csharp
 using Mscc.GenerativeAI;
 // Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
-var model = new GenerativeModel(model: Model.GeminiPro);
+var model = new GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
 ```
 
@@ -207,7 +208,7 @@ The simplest version is to toggle the boolean property `UseGrounding`, like so.
 var apiKey = "your_api_key";
 var prompt = "What is the current Google stock price?";
 var genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel("gemini-1.5-pro-002");
+var model = genAi.GenerativeModel(Model.Gemini15Pro002);
 model.UseGrounding = true;
 
 var response = await model.GenerateContent(prompt);
@@ -220,7 +221,7 @@ In case that you would like to have more control over the Google Search retrieva
 var apiKey = "your_api_key";
 var prompt = "Who won Wimbledon this year?";
 IGenerativeAI genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel("gemini-1.5-pro-002",
+var model = genAi.GenerativeModel(Model.Gemini15Pro002,
     tools: [new Tool { GoogleSearchRetrieval = 
         new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
 
@@ -357,7 +358,7 @@ Read more about [Tune Gemini Pro in Google AI Studio or with the Gemini API](htt
 
 The folders [samples](./samples) and [tests](./tests) contain more examples.
 
-- [Simple console application](./samples/Console.Minimal.Prompt)
+- [Sample console application](./samples/Console.Minimal.Prompt)
 - [ASP.NET Core Minimal web application](./samples/Web.Minimal.Api)
 - [ASP.NET Core MVP web application](./samples/Web.Mvc) (work in progress!)
 

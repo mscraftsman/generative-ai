@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.9.6
+
+### Added
+
+- add Project IDX development environment
+- add OpenAI sample app
+
+### Changed
+
+- rename due to type/namespace conflict
+- update NuGet packages
+
 ## 1.9.5
 
 ### Added
