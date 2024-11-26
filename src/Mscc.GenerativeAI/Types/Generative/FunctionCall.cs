@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
@@ -19,5 +22,6 @@ namespace Mscc.GenerativeAI
         /// See [FunctionDeclaration.parameters] for parameter details.
         /// </summary>
         public object? Args { get; set; }
+        // public virtual IDictionary<string, object>? Args { get; set; }
     }
 }

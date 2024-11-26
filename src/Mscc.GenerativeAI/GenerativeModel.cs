@@ -300,14 +300,12 @@ namespace Mscc.GenerativeAI
             string? pageToken = null, 
             string? filter = null)
         {
-            this.GuardSupported();
-            
             if (tuned)
             {
                 return await ListTunedModels(pageSize, pageToken, filter);
             }
 
-            var url = "{BaseUrlGoogleAi}/models";
+            var url = _useVertexAi ? "{BaseUrlVertexAi}/models" : "{BaseUrlGoogleAi}/models";
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(pageSize)] = Convert.ToString(pageSize), 

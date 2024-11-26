@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 #if NET9_0
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 #endif
@@ -86,8 +87,18 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.GenerativeModel(model: _model);
             model.AccessToken = fixture.AccessToken;
 
-            // Act & Assert
-            await Assert.ThrowsAsync<NotSupportedException>(() => model.ListModels());
+            // Act
+            var sut = await model.ListModels();
+
+            // Assert
+            sut.Should().NotBeNull();
+            sut.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            sut.ForEach(x =>
+            {
+                output.WriteLine($"Model: {x.DisplayName} ({x.Name})");
+                x.SupportedGenerationMethods?.ForEach(m => output.WriteLine($"  Method: {m}"));
+                x.Labels?.ToList().ForEach(k => output.WriteLine($"  {k.Key}: {k.Value}"));
+            });
         }
 
         [Theory]

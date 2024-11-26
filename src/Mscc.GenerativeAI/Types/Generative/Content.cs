@@ -41,6 +41,10 @@ namespace Mscc.GenerativeAI
             }
             set => _partTypes = value;
         }
+        /// <summary>
+        /// The ETag of the item.
+        /// </summary>
+        public string? ETag { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Content"/> class.

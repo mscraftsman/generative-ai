@@ -79,6 +79,10 @@ namespace Mscc.GenerativeAI
         /// Result of executing the ExecutableCode.
         /// </summary>
         public CodeExecutionResult CodeExecutionResult { get; set; }
+        /// <summary>
+        /// The ETag of the item.
+        /// </summary>
+        public virtual string? ETag { get; set; }
 
         public FileData FromUri(string uri, string mimetype)
         {
