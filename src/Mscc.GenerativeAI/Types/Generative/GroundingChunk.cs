@@ -8,6 +8,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Grounding chunk from the web.
         /// </summary>
-        public Web? Web { get; set; }
+        public WebChunk? Web { get; set; }
     }
 }

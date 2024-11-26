@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Chunk from the web.
     /// </summary>
-    public class Web
+    public class WebChunk
     {
         /// <summary>
         /// URI reference of the chunk.
