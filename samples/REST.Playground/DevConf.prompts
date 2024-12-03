@@ -4,8 +4,11 @@ Give me a Linux command to find all .cs files in a folder recursively, and conca
 Analyze the source code written in C#. Give an explanation of what it is doing. Then do a code analysis and provide suggestions for improvements and code stabilization.
 
 
-Give me a list of countries in Africa, their capital and population.
+Give me a Linux command to find all .cs files in a folder recursively, and concatenate them into a single file.
 
+Give me a list of countries in Asia with their names, their capital and population.
+Same in JSON format
+Same as SQL INSERT statements
 
 Inspect the image and generate a boilerplate to start a mobile application.
 
