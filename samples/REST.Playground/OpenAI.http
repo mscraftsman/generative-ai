@@ -1,4 +1,9 @@
 
+GET https://generativelanguage.googleapis.com/v1beta/openai/models
+Authorization: Bearer {{apiKey}}
+
+###
+
 POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
 Authorization: Bearer {{apiKey}}
 Content-Type: application/json

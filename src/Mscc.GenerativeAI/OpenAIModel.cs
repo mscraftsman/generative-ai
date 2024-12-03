@@ -37,6 +37,20 @@ namespace Mscc.GenerativeAI
         public OpenAIModel(ILogger? logger) : base(logger) { }
 
         /// <summary>
+        /// Lists the currently available models.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<SdkListModelsResponse> ListModels()
+        {
+            var url = $"{BaseUrlGoogleAi}/openai/models";
+            url = ParseUrl(url);
+            var response = await Client.GetAsync(url);
+            await response.EnsureSuccessAsync();
+            var models = await Deserialize<SdkListModelsResponse>(response);
+            return models;
+        }
+        
+        /// <summary>
         /// Generates a set of responses from the model given a chat history input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>

@@ -19,6 +19,25 @@ namespace Test.Mscc.GenerativeAI
         private readonly string _model = Model.Gemini15Flash;
 
         [Fact]
+        public async Task List_Models()
+        {
+            // Arrange
+            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = _model };
+
+            // Act
+            var sut = await model.ListModels();
+
+            // Assert
+            sut.Should().NotBeNull();
+            sut.Data.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            sut.Data.ForEach(x =>
+            {
+                output.WriteLine($"Model: {x.Id} ({x.Object})");
+            });
+        }
+
+        [Fact]
         public async Task ChatCompletions_Using_OpenAiModel()
         {
             // Arrange
