@@ -1624,6 +1624,22 @@
           "response": {
             "$ref": "GenerateEmbeddingsResponse"
           }
+        },
+        "models": {
+          "description": "Lists the currently available models.",
+          "flatPath": "v1beta/openai/models",
+          "httpMethod": "GET",
+          "id": "generativelanguage.openai.models",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/openai/models",
+          "response": {
+            "$ref": "SdkListModelsResponse"
+          }
         }
       },
       "resources": {
@@ -2127,11 +2143,27 @@
           "response": {
             "$ref": "GenerateEmbeddingsResponse"
           }
+        },
+        "listModels": {
+          "description": "Lists the currently available models.",
+          "flatPath": "v1beta/listModels",
+          "httpMethod": "GET",
+          "id": "generativelanguage.listModels",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/listModels",
+          "response": {
+            "$ref": "SdkListModelsResponse"
+          }
         }
       }
     }
   },
-  "revision": "20241122",
+  "revision": "20241127",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3221,7 +3253,7 @@
       "type": "object"
     },
     "File": {
-      "description": "A file uploaded to the API.",
+      "description": "A file uploaded to the API. Next ID: 15",
       "id": "File",
       "properties": {
         "createTime": {
@@ -4996,6 +5028,54 @@
             "Array type.",
             "Object type."
           ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SdkListModelsResponse": {
+      "description": "Response for list models.",
+      "id": "SdkListModelsResponse",
+      "properties": {
+        "data": {
+          "description": "Output only. A list of the requested embeddings.",
+          "items": {
+            "$ref": "SdkModel"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "object": {
+          "description": "Output only. Always \"list\", required by the SDK.",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SdkModel": {
+      "description": "The model object.",
+      "id": "SdkModel",
+      "properties": {
+        "created": {
+          "description": "Output only. The Unix timestamp (in seconds) when the model was created.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "id": {
+          "description": "Output only. Id of the model.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "object": {
+          "description": "Output only. Always \"model\", required by the SDK.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "owned_by": {
+          "description": "Output only. The organization that owns the model.",
+          "readOnly": true,
           "type": "string"
         }
       },
