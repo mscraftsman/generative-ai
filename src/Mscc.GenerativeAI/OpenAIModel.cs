@@ -39,7 +39,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Lists the currently available models.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of available models.</returns>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<SdkListModelsResponse> ListModels()
         {
             var url = $"{BaseUrlGoogleAi}/openai/models";
@@ -48,6 +49,24 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync();
             var models = await Deserialize<SdkListModelsResponse>(response);
             return models;
+        }
+
+        /// <summary>
+        /// Gets information about a specific `Model` such as its version number.
+        /// </summary>
+        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the ListModels method.</param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<SdkModel> GetModel(string? model = null)
+        {
+            model ??= _model;
+            model = model.SanitizeModelName();
+
+            var url = $"{BaseUrlGoogleAi}/openai/{model}";
+            url = ParseUrl(url);
+            var response = await Client.GetAsync(url);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<SdkModel>(response);
         }
         
         /// <summary>

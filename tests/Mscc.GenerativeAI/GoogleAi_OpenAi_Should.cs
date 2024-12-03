@@ -33,8 +33,25 @@ namespace Test.Mscc.GenerativeAI
             sut.Data.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.Data.ForEach(x =>
             {
-                output.WriteLine($"Model: {x.Id} ({x.Object})");
+                output.WriteLine($"Model: {x.Id} ({x.Object} / {x.Created}) by {x.OwnedBy}");
             });
+        }
+
+        [Theory]
+        [InlineData(Model.Gemini15Pro)]
+        [InlineData(Model.Gemini15Flash)]
+        public async Task Get_Model_Information(string modelName)
+        {
+            // Arrange
+            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = modelName };
+
+            // Act
+            var sut = await model.GetModel(model: modelName);
+
+            // Assert
+            sut.Should().NotBeNull();
+            output.WriteLine($"Model: {sut.Id} ({sut.Object} / {sut.Created}) by {sut.OwnedBy}");
         }
 
         [Fact]
