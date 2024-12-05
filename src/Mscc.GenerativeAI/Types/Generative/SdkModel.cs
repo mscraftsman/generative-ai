@@ -18,8 +18,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public long Created { get; set; }
         /// <summary>
-        /// "Output only. The organization that owns the model.
+        /// Output only. The organization that owns the model.
         /// </summary>
         public string OwnedBy { get; set; }
+        /// <summary>
+        /// Output only. Optional. An indicator whether a fine-tuned model has been deleted.
+        /// </summary>
+        public bool? Deleted { get; set; }
     }
 }
