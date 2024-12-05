@@ -2163,7 +2163,7 @@
       }
     }
   },
-  "revision": "20241127",
+  "revision": "20241204",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
