@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
+using System.Collections;
+using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -78,11 +80,11 @@ namespace Test.Mscc.GenerativeAI
             model.Name.Should().Be($"{Model.Imagen3.SanitizeModelName()}");
         }
 
-        [Fact]
-        public async Task Generate_Content()
+        [Theory]
+        [ClassData(typeof(ImagePrompts))]
+        public async Task Generate_Content(string prompt)
         {
             // Arrange
-            var prompt = "A French cafe with the Golden Gate Bridge in the background.";
             var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertexAi.ImageGenerationModel(model: _model);
             model.AccessToken = fixture.AccessToken;
@@ -104,5 +106,70 @@ namespace Test.Mscc.GenerativeAI
                 output.WriteLine($"Wrote image to {fileName}");
             }
         }
+
+        [Theory]
+        [ClassData(typeof(ImagePrompts))]
+        public async Task Generate_Images(string prompt, string aspectRatio)
+        {
+            // Arrange
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var model = vertexAi.ImageGenerationModel(model: _model);
+            model.AccessToken = fixture.AccessToken;
+
+            // Act
+            var response = await model.GenerateImages(prompt, aspectRatio: aspectRatio);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Predictions.Should().NotBeNull()
+                .And.HaveCountGreaterThanOrEqualTo(1)
+                .And.HaveCountLessThanOrEqualTo(8);
+            foreach (var image in response.Predictions)
+            {
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        image.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
+                output.WriteLine($"Wrote image to {fileName}");
+            }
+        }
+    }
+
+    internal class ImagePrompts : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[]
+            {
+                "A French cafe with the Golden Gate Bridge in the background.", 
+                "16:9"
+            };
+            yield return new object[]
+            {
+                "A screenshot of a third-person open world exploration game. The player is an adventurer exploring a forest. There is a house with a red door on the left, and a house with a blue door on the right. The camera is placed directly behind the player. #photorealistic #immersive",
+                "16:9"
+            };
+            yield return new object[]
+            {
+                "An image of a computer game showing a scene from inside a rough hewn stone cave or mine. The viewer's position is a 3rd person camera based above a player avatar looking down towards the avatar. The player avatar is a knight with a sword. In front of the knight avatar there are x3 stone arched doorways and the knight chooses to go through any one of these doors. Beyond the first and inside we can see strange green plants with glowing flowers lining that tunnel. Inside and beyond the second doorway there is a corridor of spiked iron plates riveted to the cave walls leading towards an ominous glow further along. Through the third door we can see a set of rough hewn stone steps ascending to a mysterious destination.",
+                "16:9"
+            };
+            yield return new object[]
+            {
+                "Screenshot of a world with a warrior protagonist", "16:9"
+            };
+            yield return new object[]
+            {
+                "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape",
+                "16:9"
+            };
+            yield return new object[]
+            {
+                "A panning shot of a serene mountain landscape, the camera slowly revealing snow-capped peaks, granite rocks and a crystal-clear lake reflecting the sky",
+                "16:9"
+            };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
