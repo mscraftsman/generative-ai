@@ -12,10 +12,10 @@
       <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
-      <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.30.0" />
-      <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.30.0-alpha" />
+      <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.31.0" />
+      <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.31.0-alpha" />
       <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.30.0" />
-      <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.30.0-alpha" />
+      <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.31.0-alpha" />
     </ItemGroup>
 
     <ItemGroup>
