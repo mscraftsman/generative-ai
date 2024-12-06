@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.9.7
 
+### Added
+
 - add model `gemini-exp-1206`
 - add OpenAI list models endpoint
 - add OpenAI get model endpoint
