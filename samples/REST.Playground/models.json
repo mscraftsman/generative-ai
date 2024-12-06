@@ -427,9 +427,9 @@
       "version": "001"
     },
     {
-      "description": "Experimental release (November 11th, 2024) of Gemini.",
-      "displayName": "Gemini Experimental 1114",
-      "inputTokenLimit": 32767,
+      "description": "Experimental release (November 21st, 2024) of Gemini.",
+      "displayName": "Gemini Experimental 1121",
+      "inputTokenLimit": 32768,
       "maxTemperature": 2,
       "name": "models/gemini-exp-1114",
       "outputTokenLimit": 8192,
@@ -440,7 +440,7 @@
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "exp-1114"
+      "version": "exp-1121"
     },
     {
       "description": "Experimental release (November 21st, 2024) of Gemini.",
@@ -457,6 +457,22 @@
       "topK": 64,
       "topP": 0.95,
       "version": "exp-1121"
+    },
+    {
+      "description": "Experimental release (December 6th, 2024) of Gemini.",
+      "displayName": "Gemini Experimental 1206",
+      "inputTokenLimit": 2097152,
+      "maxTemperature": 2,
+      "name": "models/gemini-exp-1206",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "exp_1206"
     },
     {
       "description": "Obtain a distributed representation of a text.",
