@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 1.9.7
+
+- add model `gemini-exp-1206`
+- add OpenAI list models endpoint
+- add OpenAI get model endpoint
+- add Imagen 3 samples from blog article
+- add list models functionality for Vertex AI
+- add ComputeTokens method for Vertex AI
+
 ## 1.9.6
 
 ### Added
