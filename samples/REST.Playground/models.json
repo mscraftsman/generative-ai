@@ -213,9 +213,9 @@
       "version": "exp-0801"
     },
     {
-      "description": "Experimental release (August 27th, 2024) of Gemini 1.5 Pro, our mid-size multimodal model that supports up to 2 million tokens, with across the board improvements. Replaced by Gemini-1.5-pro-002 (stable).",
-      "displayName": "Gemini 1.5 Pro Experimental 0827",
-      "inputTokenLimit": 2000000,
+      "description": "Experimental release (December 6th, 2024) of Gemini.",
+      "displayName": "Gemini Experimental 1206",
+      "inputTokenLimit": 2097152,
       "maxTemperature": 2,
       "name": "models/gemini-1.5-pro-exp-0827",
       "outputTokenLimit": 8192,
@@ -226,7 +226,7 @@
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "exp-0827"
+      "version": "exp-1206"
     },
     {
       "description": "Alias that points to the most recent production (non-experimental) release of Gemini 1.5 Flash, our fast and versatile multimodal model for scaling across diverse tasks.",
@@ -295,9 +295,9 @@
       "version": "001"
     },
     {
-      "description": "Experimental release (August 27th, 2024) of Gemini 1.5 Flash, our fast and versatile multimodal model for scaling across diverse tasks, with across the board improvements. Replaced by Gemini-1.5-flash-002 (stable).",
-      "displayName": "Gemini 1.5 Flash Experimental 0827",
-      "inputTokenLimit": 1000000,
+      "description": "Experimental release (December 6th, 2024) of Gemini.",
+      "displayName": "Gemini Experimental 1206",
+      "inputTokenLimit": 2097152,
       "maxTemperature": 2,
       "name": "models/gemini-1.5-flash-exp-0827",
       "outputTokenLimit": 8192,
@@ -308,7 +308,7 @@
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "exp-0827"
+      "version": "exp-1206"
     },
     {
       "description": "Stable version of Gemini 1.5 Flash, our fast and versatile multimodal model for scaling across diverse tasks, released in September of 2024.",
