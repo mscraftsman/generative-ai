@@ -28,9 +28,20 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public GenerationConfig? GenerationConfig { get; set; }
         /// <summary>
-        /// Optional. A list of unique SafetySetting instances for blocking unsafe content.
-        /// This will be enforced on the GenerateContentRequest.contents and GenerateContentResponse.candidates. There should not be more than one setting for each SafetyCategory type. The API will block any contents and responses that fail to meet the thresholds set by these settings. This list overrides the default settings for each SafetyCategory specified in the safetySettings. If there is no SafetySetting for a given SafetyCategory provided in the list, the API will use the default safety setting for that category. Harm categories HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT, HARM_CATEGORY_HARASSMENT are supported.
+        /// Optional. A list of unique `<see cref="SafetySetting"/>` instances for blocking unsafe content.
         /// </summary>
+        /// <remarks>
+        /// This will be enforced on the `GenerateContentRequest.contents` and `GenerateContentResponse.candidates`.
+        /// There should not be more than one setting for each `SafetyCategory` type.
+        /// The API will block any contents and responses that fail to meet the thresholds set by these settings.
+        /// This list overrides the default settings for each `SafetyCategory` specified in the safety_settings.
+        /// If there is no `SafetySetting` for a given `SafetyCategory` provided in the list, the API will use the
+        /// default safety setting for that category.
+        /// Harm categories HARM_CATEGORY_HATE_SPEECH, HARM_CATEGORY_SEXUALLY_EXPLICIT, HARM_CATEGORY_DANGEROUS_CONTENT, HARM_CATEGORY_HARASSMENT, HARM_CATEGORY_CIVIC_INTEGRITY are supported.
+        /// Refer to the [guide](https://ai.google.dev/gemini-api/docs/safety-settings) for detailed information on
+        /// available safety settings. Also refer to the [Safety guidance](https://ai.google.dev/gemini-api/docs/safety-guidance)
+        /// to learn how to incorporate safety considerations in your AI applications.
+        /// </remarks>
         public List<SafetySetting>? SafetySettings { get; set; }
         /// <summary>
         /// Optional. Available for gemini-1.5-pro and gemini-1.0-pro-002.

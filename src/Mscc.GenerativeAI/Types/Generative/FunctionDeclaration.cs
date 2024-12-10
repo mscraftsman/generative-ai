@@ -18,7 +18,11 @@
         /// </summary>
         public string? Description { get; set; } = string.Empty;
         /// <summary>
-        /// Optional. Describes the parameters to this function. Reflects the Open API 3.03 Parameter Object string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter.
+        /// Optional. Describes the parameters to this function.
+        /// </summary>
+        /// <remarks>
+        /// Reflects the Open API 3.03 Parameter Object string Key: the name of the parameter.
+        /// Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter.
         /// For function with no parameters, this can be left unset. Example with 1 required and 1 optional parameter:
         /// type: OBJECT
         /// properties:
@@ -27,8 +31,15 @@
         ///   param2:
         ///     type: INTEGER
         ///   required: - 
-        /// </summary>
+        /// </remarks>
         public Schema? Parameters { get; set; }
         //public Dictionary<string, object> ParametersPython { get; set; }
+        /// <summary>
+        /// Optional. Describes the output from this function in JSON Schema format.
+        /// </summary>
+        /// <remarks>
+        /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
+        /// </remarks>
+        public Schema? Response { get; set; }
     }
 }
