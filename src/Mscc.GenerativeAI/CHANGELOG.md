@@ -15,8 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.0.1
 
+### Added
+
 - add types, enums, and properties for Multimodal Live API
 - add Google Search as a tool
+
+### Changed
+
+- extend README to show "Search as a tool"
 
 ## 2.0.0
 

@@ -37,7 +37,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.0.0" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.0.1" />
   </ItemGroup>
 ```
 
@@ -199,6 +199,26 @@ Ahoy there, matey! I be doin' finer than a freshly swabbed poop deck on this fin
 Shimmer me timbers, it's good to see a friendly face!  
 What brings ye to these here waters?
 ```
+
+### Use Google Search
+
+To activate Google Search as a tool, set the boolean property `UseGoogleSearch` to true, like the following example.
+
+```csharp
+var apiKey = "your_api_key";
+var prompt = "When is the next total solar eclipse in Mauritius?";
+var genAi = new GoogleAI(apiKey);
+var model = genAi.GenerativeModel(Model.Gemini20FlashExperimental);
+model.UseGoogleSearch = true;
+
+var response = await model.GenerateContent(prompt);
+Console.WriteLine(string.Join(Environment.NewLine,
+    response.Candidates![0].Content!.Parts
+        .Select(x => x.Text)
+        .ToArray()));
+```
+
+More details are described in the API documentation on [Search as a tool](https://ai.google.dev/gemini-api/docs/models/gemini-v2#search-tool).
 
 ### Grounding with Google Search
 
