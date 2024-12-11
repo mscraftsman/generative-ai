@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.0.1
+
+- add types, enums, and properties for Multimodal Live API
+- add Google Search as a tool
+
 ## 2.0.0
 
 ### Added

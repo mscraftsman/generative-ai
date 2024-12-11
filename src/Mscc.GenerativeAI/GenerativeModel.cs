@@ -24,6 +24,7 @@ namespace Mscc.GenerativeAI
         private readonly CachedContent? _cachedContent;
         private readonly TuningJob? _tuningJob;
         private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
+        private readonly List<Tool> defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
@@ -114,11 +115,16 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public bool UseGrounding { get; set; } = false;
 
+        /// <summary>
+        /// Activate Google Search (default = no)
+        /// </summary>
+        public bool UseGoogleSearch { get; set; } = false;
+
         /// <inheritdoc/>
         protected override void ThrowIfUnsupportedRequest<T>(T request)
         {
-            if (_cachedContent is not null && UseGrounding) throw new NotSupportedException("Grounding is not supported with CachedContent.");
-            if (UseJsonMode && UseGrounding) throw new NotSupportedException("Grounding is not supported wit JSON mode.");
+            if (_cachedContent is not null && (UseGrounding || UseGoogleSearch)) throw new NotSupportedException("Google Search or Grounding is not supported with CachedContent.");
+            if (UseJsonMode && (UseGrounding || UseGoogleSearch)) throw new NotSupportedException("Google Search or Grounding is not supported with JSON mode.");
         }
         
         /// <summary>
@@ -727,6 +733,15 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
             }
 
+            if (UseGoogleSearch)
+            {
+                request.Tools ??= defaultGoogleSearch;
+                if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
+                {
+                    request.Tools = defaultGoogleSearch;
+                }
+            }
+
             if (UseGrounding)
             {
                 request.Tools ??= defaultGoogleSearchRetrieval;
@@ -900,6 +915,15 @@ namespace Mscc.GenerativeAI
                 request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
             }
 
+            if (UseGoogleSearch)
+            {
+                request.Tools ??= defaultGoogleSearch;
+                if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
+                {
+                    request.Tools = defaultGoogleSearch;
+                }
+            }
+
             if (UseGrounding)
             {
                 request.Tools ??= defaultGoogleSearchRetrieval;
@@ -1055,6 +1079,24 @@ namespace Mscc.GenerativeAI
                     yield return item;
                 }
             }
+        }
+
+        // ToDo: Implement methode
+        // Ref: https://ai.google.dev/gemini-api/docs/models/gemini-v2#live-api
+        // Ref: https://ai.google.dev/api/multimodal-live
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<GenerateContentResponse> BidiGenerateContent()
+        {
+            if (!_model.Equals($"{GenerativeAI.Model.Gemini20FlashExperimental.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotSupportedException();
+            }
+            throw new NotImplementedException();
         }
         
         //ToDo: Implement new endpoint method createCachedContent 
