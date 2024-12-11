@@ -459,6 +459,23 @@
       "version": "exp-1121"
     },
     {
+      "description": "Gemini 2.0 Flash Experimental",
+      "displayName": "Gemini 2.0 Flash Experimental",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.0-flash-exp",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 40,
+      "topP": 0.95,
+      "version": "2.0"
+    },
+    {
       "description": "Experimental release (December 6th, 2024) of Gemini.",
       "displayName": "Gemini Experimental 1206",
       "inputTokenLimit": 2097152,
