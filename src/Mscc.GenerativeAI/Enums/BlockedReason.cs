@@ -30,6 +30,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Prompt was blocked due to prohibited content.
         /// </summary>
-        ProhibitedContent
+        ProhibitedContent,
+        /// <summary>
+        /// Candidates blocked due to unsafe image generation content.
+        /// </summary>
+        ImageSafety
     }
 }

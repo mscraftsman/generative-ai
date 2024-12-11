@@ -90,5 +90,18 @@ namespace Mscc.GenerativeAI
         /// Optional. Enables enhanced civic answers. It may not be available for all models.
         /// </summary>
         public bool? EnableEnhancedCivicAnswers { get; set; }
+        /// <summary>
+        /// Optional. The requested modalities of the response.
+        /// Represents the set of modalities that the model can return, and should be expected
+        /// in the response. This is an exact match to the modalities of the response.
+        /// A model may have multiple combinations of supported modalities. If the requested
+        /// modalities do not match any of the supported combinations, an error will be returned.
+        /// An empty list is equivalent to requesting only text.
+        /// </summary>
+        public List<ResponseModality>? ResponseModalities { get; set; }
+        /// <summary>
+        /// Optional. The speech generation config.
+        /// </summary>
+        public SpeechConfig? SpeechConfig { get; set; }
     }
 }

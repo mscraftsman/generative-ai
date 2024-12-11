@@ -9,7 +9,6 @@ namespace Mscc.GenerativeAI
     /// If empty, the model has not stopped generating the tokens.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<FinishReason>))]
-
     public enum FinishReason
     {
         /// <summary>
@@ -61,6 +60,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The response candidate content was flagged for using an unsupported language.
         /// </summary>
-        Language
+        Language,
+        /// <summary>
+        /// Token generation stopped because generated images contain safety violations.
+        /// </summary>
+        ImageSafety
     }
 }

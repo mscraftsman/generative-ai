@@ -29,5 +29,10 @@ namespace Mscc.GenerativeAI
         //Response map[string] any
         public dynamic? Response { get; set; }
         //public virtual IDictionary<string, object> Response { get; set; }
+        /// <summary>
+        /// Optional. The id of the function call this response is for.
+        /// Populated by the client to match the corresponding function call `id`.
+        /// </summary>
+        public string? Id { get; set; }
     }
 }

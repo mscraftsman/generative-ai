@@ -34,5 +34,9 @@ namespace Mscc.GenerativeAI
         /// Optional. GoogleSearchRetrieval tool type. Specialized retrieval tool that is powered by Google search.
         /// </summary>
         public GoogleSearchRetrieval? GoogleSearchRetrieval { get; set; }
+        /// <summary>
+        /// Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google.
+        /// </summary>
+        public GoogleSearch? GoogleSearch { get; set; }
     }
 }

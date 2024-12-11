@@ -23,5 +23,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public object? Args { get; set; }
         // public virtual IDictionary<string, object>? Args { get; set; }
+        /// <summary>
+        /// Optional. The unique id of the function call.
+        /// If populated, the client to execute the `function_call` and return the response with the matching `id`.
+        /// </summary>
+        public string? Id { get; set; }
     }
 }
