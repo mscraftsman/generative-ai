@@ -11,6 +11,7 @@ namespace Mscc.GenerativeAI
         public static string Get = "get";
         public static string List = "list";
         public static string StreamGenerateContent = "streamGenerateContent";
+        public static string BidirectionalGenerateContent = "bidiGenerateContent";
 
         public static string Predict = "predict";
         public static string PredictLongRunning = "predictLongRunning";
