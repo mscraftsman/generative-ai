@@ -68,6 +68,7 @@ namespace Mscc.GenerativeAI
             get
             {
                 var model = _model.SanitizeModelName().Split(new[] { '/' })[1];
+#if NET472_OR_GREATER || NETSTANDARD2_0
                 switch (model)
                 {
                     case GenerativeAI.Model.BisonChat:
@@ -82,6 +83,10 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
+                    case GenerativeAI.Model.Gemini20Flash:
+                        return UseRealtime
+                            ? GenerativeAI.Method.BidirectionalGenerateContent
+                            : GenerativeAI.Method.GenerateContent;
                 }
                 if (_useVertexAi)
                 {
@@ -92,9 +97,28 @@ namespace Mscc.GenerativeAI
                 }
 
                 return GenerativeAI.Method.GenerateContent;
+#else
+                return model switch
+                {
+                    GenerativeAI.Model.BisonChat => GenerativeAI.Method.GenerateMessage,
+                    GenerativeAI.Model.BisonText => GenerativeAI.Method.GenerateText,
+                    GenerativeAI.Model.GeckoEmbedding => GenerativeAI.Method.EmbedText,
+                    GenerativeAI.Model.Embedding => GenerativeAI.Method.EmbedContent,
+                    GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
+                    GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
+                    GenerativeAI.Model.Gemini20Flash => UseRealtime
+                        ? GenerativeAI.Method.BidirectionalGenerateContent
+                        : GenerativeAI.Method.GenerateContent,
+                    _ => _useVertexAi
+                        ? (!string.IsNullOrEmpty(_endpointId)
+                            ? GenerativeAI.Method.GenerateContent
+                            : GenerativeAI.Method.StreamGenerateContent)
+                        : GenerativeAI.Method.GenerateContent
+                };
+#endif
             }
         }
-        
+
         internal bool IsVertexAI => _useVertexAi;
 
         /// <summary>
@@ -119,6 +143,11 @@ namespace Mscc.GenerativeAI
         /// Activate Google Search (default = no)
         /// </summary>
         public bool UseGoogleSearch { get; set; } = false;
+
+        /// <summary>
+        /// Enable realtime stream using Multimodal Live API
+        /// </summary>
+        public bool UseRealtime { get; set; } = false;
 
         /// <inheritdoc/>
         protected override void ThrowIfUnsupportedRequest<T>(T request)
