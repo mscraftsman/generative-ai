@@ -189,7 +189,7 @@ IGenerativeAI genAi = new GoogleAI(apiKey);
 var model = genAi.GenerativeModel(Model.Gemini15ProLatest, systemInstruction: systemInstruction);
 var request = new GenerateContentRequest(prompt);
 
-var response = await model.GenerateContent(prompt);
+var response = await model.GenerateContent(request);
 Console.WriteLine(response.Text);
 ```
 
