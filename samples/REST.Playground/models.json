@@ -197,9 +197,9 @@
       "version": "001"
     },
     {
-      "description": "Experimental release (August 1st, 2024) of Gemini 1.5 Pro, our mid-size multimodal model that supports up to 2 million tokens, with across the board improvements. Replaced by Gemini-1.5-pro-002 (stable).",
-      "displayName": "Gemini 1.5 Pro Experimental 0801",
-      "inputTokenLimit": 2000000,
+      "description": "Experimental release (December 6th, 2024) of Gemini.",
+      "displayName": "Gemini Experimental 1206",
+      "inputTokenLimit": 2097152,
       "maxTemperature": 2,
       "name": "models/gemini-1.5-pro-exp-0801",
       "outputTokenLimit": 8192,
