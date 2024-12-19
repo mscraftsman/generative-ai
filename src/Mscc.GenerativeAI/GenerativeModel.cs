@@ -81,6 +81,10 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.TextEmbedding:
                         return GenerativeAI.Method.EmbedContent;
+                    case GenerativeAI.Model.Imagen3:
+                        return GenerativeAI.Method.Generate;
+                    case GenerativeAI.Model.Imagen3Fast:
+                        return GenerativeAI.Method.Generate;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
                     case GenerativeAI.Model.Gemini20Flash:
@@ -105,6 +109,8 @@ namespace Mscc.GenerativeAI
                     GenerativeAI.Model.GeckoEmbedding => GenerativeAI.Method.EmbedText,
                     GenerativeAI.Model.Embedding => GenerativeAI.Method.EmbedContent,
                     GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
+                    GenerativeAI.Model.Imagen3  => GenerativeAI.Method.Generate,
+                    GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Generate,
                     GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
                     GenerativeAI.Model.Gemini20Flash => UseRealtime
                         ? GenerativeAI.Method.BidirectionalGenerateContent
@@ -1126,6 +1132,39 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException();
             }
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        public async Task<GenerateImagesResponse> GenerateImages(GenerateImagesRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var url = $"{BaseUrlGoogleAi}/images";
+            url = ParseUrl(url, Method);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            var response = await Client.PostAsync(url, payload);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<GenerateImagesResponse>(response);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prompt">Required. String to process.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        public async Task<GenerateImagesResponse> GenerateImages(string prompt)
+        {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            GenerateImagesRequest request = new() { Prompt = prompt };
+            return await GenerateImages(request);
         }
         
         //ToDo: Implement new endpoint method createCachedContent 

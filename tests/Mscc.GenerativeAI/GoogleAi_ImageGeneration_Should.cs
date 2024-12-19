@@ -108,5 +108,28 @@ namespace Test.Mscc.GenerativeAI
                 output.WriteLine($"Wrote image to {fileName}");
             }
         }
+
+        [Fact]
+        public async Task Generate_Images()
+        {
+            // Arrange
+            var prompt =
+                "A panning shot of a serene mountain landscape, the camera slowly revealing snow-capped peaks, granite rocks and a crystal-clear lake reflecting the sky";
+            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = genAi.GenerativeModel(model: Model.Imagen3);
+            var request = new GenerateImagesRequest()
+            {
+                Model = _model, 
+                Prompt = prompt
+            };
+            
+            // Act
+            var response = await model.GenerateImages(request);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.Images.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine($"{response.Images[0].B64Json}");
+        }
     }
 }
