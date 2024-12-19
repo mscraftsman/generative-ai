@@ -2,6 +2,7 @@ namespace Mscc.GenerativeAI
 {
     public static class Method
     {
+
         // Methods used for models.
         public static string BatchEmbedContents = "batchEmbedContents";
         public static string CountTokens = "countTokens";
@@ -12,6 +13,8 @@ namespace Mscc.GenerativeAI
         public static string List = "list";
         public static string StreamGenerateContent = "streamGenerateContent";
         public static string BidirectionalGenerateContent = "bidiGenerateContent";
+
+        public static string Generate = "generate";
 
         public static string Predict = "predict";
         public static string PredictLongRunning = "predictLongRunning";

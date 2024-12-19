@@ -22,7 +22,6 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Models()
         {
             // Arrange
-            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = _model };
 
             // Act
@@ -43,7 +42,6 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
-            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = modelName };
 
             // Act
@@ -58,7 +56,6 @@ namespace Test.Mscc.GenerativeAI
         public async Task ChatCompletions_Using_OpenAiModel()
         {
             // Arrange
-            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = _model };
             var request = new ChatCompletionsRequest()
                 {
@@ -80,7 +77,6 @@ namespace Test.Mscc.GenerativeAI
         public async Task ChatCompletions_Using_ChatModel()
         {
             // Arrange
-            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = new ChatModel { ApiKey = fixture.ApiKey, Model = _model };
             var request = new ChatCompletionsRequest()
             {
@@ -102,8 +98,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Embed_Using_OpenAiModel()
         {
             // Arrange
-            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = "text-embedding-004" };
+            var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = Model.TextEmbedding };
             var request = new GenerateEmbeddingsRequest()
             {
                 Model = "text-embedding-004", 
@@ -122,8 +117,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Embed_Using_EmbeddingsModel()
         {
             // Arrange
-            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = new EmbeddingsModel { ApiKey = fixture.ApiKey, Model = "text-embedding-004" };
+            var model = new EmbeddingsModel { ApiKey = fixture.ApiKey, Model = Model.TextEmbedding };
             var request = new GenerateEmbeddingsRequest()
             {
                 Model = "text-embedding-004", 
@@ -136,6 +130,50 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             output.WriteLine($"{string.Join(",", response.Data[0].Embedding.ToArray())}");
+        }
+
+        [Fact]
+        public async Task Images_Using_OpenAiModel()
+        {
+            // Arrange
+            var prompt =
+                "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape";
+            var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
+            var request = new GenerateImagesRequest()
+            {
+                Model = _model, 
+                Prompt = prompt
+            };
+            
+            // Act
+            var response = await model.Images(request);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.Images.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine($"{response.Images[0].B64Json}");
+        }
+
+        [Fact]
+        public async Task Images_Using_ImagesModel()
+        {
+            // Arrange
+            var prompt =
+                "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape";
+            var model = new ImagesModel { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
+            var request = new GenerateImagesRequest()
+            {
+                Model = _model, 
+                Prompt = prompt
+            };
+            
+            // Act
+            var response = await model.Images(request);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.Images.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine($"{response.Images[0].B64Json}");
         }
     }
 }

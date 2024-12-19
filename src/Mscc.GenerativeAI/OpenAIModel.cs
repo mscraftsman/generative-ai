@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
     public class OpenAIModel : BaseModel
     {
         protected override string Version => ApiVersion.V1Beta;
-        
+
         /// <inheritdoc cref="BaseModel"/>
         public override string? ApiKey
         {
@@ -107,6 +107,20 @@ namespace Mscc.GenerativeAI
             var response = await Client.PostAsync(url, payload, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GenerateEmbeddingsResponse>(response);
+        }
+
+        public async Task<GenerateImagesResponse> Images(GenerateImagesRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var url = $"{BaseUrlGoogleAi}/openai/images";
+            url = ParseUrl(url);
+            string json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            var response = await Client.PostAsync(url, payload, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<GenerateImagesResponse>(response);
         }
     }
 }
