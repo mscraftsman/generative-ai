@@ -18,6 +18,8 @@ namespace Mscc.GenerativeAI
 
         public static string Predict = "predict";
         public static string PredictLongRunning = "predictLongRunning";
+        public static string RawPredict = "rawPredict";
+        public static string StreamRawPredict = "streamRawPredict";
 
         // Additional methods used for tuned models.
         public static string Create = "create";
