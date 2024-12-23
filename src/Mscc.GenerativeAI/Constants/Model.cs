@@ -112,6 +112,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
         /// </summary>
+        public const string Imagen3Customization = "imagen-3.0-capability";
+        /// <summary>
+        /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
+        /// </summary>
         public const string ImageGeneration3 = "imagen-3.0-generate-0611";
         /// <summary>
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
