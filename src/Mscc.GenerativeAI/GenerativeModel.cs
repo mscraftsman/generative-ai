@@ -158,8 +158,12 @@ namespace Mscc.GenerativeAI
         /// <inheritdoc/>
         protected override void ThrowIfUnsupportedRequest<T>(T request)
         {
-            if (_cachedContent is not null && (UseGrounding || UseGoogleSearch)) throw new NotSupportedException("Google Search or Grounding is not supported with CachedContent.");
-            if (UseJsonMode && (UseGrounding || UseGoogleSearch)) throw new NotSupportedException("Google Search or Grounding is not supported with JSON mode.");
+            if (request is CopyModelRequest && !_useVertexAi)
+                throw new NotSupportedException("Copying a model is not supported with Google AI");
+            if (_cachedContent is not null && (UseGrounding || UseGoogleSearch)) 
+                throw new NotSupportedException("Google Search or Grounding is not supported with CachedContent.");
+            if (UseJsonMode && (UseGrounding || UseGoogleSearch)) 
+                throw new NotSupportedException("Google Search or Grounding is not supported with JSON mode.");
         }
         
         /// <summary>
@@ -383,6 +387,27 @@ namespace Mscc.GenerativeAI
             var response = await Client.GetAsync(url);
             await response.EnsureSuccessAsync();
             return await Deserialize<ModelResponse>(response);
+        }
+        
+        // ToDo: Copy model on Vertex AI
+        // Ref: https://cloud.google.com/vertex-ai/docs/model-registry/copy-model
+        /// <summary>
+        /// Copies a model in Vertex AI Model Registry.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
+        public async Task<CopyModelResponse> CopyModel(CopyModelRequest request)
+        {
+            ThrowIfUnsupportedRequest<CopyModelRequest>(request);
+            
+            var url = "{BaseUrlVertexAi}/models:{method}";
+            url = ParseUrl(url, GenerativeAI.Method.Copy);
+            var json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            var response = await Client.PostAsync(url, payload);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<CopyModelResponse>(response);
         }
 
         /// <summary>
