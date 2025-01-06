@@ -15,13 +15,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.0.2
 
+### Added
+
+- add model `gemini-2.0-flash-thinking-exp`
+- add model `gemini-2.0-flash-thinking-exp-1219`
+- add model `imagen-3.0-capability-001`
+- add `images` API to OpenAI compatibility
+- add `GenerateImages` method to Gemini model
+- copy model on Vertex AI
+
 ### Changed
 
 - Extend `SendMessage` - Chat conversations - How [#52](https://github.com/mscraftsman/generative-ai/issues/52) thanks to @Francks11
+- update NuGet packages
 
 ### Fixed
 
 - ResponseSchema property must be an object [#53](https://github.com/mscraftsman/generative-ai/issues/53) thanks to @Ar4ics
+- fix typos
 
 ## 2.0.1
 
