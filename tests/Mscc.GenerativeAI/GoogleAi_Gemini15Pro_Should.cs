@@ -125,13 +125,27 @@ namespace Test.Mscc.GenerativeAI
             var model = googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", 
-                ResponseSchema = "{\"type\": \"ARRAY\",\n          \"items\": {\n            \"type\": \"OBJECT\",\n            \"properties\": {\n              \"recipe_name\": {\"type\":\"STRING\"},\n            }\n          }"
+                ResponseMimeType = "application/json",
+                ResponseSchema = new 
+                {
+                    type = "ARRAY",
+                    items = new
+                    {
+                        type = "OBJECT", 
+                        properties = new
+                        {
+                            recipe_name = new
+                            {
+                                type = "STRING"
+                            }
+                        }
+                    }
+                }
             };
-            model.UseJsonMode = true;
 
             // Act
-            var response = await model.GenerateContent(prompt);
+            var response = await model.GenerateContent(prompt, 
+                generationConfig: generationConfig);
 
             // Assert
             response.Should().NotBeNull();

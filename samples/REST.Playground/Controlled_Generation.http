@@ -1,0 +1,54 @@
+###
+
+# curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$GOOGLE_API_KEY" 
+#-H 'Content-Type: application/json' 
+#-d '{
+#    "contents": [{
+#      "parts":[
+#        {"text": "List 5 popular cookie recipes"}
+#        ]
+#    }],
+#    "generationConfig": {
+#        "response_mime_type": "application/json",
+#        "response_schema": {
+#          "type": "ARRAY",
+#          "items": {
+#            "type": "OBJECT",
+#            "properties": {
+#              "recipe_name": {"type":"STRING"},
+#            }
+#          }
+#        }
+#    }
+#}'
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={{apiKey}}
+Content-Type: application/json
+
+{
+  "contents": [
+    {
+      "parts": [
+        {
+          "text": "List 5 popular cookie recipes"
+        }
+      ]
+    }
+  ],
+  "generationConfig": {
+    "response_mime_type": "application/json",
+    "response_schema": {
+      "type": "ARRAY",
+      "items": {
+        "type": "OBJECT",
+        "properties": {
+          "recipe_name": {
+            "type": "STRING"
+          }
+        }
+      }
+    }
+  }
+}
+
+###
+

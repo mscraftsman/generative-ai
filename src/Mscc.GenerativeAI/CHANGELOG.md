@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.0.2
+
+### Fixed
+
+- ResponseSchema property must be an object [#53](https://github.com/mscraftsman/generative-ai/issues/53) thanks to @Ar4ics
+
 ## 2.0.1
 
 ### Added
