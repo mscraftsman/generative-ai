@@ -204,7 +204,7 @@ namespace Mscc.GenerativeAI
 
             Contents = new List<Content> { new Content
             {
-                Parts = parts.Select(p => (IPart)p).ToList()
+                PartTypes = parts
             }};
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;

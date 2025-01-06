@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.0.2
 
+### Changed
+
+- Extend `SendMessage` - Chat conversations - How [#52](https://github.com/mscraftsman/generative-ai/issues/52) thanks to @Francks11
+
 ### Fixed
 
 - ResponseSchema property must be an object [#53](https://github.com/mscraftsman/generative-ai/issues/53) thanks to @Ar4ics
