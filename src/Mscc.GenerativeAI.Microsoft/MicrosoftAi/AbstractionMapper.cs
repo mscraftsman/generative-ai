@@ -31,7 +31,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
                 TryAddOption<int?>(options, "TopK", v => generationConfig.TopK = v);
                 TryAddOption<int?>(options, "MaxOutputTokens", v => generationConfig.MaxOutputTokens = v);
                 TryAddOption<string?>(options, "ResponseMimeType", v => generationConfig.ResponseMimeType = v);
-                TryAddOption<string?>(options, "ResponseSchema", v => generationConfig.ResponseSchema = v);
+                // TryAddOption<string?>(options, "ResponseSchema", v => generationConfig.ResponseSchema = v);
                 TryAddOption<float?>(options, "PresencePenalty", v => generationConfig.PresencePenalty = v);
                 TryAddOption<float?>(options, "FrequencyPenalty", v => generationConfig.FrequencyPenalty = v);
                 TryAddOption<bool?>(options, "ResponseLogprobs", v => generationConfig.ResponseLogprobs = v);
