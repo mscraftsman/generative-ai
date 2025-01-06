@@ -117,7 +117,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact]
-        public async Task? GenerateContent_Using_JsonMode_Schema()
+        public async Task GenerateContent_Using_JsonMode_Schema()
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
