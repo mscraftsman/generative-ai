@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
+using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -733,6 +734,35 @@ namespace Test.Mscc.GenerativeAI
             sut.Should().NotBeNull();
             output.WriteLine($"{sut.Role}: {sut.Text}");
         }
+
+        [Fact]
+        public async Task Start_Chat_With_Multimodal_Content()
+        {
+            // Arrange
+            var systemInstruction = new Content("You are an expert analyzing transcripts.");
+            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
+            var chat = model.StartChat();
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "a11.txt");
+            var document = await genAi.UploadFile(filePath);
+            var request = new GenerateContentRequest("Hi, could you summarize this transcript?");
+            request.AddMedia(document.File);
+
+            // Act
+            var response = await chat.SendMessage(request);
+            output.WriteLine($"model: {response.Text}");
+            output.WriteLine("----------");
+            response = await chat.SendMessage("Okay, could you tell me more about the trans-lunar injection");
+            output.WriteLine($"model: {response.Text}");
+            
+            // Assert
+            model.Should().NotBeNull();
+            chat.History.Count.Should().Be(4);
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeNull();
+            output.WriteLine($"model: {response.Text}");
+        }        
 
         [Fact]
         public async Task Start_Chat_Streaming()
