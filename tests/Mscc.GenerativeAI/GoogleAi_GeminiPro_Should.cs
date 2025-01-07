@@ -744,7 +744,9 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(_model, systemInstruction: systemInstruction);
             var chat = model.StartChat();
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "a11.txt");
-            var document = await genAi.UploadFile(filePath);
+            var document = await genAi.UploadFile(filePath, "Apollo 11 Flight Report");
+            output.WriteLine($"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(StateFileResource), document.File.State)})");
+
             var request = new GenerateContentRequest("Hi, could you summarize this transcript?");
             request.AddMedia(document.File);
 

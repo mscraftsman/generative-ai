@@ -461,7 +461,7 @@ namespace Test.Mscc.GenerativeAI
             sut.Files.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             sut.Files.ForEach(x =>
             {
-                output.WriteLine($"Display Name: {x.DisplayName}");
+                output.WriteLine($"Display Name: {x.DisplayName} ({Enum.GetName(typeof(StateFileResource), x.State)})");
                 output.WriteLine($"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
                 output.WriteLine($"Uri: {x.Uri}");
             });
