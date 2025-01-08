@@ -103,5 +103,9 @@ namespace Mscc.GenerativeAI
         /// Optional. The speech generation config.
         /// </summary>
         public SpeechConfig? SpeechConfig { get; set; }
+        /// <summary>
+        /// Optional. If specified, the media resolution specified will be used.
+        /// </summary>
+        public MediaResolution? MediaResolution { get; set; }
     }
 }
