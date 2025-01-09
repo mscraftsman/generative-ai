@@ -33,7 +33,7 @@ namespace Mscc.GenerativeAI
         /// <param name="uri">URI or path to the file to upload.</param>
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
-        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
         /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
@@ -99,7 +99,7 @@ namespace Mscc.GenerativeAI
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="mimeType">The MIME type of the stream content.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
-        /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
         /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
@@ -163,10 +163,12 @@ namespace Mscc.GenerativeAI
         /// To retrieve the file content via REST, add alt=media as a query parameter.
         /// </remarks>
         /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<GeneratedFile> DownloadFile(string file)
+        public async Task<GeneratedFile> DownloadFile(string file,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
 
@@ -174,7 +176,7 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/{file}";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GeneratedFile>(response);
         }

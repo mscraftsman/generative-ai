@@ -39,13 +39,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Lists the currently available models.
         /// </summary>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of available models.</returns>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<SdkListModelsResponse> ListModels()
+        public async Task<SdkListModelsResponse> ListModels(CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlGoogleAi}/openai/models";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             var models = await Deserialize<SdkListModelsResponse>(response);
             return models;
@@ -55,16 +56,18 @@ namespace Mscc.GenerativeAI
         /// Gets information about a specific `Model` such as its version number.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the ListModels method.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<SdkModel> GetModel(string? model = null)
+        public async Task<SdkModel> GetModel(string? model = null,
+            CancellationToken cancellationToken = default)
         {
             model ??= _model;
             model = model.SanitizeModelName();
 
             var url = $"{BaseUrlGoogleAi}/openai/{model}";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<SdkModel>(response);
         }
@@ -73,7 +76,7 @@ namespace Mscc.GenerativeAI
         /// Generates a set of responses from the model given a chat history input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<ChatCompletionsResponse> Completions(ChatCompletionsRequest request,
             CancellationToken cancellationToken = default)
@@ -93,7 +96,7 @@ namespace Mscc.GenerativeAI
         /// Generates embeddings from the model given an input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<GenerateEmbeddingsResponse> Embeddings(GenerateEmbeddingsRequest request,
             CancellationToken cancellationToken = default)
@@ -109,6 +112,13 @@ namespace Mscc.GenerativeAI
             return await Deserialize<GenerateEmbeddingsResponse>(response);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<GenerateImagesResponse> Images(GenerateImagesRequest request,
             CancellationToken cancellationToken = default)
         {

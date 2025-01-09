@@ -40,7 +40,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<TuningJob> Create(CreateTuningJobRequest request,
@@ -63,11 +63,16 @@ namespace Mscc.GenerativeAI
             return await Deserialize<TuningJob>(response);
         }
 
-        public async Task<List<TuningJob>> List()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        public async Task<List<TuningJob>> List(CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlVertexAi}/tuningJobs";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             var tuningJobs = await Deserialize<ListTuningJobResponse>(response);
             return tuningJobs.TuningJobs;
@@ -77,9 +82,11 @@ namespace Mscc.GenerativeAI
         /// Gets metadata of a tuning job.
         /// </summary>
         /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The details of a tuning job.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
-        public async Task<TuningJob> Get(string tuningJobId)
+        public async Task<TuningJob> Get(string tuningJobId,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
@@ -87,7 +94,7 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<TuningJob>(response);
         }
@@ -96,7 +103,7 @@ namespace Mscc.GenerativeAI
         /// Cancels a tuning job.
         /// </summary>
         /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
         public async Task<string> Cancel(string tuningJobId,
@@ -112,16 +119,22 @@ namespace Mscc.GenerativeAI
             var payload = new StringContent(string.Empty, Encoding.UTF8, Constants.MediaType);
             var response = await Client.PostAsync(url, payload, cancellationToken);
             await response.EnsureSuccessAsync();
+#if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
         }
 
         /// <summary>
         /// Deletes a tuning job.
         /// </summary>
         /// <param name="tuningJobId">Required. The ID of the tuning job. Format: `tuningJobs/{id}`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="tuningJobId"/> is <see langword="null"/> or empty.</exception>
-        public async Task<string> Delete(string tuningJobId)
+        public async Task<string> Delete(string tuningJobId,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(tuningJobId)) throw new ArgumentException("Value cannot be null or empty.", nameof(tuningJobId));
 
@@ -129,9 +142,13 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
-            var response = await Client.DeleteAsync(url);
+            var response = await Client.DeleteAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
+#if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
         }
     }
 }

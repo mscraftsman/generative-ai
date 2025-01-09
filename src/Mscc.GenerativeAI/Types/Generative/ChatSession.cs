@@ -79,6 +79,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The model's response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="BlockedPromptException">Thrown when the model's response is blocked by a reason.</exception>
@@ -88,7 +89,8 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null, 
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             // ThrowIfUnsupportedRequest<GenerateContentRequest>(request);
@@ -108,7 +110,7 @@ namespace Mscc.GenerativeAI
             request.Tools ??= tools ?? _tools;
             request.ToolConfig ??= toolConfig;
 
-            var response = await _model.GenerateContent(request);
+            var response = await _model.GenerateContent(request, cancellationToken: cancellationToken);
             
             response.CheckResponse();
 
@@ -135,13 +137,15 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The model's response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="prompt"/> is <see langword="null"/>.</exception>
         public async Task<GenerateContentResponse> SendMessage(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null, 
+            CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -150,7 +154,7 @@ namespace Mscc.GenerativeAI
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools,
                 toolConfig: toolConfig);
-            return await SendMessage(request);
+            return await SendMessage(request, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -162,13 +166,15 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The model's response.</returns>
         /// <exception cref="ValueErrorException">Thrown when the candidate count is larger than 1.</exception>
         public async Task<GenerateContentResponse> SendMessage(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null, 
+            CancellationToken cancellationToken = default)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
             
@@ -177,7 +183,7 @@ namespace Mscc.GenerativeAI
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools,
                 toolConfig: toolConfig);
-            return await SendMessage(request);
+            return await SendMessage(request, cancellationToken: cancellationToken);
         }
 
         [Obsolete("This method has been replaced by strong-typed overloads and will be removed soon.")]
@@ -185,7 +191,8 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null, 
+            CancellationToken cancellationToken = default)
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
             if (!(content is String || content is List<Part>)) throw new ArgumentException(content.ToString(), nameof(content));
@@ -220,7 +227,7 @@ namespace Mscc.GenerativeAI
                 ToolConfig = toolConfig
             };
 
-            var response = await _model.GenerateContent(request);
+            var response = await _model.GenerateContent(request, cancellationToken: cancellationToken);
             
             response.CheckResponse();
 
@@ -247,7 +254,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The model's response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is <see langword="null"/></exception>
         /// <exception cref="BlockedPromptException">Thrown when the <paramref name="request"/> is blocked by a reason.</exception>
@@ -302,13 +309,15 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The model's response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="prompt"/> is <see langword="null"/>.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -317,7 +326,7 @@ namespace Mscc.GenerativeAI
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools,
                 toolConfig: toolConfig);
-            await foreach (var response in SendMessageStream(request))
+            await foreach (var response in SendMessageStream(request, cancellationToken: cancellationToken))
             {
                 yield return response;
             }
@@ -332,13 +341,15 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. Overrides for the model's safety settings.</param>
         /// <param name="tools">Optional. Overrides for the list of tools the model may use to generate the next response.</param>
         /// <param name="toolConfig">Optional. Overrides for the configuration of tools.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The model's response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parts"/> is <see langword="null"/>.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            ToolConfig? toolConfig = null)
+            ToolConfig? toolConfig = null, 
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
@@ -347,7 +358,7 @@ namespace Mscc.GenerativeAI
                 safetySettings ?? _safetySettings, 
                 tools ?? _tools,
                 toolConfig: toolConfig);
-            await foreach (var response in SendMessageStream(request))
+            await foreach (var response in SendMessageStream(request, cancellationToken: cancellationToken))
             {
                 yield return response;
             }

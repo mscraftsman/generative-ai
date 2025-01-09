@@ -43,7 +43,7 @@ namespace Mscc.GenerativeAI
         /// Generates embeddings from the model given an input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<GenerateEmbeddingsResponse> Embeddings(GenerateEmbeddingsRequest request,
             CancellationToken cancellationToken = default)

@@ -77,7 +77,7 @@ namespace Mscc.GenerativeAI
         /// Generates images from the specified <see cref="ImageGenerationRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated images.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<ImageGenerationResponse> GenerateImages(ImageGenerationRequest request,
@@ -104,6 +104,7 @@ namespace Mscc.GenerativeAI
         /// <param name="language">Language of the text prompt for the image.</param>
         /// <param name="safetyFilterLevel">Adds a filter level to Safety filtering.</param>
         /// <param name="personGeneration">Allow generation of people by the model.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -111,7 +112,8 @@ namespace Mscc.GenerativeAI
             int numberOfImages = 1, string? negativePrompt = null, 
             string? aspectRatio = null, int? guidanceScale = null,
             string? language = null, string? safetyFilterLevel = null,
-            string? personGeneration = null)
+            string? personGeneration = null,
+            CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
@@ -138,19 +140,21 @@ namespace Mscc.GenerativeAI
                 request.Parameters.PersonGeneration = personGeneration;
             }
             
-            return await GenerateImages(request);
+            return await GenerateImages(request, cancellationToken);
         }
 
         /// <summary>
         /// Generates a response from the model given an input prompt and other parameters.
         /// </summary>
         /// <param name="prompt">Required. String to process.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageGenerationResponse> GenerateContent(string prompt)
+        public async Task<ImageGenerationResponse> GenerateContent(string prompt,
+            CancellationToken cancellationToken = default)
         {
-            return await GenerateImages(prompt);
+            return await GenerateImages(prompt, cancellationToken: cancellationToken);
         }
     }
 }

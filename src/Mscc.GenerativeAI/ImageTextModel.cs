@@ -47,7 +47,7 @@ namespace Mscc.GenerativeAI
         /// Generates images from the specified <see cref="ImageTextRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated images.</returns>
         public async Task<ImageTextResponse> GetCaptions(ImageTextRequest request,
             CancellationToken cancellationToken = default)
@@ -69,6 +69,7 @@ namespace Mscc.GenerativeAI
         /// <param name="numberOfResults">Optional. Number of results to return. Default is 1.</param>
         /// <param name="language">Optional. Language to use. Default is en.</param>
         /// <param name="storageUri">Optional. Cloud Storage uri where to store the generated predictions.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -76,12 +77,13 @@ namespace Mscc.GenerativeAI
         public async Task<ImageTextResponse> GetCaptions(string base64Image,
             int? numberOfResults = null,
             string? language = null,
-            string? storageUri = null)
+            string? storageUri = null,
+            CancellationToken cancellationToken = default)
         {
             if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
 
             var request = new ImageTextRequest(base64Image, null, numberOfResults, language, storageUri);
-            return await GetCaptions(request);
+            return await GetCaptions(request, cancellationToken);
         }
 
         /// <summary>
@@ -91,6 +93,7 @@ namespace Mscc.GenerativeAI
         /// <param name="question">Required. The question to ask about the image.</param>
         /// <param name="numberOfResults">Optional. Number of results to return. Default is 1.</param>
         /// <param name="language">Optional. Language to use. Default is en.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -98,13 +101,14 @@ namespace Mscc.GenerativeAI
         public async Task<ImageTextResponse> AskQuestion(string base64Image,
             string question,
             int? numberOfResults = null,
-            string? language = null)
+            string? language = null,
+            CancellationToken cancellationToken = default)
         {
             if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
             if (question == null) throw new ArgumentNullException(nameof(question));
 
             var request = new ImageTextRequest(base64Image, question, numberOfResults, language);
-            return await GetCaptions(request);
+            return await GetCaptions(request, cancellationToken);
         }
     }
 }

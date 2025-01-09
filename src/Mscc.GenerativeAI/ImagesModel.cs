@@ -29,6 +29,13 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImagesModel(ILogger? logger) : base(logger) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<GenerateImagesResponse> Images(GenerateImagesRequest request,
             CancellationToken cancellationToken = default)
         {

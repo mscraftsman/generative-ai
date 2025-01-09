@@ -34,7 +34,7 @@ namespace Mscc.GenerativeAI
         /// Creates CachedContent resource.
         /// </summary>
         /// <param name="request">The cached content resource to create.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The cached content resource created</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CachedContent> Create(CachedContent request,
@@ -62,6 +62,7 @@ namespace Mscc.GenerativeAI
         /// <param name="history">Optional. A chat history to initialize the session with.</param>
         /// <param name="ttl">Optional. Input only. New TTL for this resource, input only. A duration in seconds with up to nine fractional digits, ending with 's'</param>
         /// <param name="expireTime">Optional. Timestamp in UTC of when this resource is considered expired. This is always provided on output, regardless of what was sent on input.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The created cached content resource.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="model"/> is <see langword="null"/> or empty.</exception>
         public async Task<CachedContent> Create(string model,
@@ -70,7 +71,8 @@ namespace Mscc.GenerativeAI
             List<Content>? contents = null,
             List<ContentResponse>? history = null,
             TimeSpan? ttl = null,
-            DateTime? expireTime = null)
+            DateTime? expireTime = null,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentException("Value cannot be null or empty.", nameof(model));
 
@@ -85,7 +87,7 @@ namespace Mscc.GenerativeAI
                 Ttl = ttl ?? TimeSpan.FromMinutes(5),
                 ExpireTime = expireTime
             };
-            return await Create(request);
+            return await Create(request, cancellationToken);
         }
 
         /// <summary>
@@ -93,9 +95,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="pageSize">Optional. The maximum number of cached contents to return. The service may return fewer than this value. If unspecified, some default (under maximum) number of items will be returned. The maximum value is 1000; values above 1000 will be coerced to 1000.</param>
         /// <param name="pageToken">Optional. A page token, received from a previous `ListCachedContents` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListCachedContents` must match the call that provided the page token.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<List<CachedContent>> List(int? pageSize = 50, 
-            string? pageToken = null)
+            string? pageToken = null,
+            CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlGoogleAi}/cachedContents";
             var queryStringParams = new Dictionary<string, string?>()
@@ -105,7 +109,7 @@ namespace Mscc.GenerativeAI
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             var cachedContents = await Deserialize<ListCachedContentsResponse>(response);
             return cachedContents.CachedContents;
@@ -115,9 +119,11 @@ namespace Mscc.GenerativeAI
         /// Reads CachedContent resource.
         /// </summary>
         /// <param name="cachedContentName">Required. The resource name referring to the content cache entry. Format: `cachedContents/{id}`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The cached content resource.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="cachedContentName"/> is <see langword="null"/> or empty.</exception>
-        public async Task<CachedContent> Get(string cachedContentName)
+        public async Task<CachedContent> Get(string cachedContentName,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(cachedContentName)) throw new ArgumentException("Value cannot be null or empty.", nameof(cachedContentName));
 
@@ -125,7 +131,7 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/{cachedContentName}";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url);
+            var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<CachedContent>(response);
         }
@@ -136,10 +142,14 @@ namespace Mscc.GenerativeAI
         /// <param name="request">The cached content resource to update.</param>
         /// <param name="ttl">Optional. Input only. New TTL for this resource, input only. A duration in seconds with up to nine fractional digits, ending with 's'</param>
         /// <param name="updateMask">Optional. The list of fields to update.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The updated cached content resource.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="request.Name"/> is <see langword="null"/> or empty.</exception>
-        public async Task<CachedContent> Update(CachedContent request, TimeSpan ttl, string? updateMask = null)
+        public async Task<CachedContent> Update(CachedContent request, 
+            TimeSpan ttl, 
+            string? updateMask = null,
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrEmpty(request.Name)) throw new ArgumentException("Value cannot be null or empty.", nameof(request.Name));
@@ -163,7 +173,7 @@ namespace Mscc.GenerativeAI
             };
             var response = await Client.SendAsync(message);
 #else
-            var response = await Client.PatchAsync(url, payload);
+            var response = await Client.PatchAsync(url, payload, cancellationToken);
 #endif
             await response.EnsureSuccessAsync();
             return await Deserialize<CachedContent>(response);
@@ -173,9 +183,11 @@ namespace Mscc.GenerativeAI
         /// Deletes CachedContent resource.
         /// </summary>
         /// <param name="cachedContentName">Required. The resource name referring to the content cache entry. Format: `cachedContents/{id}`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="cachedContentName"/> is <see langword="null"/> or empty.</exception>
-        public async Task<string> Delete(string cachedContentName)
+        public async Task<string> Delete(string cachedContentName,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(cachedContentName)) throw new ArgumentException("Value cannot be null or empty.", nameof(cachedContentName));
 
@@ -183,9 +195,13 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/{cachedContentName}";
             url = ParseUrl(url);
-            var response = await Client.DeleteAsync(url);
+            var response = await Client.DeleteAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
+#if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
         }
     }
 }
