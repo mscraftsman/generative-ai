@@ -1095,6 +1095,35 @@
         }
       }
     },
+    "listModels": {
+      "methods": {
+        "sdkGetModel": {
+          "description": "Gets a model instance.",
+          "flatPath": "v1beta/listModels/{listModelsId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.listModels.sdkGetModel",
+          "parameterOrder": [
+            "listModelsId"
+          ],
+          "parameters": {
+            "listModelsId": {
+              "location": "path",
+              "required": true,
+              "type": "string"
+            },
+            "model": {
+              "description": "Required. The name of the model to get.",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/listModels/{listModelsId}",
+          "response": {
+            "$ref": "SdkModel"
+          }
+        }
+      }
+    },
     "media": {
       "methods": {
         "download": {
@@ -1707,6 +1736,35 @@
               }
             }
           }
+        },
+        "models": {
+          "methods": {
+            "sdkGetModel": {
+              "description": "Gets a model instance.",
+              "flatPath": "v1beta/openai/models/{modelsId}",
+              "httpMethod": "GET",
+              "id": "generativelanguage.openai.models.sdkGetModel",
+              "parameterOrder": [
+                "modelsId"
+              ],
+              "parameters": {
+                "model": {
+                  "description": "Required. The name of the model to get.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "modelsId": {
+                  "location": "path",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/openai/models/{modelsId}",
+              "response": {
+                "$ref": "SdkModel"
+              }
+            }
+          }
         }
       }
     },
@@ -2205,7 +2263,7 @@
       }
     }
   },
-  "revision": "20241224",
+  "revision": "20250108",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -5177,6 +5235,13 @@
           },
           "description": "Optional. Properties of Type.OBJECT.",
           "type": "object"
+        },
+        "propertyOrdering": {
+          "description": "Optional. The order of the properties. Not a standard field in open api spec. Used to determine the order of the properties in the response.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         },
         "required": {
           "description": "Optional. Required properties of Type.OBJECT.",
