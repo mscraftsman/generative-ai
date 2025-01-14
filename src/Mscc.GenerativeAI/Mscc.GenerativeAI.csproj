@@ -14,16 +14,21 @@
 		<PackageTags>Gemini GeminiAI GeminiPro GeminiProVision GoogleAI VertexAI GenAI GenerativeAI Summarization TextGeneration AIAssistant CodeAssistant TunedModel Model</PackageTags>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Authors>jkirstaetter</Authors>
+		<Authors>Jochen Kirstätter</Authors>
 		<Copyright>Copyright (c) Jochen Kirstätter</Copyright>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>MsccGenerativeAi-icon-nuget.png</PackageIcon>
 		<PackageProjectUrl>https://mscraftsman.github.io/generative-ai</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>(Package release notes are in CHANGELOG.md)</PackageReleaseNotes>
 		<Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
@@ -57,7 +62,6 @@
 	<ItemGroup>
 		<None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
 		<None Include="..\..\README.md" Pack="True" PackagePath="" />
-		<None Include="..\..\LICENSE" Pack="True" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
@@ -78,11 +82,15 @@
 
 	<ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0'))">
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
-		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Test.Mscc.GenerativeAI" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="NJsonSchema" Version="10.9.0" />
 	</ItemGroup>
 
 	<Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">

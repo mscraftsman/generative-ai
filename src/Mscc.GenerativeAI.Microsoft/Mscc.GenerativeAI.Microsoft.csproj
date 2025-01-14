@@ -14,16 +14,21 @@
         <PackageTags>Gemini;GeminiAI;GoogleAI;VertexAI;GenAI;GenerativeAI;OAuth2;Microsoft.Extensions.AI;Microsoft.Semantic.Kernel;SemanticKernel</PackageTags>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Authors>jkirstaetter</Authors>
+        <Authors>Jochen Kirstätter</Authors>
         <Copyright>Copyright (c) Jochen Kirstätter</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageIcon>MsccGenerativeAi-icon-nuget.png</PackageIcon>
         <PackageProjectUrl>https://mscraftsman.github.io/generative-ai</PackageProjectUrl>
         <RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
-        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
         <PackageReleaseNotes>(Package release notes are in CHANGELOG.md)</PackageReleaseNotes>
-        <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))-preview</Version>
+        <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
@@ -48,7 +53,6 @@
     <ItemGroup>
         <None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
         <None Include="README.md" Pack="True" PackagePath="" />
-        <None Include="..\..\LICENSE" Pack="True" PackagePath="" />
     </ItemGroup>
 
     <ItemGroup>
