@@ -31,6 +31,14 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public Schema? Items { get; set; }
         /// <summary>
+        /// Optional. Maximum number of the elements for Type.ARRAY.
+        /// </summary>
+        public long? MaxItems { get; set; }
+        /// <summary>
+        /// Optional. Minimum number of the elements for Type.ARRAY.
+        /// </summary>
+        public long? MinItems { get; set; }
+        /// <summary>
         /// Optional. Possible values of the element of Type.STRING with enum format.
         /// For example we can define an Enum Direction as :
         /// {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]}
@@ -41,6 +49,10 @@ namespace Mscc.GenerativeAI
         /// An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
         /// </summary>
         public dynamic? Properties { get; set; }
+        /// <summary>
+        /// Optional. The order of the properties. Not a standard field in open api spec. Used to determine the order of the properties in the response.
+        /// </summary>
+        public List<string>? PropertyOrdering { get; set; }
         /// <summary>
         /// Optional. Required properties of Type.OBJECT.
         /// </summary>
