@@ -163,11 +163,13 @@ namespace Mscc.GenerativeAI
         /// To retrieve the file content via REST, add alt=media as a query parameter.
         /// </remarks>
         /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <param name="media">Optional. Flag indicating whether to retrieve the file content.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GeneratedFile> DownloadFile(string file,
+            bool media = false,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
@@ -176,6 +178,13 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/{file}";
             url = ParseUrl(url);
+            if (media)
+            {
+                url.AddQueryString(new Dictionary<string, string?>()
+                {
+                    ["alt"] = "media"
+                });
+            }
             var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GeneratedFile>(response);

@@ -74,5 +74,13 @@ namespace Mscc.GenerativeAI
         /// Each tool declares its signature.
         /// </summary>
         public List<ChatTool>? Tools { get; set; }
+        /// <summary>
+        /// Optional. Options for audio generation.
+        /// </summary>
+        public AudioOptions? Audio { get; set; }
+        /// <summary>
+        /// Optional. Modalities for the request.
+        /// </summary>
+        public string? Modalities { get; set; }
     }
 }

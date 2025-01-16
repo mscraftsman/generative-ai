@@ -19,7 +19,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// Optional. The human-readable display name for the File. The display name must be no more than 512 characters in length, including spaces. Example: "Welcome Image"
+        /// Optional. The human-readable display name for the File. The display name must be no more than 512 characters
+        /// in length, including spaces. Example: "Welcome Image"
         /// </summary>
         public string? DisplayName { get; set; }
         /// <summary>
@@ -32,17 +33,20 @@ namespace Mscc.GenerativeAI
         public long SizeBytes { get; set; }
         /// <summary>
         /// Output only. The timestamp of when the File was created.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
+        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
+        /// Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
         /// </summary>
         public DateTime CreateTime { get; set; }
         /// <summary>
         /// Output only. The timestamp of when the File was last updated.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
+        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
+        /// Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
         /// </summary>
         public DateTime UpdateTime { get; set; }
         /// <summary>
         /// Output only. The timestamp of when the File will be deleted. Only set if the File is scheduled to expire.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
+        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits.
+        /// Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
         /// </summary>
         public DateTime ExpirationTime { get; set; }
         /// <summary>
@@ -65,5 +69,13 @@ namespace Mscc.GenerativeAI
         /// Output only. Metadata for a video.
         /// </summary>
         public VideoMetadata Metadata { get; set; }
+        /// <summary>
+        /// Output only. The download uri of the `File`.
+        /// </summary>
+        public string? DownloadUri { get; set; }
+        /// <summary>
+        /// Source of the File.
+        /// </summary>
+        public FileResourceSource Source { get; set; }
     }
 }
