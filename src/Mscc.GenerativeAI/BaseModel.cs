@@ -281,6 +281,9 @@ namespace Mscc.GenerativeAI
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
+#if DEBUG
+                WriteIndented = true,
+#endif
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
@@ -288,7 +291,9 @@ namespace Mscc.GenerativeAI
                 PropertyNameCaseInsensitive = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 AllowTrailingCommas = true,
-                //WriteIndented = true,
+#if NET9_0_OR_GREATER
+                RespectNullableAnnotations = true
+#endif
             };
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
 
