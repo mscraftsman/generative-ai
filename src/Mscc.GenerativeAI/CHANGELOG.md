@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - drop .NET 6.0 targeting
 - InvalidOperationException when setting Timeout [#57](https://github.com/mscraftsman/generative-ai/issues/57) thanks to @Ar4ics
 - extend `OpenAI.GetModel` method
+- change JSON default settings
 
 ## 2.0.2
 
