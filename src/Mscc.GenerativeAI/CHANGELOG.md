@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.0
+
+### Added
+
+- add Schema properties
+- add enum `MediaResolution`
+- add `AudioOptions` property
+  add `DownloadFile` method and `Source` property
+- add optional parameter `CancellationToken` to all requests [#54](https://github.com/mscraftsman/generative-ai/issues/54) thanks to @Ar4ics
+
+### Changed
+
+- update NuGet packages
+- drop .NET 6.0 targeting
+- InvalidOperationException when setting Timeout [#57](https://github.com/mscraftsman/generative-ai/issues/57) thanks to @Ar4ics
+- extend `OpenAI.GetModel` method
+
 ## 2.0.2
 
 ### Added

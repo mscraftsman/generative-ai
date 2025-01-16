@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.0
+
+### Changed
+
+- update NuGet packages
+- drop .NET 6.0 targeting
+
 ## 2.0.2
 
 ### Changed

@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.0
+
+### Changed
+
+- update M.E.AI to 9.1.0-preview.1.25064.3 [#58](https://github.com/mscraftsman/generative-ai/pull/58) thanks to @stephentoub
+- update NuGet packages
+- drop .NET 6.0 targeting
+
 ## 2.0.2
 
 ### Changed
@@ -45,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update M.E.AI to 9.0.1-preview.1.24570.5 [#48](https://github.com/mscraftsman/generative-ai/pull/48) - thanks to @stephentoub
+- Update M.E.AI to 9.0.1-preview.1.24570.5 [#48](https://github.com/mscraftsman/generative-ai/pull/48) thanks to @stephentoub
 
 ## 1.9.4
 
@@ -69,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- PR: Update Microsoft.Extensions.AI to 9.0.0-preview.9.24556.5 [#44](https://github.com/mscraftsman/generative-ai/pull/44) - thanks to @stephentoub
+- PR: Update Microsoft.Extensions.AI to 9.0.0-preview.9.24556.5 [#44](https://github.com/mscraftsman/generative-ai/pull/44) thanks to @stephentoub
 
 ## 1.9.0
 
