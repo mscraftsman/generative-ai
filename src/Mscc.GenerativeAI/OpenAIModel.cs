@@ -1,5 +1,6 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,20 +54,29 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Gets information about a specific `Model` such as its version number.
+        /// Gets a model instance.
         /// </summary>
-        /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the ListModels method.</param>
+        /// <param name="modelsId">Required. The resource name of the model. This name should match a model name returned by the ListModels method.</param>
+        /// <param name="model">Required. The name of the model to get.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<SdkModel> GetModel(string? model = null,
+        public async Task<SdkModel> GetModel(string? modelsId = null,
+            string? model = null,
             CancellationToken cancellationToken = default)
         {
-            model ??= _model;
-            model = model.SanitizeModelName();
+            modelsId ??= _model;
+            modelsId = modelsId.SanitizeModelName();
 
-            var url = $"{BaseUrlGoogleAi}/openai/{model}";
+            var url = $"{BaseUrlGoogleAi}/openai/{modelsId}";
             url = ParseUrl(url);
+            if (!string.IsNullOrEmpty(model))
+            {
+                url = url.AddQueryString(new Dictionary<string, string?>()
+                {
+                    [nameof(model)] = model
+                });
+            }
             var response = await Client.GetAsync(url, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<SdkModel>(response);

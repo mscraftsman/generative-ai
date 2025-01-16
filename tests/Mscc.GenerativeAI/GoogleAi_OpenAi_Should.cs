@@ -45,7 +45,7 @@ namespace Test.Mscc.GenerativeAI
             var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = modelName };
 
             // Act
-            var sut = await model.GetModel(model: modelName);
+            var sut = await model.GetModel(modelsId: modelName);
 
             // Assert
             sut.Should().NotBeNull();
