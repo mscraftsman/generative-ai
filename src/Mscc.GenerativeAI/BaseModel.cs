@@ -220,6 +220,7 @@ namespace Mscc.GenerativeAI
                     { "BaseUrlVertexAi", BaseUrlVertexAi },
                     { "version", Version },
                     { "model", _model },
+                    { "modelsId", _model },
                     { "apikey", _apiKey ?? "" },
                     { "projectId", _projectId ?? "" },
                     { "region", _region },
