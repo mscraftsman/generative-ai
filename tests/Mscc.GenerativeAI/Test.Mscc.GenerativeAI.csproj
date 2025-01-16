@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net472;net6.0;net8.0;net9.0</TargetFrameworks>
+		<TargetFrameworks>net472;net8.0;net9.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<NoWarn>$(NoWarn);CS0618;NU1701</NoWarn>
 		<IsPackable>false</IsPackable>
