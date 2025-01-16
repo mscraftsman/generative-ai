@@ -860,7 +860,7 @@ namespace Mscc.GenerativeAI
 
             if (requestOptions != null)
             {
-                Client.Timeout = requestOptions.Timeout;
+                //Client.Timeout = requestOptions.Timeout;
             }
             
             var response = await Client.PostAsync(url, payload, cancellationToken);
@@ -1519,7 +1519,7 @@ namespace Mscc.GenerativeAI
             
             if (requestOptions != null)
             {
-                Client.Timeout = requestOptions.Timeout;
+                //Client.Timeout = requestOptions.Timeout;
             }
             
             var response = await Client.PostAsync(url, payload, cancellationToken);
@@ -1584,7 +1584,7 @@ namespace Mscc.GenerativeAI
             
             if (requestOptions != null)
             {
-                Client.Timeout = requestOptions.Timeout;
+                //Client.Timeout = requestOptions.Timeout;
             }
             
             var response = await Client.PostAsync(url, payload, cancellationToken);
@@ -1724,7 +1724,7 @@ namespace Mscc.GenerativeAI
             
             if (requestOptions != null)
             {
-                Client.Timeout = requestOptions.Timeout;
+                //Client.Timeout = requestOptions.Timeout;
             }
             
             var response = await Client.PostAsync(url, payload, cancellationToken);
@@ -1787,7 +1787,7 @@ namespace Mscc.GenerativeAI
         
             if (requestOptions != null)
             {
-                Client.Timeout = requestOptions.Timeout;
+                //Client.Timeout = requestOptions.Timeout;
             }
             
             var response = await Client.PostAsync(url, payload, cancellationToken);
@@ -1856,7 +1856,7 @@ namespace Mscc.GenerativeAI
             
             if (requestOptions != null)
             {
-                Client.Timeout = requestOptions.Timeout;
+                //Client.Timeout = requestOptions.Timeout;
             }
             
             var response = await Client.PostAsync(url, payload, cancellationToken);
