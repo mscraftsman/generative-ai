@@ -20,6 +20,7 @@
 		<PackageIcon>MsccGenerativeAi-icon-nuget.png</PackageIcon>
 		<PackageProjectUrl>https://mscraftsman.github.io/generative-ai</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/mscraftsman/generative-ai</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
@@ -75,22 +76,14 @@
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.1" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
-		<PackageReference Include="System.Text.Json" Version="8.0.5" />
-	</ItemGroup>
-
-	<ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0'))">
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
-		<PackageReference Include="System.Text.Json" Version="8.0.5" />
-	</ItemGroup>
-
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="NJsonSchema" Version="10.9.0" />
+		<PackageReference Include="JsonSchema.Net.Generation" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="System.Text.Json" Version="9.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
+using System.Dynamic;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -115,9 +116,40 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
         }
+
+        class Recipe {
+            public string Name { get; set; }
+#if NET9_0
+            public required string RecipeName { get; set; }
+#endif
+        }
         
         [Fact]
-        public async Task GenerateContent_Using_JsonMode_Schema()
+        public async Task GenerateContent_Using_JsonMode_Schema_using_List()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json",
+                ResponseSchema = new List<Recipe>()
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt, 
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+        
+        [Fact]
+        public async Task GenerateContent_Using_JsonMode_Schema_using_Anonymous()
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
@@ -128,19 +160,46 @@ namespace Test.Mscc.GenerativeAI
                 ResponseMimeType = "application/json",
                 ResponseSchema = new 
                 {
-                    type = "ARRAY",
+                    type = "array",
                     items = new
                     {
-                        type = "OBJECT", 
+                        type = "object", 
                         properties = new
                         {
-                            recipe_name = new
+                            name = new
                             {
-                                type = "STRING"
+                                type = "string"
                             }
                         }
                     }
                 }
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt, 
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+        
+        [Fact(Skip = "ReadOnly declaration not accepted.")]
+        public async Task GenerateContent_Using_JsonMode_Schema_using_Dynamic()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            dynamic schema = new ExpandoObject();
+            schema.Name = "dynamic";
+            
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json",
+                ResponseSchema = schema
             };
 
             // Act
