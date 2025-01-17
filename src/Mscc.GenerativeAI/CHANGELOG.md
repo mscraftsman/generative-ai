@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.1
+
+### Changed 
+
+- Integrate JsonSchema.net to generate OpenApi schemas [#55](https://github.com/mscraftsman/generative-ai/issues/55) thanks to @rawb300
+
 ## 2.1.0
 
 ### Added

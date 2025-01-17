@@ -37,7 +37,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.1.0" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.1.1" />
   </ItemGroup>
 ```
 
@@ -200,6 +200,40 @@ Shimmer me timbers, it's good to see a friendly face!
 What brings ye to these here waters?
 ```
 
+### Generate structured output
+
+Gemini generates unstructured text by default, but some applications require structured text. For these use cases, you can constrain Gemini to respond with JSON, a structured data format suitable for automated processing.
+
+You can control the structure of the JSON response by suppling a schema. There are two ways to supply a schema to the model:
+
+- As text in the prompt
+- As a structured schema supplied through model configuration
+
+```csharp
+class Recipe {
+    public string RecipeName { get; set; }
+}
+
+// generate structure JSON output
+var apiKey = "your_api_key";
+var prompt = "List a few popular cookie recipes.";
+var googleAi = new GoogleAI(apiKey);
+var model = googleAi.GenerativeModel(model: Model.Gemini15ProLatest);
+var generationConfig = new GenerationConfig()
+{
+    ResponseMimeType = "application/json",
+    ResponseSchema = new List<Recipe>()
+};
+
+var response = await model.GenerateContent(prompt, 
+    generationConfig: generationConfig);
+Console.WriteLine(response?.Text);
+}
+```
+The output might look like this:
+```json
+[{"recipeName": "Chocolate Chip Cookies"}, {"recipeName": "Peanut Butter Cookies"}, {"recipeName": "Snickerdoodles"}, {"recipeName": "Oatmeal Raisin Cookies"}, {"recipeName": "Sugar Cookies"}]
+```
 ### Use Google Search
 
 To activate Google Search as a tool, set the boolean property `UseGoogleSearch` to true, like the following example.
