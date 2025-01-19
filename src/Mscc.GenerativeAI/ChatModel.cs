@@ -15,13 +15,15 @@ namespace Mscc.GenerativeAI
         protected override string Version => ApiVersion.V1Beta;
         
         /// <inheritdoc cref="BaseModel"/>
-        public override string? ApiKey
+        protected override void AddApiKeyHeader(HttpRequestMessage request)
         {
-            set
+            if (!string.IsNullOrEmpty(_apiKey))
             {
-                _apiKey = value;
-                if (value != null)
-                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+                if (request.Headers.Contains("Authorization"))
+                {
+                    request.Headers.Remove("Authorization");
+                }
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
             }
         }
         
