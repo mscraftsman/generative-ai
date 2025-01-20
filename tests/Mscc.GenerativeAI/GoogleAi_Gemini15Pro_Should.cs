@@ -102,7 +102,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateContent_Using_JsonMode_SchemaPrompt()
         {
             // Arrange
-            var prompt = "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
+            var prompt =
+                "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
             model.UseJsonMode = true;
@@ -117,15 +118,16 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
-        class Recipe {
+        class Recipe
+        {
             public string Name { get; set; }
 #if NET9_0
             public required string RecipeName { get; set; }
 #endif
         }
-        
+
         [Fact]
-        public async Task GenerateContent_Using_JsonMode_Schema_using_List()
+        public async Task GenerateContent_Using_ResponseSchema_with_List()
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
@@ -133,12 +135,11 @@ namespace Test.Mscc.GenerativeAI
             var model = googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json",
-                ResponseSchema = new List<Recipe>()
+                ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
             };
 
             // Act
-            var response = await model.GenerateContent(prompt, 
+            var response = await model.GenerateContent(prompt,
                 generationConfig: generationConfig);
 
             // Assert
@@ -147,9 +148,46 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
         }
-        
+
+        class FlightSchedule
+        {
+            public string Time { get; set; }
+            public string Destination { get; set; }
+        }
+
         [Fact]
-        public async Task GenerateContent_Using_JsonMode_Schema_using_Anonymous()
+        public async Task GenerateContent_Using_ResponseSchema_with_List_From_InlineData()
+        {
+            // Arrange
+            var prompt = "Parse the time and city from the airport board shown in this image into a list.";
+            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            // Images
+            var board = await TestExtensions.ReadImageFileBase64Async(
+                "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
+            var request = new GenerateContentRequest(prompt);
+            request.Contents[0].Parts.Add(
+                new InlineData { MimeType = "image/png", Data = board }
+            );
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", ResponseSchema = new List<FlightSchedule>()
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
+                .HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task GenerateContent_Using_ResponseSchema_with_Anonymous()
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
@@ -187,7 +225,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Fact(Skip = "ReadOnly declaration not accepted.")]
-        public async Task GenerateContent_Using_JsonMode_Schema_using_Dynamic()
+        public async Task GenerateContent_Using_ResponseSchema_with_Dynamic()
         {
             // Arrange
             var prompt = "List a few popular cookie recipes.";
