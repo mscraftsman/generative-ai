@@ -13,7 +13,7 @@ var response = await chatClient.CompleteAsync(prompt);
 Console.WriteLine(response.Message);
 
 response = await chatClient.CompleteAsync( 
-    "Translate the following text into Pig Latin: I love .NET and AI"); 
+    "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference."); 
 Console.WriteLine(response.Message);
 
 // Create embeddings using the appropriate model.
