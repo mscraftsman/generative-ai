@@ -415,18 +415,9 @@ namespace Mscc.GenerativeAI
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default, HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
             // Add auth headers specific to this request
-            if (!string.IsNullOrEmpty(_apiKey))
-            {
-                request.Headers.Add("x-goog-api-key", _apiKey);
-            }
-            if (!string.IsNullOrEmpty(_accessToken))
-            {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-            }
-            if (!string.IsNullOrEmpty(_projectId))
-            {
-                request.Headers.Add("x-goog-user-project", _projectId);
-            }
+            AddApiKeyHeader(request);
+            AddAccessTokenHeader(request);
+            AddProjectIdHeader(request);
 
             // Add instance default headers
             request.Headers.UserAgent.Add(_defaultUserAgent);
