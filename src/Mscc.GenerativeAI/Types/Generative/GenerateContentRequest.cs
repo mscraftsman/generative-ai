@@ -223,6 +223,17 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Adds a <see cref="Part"/> object to the i-th Content.
+        /// </summary>
+        /// <param name="part"></param>
+        /// <param name="i"></param>
+        public void AddPart(IPart part, int i)
+        {
+            if (Contents[i] == null) throw new ArgumentNullException(nameof(Contents[i]));
+            Contents[i].Parts.Add(part);
+        }
+
+        /// <summary>
         /// Adds a media file to the request.
         /// </summary>
         /// <remarks>
@@ -245,11 +256,11 @@ namespace Mscc.GenerativeAI
             
             if (useOnline)
             {
-                Contents[0].Parts.Add(new FileData
+                AddPart(new FileData
                 {
                     FileUri = uri,
                     MimeType = mimeType
-                });
+                }, 0);
             }
             
             if (File.Exists(uri))
@@ -265,10 +276,22 @@ namespace Mscc.GenerativeAI
                 base64data =  await GenerativeAIExtensions.ReadImageFileBase64Async(uri);
             }
 
-            GenerativeAIExtensions.GuardInlineDataMimeType(mimeType);
-            Contents[0].Parts.Add(
-                new InlineData { MimeType = mimeType, Data = base64data }
-            );
+
+            AddMedia(base64data, mimeType);
+        }
+
+        /// <summary>
+        /// Adds a base64 media to the request.
+        /// </summary>
+        /// <param name="base64Content">The base64 content of the media.</param>
+        /// <param name="mimeType">The IANA standard MIME type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Content"/> is <see langword="null"/>.</exception>
+        public void AddMedia(string base64Content, string mimeType)
+        {
+            if (base64Content == null) throw new ArgumentNullException(nameof(base64Content));
+
+            GenerativeAIExtensions.GuardMimeType(mimeType);
+            AddPart(new InlineData { MimeType = mimeType, Data = base64Content }, 0);
         }
 
         /// <summary>
@@ -283,9 +306,7 @@ namespace Mscc.GenerativeAI
             // Strangely, the MIME type is not checked for FileData but InlineData only.
             // GenerativeAIExtensions.GuardMimeType(file.MimeType);
 
-            Contents[0].Parts.Add(
-                new FileData { FileUri = file.Uri, MimeType = file.MimeType }
-            );
+            AddPart(new FileData { FileUri = file.Uri, MimeType = file.MimeType }, 0);
         }
     }
 }

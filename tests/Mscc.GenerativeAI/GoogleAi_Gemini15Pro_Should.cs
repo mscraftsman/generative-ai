@@ -312,7 +312,7 @@ namespace Test.Mscc.GenerativeAI
                     Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024
                 }
             };
-            await request.AddMedia(Path.Combine(Environment.CurrentDirectory, "payload", filename));
+            await request.AddMedia(uri:Path.Combine(Environment.CurrentDirectory, "payload", filename));
 
             // Act
             var response = await model.GenerateContent(request);
@@ -326,14 +326,15 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Text);
         }
 
-        [Fact]
-        public async Task Describe_AddMedia_From_Url()
+        [Theory]
+        [InlineData("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png", "Parse the time and city from the airport board shown in this image into a list, in Markdown")]
+        [InlineData("http://groups.di.unipi.it/~occhiuto/sintassi.pdf", "Generate 5 exercise for a student")]
+        public async Task Describe_AddMedia_From_Url(string uri, string prompt)
         {
             // Arrange
-            var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
-            await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
+            await request.AddMedia(uri:uri);
 
             // Act
             var response = await model.GenerateContent(request);
