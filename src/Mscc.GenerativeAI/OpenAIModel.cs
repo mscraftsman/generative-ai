@@ -80,7 +80,7 @@ namespace Mscc.GenerativeAI
                     [nameof(model)] = model
                 });
             }
-            var response = await Client.GetAsync(url, cancellationToken);
+            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<SdkModel>(response);
         }
@@ -125,7 +125,11 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var response = await Client.PostAsync(url, payload, cancellationToken);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = payload
+            };
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GenerateEmbeddingsResponse>(response);
         }
@@ -146,7 +150,11 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var response = await Client.PostAsync(url, payload, cancellationToken);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = payload
+            };
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GenerateImagesResponse>(response);
         }

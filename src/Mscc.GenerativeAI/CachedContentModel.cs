@@ -46,7 +46,11 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var response = await Client.PostAsync(url, payload, cancellationToken);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = payload
+            };
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<CachedContent>(response);
         }
@@ -109,7 +113,7 @@ namespace Mscc.GenerativeAI
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
-            var response = await Client.GetAsync(url, cancellationToken);
+            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
             await response.EnsureSuccessAsync();
             var cachedContents = await Deserialize<ListCachedContentsResponse>(response);
             return cachedContents.CachedContents;
@@ -131,7 +135,7 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/{cachedContentName}";
             url = ParseUrl(url);
-            var response = await Client.GetAsync(url, cancellationToken);
+            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<CachedContent>(response);
         }
@@ -171,9 +175,9 @@ namespace Mscc.GenerativeAI
                 RequestUri = new Uri(url),
                 Version = _httpVersion
             };
-            var response = await Client.SendAsync(message);
+            var response = await SendAsync(message, cancellationToken);
 #else
-            var response = await Client.PatchAsync(url, payload, cancellationToken);
+            var response = await SendAsync(message, cancellationToken);
 #endif
             await response.EnsureSuccessAsync();
             return await Deserialize<CachedContent>(response);
@@ -195,7 +199,7 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/{cachedContentName}";
             url = ParseUrl(url);
-            var response = await Client.DeleteAsync(url, cancellationToken);
+            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Delete, url), cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
