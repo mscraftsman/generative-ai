@@ -167,7 +167,6 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-#if NET472_OR_GREATER || NETSTANDARD2_0
             var message = new HttpRequestMessage
             {
                 Method = new HttpMethod("PATCH"),
@@ -176,9 +175,6 @@ namespace Mscc.GenerativeAI
                 Version = _httpVersion
             };
             var response = await SendAsync(message, cancellationToken);
-#else
-            var response = await SendAsync(message, cancellationToken);
-#endif
             await response.EnsureSuccessAsync();
             return await Deserialize<CachedContent>(response);
         }
