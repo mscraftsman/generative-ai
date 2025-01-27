@@ -8,13 +8,18 @@ using Json.Schema.Generation;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Custom JSON converter to serialize and deserialize JSON schema.
+    /// </summary>
     public sealed class ResponseSchemaJsonConverter : JsonConverter<object>
     {
+        /// <inheritdoc cref="JsonConverter"/>
         public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return JsonSerializer.Deserialize<dynamic>(reader.GetString()!, options);
         }
 
+        /// <inheritdoc cref="JsonConverter"/>
         public override void Write(
             Utf8JsonWriter writer,
             object value,
