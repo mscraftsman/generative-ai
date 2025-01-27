@@ -22,7 +22,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiGeminiProVisionShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.GeminiProVision;
+        private readonly string _model = Model.Gemini15FlashLatest;
 
         [Fact]
         public void Initialize_GeminiProVision()
