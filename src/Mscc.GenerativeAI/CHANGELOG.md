@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.2
+
+### Added
+
+- allow custom response schema [#59](https://github.com/mscraftsman/generative-ai/pull/59) thanks to @biegehydra
+- NuGet: embed untracked sources
+- add raw base64 addMedia method [#61](https://github.com/mscraftsman/generative-ai/pull/61) thanks to @cecingua
+
+### Changed
+
+- make clients thread safe [#59](https://github.com/mscraftsman/generative-ai/pull/59) thanks to @biegehydra
+- rename tests for `ResponseSchema`
+- update NuGet packages
+- drop Newtonsoft.Json
+
+### Fixed
+
+- "System.Net.Http.HttpRequestException: The HTTP request headers length exceeded the server limit of 65536 bytes" in Mscc.GenerativeAI.GoogleAI.UploadFile [#56](https://github.com/mscraftsman/generative-ai/issues/56)
+
 ## 2.1.1
 
 ### Changed 
