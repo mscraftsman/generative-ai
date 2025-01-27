@@ -33,7 +33,7 @@ namespace Mscc.GenerativeAI
 
             return apiKey;
         }
-        
+
         /// <summary>
         /// Checks if the functionality is supported by the model.
         /// </summary>
@@ -57,11 +57,14 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
         public static void GuardInlineDataMimeType(string mimeType)
         {
-            string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
+            string[] allowedMimeTypes =
+            [
+                "image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
                 "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac"
             ];
-            
-            if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
+
+            if (!allowedMimeTypes.Contains(mimeType.ToLowerInvariant()))
+                throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
         }
 
         /// <summary>
@@ -76,14 +79,17 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
         public static void GuardMimeType(string mimeType)
         {
-            string[] allowedMimeTypes = ["image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
+            string[] allowedMimeTypes =
+            [
+                "image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
                 "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac",
                 "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp",
-                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python", 
-                "text/x-python", "text/plain", "text/html", "text/css","text/md","text/csv", "text/xml", "text/rtf"
+                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python",
+                "text/x-python", "text/plain", "text/html", "text/css", "text/md", "text/csv", "text/xml", "text/rtf"
             ];
-            
-            if (!allowedMimeTypes.Contains(mimeType)) throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
+
+            if (!allowedMimeTypes.Contains(mimeType.ToLowerInvariant()))
+                throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
         }
 
         /// <summary>
@@ -94,7 +100,8 @@ namespace Mscc.GenerativeAI
         public static void GuardSupportedLanguage(this string language)
         {
             string[] supportedLanguages = { "en", "de", "fr", "it", "es" };
-            if (!supportedLanguages.Contains(language)) throw new NotSupportedException($"The language `{language}` is not supported by the API.");
+            if (!supportedLanguages.Contains(language.ToLowerInvariant()))
+                throw new NotSupportedException($"The language `{language}` is not supported by the API.");
         }
 
         public static string SanitizeModelName(this string value)
@@ -113,7 +120,7 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
-        
+
         public static string SanitizeFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -125,7 +132,7 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
-        
+
         public static string SanitizeGeneratedFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -137,7 +144,7 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
-        
+
         public static string SanitizeCachedContentName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -149,7 +156,7 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
-        
+
         public static string SanitizeTuningJobsName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -170,7 +177,7 @@ namespace Mscc.GenerativeAI
             {
                 return value;
             }
-        
+
             return value;
         }
         
@@ -238,6 +245,23 @@ namespace Mscc.GenerativeAI
                     throw new StopCandidateException(response.Candidates[0]);
                 }
             }
+        }
+
+        internal static bool IsValidBase64String(this string value)
+        {
+#if NET8_0_OR_GREATER
+            return System.Buffers.Text.Base64.IsValid(value.AsSpan());
+#else
+            try
+            {
+                _ = Convert.FromBase64String(value);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+#endif
         }
 
         internal static async Task<string> ReadImageFileBase64Async(string url)
