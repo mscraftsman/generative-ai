@@ -74,7 +74,7 @@ namespace Mscc.GenerativeAI
                 ["alt"] = "json", 
                 ["uploadType"] = "multipart"
             });
-            string json = Serialize(request);
+            var json = Serialize(request);
 
             using var fs = new FileStream(uri, FileMode.Open);
             var multipartContent = new MultipartContent("related");
@@ -86,10 +86,8 @@ namespace Mscc.GenerativeAI
                     ContentLength = totalBytes 
                 }
             });
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = multipartContent
-            };
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = multipartContent;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<UploadMediaResponse>(response);
@@ -141,7 +139,7 @@ namespace Mscc.GenerativeAI
                 ["alt"] = "json", 
                 ["uploadType"] = "multipart"
             });
-            string json = Serialize(request);
+            var json = Serialize(request);
 
             var multipartContent = new MultipartContent("related");
             multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
@@ -152,10 +150,8 @@ namespace Mscc.GenerativeAI
                     ContentLength = totalBytes 
                 }
             });
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = multipartContent
-            };
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = multipartContent;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<UploadMediaResponse>(response);
@@ -191,7 +187,8 @@ namespace Mscc.GenerativeAI
                     ["alt"] = "media"
                 });
             }
-            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GeneratedFile>(response);
         }

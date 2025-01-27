@@ -14,6 +14,27 @@ namespace Mscc.GenerativeAI
     public static class GenerativeAIExtensions
     {
         /// <summary>
+        /// Checks whether the API key has the right conditions.
+        /// </summary>
+        /// <param name="apiKey">API key for the Gemini API.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="apiKey"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="apiKey"/> is empty.</exception>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="apiKey"/> has extra whitespace at the start or end, doesn't start with 'AIza', or has the wrong length.</exception>
+        public static string? GuardApiKey(this string? apiKey)
+        {
+            if (apiKey == null) return null;
+            // if (apiKey == null) throw new ArgumentNullException(nameof(apiKey));
+            // if (string.IsNullOrWhiteSpace(apiKey)) throw new ArgumentOutOfRangeException(nameof(apiKey));
+            if (apiKey.Trim() != apiKey)
+                throw new ArgumentException("Key has extra whitespace at the start or end", nameof(apiKey));
+            if (!apiKey.Substring(0, 4).Equals("AIza"))
+                throw new ArgumentException("Key should start with 'AIza'", nameof(apiKey));
+            if (apiKey.Length != 39) throw new ArgumentException("Key is not the correct length", nameof(apiKey));
+
+            return apiKey;
+        }
+        
+        /// <summary>
         /// Checks if the functionality is supported by the model.
         /// </summary>
         /// <param name="model">Model to use.</param>

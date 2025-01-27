@@ -43,12 +43,10 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlGoogleAi}/images";
             url = ParseUrl(url, Method);
-            string json = Serialize(request);
+            var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = payload
-            };
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GenerateImagesResponse>(response);

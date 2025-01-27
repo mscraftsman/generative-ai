@@ -47,7 +47,8 @@ namespace Mscc.GenerativeAI
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
-            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<ListGeneratedFilesResponse>(response);
         }

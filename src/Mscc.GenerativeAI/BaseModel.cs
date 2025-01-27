@@ -76,7 +76,7 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// The value can only be set or modified before the first request is made.
         /// </remarks>
-        public virtual string? ApiKey { set => _apiKey = value; }
+        public string? ApiKey { set => _apiKey = value.GuardApiKey(); }
 
         protected virtual void AddApiKeyHeader(HttpRequestMessage request)
         {
@@ -412,7 +412,9 @@ namespace Mscc.GenerativeAI
                 "'";
         }
 
-        protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default, HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
+        protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            CancellationToken cancellationToken = default,
+            HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
             // Add auth headers specific to this request
             AddApiKeyHeader(request);

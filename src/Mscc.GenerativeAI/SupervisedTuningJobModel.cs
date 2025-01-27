@@ -56,12 +56,10 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlVertexAi}/tuningJobs";
             url = ParseUrl(url);
-            string json = Serialize(request);
+            var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = payload
-            };
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<TuningJob>(response);
@@ -76,7 +74,8 @@ namespace Mscc.GenerativeAI
         {
             var url = $"{BaseUrlVertexAi}/tuningJobs";
             url = ParseUrl(url);
-            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             var tuningJobs = await Deserialize<ListTuningJobResponse>(response);
             return tuningJobs.TuningJobs;
@@ -98,7 +97,8 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
-            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<TuningJob>(response);
         }
@@ -121,10 +121,8 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlVertexAi}/{tuningJobId}:{method}";
             url = ParseUrl(url, method);
             var payload = new StringContent(string.Empty, Encoding.UTF8, Constants.MediaType);
-            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
-            {
-                Content = payload
-            };
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
@@ -150,7 +148,8 @@ namespace Mscc.GenerativeAI
 
             var url = $"{BaseUrlVertexAi}/{tuningJobId}";
             url = ParseUrl(url);
-            var response = await SendAsync(new HttpRequestMessage(HttpMethod.Delete, url), cancellationToken);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
