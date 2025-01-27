@@ -372,7 +372,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
             var request = new GenerateContentRequest(prompt);
-            await request.AddMedia(uri:uri);
+            await request.AddMedia(uri);
 
             // Act
             var response = await model.GenerateContent(request);
