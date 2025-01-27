@@ -7,6 +7,7 @@ using System.Security.Authentication;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Threading;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -75,32 +76,34 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// The value can only be set or modified before the first request is made.
         /// </remarks>
-        public virtual string? ApiKey
+        public virtual string? ApiKey { set => _apiKey = value; }
+
+        protected virtual void AddApiKeyHeader(HttpRequestMessage request)
         {
-            set
+            if (!string.IsNullOrEmpty(_apiKey))
             {
-                _apiKey = value;
-                if (!string.IsNullOrEmpty(_apiKey))
+                if (request.Headers.Contains("x-goog-api-key"))
                 {
-                    if (Client.DefaultRequestHeaders.Contains("x-goog-api-key"))
-                    {
-                        Client.DefaultRequestHeaders.Remove("x-goog-api-key");
-                    }
-                    Client.DefaultRequestHeaders.Add("x-goog-api-key", _apiKey);
+                    request.Headers.Remove("x-goog-api-key");
                 }
+                request.Headers.Add("x-goog-api-key", _apiKey);
             }
         }
         
         /// <summary>
         /// Sets the access token to use for the request.
         /// </summary>
-        public string? AccessToken
+        public string? AccessToken { set => _accessToken = value; }
+        
+        protected virtual void AddAccessTokenHeader(HttpRequestMessage request)
         {
-            set
+            if (!string.IsNullOrEmpty(_accessToken))
             {
-                _accessToken = value;
-                if (value != null)
-                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+                if (request.Headers.Contains("Authorization"))
+                {
+                    request.Headers.Remove("Authorization");
+                }
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
         }
         
@@ -110,19 +113,16 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// The value can only be set or modified before the first request is made.
         /// </remarks>
-        public string? ProjectId
+        public string? ProjectId { set => _projectId = value; }
+        protected virtual void AddProjectIdHeader(HttpRequestMessage request)
         {
-            set
+            if (!string.IsNullOrEmpty(_projectId))
             {
-                _projectId = value;
-                if (!string.IsNullOrEmpty(_projectId))
+                if (request.Headers.Contains("x-goog-user-project"))
                 {
-                    if (Client.DefaultRequestHeaders.Contains("x-goog-user-project"))
-                    {
-                        Client.DefaultRequestHeaders.Remove("x-goog-user-project");
-                    }
-                    Client.DefaultRequestHeaders.Add("x-goog-user-project", _projectId);
+                    request.Headers.Remove("x-goog-user-project");
                 }
+                request.Headers.Add("x-goog-user-project", _projectId);
             }
         }
 
@@ -149,13 +149,24 @@ namespace Mscc.GenerativeAI
         /// </summary>
         protected virtual void ThrowIfUnsupportedRequest<T>(T request) { }
 
+        // Instance fields for default headers
+        private readonly ProductInfoHeaderValue _defaultUserAgent;
+        private readonly KeyValuePair<string, string> _defaultApiClientHeader;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public BaseModel(ILogger? logger = null) : base(logger)
         {
-            SetDefaultRequestHeaders();
+            // Initialize the default headers in constructor
+            var productHeaderValue = new ProductHeaderValue(
+                name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI", 
+                version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
+            _defaultUserAgent = new ProductInfoHeaderValue(productHeaderValue);
+            _defaultApiClientHeader = new KeyValuePair<string, string>(
+                "x-goog-api-client", 
+                _defaultUserAgent.ToString());
             _options = DefaultJsonSerializerOptions();
             GenerativeAIExtensions.ReadDotEnv();
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
@@ -256,21 +267,6 @@ namespace Mscc.GenerativeAI
             var json = await response.Content.ReadAsStringAsync();
             return await response.Content.ReadFromJsonAsync<T>(_options);
 #endif
-        }
-
-        /// <summary>
-        /// Set default request headers of <see cref="HttpClient"/>.
-        /// </summary>
-        private void SetDefaultRequestHeaders()
-        {
-            // ('x-goog-api-client', 'genai-py/0.8.2 gl-python/3.12.3 grpc/1.68.0 gax/2.23.0')
-            // ('x-goog-request-params', 'model=models/imagen-3.0-generate-001')
-            var productHeaderValue = new ProductHeaderValue(
-                name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI", 
-                version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
-            var productInfoHeaderValue = new ProductInfoHeaderValue(productHeaderValue);
-            Client.DefaultRequestHeaders.UserAgent.Add(productInfoHeaderValue);
-            Client.DefaultRequestHeaders.Add(name: "x-goog-api-client", productInfoHeaderValue.ToString());
         }
 
         /// <summary>
@@ -415,5 +411,19 @@ namespace Mscc.GenerativeAI
                 ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
                 "'";
         }
-   }
+
+        protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default, HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
+        {
+            // Add auth headers specific to this request
+            AddApiKeyHeader(request);
+            AddAccessTokenHeader(request);
+            AddProjectIdHeader(request);
+
+            // Add instance default headers
+            request.Headers.UserAgent.Add(_defaultUserAgent);
+            request.Headers.Add(_defaultApiClientHeader.Key, _defaultApiClientHeader.Value);
+
+            return await Client.SendAsync(request, completionOption, cancellationToken);
+        }
+    }
 }

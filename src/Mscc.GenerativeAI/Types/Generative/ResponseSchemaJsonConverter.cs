@@ -22,7 +22,7 @@ namespace Mscc.GenerativeAI
         {
             var type = value.GetType();
             // How to figure out: type vs anonymous vs dynamic?
-            if (type.Name.Substring(0,Math.Min(type.Name.Length, 20)).Contains("AnonymousType"))
+            if (type == typeof(JsonDocument) || type.Name.Substring(0,Math.Min(type.Name.Length, 20)).Contains("AnonymousType"))
             {
                 var newOptions = new JsonSerializerOptions(options);
                 newOptions.Converters.Remove(this);

@@ -88,7 +88,11 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, Method);
             string json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var response = await Client.PostAsync(url, payload, cancellationToken);
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = payload
+            };
+            var response = await SendAsync(httpRequest, cancellationToken);
             response.EnsureSuccessStatusCode();
             return await Deserialize<ImageGenerationResponse>(response);
         }

@@ -17,14 +17,15 @@ namespace Mscc.GenerativeAI
     {
         protected override string Version => ApiVersion.V1Beta;
         
-        /// <inheritdoc cref="BaseModel"/>
-        public override string? ApiKey
+        protected override void AddApiKeyHeader(HttpRequestMessage request)
         {
-            set
+            if (!string.IsNullOrEmpty(_apiKey))
             {
-                _apiKey = value;
-                if (value != null)
-                    Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+                if (request.Headers.Contains("Authorization"))
+                {
+                    request.Headers.Remove("Authorization");
+                }
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
             }
         }
         
@@ -53,8 +54,13 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/embeddings:generate";
             url = ParseUrl(url);
             string json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            var response = await Client.PostAsync(url, payload, cancellationToken);
+            
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(json, Encoding.UTF8, Constants.MediaType)
+            };
+            
+            var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GenerateEmbeddingsResponse>(response);
         }
