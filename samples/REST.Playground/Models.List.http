@@ -22,3 +22,13 @@ GET https://generativelanguage.googleapis.com/v1beta/models?key={{apiKey}}
 ###
 
 GET https://generativelanguage.googleapis.com/v1beta/models?key={{apiKey}}&pageSize=50
+
+###
+
+GET https://generativelanguage.googleapis.com/v1beta/listModels
+Authorization: Bearer {{apiKey}}
+
+###
+
+GET https://generativelanguage.googleapis.com/v1beta/openai/models
+Authorization: Bearer {{apiKey}}
