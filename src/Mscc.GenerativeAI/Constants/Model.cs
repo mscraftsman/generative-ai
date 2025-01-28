@@ -62,6 +62,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
         public const string Gemini20FlashThinkingExperimental1219 = "gemini-2.0-flash-thinking-exp-1219";
+        public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
 
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
