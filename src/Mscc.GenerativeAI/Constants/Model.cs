@@ -108,7 +108,7 @@ namespace Mscc.GenerativeAI
         public const string MultimodalEmbedding = MultimodalEmbedding001;
         
         // Models for Imagen on Vertex AI - image generation and editing
-        public const string Imagen3 = "imagen-3.0-generate-001";
+        public const string Imagen3 = "imagen-3.0-generate-002";
         public const string Imagen3Fast = "imagen-3.0-fast-generate-001";
         /// <summary>
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
