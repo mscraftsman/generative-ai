@@ -23,9 +23,10 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Model.Embedding.SanitizeModelName();
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
 
             // Act
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var model = googleAi.GenerativeModel(model: _model);
 
             // Assert
             model.Should().NotBeNull();

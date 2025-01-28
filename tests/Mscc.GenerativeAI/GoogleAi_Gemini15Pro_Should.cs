@@ -33,7 +33,8 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -160,7 +161,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list.";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
@@ -255,7 +257,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Text_From_Image()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var base64Image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
             var parts = new List<IPart>
@@ -282,7 +285,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
             var request = new GenerateContentRequest(prompt);
@@ -309,7 +313,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Text_From_ImageFile(string filename, string mimetype, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
             var parts = new List<IPart>
             {
@@ -342,7 +347,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Describe_AddMedia_From_ImageFile(string filename, string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt)
             {
                 GenerationConfig = new GenerationConfig()
@@ -370,7 +376,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Describe_AddMedia_From_Url(string uri, string prompt)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(uri);
 
@@ -390,7 +397,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png", useOnline: true);
 
@@ -848,7 +856,8 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Describe the image with a creative description";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig
             {
                 Temperature = 0.4f,
@@ -880,7 +889,8 @@ Use speaker A, speaker B, etc. to identify the speakers.
         {
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Parts.Add(new FileData
             {
@@ -961,7 +971,8 @@ Answer:";
         public async Task Multimodal_Video_Input()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var video = await TestExtensions.ReadImageFileBase64Async("gs://cloud-samples-data/video/animals.mp4");
             var request = new GenerateContentRequest("What's in the video?");
             request.Contents[0].Role = Role.User;

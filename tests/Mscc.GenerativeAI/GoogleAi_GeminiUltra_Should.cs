@@ -57,7 +57,9 @@ namespace Test.Mscc.GenerativeAI
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.GeminiUltra;
 
             // Act
-            var model = new GenerativeModel();
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel();
+            model.ProjectId = fixture.ProjectId;
 
             // Assert
             model.Should().NotBeNull();
@@ -69,9 +71,10 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.GeminiUltra;
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
 
             // Act
-            var model = new GenerativeModel(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel();
 
             // Assert
             model.Should().NotBeNull();
@@ -83,9 +86,10 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = _model;
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
 
             // Act
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var model = googleAi.GenerativeModel(model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -96,7 +100,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Models()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel();
 
             // Act
             var sut = await model.ListModels();
@@ -115,7 +120,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Models_Using_OAuth()
         {
             // Arrange
-            var model = new GenerativeModel { AccessToken = fixture.AccessToken };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel();
 
             // Act
             var sut = await model.ListModels();
@@ -134,7 +140,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Tuned_Models()
         {
             // Arrange
-            var model = new GenerativeModel { AccessToken = fixture.AccessToken };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel();
 
             // Act
             var sut = await model.ListModels(true);
@@ -159,7 +166,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel();
 
             // Act
             var sut = await model.GetModel(model: modelName);
@@ -176,9 +184,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_TunedModel_Information_Using_ApiKey(string modelName)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel();
 
-            
             // Act & Assert
             await Assert.ThrowsAsync<NotSupportedException>(() => model.GetModel(model: modelName));
         }
@@ -192,7 +200,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Model_Information_Using_OAuth(string modelName)
         {
             // Arrange
-            var model = new GenerativeModel { AccessToken = fixture.AccessToken };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel();
             var expected = modelName;
             if (!expected.Contains("/"))
                 expected = $"{expected.SanitizeModelName()}";
@@ -219,7 +228,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -235,7 +245,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateContent_WithEmptyPrompt_ThrowsArgumentNullException()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             string prompt = null;
 
             // Act & Assert
@@ -246,7 +257,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_MultiplePrompt()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is x multiplied by 2?" },
@@ -268,7 +280,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -291,7 +304,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a short poem about koi fish.";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(), 
@@ -314,7 +328,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateContent_WithNullRequest_ThrowsArgumentNullException()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             GenerateContentRequest request = null;
 
             // Act & Assert
@@ -326,7 +341,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = Role.User;
 
@@ -345,7 +361,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
 
             // Act
             var responseStream = model.GenerateContentStream(prompt);
@@ -370,7 +387,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -400,7 +418,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task GenerateAnswer_WithValidRequest_ReturnsAnswerResponse()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: "YOUR_API_KEY", model: Model.AttributedQuestionAnswering);
+            var googleAi = new GoogleAI(apiKey: "YOUR_API_KEY");
+            var model = googleAi.GenerativeModel(model: Model.AttributedQuestionAnswering);
             var request = new GenerateAnswerRequest("What is the capital of France?", AnswerStyle.Abstractive);
 
             // Act
@@ -420,7 +439,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Count_Tokens(string prompt, int expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
 
             // Act
             var response = await model.CountTokens(prompt);
@@ -439,7 +459,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Count_Tokens_Request(string prompt, int expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -460,7 +481,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -478,7 +500,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_With_History()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var history = new List<ContentResponse>
             {
                 new() { Role = Role.User, Text = "Hello" },
@@ -505,7 +528,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Multiple_Prompts()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat();
 
             // Act
@@ -534,7 +558,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Conversations()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat();
 
             // Act
@@ -557,7 +582,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Rewind_Conversation()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat();
             _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
             _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
@@ -592,7 +618,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Conversations_Get_Last()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat();
             _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
             _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
@@ -611,7 +638,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_Streaming()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -647,7 +675,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             List<Tool> tools =
             [
                 new Tool()
@@ -759,7 +788,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             List<Tool> tools =
             [
                 new Tool()
@@ -904,7 +934,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             List<Tool> tools =
             [
                 new Tool()
@@ -1064,7 +1095,8 @@ namespace Test.Mscc.GenerativeAI
         public Task Function_Calling_Chat()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var chat = model.StartChat(tools: new List<Tool>());
             var chatInput1 = "What is the weather in Boston?";
 
@@ -1086,7 +1118,8 @@ namespace Test.Mscc.GenerativeAI
         public Task Function_Calling_ContentStream()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: fixture.ApiKey, model: _model);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
@@ -1126,10 +1159,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Create_Tuned_Model()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: null, model: Model.GeminiUltra)
-            {
-                AccessToken = fixture.AccessToken, ProjectId = fixture.ProjectId
-            };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel(model: Model.GeminiUltra);
+            model.ProjectId = fixture.ProjectId;
             var request = new CreateTunedModelRequest()
             {
                 BaseModel = $"{Model.GeminiUltra.SanitizeModelName()}",
@@ -1175,10 +1207,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Create_Tuned_Model_Simply()
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: null, model: Model.GeminiUltra)
-            {
-                AccessToken = fixture.AccessToken, ProjectId = fixture.ProjectId
-            };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel(model: Model.GeminiUltra);
+            model.ProjectId = fixture.ProjectId;
             var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
             {    
@@ -1215,11 +1246,10 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var modelName = "tunedModels/number-generator-model-psx3d3gljyko";     // see List_Tuned_Models for available options.
-            var model = new GenerativeModel()
-            {
-                AccessToken = fixture.AccessToken,
-                ProjectId = fixture.ProjectId
-            };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel();
+            model.ProjectId = fixture.ProjectId;
+
             
             // Act
             var response = await model.DeleteTunedModel(modelName);
@@ -1237,11 +1267,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_TunedModel(string prompt, string expected)
         {
             // Arrange
-            var model = new GenerativeModel(apiKey: null, model: "tunedModels/autogenerated-test-model-48gob9c9v54p")
-            {
-                AccessToken = fixture.AccessToken,
-                ProjectId = fixture.ProjectId
-            };
+            var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
+            var model = googleAI.GenerativeModel(model: "tunedModels/autogenerated-test-model-48gob9c9v54p");
+            model.ProjectId = fixture.ProjectId;
 
             // Act
             var response = await model.GenerateContent(prompt);

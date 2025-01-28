@@ -110,9 +110,6 @@ using Mscc.GenerativeAI;
 // Google AI with an API key
 var googleAI = new GoogleAI(apiKey: "your API key");
 var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
-
-// Original approach, still valid.
-// var model = new GenerativeModel(apiKey: "your API key", model: Model.GeminiPro);
 ```
 
 Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -120,8 +117,9 @@ Google AI with OAuth. Use `gcloud auth application-default print-access-token` t
 ```csharp
 using Mscc.GenerativeAI;
 // Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
-var model = new GenerativeModel(model: Model.Gemini15Pro);
-model.AccessToken = accessToken;
+var accessToken = "your access token";
+var googleAI = new GoogleAI(accessToken: accessToken);
+var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
 ```
 
 Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -146,7 +144,8 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Write a story about a magic backpack.";
 
-var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiPro);
+var googleAI = new GoogleAI(apiKey: "your API key");
+var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
 
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
@@ -292,7 +291,8 @@ using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
 var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-var model = new GenerativeModel(apiKey: apiKey, model: Model.GeminiVisionPro);
+var googleAI = new GoogleAI(apiKey: "your API key");
+var model = googleAI.GenerativeModel(model: Model.GeminiVisionPro);
 var request = new GenerateContentRequest(prompt);
 await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
 
@@ -310,7 +310,8 @@ Gemini enables you to have freeform conversations across multiple turns. You can
 using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
-var model = new GenerativeModel(apiKey: apiKey);    // using default model: gemini-1.5-pro
+var googleAI = new GoogleAI(apiKey);
+var model = googleAI.GenerativeModel();    // using default model: gemini-1.5-pro
 var chat = model.StartChat();   // optionally pass a previous history in the constructor.
 
 // Instead of discarding you could also use the response and access `response.Text`.
@@ -372,10 +373,10 @@ using Mscc.GenerativeAI;
 
 var projectId = "your_google_project_id"; // the ID of a project, not its name.
 var accessToken = "your_access_token";      // use `gcloud auth application-default print-access-token` to get it.
-var model = new GenerativeModel(apiKey: null, model: Model.Gemini10Pro001)
-{
-    AccessToken = accessToken, ProjectId = projectId
-};
+var googleAI = new GoogleAI(accessToken: accessToken);
+var model = googleAI.GenerativeModel(model: Model.Gemini10Pro001);
+model.ProjectId = projectId;
+
 var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
 var dataset = new List<TuningExample>
 {    
