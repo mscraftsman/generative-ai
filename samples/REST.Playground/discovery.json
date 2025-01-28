@@ -917,6 +917,193 @@
         }
       }
     },
+    "coscientist": {
+      "methods": {
+        "reset": {
+          "description": "Reset state by closing all instances.",
+          "flatPath": "v1beta/coscientist:reset",
+          "httpMethod": "POST",
+          "id": "generativelanguage.coscientist.reset",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/coscientist:reset",
+          "request": {
+            "$ref": "BrainstormerResetRequest"
+          },
+          "response": {
+            "$ref": "BrainstormerResetResponse"
+          }
+        },
+        "startResearch": {
+          "description": "Start a new research.",
+          "flatPath": "v1beta/coscientist:startResearch",
+          "httpMethod": "POST",
+          "id": "generativelanguage.coscientist.startResearch",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/coscientist:startResearch",
+          "request": {
+            "$ref": "BrainstormerStartResearchRequest"
+          },
+          "response": {
+            "$ref": "BrainstormerStartResearchResponse"
+          }
+        }
+      },
+      "resources": {
+        "instances": {
+          "methods": {
+            "export": {
+              "description": "Export instance.",
+              "flatPath": "v1beta/coscientist/instances/{instancesId}:export",
+              "httpMethod": "GET",
+              "id": "generativelanguage.coscientist.instances.export",
+              "parameterOrder": [
+                "instanceId"
+              ],
+              "parameters": {
+                "ideasCount": {
+                  "description": "Required. Number of ideas to export.",
+                  "format": "int64",
+                  "location": "query",
+                  "type": "string"
+                },
+                "instanceId": {
+                  "description": "Required. ID of the instance.",
+                  "format": "int64",
+                  "location": "path",
+                  "pattern": "^[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/coscientist/instances/{+instanceId}:export",
+              "response": {
+                "$ref": "BrainstormerExportInstanceResponse"
+              }
+            },
+            "ideas": {
+              "description": "List ideas in an instance.",
+              "flatPath": "v1beta/coscientist/instances/{instancesId}/ideas",
+              "httpMethod": "GET",
+              "id": "generativelanguage.coscientist.instances.ideas",
+              "parameterOrder": [
+                "instanceId"
+              ],
+              "parameters": {
+                "instanceId": {
+                  "description": "Required. Instance ID.",
+                  "format": "int64",
+                  "location": "path",
+                  "pattern": "^[^/]+$",
+                  "required": true,
+                  "type": "string"
+                },
+                "maxIdeas": {
+                  "description": "Maximum number of ideas to return. A value of -1 means no limit.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                }
+              },
+              "path": "v1beta/coscientist/instances/{+instanceId}/ideas",
+              "response": {
+                "$ref": "BrainstormerListIdeasResponse"
+              }
+            },
+            "researchStatus": {
+              "description": "Get the progress status of the research.",
+              "flatPath": "v1beta/coscientist/instances/{instancesId}:researchStatus",
+              "httpMethod": "GET",
+              "id": "generativelanguage.coscientist.instances.researchStatus",
+              "parameterOrder": [
+                "instanceId"
+              ],
+              "parameters": {
+                "instanceId": {
+                  "description": "Required. ID of the instance.",
+                  "format": "int64",
+                  "location": "path",
+                  "pattern": "^[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/coscientist/instances/{+instanceId}:researchStatus",
+              "response": {
+                "$ref": "BrainstormerGetResearchStatusResponse"
+              }
+            },
+            "stopResearch": {
+              "description": "Stop a research.",
+              "flatPath": "v1beta/coscientist/instances/{instancesId}:stopResearch",
+              "httpMethod": "POST",
+              "id": "generativelanguage.coscientist.instances.stopResearch",
+              "parameterOrder": [
+                "instanceId"
+              ],
+              "parameters": {
+                "instanceId": {
+                  "description": "Required. ID of the instance.",
+                  "format": "int64",
+                  "location": "path",
+                  "pattern": "^[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/coscientist/instances/{+instanceId}:stopResearch",
+              "request": {
+                "$ref": "BrainstormerStopResearchRequest"
+              },
+              "response": {
+                "$ref": "BrainstormerStopResearchResponse"
+              }
+            }
+          },
+          "resources": {
+            "ideas": {
+              "methods": {
+                "get": {
+                  "description": "Gets full information about an idea.",
+                  "flatPath": "v1beta/coscientist/instances/{instancesId}/ideas:get",
+                  "httpMethod": "POST",
+                  "id": "generativelanguage.coscientist.instances.ideas.get",
+                  "parameterOrder": [
+                    "instanceId"
+                  ],
+                  "parameters": {
+                    "instanceId": {
+                      "description": "Required. ID of the instance.",
+                      "format": "int64",
+                      "location": "path",
+                      "pattern": "^[^/]+$",
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  "path": "v1beta/coscientist/instances/{+instanceId}/ideas:get",
+                  "request": {
+                    "$ref": "BrainstormerGetIdeasRequest"
+                  },
+                  "response": {
+                    "$ref": "BrainstormerGetIdeasResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "embeddings": {
       "methods": {
         "generate": {
@@ -2239,7 +2426,7 @@
       }
     }
   },
-  "revision": "20250115",
+  "revision": "20250126",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -2420,6 +2607,704 @@
           "description": "The IANA standard MIME type of the source data. Examples: - image/png - image/jpeg If an unsupported MIME type is provided, an error will be returned. For a complete list of supported types, see [Supported file formats](https://ai.google.dev/gemini-api/docs/prompting_with_media#supported_file_formats).",
           "type": "string"
         }
+      },
+      "type": "object"
+    },
+    "BrainstormerAttribute": {
+      "description": "Attribute of an idea.",
+      "id": "BrainstormerAttribute",
+      "properties": {
+        "name": {
+          "description": "Attribute name (e.g. novelty).",
+          "type": "string"
+        },
+        "value": {
+          "description": "Attribute value (e.g. Not novel).",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerAttributeConfig": {
+      "description": "Config for an attribute.",
+      "id": "BrainstormerAttributeConfig",
+      "properties": {
+        "extractor": {
+          "description": "Required. Extraction instructions (e.g. \"Write mechanism of function in detail and score the hypothesis for novelty\").",
+          "type": "string"
+        },
+        "title": {
+          "description": "Required. Name to show in the table (e.g. Novelty).",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerCreateInstanceRequest": {
+      "description": "Create an instance from a text description.",
+      "id": "BrainstormerCreateInstanceRequest",
+      "properties": {
+        "config": {
+          "$ref": "BrainstormerInstanceConfig",
+          "description": "Required. Config for the instance."
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerCreateInstanceResponse": {
+      "description": "Response for creating an instance.",
+      "id": "BrainstormerCreateInstanceResponse",
+      "properties": {
+
+      },
+      "type": "object"
+    },
+    "BrainstormerExportInstanceResponse": {
+      "description": "Export instance response.",
+      "id": "BrainstormerExportInstanceResponse",
+      "properties": {
+        "ideas": {
+          "description": "Output only. Ideas in the instance.",
+          "items": {
+            "$ref": "BrainstormerExportedIdea"
+          },
+          "readOnly": true,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerExportedIdea": {
+      "description": "Info about an exported idea.",
+      "id": "BrainstormerExportedIdea",
+      "properties": {
+        "attributes": {
+          "description": "Attributes of the idea.",
+          "items": {
+            "$ref": "BrainstormerAttribute"
+          },
+          "type": "array"
+        },
+        "category": {
+          "description": "Category of the idea.",
+          "type": "string"
+        },
+        "eloRating": {
+          "description": "Elo rating of the idea.",
+          "format": "float",
+          "type": "number"
+        },
+        "id": {
+          "description": "ID of the idea.",
+          "format": "int64",
+          "type": "string"
+        },
+        "observations": {
+          "description": "Observations that the idea is related to.",
+          "type": "string"
+        },
+        "possibleIssues": {
+          "description": "Possible issues with the idea.",
+          "type": "string"
+        },
+        "relevantContacts": {
+          "description": "Relevant contacts for the idea.",
+          "type": "string"
+        },
+        "review": {
+          "description": "Review of the idea.",
+          "type": "string"
+        },
+        "reviewReferences": {
+          "description": "References to the review.",
+          "items": {
+            "$ref": "BrainstormerReference"
+          },
+          "type": "array"
+        },
+        "reviewsSummary": {
+          "description": "Summary of the reviews.",
+          "type": "string"
+        },
+        "summary": {
+          "description": "Summary of the idea.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text of the idea.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the idea.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerGetIdeasRequest": {
+      "description": "Get ideas request.",
+      "id": "BrainstormerGetIdeasRequest",
+      "properties": {
+        "ideaIds": {
+          "description": "Required. IDs of the ideas to get.",
+          "items": {
+            "format": "int64",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerGetIdeasResponse": {
+      "description": "Get ideas response.",
+      "id": "BrainstormerGetIdeasResponse",
+      "properties": {
+        "ideas": {
+          "description": "Output only. Ideas.",
+          "items": {
+            "$ref": "IdeaItem"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "instanceId": {
+          "description": "Output only. ID of the instance.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerGetResearchStatusResponse": {
+      "description": "Get research status response.",
+      "id": "BrainstormerGetResearchStatusResponse",
+      "properties": {
+        "ideasCount": {
+          "description": "Output only. Number of ideas.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "progress": {
+          "description": "Output only. Progress of the research.",
+          "format": "float",
+          "readOnly": true,
+          "type": "number"
+        },
+        "state": {
+          "description": "Output only. State of the instance.",
+          "enum": [
+            "INSTANCE_STATE_DEFAULT",
+            "INSTANCE_STATE_STARTING",
+            "INSTANCE_STATE_IN_PROGRESS",
+            "INSTANCE_STATE_COMPLETED",
+            "INSTANCE_STATE_FAILED"
+          ],
+          "enumDescriptions": [
+            "Default state.",
+            "Instance is being created.",
+            "Instance is in progress.",
+            "Instance is completed.",
+            "Instance failed."
+          ],
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerIdea": {
+      "description": "An idea.",
+      "id": "BrainstormerIdea",
+      "properties": {
+        "attributes": {
+          "description": "Output only. Extracted attributes for this idea.",
+          "items": {
+            "$ref": "BrainstormerAttribute"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "authors": {
+          "description": "Authors if the idea was manually submitted or improved from manually submitted ideas.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "category": {
+          "description": "Category of the idea. The category is used for deduplication of the ideas.",
+          "type": "string"
+        },
+        "createTime": {
+          "description": "Creation time of the idea. In seconds since epoch.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "deepVerification": {
+          "description": "Deep verification of all assumptions using tools.",
+          "type": "string"
+        },
+        "id": {
+          "description": "ID of the idea",
+          "format": "int64",
+          "type": "string"
+        },
+        "ideaProximities": {
+          "description": "Proximity of the idea to other ideas.",
+          "items": {
+            "$ref": "BrainstormerIdeaProximity"
+          },
+          "type": "array"
+        },
+        "inputIdea": {
+          "description": "Input idea if it was used for generating this idea.",
+          "type": "string"
+        },
+        "observationSummary": {
+          "description": "Idea impact on understanding of existing observations.",
+          "type": "string"
+        },
+        "relevantContacts": {
+          "description": "Contacts who are working on the related areas.",
+          "type": "string"
+        },
+        "reviews": {
+          "description": "All reviews for this idea.",
+          "items": {
+            "$ref": "BrainstormerIdeaReview"
+          },
+          "type": "array"
+        },
+        "reviewsOverview": {
+          "description": "Summary of the reviews.",
+          "type": "string"
+        },
+        "reviewsSummary": {
+          "description": "Summary of the reviews.",
+          "type": "string"
+        },
+        "summary": {
+          "description": "Summary of the idea.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Full text of the idea.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the idea. The title is generated based on the text.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerIdeaInfo": {
+      "description": "Info about an idea.",
+      "id": "BrainstormerIdeaInfo",
+      "properties": {
+        "attributes": {
+          "description": "Attributes of the idea.",
+          "items": {
+            "$ref": "BrainstormerAttribute"
+          },
+          "type": "array"
+        },
+        "authors": {
+          "description": "Authors of the idea.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "category": {
+          "description": "Category of the idea.",
+          "type": "string"
+        },
+        "createTime": {
+          "description": "Creation time of the idea.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "disqualifyingAssumptionsCount": {
+          "description": "Number of assumptions that are disqualifying.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "eloRating": {
+          "description": "Elo rating of the idea.",
+          "format": "float",
+          "type": "number"
+        },
+        "id": {
+          "description": "ID of the idea.",
+          "format": "int64",
+          "type": "string"
+        },
+        "ideaProximities": {
+          "description": "Proximity of the idea to other ideas.",
+          "items": {
+            "$ref": "BrainstormerIdeaProximity"
+          },
+          "type": "array"
+        },
+        "incorrectAssumptionsCount": {
+          "description": "Number of assumptions that are incorrect.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "isAbandoned": {
+          "description": "Whether the idea was abandoned.",
+          "type": "boolean"
+        },
+        "isDeepVerified": {
+          "description": "Whether the idea was deep verified.",
+          "type": "boolean"
+        },
+        "isObserved": {
+          "description": "Whether match with observations was computed for the idea.",
+          "type": "boolean"
+        },
+        "ranking": {
+          "description": "Ranking of the idea.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "reviewScore": {
+          "description": "Review score of the idea.",
+          "format": "float",
+          "type": "number"
+        },
+        "reviewType": {
+          "description": "Review type of the idea.",
+          "enum": [
+            "UNKNOWN",
+            "INITIAL",
+            "FULL",
+            "MANUAL",
+            "TOURNAMENT",
+            "ETHICAL"
+          ],
+          "enumDescriptions": [
+            "Unknown type.",
+            "First correctness review used for filtering using just LLM memory.",
+            "Full review with tools.",
+            "Written by a user.",
+            "Summary of the matches.",
+            "Ethical review."
+          ],
+          "type": "string"
+        },
+        "summary": {
+          "description": "Summary of the idea.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the idea.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerIdeaProximity": {
+      "description": "Proximity of an idea to another idea.",
+      "id": "BrainstormerIdeaProximity",
+      "properties": {
+        "ideaId": {
+          "description": "ID of the idea.",
+          "format": "int64",
+          "type": "string"
+        },
+        "similarityScore": {
+          "description": "Similarity score of the idea.",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerIdeaReview": {
+      "description": "Review of an idea.",
+      "id": "BrainstormerIdeaReview",
+      "properties": {
+        "references": {
+          "description": "References to the review.",
+          "items": {
+            "$ref": "BrainstormerReference"
+          },
+          "type": "array"
+        },
+        "relatedContacts": {
+          "description": "Related contacts who are working on the related areas.",
+          "type": "string"
+        },
+        "review": {
+          "description": "Review text.",
+          "type": "string"
+        },
+        "reviewType": {
+          "description": "Type of the review.",
+          "enum": [
+            "UNKNOWN",
+            "INITIAL",
+            "FULL",
+            "MANUAL",
+            "TOURNAMENT",
+            "ETHICAL"
+          ],
+          "enumDescriptions": [
+            "Unknown type.",
+            "First correctness review used for filtering using just LLM memory.",
+            "Full review with tools.",
+            "Written by a user.",
+            "Summary of the matches.",
+            "Ethical review."
+          ],
+          "type": "string"
+        },
+        "score": {
+          "description": "Score of the review.",
+          "format": "float",
+          "type": "number"
+        },
+        "time": {
+          "description": "Time of the review. In seconds since epoch.",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerInstanceConfig": {
+      "description": "Config for an instance.",
+      "id": "BrainstormerInstanceConfig",
+      "properties": {
+        "attributes": {
+          "description": "Optional. Attributes that we want to extract. These can be strings or scores. These attributes will be attached to every idea. Examples: + Write mechanism of function in detail and score the hypothesis for novelty.",
+          "items": {
+            "$ref": "BrainstormerAttributeConfig"
+          },
+          "type": "array"
+        },
+        "author": {
+          "description": "Required. Author of the instance.",
+          "type": "string"
+        },
+        "enableRewrite": {
+          "description": "Optional. Set to false to keep the goal as written by the user.",
+          "type": "boolean"
+        },
+        "followUpOnSpecificResearch": {
+          "description": "Optional. Set to true to follow up on existing research, this means we first need to find the existing research and then follow up on it.",
+          "type": "boolean"
+        },
+        "goal": {
+          "description": "Required. Goal that we want to achieve: Examples: + Find novel hypothesis for the key factor causing ALS. The hypothesis can be tested using in-vitro experiment.\".",
+          "type": "string"
+        },
+        "preferences": {
+          "description": "Optional. What makes a hypothesis better than another hypothesis. Examples: + Prefer highly novel specific hypotheses.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "shouldBeCorrect": {
+          "description": "Optional. Set to true if user is likely looking for a correct idea (e.g. scientific hypotheses should be correct, sci-fi stories don't need to be correct).",
+          "type": "boolean"
+        },
+        "shouldBeNovel": {
+          "description": "Optional. Set to true if user is looking for a novel idea.",
+          "type": "boolean"
+        },
+        "suggestsIdeaContacts": {
+          "description": "Optional. Set to true to suggests research contacts for each idea.",
+          "type": "boolean"
+        },
+        "title": {
+          "description": "Required. Title Examples: + Find novel hypothesis for the key factor causing ALS.",
+          "type": "string"
+        },
+        "userInput": {
+          "description": "Required. User provided goal that we want to achieve. Examples: + Find novel hypothesis for the key factor causing ALS. The hypothesis can be tested using in-vitro experiment.\". For each hypothesis we want be able to sort by the novelty score and which pathway it mentions.",
+          "type": "string"
+        },
+        "weight": {
+          "description": "Optional. Weight of the instance. Higher weight means higher priority.",
+          "format": "float",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerInstanceStats": {
+      "description": "Stats about an instance.",
+      "id": "BrainstormerInstanceStats",
+      "properties": {
+        "categoriesCount": {
+          "description": "Output only. Number of categories in the instance.",
+          "format": "int32",
+          "readOnly": true,
+          "type": "integer"
+        },
+        "highestEloRating": {
+          "description": "Output only. Highest elo rating of all ideas in the instance.",
+          "format": "float",
+          "readOnly": true,
+          "type": "number"
+        },
+        "ideasCount": {
+          "description": "Output only. Number of ideas in the instance.",
+          "format": "int32",
+          "readOnly": true,
+          "type": "integer"
+        },
+        "reviewedCount": {
+          "description": "Output only. Number of ideas that have been reviewed.",
+          "format": "int32",
+          "readOnly": true,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerListIdeasResponse": {
+      "description": "List ideas response.",
+      "id": "BrainstormerListIdeasResponse",
+      "properties": {
+        "ideas": {
+          "description": "Output only. Info about the ideas.",
+          "items": {
+            "$ref": "BrainstormerIdeaInfo"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "instanceId": {
+          "description": "Output only. ID of the instance.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "relevantContacts": {
+          "description": "Output only. Relevant contacts for the instance.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "researchOverview": {
+          "description": "Output only. Overview of the research.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "reviewsOverview": {
+          "description": "Output only. Overview of the reviews.",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerListInstancesResponse": {
+      "description": "List instances response.",
+      "id": "BrainstormerListInstancesResponse",
+      "properties": {
+        "instances": {
+          "description": "Output only. The list of instances.",
+          "items": {
+            "$ref": "Instance"
+          },
+          "readOnly": true,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerReference": {
+      "description": "Reference to a source of information.",
+      "id": "BrainstormerReference",
+      "properties": {
+        "source": {
+          "description": "Source of the reference.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the reference.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerResetRequest": {
+      "description": "Reset the state and delete all instances.",
+      "id": "BrainstormerResetRequest",
+      "properties": {
+
+      },
+      "type": "object"
+    },
+    "BrainstormerResetResponse": {
+      "description": "Reset response.",
+      "id": "BrainstormerResetResponse",
+      "properties": {
+
+      },
+      "type": "object"
+    },
+    "BrainstormerStartResearchRequest": {
+      "description": "Start research request.",
+      "id": "BrainstormerStartResearchRequest",
+      "properties": {
+        "researchGoal": {
+          "description": "Required. Research goal.",
+          "type": "string"
+        },
+        "researchType": {
+          "description": "Required. Research type.",
+          "enum": [
+            "RESEARCH_TYPE_UNKNOWN",
+            "RESEARCH_TYPE_TIER1",
+            "RESEARCH_TYPE_TIER2",
+            "RESEARCH_TYPE_TIER3"
+          ],
+          "enumDescriptions": [
+            "Default state.",
+            "Basic research limited to small number of ideas.",
+            "Standard research which includes generation and idea evolution.",
+            "Advanced research which includes generation, idea evolution, deep verification, observation, simulation and long running time."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerStartResearchResponse": {
+      "description": "Start research response.",
+      "id": "BrainstormerStartResearchResponse",
+      "properties": {
+        "instanceId": {
+          "description": "Output only. ID of the instance",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BrainstormerStopResearchRequest": {
+      "description": "Stop research request.",
+      "id": "BrainstormerStopResearchRequest",
+      "properties": {
+
+      },
+      "type": "object"
+    },
+    "BrainstormerStopResearchResponse": {
+      "description": "Stop research response.",
+      "id": "BrainstormerStopResearchResponse",
+      "properties": {
+
       },
       "type": "object"
     },
@@ -2641,6 +3526,15 @@
           "format": "int32",
           "type": "integer"
         },
+        "parallelToolCalls": {
+          "description": "Optional. Whether to call tools in parallel. Included here for compatibility with the SDK, but only false is supported.",
+          "type": "boolean"
+        },
+        "presencePenalty": {
+          "description": "Optional. Penalizes new tokens based on previous appearances. Valid ranges are [-2, 2]. Default is 0.",
+          "format": "float",
+          "type": "number"
+        },
         "responseFormat": {
           "$ref": "ResponseFormat",
           "description": "Optional. Defines the format of the response. If not set, the response will be formatted as text."
@@ -2677,6 +3571,10 @@
           "description": "Optional. The maximum cumulative probability of tokens to consider when sampling.",
           "format": "float",
           "type": "number"
+        },
+        "user": {
+          "description": "Optional. The user name used for tracking the request. Not used, only for compatibility with the SDK.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -3058,6 +3956,14 @@
           "description": "Number of tokens in the cached part of the prompt (the cached content).",
           "format": "int32",
           "type": "integer"
+        },
+        "promptTokensDetails": {
+          "description": "Output only. List of modalities that were processed in the request input.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
         },
         "totalTokens": {
           "description": "The number of tokens that the `Model` tokenizes the `prompt` into. Always non-negative.",
@@ -4101,6 +5007,11 @@
           "$ref": "Schema",
           "description": "Optional. Output schema of the generated candidate text. Schemas must be a subset of the [OpenAPI schema](https://spec.openapis.org/oas/v3.0.3#schema) and can be objects, primitives or arrays. If set, a compatible `response_mime_type` must also be set. Compatible MIME types: `application/json`: Schema for JSON response. Refer to the [JSON text generation guide](https://ai.google.dev/gemini-api/docs/json-mode) for more details."
         },
+        "seed": {
+          "description": "Optional. Seed used in decoding. If not set, the request uses a randomly generated seed.",
+          "format": "int32",
+          "type": "integer"
+        },
         "speechConfig": {
           "$ref": "SpeechConfig",
           "description": "Optional. The speech generation config."
@@ -4340,6 +5251,30 @@
       },
       "type": "object"
     },
+    "IdeaItem": {
+      "description": "Info about an idea.",
+      "id": "IdeaItem",
+      "properties": {
+        "eloRating": {
+          "description": "Output only. Elo rating of the idea.",
+          "format": "float",
+          "readOnly": true,
+          "type": "number"
+        },
+        "idea": {
+          "$ref": "BrainstormerIdea",
+          "description": "Output only. Info about the idea.",
+          "readOnly": true
+        },
+        "rank": {
+          "description": "Output only. Ranking of the idea. 1-based.",
+          "format": "int32",
+          "readOnly": true,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
     "Image": {
       "description": "An image generated by the model.",
       "id": "Image",
@@ -4376,6 +5311,48 @@
             "$ref": "SafetyRating"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Instance": {
+      "description": "An instance.",
+      "id": "Instance",
+      "properties": {
+        "ideas": {
+          "$ref": "BrainstormerListIdeasResponse",
+          "description": "Output only. Ideas in the instance.",
+          "readOnly": true
+        },
+        "instanceId": {
+          "description": "Output only. ID of the instance.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "state": {
+          "description": "Output only. State of the instance.",
+          "enum": [
+            "INSTANCE_STATE_DEFAULT",
+            "INSTANCE_STATE_STARTING",
+            "INSTANCE_STATE_IN_PROGRESS",
+            "INSTANCE_STATE_COMPLETED",
+            "INSTANCE_STATE_FAILED"
+          ],
+          "enumDescriptions": [
+            "Default state.",
+            "Instance is being created.",
+            "Instance is in progress.",
+            "Instance is completed.",
+            "Instance failed."
+          ],
+          "readOnly": true,
+          "type": "string"
+        },
+        "stats": {
+          "$ref": "BrainstormerInstanceStats",
+          "description": "Output only. Stats of the instance.",
+          "readOnly": true
         }
       },
       "type": "object"
@@ -4661,6 +5638,38 @@
         "key": {
           "description": "Required. The key of the metadata to filter on.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ModalityTokenCount": {
+      "description": "Represents token counting info for a single modality.",
+      "id": "ModalityTokenCount",
+      "properties": {
+        "modality": {
+          "description": "The modality associated with this token count.",
+          "enum": [
+            "MODALITY_UNSPECIFIED",
+            "TEXT",
+            "IMAGE",
+            "VIDEO",
+            "AUDIO",
+            "DOCUMENT"
+          ],
+          "enumDescriptions": [
+            "Unspecified modality.",
+            "Plain text.",
+            "Image.",
+            "Video.",
+            "Audio.",
+            "Document, e.g. PDF."
+          ],
+          "type": "string"
+        },
+        "tokenCount": {
+          "description": "Number of tokens.",
+          "format": "int32",
+          "type": "integer"
         }
       },
       "type": "object"
@@ -5830,6 +6839,14 @@
       "description": "Metadata on the generation request's token usage.",
       "id": "UsageMetadata",
       "properties": {
+        "cacheTokensDetails": {
+          "description": "Output only. List of modalities of the cached content in the request input.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
         "cachedContentTokenCount": {
           "description": "Number of tokens in the cached part of the prompt (the cached content)",
           "format": "int32",
@@ -5840,10 +6857,26 @@
           "format": "int32",
           "type": "integer"
         },
+        "candidatesTokensDetails": {
+          "description": "Output only. List of modalities that were returned in the response.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
         "promptTokenCount": {
           "description": "Number of tokens in the prompt. When `cached_content` is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content.",
           "format": "int32",
           "type": "integer"
+        },
+        "promptTokensDetails": {
+          "description": "Output only. List of modalities that were processed in the request input.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
         },
         "totalTokenCount": {
           "description": "Total token count for the generation request (prompt + response candidates).",
