@@ -109,5 +109,9 @@ namespace Mscc.GenerativeAI
         /// Optional. If specified, the media resolution specified will be used.
         /// </summary>
         public MediaResolution? MediaResolution { get; set; }
+        /// <summary>
+        /// Optional. Seed used in decoding. If not set, the request uses a randomly generated seed.
+        /// </summary>
+        public int? Seed { get; set; }
     }
 }

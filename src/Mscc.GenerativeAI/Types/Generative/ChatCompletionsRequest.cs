@@ -1,4 +1,6 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -82,5 +84,20 @@ namespace Mscc.GenerativeAI
         /// Optional. Modalities for the request.
         /// </summary>
         public string? Modalities { get; set; }
+        /// <summary>
+        /// Optional. Whether to call tools in parallel.
+        /// </summary>
+        /// <remarks>
+        /// Included here for compatibility with the SDK, but only false is supported.
+        /// </remarks>
+        public bool? ParallelToolCalls { get; set; }
+        /// <summary>
+        /// Optional. Penalizes new tokens based on previous appearances. Valid ranges are [-2, 2]. Default is 0.
+        /// </summary>
+        public float? PresencePenalty { get; set; }
+        /// <summary>
+        /// Optional. The user name used for tracking the request. Not used, only for compatibility with the SDK.
+        /// </summary>
+        public string? User { get; set; }
     }
 }

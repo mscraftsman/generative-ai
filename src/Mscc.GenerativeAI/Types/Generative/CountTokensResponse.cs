@@ -1,4 +1,8 @@
-﻿namespace Mscc.GenerativeAI
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
+
+namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// A response from `CountTokens`. It returns the model's `token_count` for the `prompt`.
@@ -39,5 +43,9 @@
             get => _totalCachedTokens;
             set => _totalCachedTokens = value < 0 ? 0 : value < int.MaxValue ? value : int.MaxValue;
         }
+        /// <summary>
+        /// Output only. List of modalities that were processed in the request input.
+        /// </summary>
+        public List<ModalityTokenCount>? PromptTokensDetails { get; set; }
     }
 }
