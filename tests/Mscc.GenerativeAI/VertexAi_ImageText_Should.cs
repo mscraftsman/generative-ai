@@ -45,7 +45,7 @@ namespace Test.Mscc.GenerativeAI
             
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected}");
+            model.Name.Should().Be($"{expected.SanitizeModelName()}");
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageText}");
+            model.Name.Should().Be($"{Model.ImageText.SanitizeModelName()}");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageGeneration}");
+            model.Name.Should().Be($"{Model.ImageText.SanitizeModelName()}");
         }
 
         [Theory]

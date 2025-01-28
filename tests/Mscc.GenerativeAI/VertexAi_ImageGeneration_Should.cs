@@ -82,7 +82,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [ClassData(typeof(ImagePrompts))]
-        public async Task Generate_Content(string prompt)
+        public async Task Generate_Content(string prompt, string aspectRatio)
         {
             // Arrange
             var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
