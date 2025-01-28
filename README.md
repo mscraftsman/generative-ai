@@ -144,7 +144,7 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Write a story about a magic backpack.";
 
-var googleAI = new GoogleAI(apiKey: "your API key");
+var googleAI = new GoogleAI(apiKey: apiKey);
 var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
 
 var response = await model.GenerateContent(prompt);
