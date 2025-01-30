@@ -22,17 +22,30 @@ public sealed class GeminiChatClient : mea.IChatClient
     public mea.ChatClientMetadata Metadata { get; }
 
     /// <summary>
-    /// Creates an instance of the Gemini API client.
+    /// Creates an instance of the Gemini API client using Google AI.
     /// </summary>
     /// <param name="apiKey">API key provided by Google AI Studio</param>
-    /// <param name="model">Model to use</param>
-    public GeminiChatClient(string apiKey, string model = "")
+    /// <param name="model">Model to use.</param>
+    public GeminiChatClient(string apiKey, string model = Model.Gemini15Pro)
     {
         var genAi = new GoogleAI(apiKey);
         _client = genAi.GenerativeModel(model);
         Metadata = new(ProviderName, null, model);
     }
 
+    /// <summary>
+    /// Creates an instance of the Gemini API client using Vertex AI.
+    /// </summary>
+    /// <param name="projectId">Identifier of the Google Cloud project.</param>
+    /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+    /// <param name="model">Model to use.</param>
+    public GeminiChatClient(string projectId, string? region = null, string model = Model.Gemini15Pro)
+    {
+        var genAi = new VertexAI(projectId, region);
+        _client = genAi.GenerativeModel(model);
+        Metadata = new(ProviderName, null, model);
+    }
+    
     /// <inheritdoc/>
     public async Task<mea.ChatCompletion> CompleteAsync(
         IList<mea.ChatMessage> chatMessages, 

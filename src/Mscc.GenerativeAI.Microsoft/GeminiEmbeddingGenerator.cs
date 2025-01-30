@@ -20,9 +20,27 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <inheritdoc/>
         public EmbeddingGeneratorMetadata Metadata { get; }
 
-        public GeminiEmbeddingGenerator(string apiKey, string model = "")
+        /// <summary>
+        /// Creates an instance of the Gemini API client using Google AI.
+        /// </summary>
+        /// <param name="apiKey">API key provided by Google AI Studio</param>
+        /// <param name="model">Model to use.</param>
+        public GeminiEmbeddingGenerator(string apiKey, string model = Model.Embedding)
         {
             var genAi = new GoogleAI(apiKey);
+            _client = genAi.GenerativeModel(model);
+            Metadata = new(providerName, null, model);
+        }
+
+        /// <summary>
+        /// Creates an instance of the Gemini API client using Vertex AI.
+        /// </summary>
+        /// <param name="projectId">Identifier of the Google Cloud project.</param>
+        /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="model">Model to use.</param>
+        public GeminiEmbeddingGenerator(string projectId, string? region = null, string model = Model.Embedding)
+        {
+            var genAi = new VertexAI(projectId, region);
             _client = genAi.GenerativeModel(model);
             Metadata = new(providerName, null, model);
         }
