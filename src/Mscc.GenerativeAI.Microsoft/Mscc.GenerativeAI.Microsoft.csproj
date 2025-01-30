@@ -58,7 +58,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.AI" Version="9.1.0-preview.1.25064.3" />
-      <PackageReference Include="Mscc.GenerativeAI" Version="2.1.1" />
+      <PackageReference Include="Mscc.GenerativeAI" Version="2.1.3" />
     </ItemGroup>
 
     <Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">
