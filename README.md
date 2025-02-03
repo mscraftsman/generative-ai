@@ -37,7 +37,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.1.3" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.1.4" />
   </ItemGroup>
 ```
 
