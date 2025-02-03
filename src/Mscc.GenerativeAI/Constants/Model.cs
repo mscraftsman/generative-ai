@@ -31,8 +31,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini15Pro002 = "gemini-1.5-pro-002";
         public const string Gemini15ProTuning = Gemini15Pro002;
         public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
-        public const string Gemini15ProExperimental0801 = "gemini-1.5-pro-exp-0801";
-        public const string Gemini15ProExperimental0827 = "gemini-1.5-pro-exp-0827";
+        public const string Gemini15ProExperimental0801 = GeminiExperimental1206;
+        public const string Gemini15ProExperimental0827 = GeminiExperimental1206;
         public const string Gemini15ProExperimental = Gemini15ProExperimental0827;
         public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
         public const string Gemini15Flash = "gemini-1.5-flash";
@@ -45,11 +45,11 @@ namespace Mscc.GenerativeAI
         public const string Gemini15Flash8B001 = "gemini-1.5-flash-8b-001";
         public const string Gemini15Flash8BLatest = "gemini-1.5-flash-8b-latest";
         public const string Gemini15FlashExperimental0827 = "gemini-1.5-flash-exp-0827";
-        public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
-        public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
+        public const string Gemini15FlashExperimental0827_8B = Gemini15Flash8B;
+        public const string Gemini15FlashExperimental0924_8B = Gemini15Flash8B;
 
-        public const string GeminiExperimental1114 = "gemini-exp-1114";
-        public const string GeminiExperimental1121 = "gemini-exp-1121";
+        public const string GeminiExperimental1114 = GeminiExperimental1206;
+        public const string GeminiExperimental1121 = GeminiExperimental1206;
         public const string GeminiExperimental1206 = "gemini-exp-1206";
         public const string GeminiExperimental = GeminiExperimental1206;
         public const string LearnLM = LearnLMExperimental;
@@ -61,7 +61,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
-        public const string Gemini20FlashThinkingExperimental1219 = "gemini-2.0-flash-thinking-exp-1219";
+        public const string Gemini20FlashThinkingExperimental1219 = Gemini20FlashThinkingExperimental0121;
         public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
 
         // PaLM 2 models
