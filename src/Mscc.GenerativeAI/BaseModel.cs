@@ -29,6 +29,7 @@ namespace Mscc.GenerativeAI
 
         protected string _model;
         protected string? _apiKey;
+        protected string _apiVersion;
         protected string? _accessToken;
         protected string? _projectId;
         protected string _region = "us-central1";
