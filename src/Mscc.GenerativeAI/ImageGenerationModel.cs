@@ -106,6 +106,8 @@ namespace Mscc.GenerativeAI
         /// <param name="language">Language of the text prompt for the image.</param>
         /// <param name="safetyFilterLevel">Adds a filter level to Safety filtering.</param>
         /// <param name="personGeneration">Allow generation of people by the model.</param>
+        /// <param name="enhancePrompt">Option to enhance your provided prompt.</param>
+        /// <param name="addWatermark">Explicitly set the watermark</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
@@ -114,7 +116,8 @@ namespace Mscc.GenerativeAI
             int numberOfImages = 1, string? negativePrompt = null, 
             string? aspectRatio = null, int? guidanceScale = null,
             string? language = null, string? safetyFilterLevel = null,
-            string? personGeneration = null,
+            string? personGeneration = null, bool? enhancePrompt = null,
+            bool? addWatermark = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
@@ -141,6 +144,8 @@ namespace Mscc.GenerativeAI
                     throw new ArgumentException("Not a valid safety filter level", nameof(personGeneration));
                 request.Parameters.PersonGeneration = personGeneration;
             }
+            request.Parameters.EnhancePrompt = enhancePrompt;
+            request.Parameters.AddWatermark = addWatermark;
             
             return await GenerateImages(request, cancellationToken);
         }
