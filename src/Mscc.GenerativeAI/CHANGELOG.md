@@ -13,18 +13,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
-## 2.1.4
+## 2.1.6
+
+### Added
+
+- add parameter `EnhancePrompt` 
+- add parameter `AddWatermark`
+- add handling for `JsonElement` and `JsonNode`
+
+### Changed
+
+- map previous models
+
+## 2.1.5
 
 ### Added
 
 - add parameter to specify API version
 - add `ThinkingConfig` parameter
-- OpenAI comp: list models REST
 - revision 20250130 - removal of OpenAI, Coscientist, etc.
 
 ### Changed
 
 - update Imagen3 model to `imagen-3.0-generate-002`
+
+## 2.1.4
+
+### Added
+
+- OpenAI comp: list models REST
+- revision 20250127
+
+### Changed
+
 - correct and update README and test cases #62
 
 ## 2.1.3
