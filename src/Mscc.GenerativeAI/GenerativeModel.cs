@@ -50,7 +50,8 @@ namespace Mscc.GenerativeAI
             }
         }
 
-        protected override string Version
+        /// <inheritdoc />
+        internal override string Version
         {
             get
             {
@@ -58,8 +59,14 @@ namespace Mscc.GenerativeAI
                 {
                     return ApiVersion.V1;
                 }
-
-                return ApiVersion.V1Beta;
+                return _apiVersion;
+            }
+            set
+            {
+                if (!_useVertexAi)
+                {
+                    _apiVersion = value;
+                }
             }
         }
 
@@ -179,6 +186,7 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public GenerativeModel(ILogger? logger = null) : base(logger)
         {
+            _apiVersion = ApiVersion.V1Beta;
             Logger.LogGenerativeModelInvoking();
         }
 

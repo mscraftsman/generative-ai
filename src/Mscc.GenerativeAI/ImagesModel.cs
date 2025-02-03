@@ -14,7 +14,7 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public sealed class ImagesModel : BaseModel
     {
-        protected override string Version => ApiVersion.V1Beta;
+        internal override string Version => ApiVersion.V1Beta;
                 
         private string Method => GenerativeAI.Method.Generate;
 

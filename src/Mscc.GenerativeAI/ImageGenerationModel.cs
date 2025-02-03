@@ -25,8 +25,8 @@ namespace Mscc.GenerativeAI
         private static readonly string[] PersonGeneration = ["dont_allow", "allow_adult", "allow_all"];
 
         private readonly bool _useVertexAi;
-        
-        protected override string Version => _useVertexAi ? ApiVersion.V1 : ApiVersion.V1Beta;
+
+        internal override string Version => _useVertexAi ? ApiVersion.V1 : ApiVersion.V1Beta;
 
         private string Url => _useVertexAi ? UrlVertexAi : UrlGoogleAi;
         

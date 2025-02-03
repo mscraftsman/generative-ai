@@ -11,7 +11,7 @@ namespace Mscc.GenerativeAI
 {
     public sealed class FilesModel : BaseModel
     {
-        protected override string Version => ApiVersion.V1Beta;
+        internal override string Version => ApiVersion.V1Beta;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesModel"/> class.

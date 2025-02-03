@@ -376,7 +376,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Describe_AddMedia_From_Url(string uri, string prompt)
         {
             // Arrange
-            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey, apiVersion: ApiVersion.V1Alpha);
             var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(uri);

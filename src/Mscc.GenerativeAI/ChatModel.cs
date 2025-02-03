@@ -12,7 +12,7 @@ namespace Mscc.GenerativeAI
 {
     public class ChatModel : BaseModel
     {
-        protected override string Version => ApiVersion.V1Beta;
+        internal override string Version => ApiVersion.V1Beta;
         
         /// <inheritdoc cref="BaseModel"/>
         protected override void AddApiKeyHeader(HttpRequestMessage request)

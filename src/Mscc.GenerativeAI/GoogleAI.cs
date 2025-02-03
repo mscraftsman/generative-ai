@@ -20,6 +20,7 @@ namespace Mscc.GenerativeAI
     {
         private readonly string? _apiKey;
         private readonly string? _accessToken;
+        private readonly string _version;
         private GenerativeModel? _generativeModel;
         private FilesModel? _filesModel;
         private MediaModel? _mediaModel;
@@ -51,11 +52,13 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">Identifier of the Google Cloud project</param>
         /// <param name="accessToken">Access token for the Google Cloud project</param>
+        /// <param name="apiVersion">Version of the API.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GoogleAI(string? apiKey = null, string? accessToken = null, ILogger? logger = null) : this(logger)
+        public GoogleAI(string? apiKey = null, string? accessToken = null, string apiVersion = ApiVersion.V1Beta, ILogger? logger = null) : this(logger)
         {
             _apiKey ??= apiKey;
             _accessToken ??= accessToken;
+            _version = apiVersion;
         }
 
         /// <summary>
@@ -82,8 +85,11 @@ namespace Mscc.GenerativeAI
                 generationConfig,
                 safetySettings,
                 tools,
-                systemInstruction); 
-            _generativeModel.AccessToken = _apiKey is null ? _accessToken : null;
+                systemInstruction)
+            {
+                AccessToken = _apiKey is null ? _accessToken : null, 
+                Version = _version
+            };
             return _generativeModel;
         }
 

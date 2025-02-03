@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
 {
     public class OpenAIModel : BaseModel
     {
-        protected override string Version => ApiVersion.V1Beta;
+        internal override string Version => ApiVersion.V1Beta;
 
         protected override void AddApiKeyHeader(HttpRequestMessage request)
         {

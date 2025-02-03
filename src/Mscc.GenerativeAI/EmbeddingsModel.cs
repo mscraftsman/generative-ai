@@ -15,7 +15,7 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public class EmbeddingsModel : BaseModel
     {
-        protected override string Version => ApiVersion.V1Beta;
+        internal override string Version => ApiVersion.V1Beta;
         
         protected override void AddApiKeyHeader(HttpRequestMessage request)
         {
