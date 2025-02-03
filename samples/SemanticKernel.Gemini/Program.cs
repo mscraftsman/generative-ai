@@ -4,11 +4,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Google;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Plugins.Web;
 using Microsoft.SemanticKernel.Plugins.Web.Bing;
 using Microsoft.SemanticKernel.Plugins.Web.Google;
 
 // using Microsoft.SemanticKernel.Connectors.OpenAI;
+#pragma warning disable SKEXP0010
 #pragma warning disable SKEXP0050
 #pragma warning disable SKEXP0070
 
@@ -33,12 +35,16 @@ Kernel kernel = services.GetRequiredService<Kernel>();
 //     new GoogleConnector(configuration["Search:Credentials:ApiKey"],
 //         configuration["Search:Credentials:SearchEngineId"])));
 
+var executionSettings = new OpenAIPromptExecutionSettings() { ResponseFormat = typeof(Demographics) };
+
 PromptExecutionSettings settings =
     new GeminiPromptExecutionSettings()
     {
         ToolCallBehavior = GeminiToolCallBehavior.AutoInvokeKernelFunctions,
         Temperature = 0.8,
-        MaxTokens = 8192
+        MaxTokens = 8192, 
+        FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(), 
+        ResponseSchema = typeof(Demographics)
     };
 IChatCompletionService chatService = services.GetRequiredService<IChatCompletionService>();
 ChatHistory history = new();
