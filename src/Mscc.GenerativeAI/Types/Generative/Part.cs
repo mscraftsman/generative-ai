@@ -80,6 +80,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public CodeExecutionResult CodeExecutionResult { get; set; }
         /// <summary>
+        /// Optional. Indicates if the part is thought from the model.
+        /// </summary>
+        public bool? Thought { get; set; }
+        /// <summary>
         /// The ETag of the item.
         /// </summary>
         public virtual string? ETag { get; set; }

@@ -113,5 +113,9 @@ namespace Mscc.GenerativeAI
         /// Optional. Seed used in decoding. If not set, the request uses a randomly generated seed.
         /// </summary>
         public int? Seed { get; set; }
+        /// <summary>
+        /// Optional. Config for thinking features. An error will be returned if this field is set for models that don't support thinking.
+        /// </summary>
+        public ThinkingConfig? ThinkingConfig { get; set; }
     }
 }
