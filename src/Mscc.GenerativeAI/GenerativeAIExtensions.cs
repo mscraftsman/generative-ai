@@ -886,7 +886,11 @@ namespace Mscc.GenerativeAI
                 ? Environment.NewLine + await response.Content.ReadAsStringAsync()
                 : string.Empty;
             
+#if NET8_0_OR_GREATER
+            throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}", inner: null, statusCode: response.StatusCode);
+#else
             throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}");
+#endif
         }
 
         /// <summary>
