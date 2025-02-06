@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.7
+
+### Added
+
+- add new model `gemini-2.0-flash`
+- add new model `gemini-2.0-flash-001`
+- add new model `gemini-2.0-flash-lite-preview`
+- add new model `gemini-2.0-flash-lite-preview-02-05`
+- add new model `gemini-2.0-pro-exp`
+- add new model `gemini-2.0-pro-exp-02-05`
+
+### Changed
+
+- remove model `gemini-1.5-flash-exp-0827`
+- remove model `gemini-1.5-pro-exp-0801`
+- remove model `gemini-1.5-pro-exp-0827`
+
 ## 2.1.6
 
 ### Added
