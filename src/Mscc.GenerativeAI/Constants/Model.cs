@@ -33,7 +33,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
         public const string Gemini15ProExperimental0801 = GeminiExperimental1206;
         public const string Gemini15ProExperimental0827 = GeminiExperimental1206;
-        public const string Gemini15ProExperimental = Gemini15ProExperimental0827;
+        public const string Gemini15ProExperimental = GeminiExperimental1206;
         public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
         public const string Gemini15Flash = "gemini-1.5-flash";
         public const string Gemini15FlashLatest = "gemini-1.5-flash-latest";
@@ -44,7 +44,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini15Flash8B = "gemini-1.5-flash-8b";
         public const string Gemini15Flash8B001 = "gemini-1.5-flash-8b-001";
         public const string Gemini15Flash8BLatest = "gemini-1.5-flash-8b-latest";
-        public const string Gemini15FlashExperimental0827 = "gemini-1.5-flash-exp-0827";
+        public const string Gemini15FlashExperimental0827 = GeminiExperimental1206;
         public const string Gemini15FlashExperimental0827_8B = Gemini15Flash8B;
         public const string Gemini15FlashExperimental0924_8B = Gemini15Flash8B;
 
@@ -57,7 +57,14 @@ namespace Mscc.GenerativeAI
         public const string LearnLMExperimental = "learnlm-1.5-pro-experimental";
         
         // Gemini 2.0
-        public const string Gemini20Flash = Gemini20FlashExperimental;
+        public const string Gemini20Pro = "gemini-2.0-pro-exp";
+        public const string Gemini20ProExperimental = Gemini20ProExperimental0205;
+        public const string Gemini20ProExperimental0205 = "gemini-2.0-pro-exp-02-05";
+        public const string Gemini20Flash = "gemini-2.0-flash";
+        public const string Gemini20Flash001 = "gemini-2.0-flash-001";
+        public const string Gemini20FlashLite = Gemini20FlashLitePreview;
+        public const string Gemini20FlashLitePreview = "gemini-2.0-flash-lite-preview";
+        public const string Gemini20FlashLitePreview0205 = "gemini-2.0-flash-lite-preview-02-05";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
