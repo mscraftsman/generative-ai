@@ -463,7 +463,7 @@ Answer:";
         public async Task Generate_Content_ExpressMode()
         {
             // Arrange
-            var prompt = "Write a story about a magic backpack.";
+            var prompt = "Explain bubble sort to me.";
             var vertex = new VertexAI(apiKey: fixture.ApiKey);
             var model = vertex.GenerativeModel(model: _model);
 

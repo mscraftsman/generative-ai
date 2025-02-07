@@ -187,7 +187,7 @@ Vertex AI in express mode is the fastest way to start building generative AI app
 ```csharp
 using Mscc.GenerativeAI;
 
-var prompt = "Write a story about a magic backpack.";
+var prompt = "Explain bubble sort to me.";
 var vertex = new VertexAI(apiKey: "your API key");
 var model = vertex.GenerativeModel(model: Model.Gemini20FlashExperimental);
 
