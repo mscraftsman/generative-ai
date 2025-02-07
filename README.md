@@ -138,7 +138,7 @@ Vertex AI in express mode using an API key.
 using Mscc.GenerativeAI;
 // Vertex AI in express mode with an API key.
 var vertex = new VertexAI(apiKey: "your API key");
-var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
+var model = vertex.GenerativeModel(model: Model.Gemini20FlashExperimental);
 ```
 
 The `ConfigurationFixture` type in the test project implements multiple options to retrieve sensitive information, i.e. API key or access token.
@@ -175,6 +175,21 @@ var prompt = "Write a story about a magic backpack.";
 var vertex = new VertexAI(projectId: projectId, region: region);
 var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
+
+var response = await model.GenerateContent(prompt);
+Console.WriteLine(response.Text);
+```
+
+### Using Vertex AI in express mode
+
+Vertex AI in express mode is the fastest way to start building generative AI applications on Google Cloud. Signing up in express mode is quick and easy, and it doesn't require entering any billing information. After you sign up, you can access and use Google Cloud APIs in just a few steps.
+
+```csharp
+using Mscc.GenerativeAI;
+
+var prompt = "Write a story about a magic backpack.";
+var vertex = new VertexAI(apiKey: "your API key");
+var model = vertex.GenerativeModel(model: Model.Gemini20FlashExperimental);
 
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
