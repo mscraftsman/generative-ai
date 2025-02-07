@@ -72,6 +72,7 @@ The package supports the following use cases to authenticate.
 | Vertex AI | [Authentication with Credentials by Metadata Server](https://cloud.google.com/docs/authentication/rest#metadata-server)                     | requires access to a metadata server                             |
 | Vertex AI | [Authentication with OAuth]()                                                                                                               | using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) |
 | Vertex AI | [Authentication with Service Account](https://cloud.google.com/docs/authentication/provide-credentials-adc#service-account)                 | using [Mscc.GenerativeAI.Google](./src/Mscc.GenerativeAI.Google) |
+| Vertex AI | [Express Mode with an API key](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview)                                                                                                            |                                                                  |
 
 This applies mainly to the instantiation procedure.
 
@@ -97,7 +98,6 @@ Using any environment variable provides simplified access to a model.
 
 ```csharp
 using Mscc.GenerativeAI;
-
 var model = new GenerativeModel();
 ```
 
@@ -130,6 +130,15 @@ using Mscc.GenerativeAI;
 var vertex = new VertexAI(projectId: projectId, region: region);
 var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 model.AccessToken = accessToken;
+```
+
+Vertex AI in express mode using an API key.
+
+```csharp
+using Mscc.GenerativeAI;
+// Vertex AI in express mode with an API key.
+var vertex = new VertexAI(apiKey: "your API key");
+var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
 ```
 
 The `ConfigurationFixture` type in the test project implements multiple options to retrieve sensitive information, i.e. API key or access token.
