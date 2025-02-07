@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.0
+
+### Added
+
+- add Vertex AI in express mode
+
 ## 2.1.8
 
 ### Added
