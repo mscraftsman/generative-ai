@@ -1,3 +1,7 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -8,6 +12,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public Image[] Predictions { get; set; }
+        public List<Image> Predictions { get; set; }
     }
 }

@@ -139,11 +139,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt =
                 "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape";
             var model = new OpenAIModel { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
-            var request = new GenerateImagesRequest()
-            {
-                Model = _model, 
-                Prompt = prompt
-            };
+            var request = new GenerateImagesRequest(prompt);
             
             // Act
             var response = await model.Images(request);
@@ -161,11 +157,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt =
                 "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape";
             var model = new ImagesModel { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
-            var request = new GenerateImagesRequest()
-            {
-                Model = _model, 
-                Prompt = prompt
-            };
+            var request = new GenerateImagesRequest(prompt);
             
             // Act
             var response = await model.Images(request);

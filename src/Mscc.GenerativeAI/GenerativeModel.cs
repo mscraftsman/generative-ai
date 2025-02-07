@@ -25,6 +25,10 @@ namespace Mscc.GenerativeAI
         private readonly TuningJob? _tuningJob;
         private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
         private readonly List<Tool> defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
+        private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
+        private static readonly string[] SafetyFilterLevel =
+            ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
+        private static readonly string[] PersonGeneration = ["DONT_ALLOW", "ALLOW_ADULT", "ALLOW_ALL"];
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
@@ -89,9 +93,9 @@ namespace Mscc.GenerativeAI
                     case GenerativeAI.Model.TextEmbedding:
                         return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.Imagen3:
-                        return GenerativeAI.Method.Generate;
+                        return GenerativeAI.Method.Predict;
                     case GenerativeAI.Model.Imagen3Fast:
-                        return GenerativeAI.Method.Generate;
+                        return GenerativeAI.Method.Predict;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
                     case GenerativeAI.Model.Gemini20Flash:
@@ -116,8 +120,8 @@ namespace Mscc.GenerativeAI
                     GenerativeAI.Model.GeckoEmbedding => GenerativeAI.Method.EmbedText,
                     GenerativeAI.Model.Embedding => GenerativeAI.Method.EmbedContent,
                     GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
-                    GenerativeAI.Model.Imagen3  => GenerativeAI.Method.Generate,
-                    GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Generate,
+                    GenerativeAI.Model.Imagen3  => GenerativeAI.Method.Predict,
+                    GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Predict,
                     GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
                     GenerativeAI.Model.Gemini20Flash => UseRealtime
                         ? GenerativeAI.Method.BidirectionalGenerateContent
@@ -1240,8 +1244,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var url = $"{BaseUrlGoogleAi}/images";
-            url = ParseUrl(url, Method);
+            var url = ParseUrl(Url, Method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
@@ -1252,18 +1255,81 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// 
+        /// Generates images from text prompt.
+        /// </summary>
+        /// <param name="model">Required. Model to use.</param>
+        /// <param name="prompt">Required. String to process.</param>
+        /// <param name="config">Configuration of image generation.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GenerateImagesResponse> GenerateImages(string model,
+            string prompt, GenerateImagesConfig? config = null,
+            CancellationToken cancellationToken = default)
+        {
+            Model = model ?? throw new ArgumentNullException(nameof(model));
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new GenerateImagesRequest(prompt);
+            request.Parameters = (ImageGenerationParameters)config ?? request.Parameters;
+            
+            return await GenerateImages(request, cancellationToken);
+        }
+        
+        /// <summary>
+        /// Generates images from text prompt.
         /// </summary>
         /// <param name="prompt">Required. String to process.</param>
+        /// <param name="numberOfImages">Number of images to generate. Range: 1..8.</param>
+        /// <param name="negativePrompt">A description of what you want to omit in the generated images.</param>
+        /// <param name="aspectRatio">Aspect ratio for the image.</param>
+        /// <param name="guidanceScale">Controls the strength of the prompt. Suggested values are - * 0-9 (low strength) * 10-20 (medium strength) * 21+ (high strength)</param>
+        /// <param name="language">Language of the text prompt for the image.</param>
+        /// <param name="safetyFilterLevel">Adds a filter level to Safety filtering.</param>
+        /// <param name="personGeneration">Allow generation of people by the model.</param>
+        /// <param name="enhancePrompt">Option to enhance your provided prompt.</param>
+        /// <param name="addWatermark">Explicitly set the watermark</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns></returns>
+        /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
-        public async Task<GenerateImagesResponse> GenerateImages(string prompt, 
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GenerateImagesResponse> GenerateImages(string prompt,
+            int numberOfImages = 1, string? negativePrompt = null, 
+            string? aspectRatio = null, int? guidanceScale = null,
+            string? language = null, string? safetyFilterLevel = null,
+            string? personGeneration = null, bool? enhancePrompt = null,
+            bool? addWatermark = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            GenerateImagesRequest request = new() { Prompt = prompt };
+            var request = new GenerateImagesRequest(prompt, numberOfImages);
+            if (!string.IsNullOrEmpty(aspectRatio))
+            {
+                if (!AspectRatio.Contains(aspectRatio)) 
+                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
+                request.Parameters.AspectRatio = aspectRatio;
+            }
+            request.Parameters.NegativePrompt ??= negativePrompt;
+            request.Parameters.GuidanceScale ??= guidanceScale;
+            request.Parameters.Language ??= language;
+            if (!string.IsNullOrEmpty(safetyFilterLevel))
+            {
+                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
+                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
+                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
+            }
+            if (!string.IsNullOrEmpty(personGeneration))
+            {
+                if (!PersonGeneration.Contains(personGeneration.ToUpperInvariant()))
+                    throw new ArgumentException("Not a valid safety filter level", nameof(personGeneration));
+                request.Parameters.PersonGeneration = personGeneration.ToUpperInvariant();
+            }
+            request.Parameters.EnhancePrompt = enhancePrompt;
+            request.Parameters.AddWatermark = addWatermark;
+            
             return await GenerateImages(request, cancellationToken);
         }
         

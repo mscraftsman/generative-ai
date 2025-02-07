@@ -7,12 +7,12 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Response for image generation.
     /// </summary>
-    public class GenerateImagesResponse
+    public class GenerateImagesResponse : ImageGenerationResponse
     {
         /// <summary>
         /// Output only. A list of the generated images.
         /// </summary>
-        public List<Image> Images { get; set; }
+        public List<Image> Images => Predictions;
         /// <summary>
         /// Output only. Model used to generate the images.
         /// </summary>

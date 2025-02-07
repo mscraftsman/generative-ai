@@ -3,40 +3,15 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Request for image generation.
     /// </summary>
-    public class GenerateImagesRequest
+    public class GenerateImagesRequest : ImageGenerationRequest
     {
         /// <summary>
-        /// Required. A text description of the desired image(s). The maximum length is 1000 characters.
+        /// Initializes a new instance of the <see cref="GenerateImagesRequest"/> class.
         /// </summary>
-        public string Prompt { get; set; }
-        /// <summary>
-        /// Optional. Model to generate the images for.
-        /// </summary>
-        public string? Model { get; set; }
-        /// <summary>
-        /// Optional. Number of images to generate.
-        /// </summary>
-        public int? N { get; set; }
-        /// <summary>
-        /// Optional. The quality of the image that will be generated. \"hd\" creates images with
-        /// finer details and greater consistency across the image.
-        /// </summary>
-        public string? Quality { get; set; }
-        /// <summary>
-        /// Optional. The format in which the generated images are returned. Must be one of url or b64_json.
-        /// </summary>
-        public string? ResponseFormat { get; set; }
-        /// <summary>
-        /// Optional. The size of the generated images.
-        /// </summary>
-        public string? Size { get; set; }
-        /// <summary>
-        /// Optional. The style of the generated images. Must be one of vivid or natural.
-        /// </summary>
-        public string? Style { get; set; }
-        /// <summary>
-        /// Optional. A unique identifier representing your end-user.
-        /// </summary>
-        public string? User { get; set; }
+        /// <param name="prompt">The text prompt guides what images the model generates.</param>
+        /// <param name="sampleCount">The number of generated images.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="sampleCount"/> is less than 1 or greater than 8.</exception>
+        public GenerateImagesRequest(string prompt, int? sampleCount = 4) : base(prompt, sampleCount) { }
     }
 }

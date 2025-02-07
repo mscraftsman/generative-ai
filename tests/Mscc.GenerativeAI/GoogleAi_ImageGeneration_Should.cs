@@ -91,8 +91,9 @@ namespace Test.Mscc.GenerativeAI
                 numberOfImages: 4,
                 safetyFilterLevel: "block_only_high",
                 personGeneration: "allow_adult",
-                aspectRatio: "3:4",
-                negativePrompt: "Outside");
+                aspectRatio: "3:4"
+//                negativePrompt: "Outside"
+            );
 
             // Assert
             response.Should().NotBeNull();
@@ -116,20 +117,57 @@ namespace Test.Mscc.GenerativeAI
             var prompt =
                 "A panning shot of a serene mountain landscape, the camera slowly revealing snow-capped peaks, granite rocks and a crystal-clear lake reflecting the sky";
             var genAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = genAi.GenerativeModel(model: Model.Imagen3);
-            var request = new GenerateImagesRequest()
-            {
-                Model = _model, 
-                Prompt = prompt
-            };
+            var model = genAi.GenerativeModel(model: _model);
+            var request = new GenerateImagesRequest(prompt);
             
             // Act
             var response = await model.GenerateImages(request);
             
             // Assert
             response.Should().NotBeNull();
-            response.Images.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            output.WriteLine($"{response.Images[0].B64Json}");
+            response.Predictions.Should().NotBeNull()
+                .And.HaveCountGreaterThanOrEqualTo(1)
+                .And.HaveCountLessThanOrEqualTo(8);
+            foreach (var image in response.Images)
+            {
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        image.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
+                output.WriteLine($"Wrote image to {fileName}");
+            }
+        }
+
+        [Fact]
+        public async Task Generate_Images_Config()
+        {
+            // Arrange
+            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = genAi.GenerativeModel();
+
+            // Act
+            var response = await model.GenerateImages(
+                model: _model,
+                prompt: "Fuzzy bunnies in my kitchen",
+                config: new GenerateImagesConfig()
+                {
+                    NumberOfImages = 4
+                }
+            );
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Predictions.Should().NotBeNull()
+                .And.HaveCountGreaterThanOrEqualTo(1)
+                .And.HaveCountLessThanOrEqualTo(8);
+            foreach (var image in response.Images)
+            {
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        image.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
+                output.WriteLine($"Wrote image to {fileName}");
+            }
         }
     }
 }
