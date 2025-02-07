@@ -18,6 +18,8 @@ namespace Mscc.GenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";
+        private readonly string? _apiKey;
+        private readonly bool _isExpressMode = false;
 
         private string _endpointId;
         private GenerativeModel? _generativeModel;
@@ -64,6 +66,12 @@ namespace Mscc.GenerativeAI
             _region = region ?? _region;
         }
 
+        public VertexAI(string? apiKey, ILogger? logger = null) : this(logger)
+        {
+            _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
+            _isExpressMode = true;
+        }
+
         /// <summary>
         /// Create a generative model on Vertex AI to use.
         /// </summary>
@@ -80,6 +88,19 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null,
             Content? systemInstruction = null)
         {
+            if (_isExpressMode)
+            {
+                if (_apiKey is null) throw new ArgumentNullException(message: "API key has not been set", null);
+                _generativeModel = new GenerativeModel(_apiKey,
+                    model,
+                    generationConfig,
+                    safetySettings,
+                    tools,
+                    systemInstruction,
+                    vertexAi: true);
+                return _generativeModel;
+            }
+            
             if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
             if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
 

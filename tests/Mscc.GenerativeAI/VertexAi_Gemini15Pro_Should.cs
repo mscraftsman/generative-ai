@@ -13,13 +13,14 @@ using FluentAssertions;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
     public class VertexAiGemini15ProShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini15ProPreview;
+        private readonly string _model = Model.Gemini20FlashLitePreview0205;
 
         [Fact]
         public void Initialize_Vertex()
@@ -157,7 +158,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
-        public Task Generate_Content_Stream()
+        public async Task Generate_Content_Stream()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -166,21 +167,23 @@ namespace Test.Mscc.GenerativeAI
             model.AccessToken = fixture.AccessToken;
 
             // Act
-            var response = model.GenerateContentStream(prompt);
+            var responseStream = model.GenerateContentStream(prompt);
 
             // Assert
-            // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // response.FirstOrDefault().Should().NotBeNull();
-            // response.ForEach(x => output.WriteLine(x.Text));
-            // response.LastOrDefault().UsageMetadata.Should().NotBeNull();
-            // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
-            // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
-            return Task.CompletedTask;
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Fact]
-        public Task Generate_Content_Stream_Request()
+        public async Task Generate_Content_Stream_Request()
         {
             // Arrange
             var prompt = "How are you doing today?";
@@ -195,17 +198,19 @@ namespace Test.Mscc.GenerativeAI
             });
 
             // Act
-            var response = model.GenerateContentStream(request);
+            var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // response.FirstOrDefault().Should().NotBeNull();
-            // response.ForEach(x => output.WriteLine(x.Text));
-            // response.LastOrDefault().UsageMetadata.Should().NotBeNull();
-            // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
-            // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
-            return Task.CompletedTask;
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
 
         [Fact]
@@ -412,6 +417,89 @@ Answer:";
             return Task.CompletedTask;
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Text.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void Initialize_Vertex_ExpressMode()
+        {
+            // Arrange
+
+            // Act
+            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+
+            // Assert
+            vertex.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Initialize_Default_Model_ExpressMode()
+        {
+            // Arrange
+            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+
+            // Act
+            var model = vertex.GenerativeModel();
+
+            // Assert
+            model.Should().NotBeNull();
+            model.Name.Should().Be(Model.Gemini15Pro.SanitizeModelName());
+        }
+
+        [Fact]
+        public void Initialize_Model_ExpressMode()
+        {
+            // Arrange
+            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+
+            // Act
+            var model = vertex.GenerativeModel(model: _model);
+
+            // Assert
+            model.Should().NotBeNull();
+            model.Name.Should().Be(_model.SanitizeModelName());
+        }
+
+        [Fact]
+        public async Task Generate_Content_ExpressMode()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var model = vertex.GenerativeModel(model: _model);
+
+            // Act
+            var response = await model.GenerateContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task Generate_Content_Stream_ExpressMode()
+        {
+            // Arrange
+            var prompt = "How are you doing today?";
+            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var model = vertex.GenerativeModel(model: _model);
+
+            // Act
+            var responseStream = model.GenerateContentStream(prompt);
+
+            // Assert
+            responseStream.Should().NotBeNull();
+            await foreach (var response in responseStream)
+            {
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                output.WriteLine(response?.Text);
+                output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+            }
         }
     }
 }

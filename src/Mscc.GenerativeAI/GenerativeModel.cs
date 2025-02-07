@@ -19,8 +19,10 @@ namespace Mscc.GenerativeAI
     {
         private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
         private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/{model}:{method}";
+        private const string UrlVertexAiExpress = "https://aiplatform.googleapis.com/{version}/publishers/{publisher}/{model}:{method}?key={apikey}";
 
         private readonly bool _useVertexAi;
+        private readonly bool _useVertexAiExpress;
         private readonly CachedContent? _cachedContent;
         private readonly TuningJob? _tuningJob;
         private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
@@ -47,6 +49,11 @@ namespace Mscc.GenerativeAI
                     if (!string.IsNullOrEmpty(_endpointId))
                     {
                         url = "{BaseUrlVertexAi}/{endpointId}";
+                    }
+
+                    if (_useVertexAiExpress)
+                    {
+                        url = UrlVertexAiExpress;
                     }
                 }
 
@@ -107,6 +114,8 @@ namespace Mscc.GenerativeAI
                 {
                     if (!string.IsNullOrEmpty(_endpointId))
                         return GenerativeAI.Method.GenerateContent;
+                    if (_useVertexAiExpress)
+                        return GenerativeAI.Method.GenerateContent;
                     
                     return GenerativeAI.Method.StreamGenerateContent;
                 }
@@ -129,7 +138,9 @@ namespace Mscc.GenerativeAI
                     _ => _useVertexAi
                         ? (!string.IsNullOrEmpty(_endpointId)
                             ? GenerativeAI.Method.GenerateContent
-                            : GenerativeAI.Method.StreamGenerateContent)
+                            : (_useVertexAiExpress)
+                                ? GenerativeAI.Method.GenerateContent
+                                : GenerativeAI.Method.StreamGenerateContent)
                         : GenerativeAI.Method.GenerateContent
                 };
 #endif
@@ -176,6 +187,12 @@ namespace Mscc.GenerativeAI
             if (UseJsonMode && (UseGrounding || UseGoogleSearch)) 
                 throw new NotSupportedException("Google Search or Grounding is not supported with JSON mode.");
         }
+
+        /// <inheritdoc/>
+        protected override void AddApiKeyHeader(HttpRequestMessage request)
+        {
+            if (!_useVertexAiExpress) base.AddApiKeyHeader(request);
+        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
@@ -204,6 +221,7 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
+        /// <param name="vertexAi">Optional. Flag to indicate use of Vertex AI in express mode.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         internal GenerativeModel(string? apiKey = null, 
             string? model = null, 
@@ -212,6 +230,7 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null, 
+            bool vertexAi = false,
             ILogger? logger = null) : this(logger)
         {
             Logger.LogGenerativeModelInvoking();
@@ -223,6 +242,9 @@ namespace Mscc.GenerativeAI
             _tools ??= tools;
             _toolConfig ??= toolConfig;
             _systemInstruction ??= systemInstruction;
+
+            _useVertexAi = vertexAi;
+            _useVertexAiExpress = vertexAi;
         }
 
         /// <summary>
