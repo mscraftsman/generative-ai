@@ -501,5 +501,31 @@ Answer:";
                 output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
+
+        [Theory]
+        [InlineData("How are you doing today?", 6)]
+        [InlineData("What kind of fish is this?", 7)]
+        [InlineData("Write a story about a magic backpack.", 8)]
+        [InlineData("Write an extended story about a magic backpack.", 9)]
+        public async Task Count_Tokens_Request_ExpressMode(string prompt, int expected)
+        {
+            // Arrange
+            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var model = vertex.GenerativeModel(model: _model);
+            var request = new GenerateContentRequest { Contents = new List<Content>() };
+            request.Contents.Add(new Content
+            {
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
+            });
+
+            // Act
+            var response = await model.CountTokens(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.TotalTokens.Should().Be(expected);
+            output.WriteLine($"Tokens: {response?.TotalTokens}");
+        }
     }
 }
