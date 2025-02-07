@@ -26,10 +26,10 @@ namespace Mscc.GenerativeAI
             // if (apiKey == null) throw new ArgumentNullException(nameof(apiKey));
             // if (string.IsNullOrWhiteSpace(apiKey)) throw new ArgumentOutOfRangeException(nameof(apiKey));
             if (apiKey.Trim() != apiKey)
-                throw new ArgumentException("Key has extra whitespace at the start or end", nameof(apiKey));
-            if (!apiKey.Substring(0, 4).Equals("AIza"))
-                throw new ArgumentException("Key should start with 'AIza'", nameof(apiKey));
-            if (apiKey.Length != 39) throw new ArgumentException("Key is not the correct length", nameof(apiKey));
+                throw new ArgumentException("API key has extra whitespace at the start or end", nameof(apiKey));
+            // if (!apiKey.Substring(0, 4).Equals("AIza"))
+            //     throw new ArgumentException("API key should start with 'AIza'", nameof(apiKey));
+            if (apiKey.Length is not (39 or 53)) throw new ArgumentException("API key is not the correct length", nameof(apiKey));
 
             return apiKey;
         }
