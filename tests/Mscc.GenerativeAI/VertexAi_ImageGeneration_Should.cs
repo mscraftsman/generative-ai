@@ -168,6 +168,56 @@ namespace Test.Mscc.GenerativeAI
                 "A panning shot of a serene mountain landscape, the camera slowly revealing snow-capped peaks, granite rocks and a crystal-clear lake reflecting the sky",
                 "16:9"
             };
+            yield return new object[]
+            {
+                "Group of people looking happy, natural light, 8k",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "Hyperrealistic portrait of a person dressed in 1920s flapper fashion, vintage style, black and white, photograph, elegant pose, 8k",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "Imagine a close-up of a vintage watch. Generate a realistic depiction with a weathered strap and detailed mechanism",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "Impressionistic landscape painting of a sunset over a field of sunflowers, vibrant colors, thick brushstrokes, inspired by Monet",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "A surreal dreamscape featuring a giant tortoise with a lush forest growing on its back, floating through a starry sky, glowing mushrooms, bioluminescent plants, ethereal atmosphere",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "Lifestyle image of a freshly roasted coffee beans spilling out of a burlap sack onto a rustic wooden table, steam rising from a nearby cup of coffee, 'Awaken Your Senses' is written on the cup in cursive, warm and inviting atmosphere, morning sunlight, product photography",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "Hyperrealistic portrait of a woman with piercing blue eyes, laughing, freckles, dramatic lighting, detailed skin texture, 8k",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "A panoramic view of a majestic mountain range at dawn",
+                "16:9"
+            };
+            yield return new object[]
+            {
+                "Show a scene from a game where the player needs to find a specific object by looking into drawers of a messy desk",
+                "1:1"
+            };
+            yield return new object[]
+            {
+                "A cityscape painted in the style of Van Gogh with swirling brushstrokes and vibrant colors",
+                "16:9"
+            };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

@@ -17,6 +17,7 @@ using Mscc.GenerativeAI;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
+using GoogleAI = Mscc.GenerativeAI.GoogleAI;
 
 namespace Test.Mscc.GenerativeAI
 {
@@ -146,12 +147,13 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel();
 
             // Act
+            // Ref: https://developers.googleblog.com/en/imagen-3-arrives-in-the-gemini-api/
             var response = await model.GenerateImages(
                 model: _model,
-                prompt: "Fuzzy bunnies in my kitchen",
+                prompt: "a portrait of a sheepadoodle wearing cape",
                 config: new GenerateImagesConfig()
                 {
-                    NumberOfImages = 4
+                    NumberOfImages = 1
                 }
             );
 
@@ -161,6 +163,41 @@ namespace Test.Mscc.GenerativeAI
                 .And.HaveCountGreaterThanOrEqualTo(1)
                 .And.HaveCountLessThanOrEqualTo(8);
             foreach (var image in response.Images)
+            {
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        image.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
+                output.WriteLine($"Wrote image to {fileName}");
+            }
+        }
+
+        [Theory]
+        [ClassData(typeof(ImagePrompts))]
+        public async Task Generate_Images_Samples(string prompt, string aspectRatio)
+        {
+            // Arrange
+            var genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = genAi.GenerativeModel();
+
+            // Act
+            // Ref: https://developers.googleblog.com/en/imagen-3-arrives-in-the-gemini-api/
+            var response = await model.GenerateImages(
+                model: _model,
+                prompt: prompt,
+                config: new GenerateImagesConfig()
+                {
+                    NumberOfImages = 1,
+                    AspectRatio = aspectRatio
+                }
+            );
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Predictions.Should().NotBeNull()
+                .And.HaveCountGreaterThanOrEqualTo(1)
+                .And.HaveCountLessThanOrEqualTo(8);
+            foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
                     Path.ChangeExtension($"{Guid.NewGuid():D}",
