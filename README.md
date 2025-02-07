@@ -182,7 +182,7 @@ Console.WriteLine(response.Text);
 
 ### Using Vertex AI in express mode
 
-Vertex AI in express mode is the fastest way to start building generative AI applications on Google Cloud. Signing up in express mode is quick and easy, and it doesn't require entering any billing information. After you sign up, you can access and use Google Cloud APIs in just a few steps.
+[Vertex AI in express mode](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview) is the fastest way to start building generative AI applications on Google Cloud. Signing up in express mode is quick and easy, and it doesn't require entering any billing information. After you sign up, you can access and use Google Cloud APIs in just a few steps.
 
 ```csharp
 using Mscc.GenerativeAI;
