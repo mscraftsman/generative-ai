@@ -592,6 +592,17 @@
       "topK": 40,
       "topP": 1,
       "version": "001"
+    },
+    {
+      "description": "Vertex served Imagen 3.0 002 model",
+      "displayName": "Imagen 3.0 002 model",
+      "inputTokenLimit": 480,
+      "name": "models/imagen-3.0-generate-002",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predict"
+      ],
+      "version": "002"
     }
   ]
 }

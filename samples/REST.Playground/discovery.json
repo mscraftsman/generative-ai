@@ -1971,7 +1971,7 @@
       }
     }
   },
-  "revision": "20250206",
+  "revision": "20250205",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
