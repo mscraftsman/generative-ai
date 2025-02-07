@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.1.8
+
+### Added
+
+- Add HTTP status code to HttpRequestException #64 thanks to @eirikwah
+
+### Changed
+
+- refactor image generation (Imagen 3)
+
 ## 2.1.7
 
 ### Added
