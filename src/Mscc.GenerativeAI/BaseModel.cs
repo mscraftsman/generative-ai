@@ -83,6 +83,11 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         public string? ApiKey { set => _apiKey = value.GuardApiKey(); }
 
+        /// <summary>
+        /// Specify API key in HTTP header
+        /// </summary>
+        /// <seealso href="https://cloud.google.com/docs/authentication/api-keys-use#using-with-rest">Using an API key with REST</seealso>
+        /// <param name="request"><see cref="HttpRequestMessage"/> to send to the API.</param>
         protected virtual void AddApiKeyHeader(HttpRequestMessage request)
         {
             if (!string.IsNullOrEmpty(_apiKey))

@@ -19,7 +19,7 @@ namespace Mscc.GenerativeAI
     {
         private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
         private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/{model}:{method}";
-        private const string UrlVertexAiExpress = "https://aiplatform.googleapis.com/{version}/publishers/{publisher}/{model}:{method}?key={apikey}";
+        private const string UrlVertexAiExpress = "https://aiplatform.googleapis.com/{version}/publishers/{publisher}/{model}:{method}";
 
         private readonly bool _useVertexAi;
         private readonly bool _useVertexAiExpress;
@@ -188,12 +188,6 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Google Search or Grounding is not supported with JSON mode.");
         }
 
-        /// <inheritdoc/>
-        protected override void AddApiKeyHeader(HttpRequestMessage request)
-        {
-            if (!_useVertexAiExpress) base.AddApiKeyHeader(request);
-        }
-        
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// </summary>
