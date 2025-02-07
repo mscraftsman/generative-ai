@@ -918,7 +918,7 @@ namespace Mscc.GenerativeAI
             //     )
             await response.EnsureSuccessAsync();
 
-            if (_useVertexAi)
+            if (_useVertexAi && !_useVertexAiExpress)
             {
                 var fullText = new StringBuilder();
                 GroundingMetadata? groundingMetadata = null;
