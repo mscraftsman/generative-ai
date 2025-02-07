@@ -21,8 +21,8 @@ namespace Mscc.GenerativeAI
 
         private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
         private static readonly string[] SafetyFilterLevel =
-            ["block_low_and_above", "block_medium_and_above", "block_only_high", "block_none"];
-        private static readonly string[] PersonGeneration = ["dont_allow", "allow_adult", "allow_all"];
+            ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
+        private static readonly string[] PersonGeneration = ["DONT_ALLOW", "ALLOW_ADULT", "ALLOW_ALL"];
 
         private readonly bool _useVertexAi;
 
@@ -134,15 +134,15 @@ namespace Mscc.GenerativeAI
             request.Parameters.Language ??= language;
             if (!string.IsNullOrEmpty(safetyFilterLevel))
             {
-                if (!SafetyFilterLevel.Contains(safetyFilterLevel))
+                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
                     throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
-                request.Parameters.SafetySetting = safetyFilterLevel;
+                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
             }
             if (!string.IsNullOrEmpty(personGeneration))
             {
-                if (!PersonGeneration.Contains(personGeneration))
+                if (!PersonGeneration.Contains(personGeneration.ToUpperInvariant()))
                     throw new ArgumentException("Not a valid safety filter level", nameof(personGeneration));
-                request.Parameters.PersonGeneration = personGeneration;
+                request.Parameters.PersonGeneration = personGeneration.ToUpperInvariant();
             }
             request.Parameters.EnhancePrompt = enhancePrompt;
             request.Parameters.AddWatermark = addWatermark;
