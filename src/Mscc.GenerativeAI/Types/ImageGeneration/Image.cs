@@ -18,6 +18,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string? GcsUri { get; set; }
         /// <summary>
+        /// The image bytes data.
+        /// <see cref="Image"/> can contain a value for this field or the `GcsUri` field but not both.
+        /// </summary>
+        public byte[]? ImageBytes { get; set; }
+        /// <summary>
         /// The base64-encoded JSON of the generated image.
         /// </summary>
         public string? B64Json { get; set; }

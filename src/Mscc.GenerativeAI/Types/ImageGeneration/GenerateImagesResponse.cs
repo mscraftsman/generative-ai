@@ -14,6 +14,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<Image> Images => Predictions;
         /// <summary>
+        /// List of generated images.
+        /// </summary>
+        public List<GeneratedImage>? GeneratedImages { get; set; }
+        /// <summary>
         /// Output only. Model used to generate the images.
         /// </summary>
         public string Model { get; set; }
