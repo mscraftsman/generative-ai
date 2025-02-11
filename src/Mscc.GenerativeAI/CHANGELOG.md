@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.1
+
+### Added
+
+- add properties from Vertex AI
+
+### Changed
+
+- improve guard of API key
+
 ## 2.2.0
 
 ### Added
