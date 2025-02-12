@@ -4,7 +4,8 @@
 [![MsccGenerativeAI](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml/badge.svg?branch=main)](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml)
 [![GitHub stars](https://img.shields.io/github/stars/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/stargazers)
 
-Access and integrate the Gemini API into your .NET applications. The packages support both Google AI Studio and Google Cloud Vertex AI.
+Access and integrate the Gemini API into your .NET applications. This SDK allows you to connect to the Gemini API through either [Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
+The SDK is fully compatible with all Gemini API models and features, including recent additions like improved tool usage (code execution, function calling and integrated Google search grounding), and media generation (Imagen).
 
 | Name                                                   | Package                                                                                 | Status                                                                                                                                                                                                                                                                        |
 |--------------------------------------------------------|-----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -37,7 +38,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.2.1" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.2.2" />
   </ItemGroup>
 ```
 
