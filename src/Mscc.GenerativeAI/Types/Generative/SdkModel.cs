@@ -1,3 +1,7 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Text.Json.Serialization;
+#endif
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -20,6 +24,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. The organization that owns the model.
         /// </summary>
+        [JsonPropertyName("owned_by")]
         public string OwnedBy { get; set; }
         /// <summary>
         /// Output only. Optional. An indicator whether a fine-tuned model has been deleted.
