@@ -23,6 +23,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public int CachedContentTokenCount { get; set; } = default;
         /// <summary>
+        /// Output only. Number of tokens present in tool-use prompt(s).
+        /// </summary>
+        public int ToolUsePromptTokenCount { get; set; } = default;
+        /// <summary>
         /// Output only. List of modalities that were processed in the request input.
         /// </summary>
         public List<ModalityTokenCount>? PromptTokensDetails { get; set; }
@@ -34,5 +38,9 @@ namespace Mscc.GenerativeAI
         /// Output only. List of modalities of the cached content in the request input.
         /// </summary>
         public List<ModalityTokenCount>? CacheTokensDetails { get; set; }
+        /// <summary>
+        /// Output only. List of modalities that were processed for tool-use request inputs.
+        /// </summary>
+        public List<ModalityTokenCount>? ToolUsePromptTokensDetails { get; set; }
     }
 }
