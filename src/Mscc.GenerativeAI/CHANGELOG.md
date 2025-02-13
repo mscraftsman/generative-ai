@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.3
+
+### Added
+
+- add usage meta data for tokens in tool-use prompt(s)
+- add model `gemini-2.0-flash-thinking-exp-no-thoughts`
+- add model `imagen-3.0-generate-002-exp`
+- add model `image-verification-001`
+
+### Changed
+
+- extend OpenAI REST calls
+- specify JSON key for Open AI model owner
+
 ## 2.2.2
 
 ### Changed
