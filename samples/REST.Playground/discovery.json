@@ -1971,7 +1971,7 @@
       }
     }
   },
-  "revision": "20250205",
+  "revision": "20250211",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3525,6 +3525,22 @@
           "description": "Optional. The maximum number of tokens to include in a response candidate. Note: The default value varies by model, see the `Model.output_token_limit` attribute of the `Model` returned from the `getModel` function.",
           "format": "int32",
           "type": "integer"
+        },
+        "mediaResolution": {
+          "description": "Optional. If specified, the media resolution specified will be used.",
+          "enum": [
+            "MEDIA_RESOLUTION_UNSPECIFIED",
+            "MEDIA_RESOLUTION_LOW",
+            "MEDIA_RESOLUTION_MEDIUM",
+            "MEDIA_RESOLUTION_HIGH"
+          ],
+          "enumDescriptions": [
+            "Media resolution has not been set.",
+            "Media resolution set to low (64 tokens).",
+            "Media resolution set to medium (256 tokens).",
+            "Media resolution set to high (zoomed reframing with 256 tokens)."
+          ],
+          "type": "string"
         },
         "presencePenalty": {
           "description": "Optional. Presence penalty applied to the next token's logprobs if the token has already been seen in the response. This penalty is binary on/off and not dependant on the number of times the token is used (after the first). Use frequency_penalty for a penalty that increases with each use. A positive penalty will discourage the use of tokens that have already been used in the response, increasing the vocabulary. A negative penalty will encourage the use of tokens that have already been used in the response, decreasing the vocabulary.",
@@ -5221,6 +5237,20 @@
         },
         "promptTokensDetails": {
           "description": "Output only. List of modalities that were processed in the request input.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
+        "toolUsePromptTokenCount": {
+          "description": "Output only. Number of tokens present in tool-use prompt(s).",
+          "format": "int32",
+          "readOnly": true,
+          "type": "integer"
+        },
+        "toolUsePromptTokensDetails": {
+          "description": "Output only. List of modalities that were processed for tool-use request inputs.",
           "items": {
             "$ref": "ModalityTokenCount"
           },
