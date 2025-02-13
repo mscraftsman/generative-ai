@@ -48,17 +48,17 @@ namespace Mscc.GenerativeAI
         public const string Gemini15FlashExperimental0827_8B = Gemini15Flash8B;
         public const string Gemini15FlashExperimental0924_8B = Gemini15Flash8B;
 
+        public const string GeminiExperimental = GeminiExperimental1206;
         public const string GeminiExperimental1114 = GeminiExperimental1206;
         public const string GeminiExperimental1121 = GeminiExperimental1206;
         public const string GeminiExperimental1206 = "gemini-exp-1206";
-        public const string GeminiExperimental = GeminiExperimental1206;
         public const string LearnLM = LearnLMExperimental;
         public const string LearnLM15 = LearnLMExperimental;
         public const string LearnLMExperimental = "learnlm-1.5-pro-experimental";
         
         // Gemini 2.0
-        public const string Gemini20Pro = "gemini-2.0-pro-exp";
-        public const string Gemini20ProExperimental = Gemini20ProExperimental0205;
+        public const string Gemini20Pro = Gemini20ProExperimental;
+        public const string Gemini20ProExperimental = "gemini-2.0-pro-exp";
         public const string Gemini20ProExperimental0205 = "gemini-2.0-pro-exp-02-05";
         public const string Gemini20Flash = "gemini-2.0-flash";
         public const string Gemini20Flash001 = "gemini-2.0-flash-001";
@@ -68,6 +68,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
+        public const string Gemini20FlashThinkingExperimentalNoThoughts = "gemini-2.0-flash-thinking-exp-no-thoughts";
         public const string Gemini20FlashThinkingExperimental1219 = Gemini20FlashThinkingExperimental0121;
         public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
 
@@ -116,6 +117,7 @@ namespace Mscc.GenerativeAI
         
         // Models for Imagen on Vertex AI - image generation and editing
         public const string Imagen3 = "imagen-3.0-generate-002";
+        public const string Imagen3Experimental = "imagen-3.0-generate-002-exp";
         public const string Imagen3Fast = "imagen-3.0-fast-generate-001";
         /// <summary>
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
@@ -129,6 +131,7 @@ namespace Mscc.GenerativeAI
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
         /// </summary>
         public const string ImageGeneration3Fast = "imagen-3.0-fast-generate-0611";
+        public const string ImageVerification = "image-verification-001";
         public const string ImageGeneration006 = "imagegeneration@006";
         public const string ImageGeneration005 = "imagegeneration@005";
         public const string Imagen2 = ImageGeneration006;
