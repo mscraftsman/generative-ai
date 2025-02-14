@@ -1,4 +1,7 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
 using System.Text.Json.Serialization;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -39,6 +42,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Description of what to discourage in the generated images.
         /// </summary>
+        [Obsolete("Setting negativePrompt is no longer supported.")]
         public string? NegativePrompt { get; set; }
         /// <summary>
         /// Optional. For model version 006 and greater use editConfig.guidanceScale.
