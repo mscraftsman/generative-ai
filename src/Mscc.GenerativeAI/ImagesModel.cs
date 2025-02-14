@@ -41,7 +41,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var url = $"{BaseUrlGoogleAi}/images";
+            var url = $"{BaseUrlGoogleAi}/images:generate";
             url = ParseUrl(url, Method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
