@@ -87,15 +87,16 @@ Content-Type: application/json
 
 ###
 
-curl "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions" \
--H "Content-Type: application/json" \
--H "Authorization: Bearer GEMINI_API_KEY" \
--d '{
+POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+Authorization: Bearer {{apiKey}}
+Content-Type: application/json
+
+{
   "model": "gemini-1.5-flash",
   "messages": [
     {
       "role": "user",
-      "content": "What'\''s the weather like in Chicago today?"
+      "content": "What's the weather like in Chicago today?"
     }
   ],
   "tools": [
@@ -122,7 +123,7 @@ curl "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions" 
     }
   ],
   "tool_choice": "auto"
-}'
+}
 
 ###
 
