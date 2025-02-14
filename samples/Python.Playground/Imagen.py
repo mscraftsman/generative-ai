@@ -1,28 +1,23 @@
 import os
-import google.generativeai as genai
+from google import genai
+from google.genai import types
+from PIL import Image
+from io import BytesIO
+from dotenv import load_dotenv
 
-genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
-
-imagen = genai.ImageGenerationModel("imagen-3.0-generate-001")
-
-result = imagen.generate_images(
-    prompt="Fuzzy bunnies in my kitchen",
-    number_of_images=4,
-    safety_filter_level="block_only_high",
-    person_generation="allow_adult",
-    aspect_ratio="3:4",
-    negative_prompt="Outside",
+load_dotenv()  # take environment variables from .env.
+client = genai.Client(
+    api_key=os.environ['GOOGLE_API_KEY']
 )
 
-for image in result.images:
-  print(image)
+response = client.models.generate_images(
+    model='imagen-3.0-generate-002',
+    prompt='Fuzzy bunnies in my kitchen',
+    config=types.GenerateImagesConfig(
+        number_of_images= 4,
+    )
+)
+for generated_image in response.generated_images:
+  image = Image.open(BytesIO(generated_image.image.image_bytes))
+  image.show()
 
-# The output should look similar to this:
-# <vertexai.preview.vision_models.GeneratedImage object at 0x78f3396ef370>
-# <vertexai.preview.vision_models.GeneratedImage object at 0x78f3396ef700>
-# <vertexai.preview.vision_models.GeneratedImage object at 0x78f33953c2b0>
-# <vertexai.preview.vision_models.GeneratedImage object at 0x78f33953c280>
-
-for image in result.images:
-  # Open and display the image using your local operating system.
-  image._pil_image.show()
