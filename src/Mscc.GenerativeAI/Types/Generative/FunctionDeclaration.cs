@@ -41,5 +41,36 @@
         /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
         /// </remarks>
         public Schema? Response { get; set; }
+        public object? Response { get; set; }
+        
+        public Delegate? Callback { get; set; }
+        
+        public FunctionDeclaration() {}
+
+        public FunctionDeclaration(string name, string? description)
+        {
+            Name = name;
+            Description = description;
+            Parameters = null;
+        }
+
+        public FunctionDeclaration(Delegate callback)
+        {
+            Name = callback.GetNormalizedName();
+            Callback = callback;
+        }
+
+        public FunctionDeclaration(string name, Delegate callback)
+        {
+            Name = name;
+            Callback = callback;
+        }
+
+        public FunctionDeclaration(string name, string? description, Delegate callback)
+        {
+            Name = name;
+            Description = description;
+            Callback = callback;
+        }
     }
 }
