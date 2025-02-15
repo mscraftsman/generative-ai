@@ -1,8 +1,11 @@
+using System.Diagnostics;
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// Represents token counting info for a single modality.
     /// </summary>
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class ModalityTokenCount
     {
         /// <summary>
@@ -13,5 +16,10 @@ namespace Mscc.GenerativeAI
         /// Number of tokens.
         /// </summary>
         public int TokenCount { get; set; }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"Role: {Modality}: {TokenCount}";
+        }
     }
 }
