@@ -388,8 +388,7 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens",
-        "bidiGenerateContent"
+        "countTokens"
       ],
       "temperature": 1,
       "topK": 40,
@@ -405,8 +404,7 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens",
-        "bidiGenerateContent"
+        "countTokens"
       ],
       "temperature": 1,
       "topK": 40,
