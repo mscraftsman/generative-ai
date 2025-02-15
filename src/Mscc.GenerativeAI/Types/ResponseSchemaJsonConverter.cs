@@ -22,10 +22,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="JsonConverter"/>
-        public override void Write(
-            Utf8JsonWriter writer,
-            object value,
-            JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
             var type = value.GetType();
             Type typeValue = null;
