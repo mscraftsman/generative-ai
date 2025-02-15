@@ -1,4 +1,9 @@
-﻿namespace Mscc.GenerativeAI
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
+using System.Text.Json.Serialization;
+#endif
+
+namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// Structured representation of a function declaration as defined by the OpenAPI 3.03 specification. Included in this declaration are the function name and parameters. This FunctionDeclaration is a representation of a block of code that can be used as a Tool by the model and executed by the client.
@@ -40,7 +45,7 @@
         /// <remarks>
         /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
         /// </remarks>
-        public Schema? Response { get; set; }
+        [JsonConverter(typeof(ResponseSchemaJsonConverter))]
         public object? Response { get; set; }
         
         public Delegate? Callback { get; set; }
