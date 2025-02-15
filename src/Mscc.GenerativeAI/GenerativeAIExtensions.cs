@@ -924,5 +924,10 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
+
+        internal static string GetNormalizedName(this Delegate callback)
+        {
+            return callback.Method.Name.ToSnakeCase();
+        }
     }
 }
