@@ -1164,6 +1164,46 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
+        string ToggleDarkMode(bool isOn)
+        {
+            return $"Dark mode is set to: {isOn}";
+        }
+        string GetCurrentWeather(string location)
+        {
+            return $"The weather in {location} is 72 degrees and sunny.";
+        }
+        async Task<object> SendEmailAsync(string recipient, string subject, string body)
+        {
+            await Task.Delay(3000);
+            return new { Success = true, Property1 = "ABC", Property2 = 123 };
+        }
+        
+        [Theory]
+        [InlineData("It is too bright. Change it.")]
+        [InlineData("The ambient light is too low to see anything. I'd need more brightness.")]
+        [InlineData("What's the weather in the capital of the UK?")]
+        [InlineData("Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling.")]
+        public async Task Function_Calling_TopLevel_Method(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            tools.AddFunction(ToggleDarkMode);
+            tools.AddFunction(GetCurrentWeather);
+            tools.AddFunction(SendEmailAsync);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+        
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
         public async Task Function_Calling_MultiTurn()
