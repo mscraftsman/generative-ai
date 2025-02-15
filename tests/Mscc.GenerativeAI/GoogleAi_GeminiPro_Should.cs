@@ -1059,7 +1059,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Which theaters in Mountain View show Barbie movie?";
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            List<Tool> tools =
+            Tools tools =
             [
                 new Tool()
                 {
@@ -1172,7 +1172,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Which theaters in Mountain View show Barbie movie?";
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            List<Tool> tools =
+            Tools tools =
             [
                 new Tool()
                 {
@@ -1318,7 +1318,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Which theaters in Mountain View show Barbie movie?";
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            List<Tool> tools =
+            Tools tools =
             [
                 new Tool()
                 {
@@ -1479,7 +1479,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            var chat = model.StartChat(tools: new List<Tool>());
+            var chat = model.StartChat(tools: new Tools());
             var chatInput1 = "What is the weather in Boston?";
 
             // Act
@@ -1505,7 +1505,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
-                Tools = new List<Tool> { }
+                Tools = new Tools { }
             };
             request.Contents.Add(new Content
             {

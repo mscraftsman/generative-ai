@@ -25,7 +25,7 @@ namespace Mscc.GenerativeAI
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null);
 
         /// <summary>

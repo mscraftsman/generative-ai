@@ -27,6 +27,8 @@ namespace Mscc.GenerativeAI
         private readonly TuningJob? _tuningJob;
         private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
         private readonly List<Tool> defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
+        private readonly Tools defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
+        private readonly Tools defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
         private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
         private static readonly string[] SafetyFilterLevel =
             ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
@@ -34,7 +36,7 @@ namespace Mscc.GenerativeAI
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
-        private List<Tool>? _tools;
+        private Tools? _tools;
         private ToolConfig? _toolConfig;
         private Content? _systemInstruction;
 
@@ -221,7 +223,7 @@ namespace Mscc.GenerativeAI
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null, 
             bool vertexAi = false,
@@ -258,7 +260,7 @@ namespace Mscc.GenerativeAI
             string? model = null, string? endpoint = null,
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
             ILogger? logger = null) : base(projectId, region, model, logger)
@@ -881,7 +883,7 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearch;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
                 {
-                    request.Tools = defaultGoogleSearch;
+                    request.Tools.AddRange(defaultGoogleSearch);
                 }
             }
 
@@ -891,6 +893,8 @@ namespace Mscc.GenerativeAI
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
                 {
                     request.Tools = defaultGoogleSearchRetrieval;
+                    request.Tools.AddRange(defaultGoogleSearchRetrieval);
+                    request.Tools.AddRange(defaultCodeExecution);
                 }
             }
             
@@ -970,7 +974,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> GenerateContent(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -989,7 +993,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> GenerateContent(List<IPart>? parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1068,7 +1072,7 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearch;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
                 {
-                    request.Tools = defaultGoogleSearch;
+                    request.Tools.AddRange(defaultGoogleSearch);
                 }
             }
 
@@ -1078,6 +1082,7 @@ namespace Mscc.GenerativeAI
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
                 {
                     request.Tools = defaultGoogleSearchRetrieval;
+                    request.Tools.AddRange(defaultGoogleSearchRetrieval);
                 }
             }
 
@@ -1120,7 +1125,7 @@ namespace Mscc.GenerativeAI
         public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1139,7 +1144,7 @@ namespace Mscc.GenerativeAI
         public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(List<IPart>? parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1715,7 +1720,7 @@ namespace Mscc.GenerativeAI
         public ChatSession StartChat(List<ContentResponse>? history = null, 
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null, 
-            List<Tool>? tools = null,
+            Tools? tools = null,
             bool enableAutomaticFunctionCalling = false)
         {
             var config = generationConfig ?? _generationConfig;
