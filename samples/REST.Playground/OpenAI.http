@@ -82,7 +82,6 @@ Content-Type: application/json
 {
   "prompt": "High-resolution image of Andromeda galaxy, 8k",
   "model": "imagen-3.0-generate-002",
-  "response_format": "url",
   "n": 1,
   "quality": "hd"
 }
