@@ -1198,7 +1198,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Description(
             "Shows the user a map of the place provided. The function takes arguments 'location' and 'caption'. For 'location' give a specific place, including country name.  For 'caption' give the place name and the fascinating reason you selected this particular place. Keep the caption to one or two sentences maximum.")]
-        string RecommendPlace(string Location, string Caption)
+        string RecommendPlace([Description("Location for Google Maps")]string Location, [Description("Short explanation about the location")]string Caption)
         {
             return "";
         }
