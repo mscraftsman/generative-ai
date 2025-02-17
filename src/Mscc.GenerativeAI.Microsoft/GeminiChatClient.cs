@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 #endif
 using mea = Microsoft.Extensions.AI;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft;
 
@@ -17,9 +18,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// Gets the Gemini model that is used to communicate with.
     /// </summary>
     private readonly GenerativeModel _client;
-    
-    /// <inheritdoc/>
-    public mea.ChatClientMetadata Metadata { get; }
+    private readonly ChatClientMetadata _metadata;
 
     /// <summary>
     /// Creates an instance of the Gemini API client using Google AI.
@@ -30,7 +29,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     {
         var genAi = new GoogleAI(apiKey);
         _client = genAi.GenerativeModel(model);
-        Metadata = new(ProviderName, null, model);
+        _metadata = new(ProviderName, null, model);
     }
 
     /// <summary>
@@ -43,11 +42,11 @@ public sealed class GeminiChatClient : mea.IChatClient
     {
         var genAi = new VertexAI(projectId, region);
         _client = genAi.GenerativeModel(model);
-        Metadata = new(ProviderName, null, model);
+        _metadata = new(ProviderName, null, model);
     }
     
     /// <inheritdoc/>
-    public async Task<mea.ChatCompletion> CompleteAsync(
+    public async Task<mea.ChatResponse> GetResponseAsync(
         IList<mea.ChatMessage> chatMessages, 
         mea.ChatOptions? options = null,
         CancellationToken cancellationToken = default)
@@ -57,11 +56,11 @@ public sealed class GeminiChatClient : mea.IChatClient
         var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		var response = await _client.GenerateContent(request, requestOptions);
-		return MicrosoftAi.AbstractionMapper.ToChatCompletion(response) ?? new mea.ChatCompletion([]);
+		return MicrosoftAi.AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
     }
 
     /// <inheritdoc/>
-    public async IAsyncEnumerable<mea.StreamingChatCompletionUpdate> CompleteStreamingAsync(
+    public async IAsyncEnumerable<mea.ChatResponseUpdate> GetStreamingResponseAsync(
         IList<mea.ChatMessage> chatMessages, 
         mea.ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -71,12 +70,15 @@ public sealed class GeminiChatClient : mea.IChatClient
         var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
-			yield return MicrosoftAi.AbstractionMapper.ToStreamingChatCompletionUpdate(response);
+			yield return MicrosoftAi.AbstractionMapper.ToChatResponseUpdate(response);
     }
 
     /// <inheritdoc/>
-    public object? GetService(Type serviceType, object? key)
-        => key is null && serviceType?.IsInstanceOfType(this) is true ? this : null;
+    object? IChatClient.GetService(Type serviceType, object? serviceKey) =>
+        serviceKey is not null ? null :
+        serviceType == typeof(ChatClientMetadata) ? _metadata :
+        serviceType?.IsInstanceOfType(this) is true ? this :
+        null;
         
     /// <inheritdoc/>
     public void Dispose() { }
