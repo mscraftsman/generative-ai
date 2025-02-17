@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 #endif
 using mea = Microsoft.Extensions.AI;
 using System.Runtime.CompilerServices;
-using Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft;
 
@@ -18,7 +17,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// Gets the Gemini model that is used to communicate with.
     /// </summary>
     private readonly GenerativeModel _client;
-    private readonly ChatClientMetadata _metadata;
+    private readonly mea.ChatClientMetadata _metadata;
 
     /// <summary>
     /// Creates an instance of the Gemini API client using Google AI.
@@ -74,9 +73,9 @@ public sealed class GeminiChatClient : mea.IChatClient
     }
 
     /// <inheritdoc/>
-    object? IChatClient.GetService(Type serviceType, object? serviceKey) =>
+    object? mea.IChatClient.GetService(Type serviceType, object? serviceKey) =>
         serviceKey is not null ? null :
-        serviceType == typeof(ChatClientMetadata) ? _metadata :
+        serviceType == typeof(mea.ChatClientMetadata) ? _metadata :
         serviceType?.IsInstanceOfType(this) is true ? this :
         null;
         
