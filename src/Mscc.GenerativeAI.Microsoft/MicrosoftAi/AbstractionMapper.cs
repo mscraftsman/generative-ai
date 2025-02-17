@@ -92,21 +92,21 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// </summary>
         /// <param name="response">The response with completion data.</param>
         /// <returns></returns>
-        public static mea.ChatCompletion? ToChatCompletion(GenerateContentResponse? response)
+        public static mea.ChatResponse? ToChatResponse(GenerateContentResponse? response)
         {
             if (response is null) return null;
 
             var chatMessage = ToChatMessage(response);
 
-            return new mea.ChatCompletion(chatMessage)
+            return new mea.ChatResponse(chatMessage)
             {
                 FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
                 AdditionalProperties = null,
                 Choices = [chatMessage],
-                CompletionId = null,
                 CreatedAt = null,
                 ModelId = null,
                 RawRepresentation = response,
+                ResponseId = null,
                 Usage = ParseContentResponseUsage(response)
             };
         }
@@ -115,12 +115,11 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.StreamingChatCompletionUpdate"/>.
         /// </summary>
         /// <param name="response">The response stream to convert.</param>
-        public static mea.StreamingChatCompletionUpdate ToStreamingChatCompletionUpdate(GenerateContentResponse? response)
+        public static mea.ChatResponseUpdate ToChatResponseUpdate(GenerateContentResponse? response)
         {
-            return new mea.StreamingChatCompletionUpdate
+            return new mea.ChatResponseUpdate
             {
                 // no need to set "Contents" as we set the text
-                CompletionId = null,
                 ChoiceIndex = 0, // should be left at 0 as Mscc.GenerativeAI does not support this
                 CreatedAt = null,
                 AdditionalProperties = null,
