@@ -87,7 +87,7 @@ namespace Mscc.GenerativeAI
             var functionObject = new JsonObject { { "name", function.Name.ToSnakeCase() } };
             
             var description = function.Description;
-            if (description is null && function.Callback is not null)
+            if (string.IsNullOrWhiteSpace(description) && function.Callback is not null)
             {
                 description = GetDescription(function.Callback.Method);
             }

@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI
         /// Description and purpose of the function.
         /// Model uses it to decide how and whether to call the function.
         /// </summary>
-        public string? Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
         /// <summary>
         /// Optional. Describes the parameters to this function.
         /// </summary>
