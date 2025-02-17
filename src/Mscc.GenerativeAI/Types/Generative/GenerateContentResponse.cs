@@ -37,6 +37,12 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        [JsonIgnore]
+        public List<FunctionCall>? FunctionCalls => Candidates?.FirstOrDefault()?.Content?.Parts
+            .Where(p => p.FunctionCall is not null)
+            .Select(p => p.FunctionCall)
+            .ToList();
+
         /// <summary>
         /// Output only. Generated Candidate responses from the model.
         /// </summary>
