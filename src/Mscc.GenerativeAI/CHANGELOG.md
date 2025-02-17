@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.4
+
+### Changed
+
+- change endpoint URL
+- mark NegativePrompt as deprecated
+
 ## 2.2.3
 
 ### Added
