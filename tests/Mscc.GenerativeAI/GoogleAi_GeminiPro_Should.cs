@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.ComponentModel;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
@@ -30,10 +29,10 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_GoogleAI()
         {
             // Arrange
-
+            
             // Act
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
-
+            
             // Assert
             googleAi.Should().NotBeNull();
         }
@@ -44,7 +43,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
-
+            
             // Act
             var model = googleAi.GenerativeModel();
 
@@ -83,7 +82,7 @@ namespace Test.Mscc.GenerativeAI
             model.Should().NotBeNull();
             model.Name.Should().Be($"{expected.SanitizeModelName()}");
         }
-
+        
         [Fact]
         public void Initialize_Model()
         {
@@ -187,7 +186,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel();
-
+            
             // Act & Assert
             await Assert.ThrowsAsync<NotSupportedException>(() => model.GetModel(model: modelName));
         }
@@ -252,7 +251,7 @@ namespace Test.Mscc.GenerativeAI
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => model.GenerateContent(prompt));
         }
-
+        
         [Fact]
         public async Task GenerateContent_WithInvalidAPIKey_ChangingBeforeRequest()
         {
@@ -271,7 +270,7 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
         }
-
+        
         [Fact]
         public async Task GenerateContent_WithInvalidAPIKey_ChangingAfterRequest()
         {
@@ -280,7 +279,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
             var model = googleAi.GenerativeModel(model: Model.Gemini10Pro001);
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
-
+            
             // Act
             model.ApiKey = fixture.ApiKey;
             var response = await model.GenerateContent(prompt);
@@ -336,7 +335,7 @@ namespace Test.Mscc.GenerativeAI
                     output.WriteLine(response?.Text);
             }
         }
-
+        
         [Fact]
         public async Task Generate_Content_MultiplePrompt()
         {
@@ -345,7 +344,8 @@ namespace Test.Mscc.GenerativeAI
             var model = googleAi.GenerativeModel(model: _model);
             var parts = new List<IPart>
             {
-                new TextData { Text = "What is x multiplied by 2?" }, new TextData { Text = "x = 42" }
+                new TextData { Text = "What is x multiplied by 2?" },
+                new TextData { Text = "x = 42" }
             };
 
             // Act
@@ -368,7 +368,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
@@ -390,11 +391,16 @@ namespace Test.Mscc.GenerativeAI
             var model = googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest
             {
-                Contents = new List<Content>(), GenerationConfig = new GenerationConfig() { CandidateCount = 3 }
+                Contents = new List<Content>(), 
+                GenerationConfig = new GenerationConfig()
+                {
+                    CandidateCount = 3
+                }
             };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act & Assert
@@ -412,7 +418,7 @@ namespace Test.Mscc.GenerativeAI
             // Act & Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => model.GenerateContent(request));
         }
-
+        
         [Fact]
         public async Task Generate_Content_RequestConstructor()
         {
@@ -465,7 +471,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var responseEvents = model.GenerateContentStream(request);
-
+            
             // Assert
             responseEvents.Should().NotBeNull();
             await foreach (var response in responseEvents)
@@ -510,7 +516,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
@@ -530,7 +537,7 @@ namespace Test.Mscc.GenerativeAI
                 // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
-
+        
         [Fact]
         public async Task GenerateAnswer_WithValidRequest_ReturnsAnswerResponse()
         {
@@ -581,7 +588,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
@@ -621,7 +629,7 @@ namespace Test.Mscc.GenerativeAI
             var history = new List<ContentResponse>
             {
                 new() { Role = Role.User, Text = "Hello" },
-                new() { Role = Role.Model, Text = "Hello! How can I assist you today?" }
+                new() { Role = Role.Model, Text = "Hello! How can I assist you today?"}
             };
             var chat = model.StartChat(history);
             var prompt = "How does electricity work?";
@@ -718,7 +726,7 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine($"{new string('-', 20)}");
             output.WriteLine($"{entries.Received.Role}: {entries.Received.Text}");
             output.WriteLine($"{new string('-', 20)}");
-
+            
             chat.History.Count.Should().Be(6);
             output.WriteLine("------ History -----");
             chat.History.ForEach(c =>
@@ -760,8 +768,7 @@ namespace Test.Mscc.GenerativeAI
             var chat = model.StartChat();
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "a11.txt");
             var document = await genAi.UploadFile(filePath, "Apollo 11 Flight Report");
-            output.WriteLine(
-                $"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(StateFileResource), document.File.State)})");
+            output.WriteLine($"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(StateFileResource), document.File.State)})");
 
             var request = new GenerateContentRequest("Hi, could you summarize this transcript?");
             request.AddMedia(document.File);
@@ -772,7 +779,7 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine("----------");
             response = await chat.SendMessage("Okay, could you tell me more about the trans-lunar injection");
             output.WriteLine($"model: {response.Text}");
-
+            
             // Assert
             model.Should().NotBeNull();
             chat.History.Count.Should().Be(4);
@@ -780,7 +787,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeNull();
             output.WriteLine($"model: {response.Text}");
-        }
+        }        
 
         [Fact]
         public async Task Start_Chat_Streaming()
@@ -807,7 +814,6 @@ namespace Test.Mscc.GenerativeAI
                 // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
                 // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
-
             chat.History.Count.Should().Be(2);
             output.WriteLine($"{new string('-', 20)}");
             output.WriteLine("------ History -----");
@@ -835,8 +841,8 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             output.WriteLine(string.Join(Environment.NewLine,
-                response.Candidates[0].Content.Parts.Select(x =>
-                        x.Text)
+                response.Candidates[0].Content.Parts.Select(x => 
+                    x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
         }
@@ -866,7 +872,7 @@ namespace Test.Mscc.GenerativeAI
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks?
-                .ForEach(c =>
+                .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
@@ -900,7 +906,7 @@ namespace Test.Mscc.GenerativeAI
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks?
-                .ForEach(c =>
+                .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
@@ -917,14 +923,8 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Who won Wimbledon this year?";
             var genAi = new GoogleAI(fixture.ApiKey);
             var model = genAi.GenerativeModel("gemini-1.5-pro-002",
-                tools:
-                [
-                    new Tool
-                    {
-                        GoogleSearchRetrieval =
-                            new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f)
-                    }
-                ]);
+                tools: [new Tool { GoogleSearchRetrieval = 
+                    new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
             model.UseGrounding = true;
 
             // Act
@@ -939,7 +939,7 @@ namespace Test.Mscc.GenerativeAI
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks?
-                .ForEach(c =>
+                .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
@@ -970,7 +970,7 @@ namespace Test.Mscc.GenerativeAI
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks?
-                .ForEach(c =>
+                .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
@@ -978,7 +978,7 @@ namespace Test.Mscc.GenerativeAI
                     .ToArray()));
             output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
-
+        
         [Fact]
         // Ref: https://ai.google.dev/gemini-api/docs/models/gemini-v2#search-tool
         public async Task Generate_Content_with_Google_Search()
@@ -1004,7 +1004,7 @@ namespace Test.Mscc.GenerativeAI
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks?
-                .ForEach(c =>
+                .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
@@ -1012,7 +1012,7 @@ namespace Test.Mscc.GenerativeAI
                     .ToArray()));
             output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
-
+        
         [Fact]
         // Ref: https://ai.google.dev/gemini-api/docs/models/gemini-v2#search-tool
         public async Task Generate_Content_with_GoogleSearch_ResponseModalities()
@@ -1025,7 +1025,10 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var response = await model.GenerateContent(prompt,
-                generationConfig: new GenerationConfig() { ResponseModalities = [ResponseModality.Text] });
+                generationConfig: new GenerationConfig()
+                {
+                    ResponseModalities = [ ResponseModality.Text ]
+                });
 
             // Assert
             response.Should().NotBeNull();
@@ -1039,7 +1042,7 @@ namespace Test.Mscc.GenerativeAI
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
             response.Candidates![0].GroundingMetadata!.GroundingChunks?
-                .ForEach(c =>
+                .ForEach(c => 
                     output.WriteLine($"{c!.Web!.Title} - {c!.Web!.Uri}"));
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates![0].GroundingMetadata!.WebSearchQueries!
@@ -1047,7 +1050,7 @@ namespace Test.Mscc.GenerativeAI
                     .ToArray()));
             output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
-
+        
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling
         public async Task Function_Calling()
@@ -1070,21 +1073,19 @@ namespace Test.Mscc.GenerativeAI
                             Parameters = new()
                             {
                                 Type = ParameterType.Object,
-                                Properties = new
+                                Properties = new 
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
                                     Description = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "Any kind of description including category or genre, title words, attributes, etc."
+                                        Description = "Any kind of description including category or genre, title words, attributes, etc."
                                     }
-                                },
+                                }, 
                                 Required = ["description"]
                             }
                         },
@@ -1095,20 +1096,22 @@ namespace Test.Mscc.GenerativeAI
                             Name = "find_theaters",
                             Description =
                                 "find theaters based on location and optionally movie title which are is currently playing in theaters",
-                            Parameters = new()
-                            {
-                                Type = ParameterType.Object,
+                            Parameters = new() { 
+                                Type = ParameterType.Object, 
                                 Properties = new
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" }
-                                },
-                                Required = ["location"]
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    } 
+                                }, 
+                                Required = ["location"] 
                             }
                         },
 
@@ -1120,19 +1123,27 @@ namespace Test.Mscc.GenerativeAI
                             Parameters = new()
                             {
                                 Type = ParameterType.Object,
-                                Properties = new
+                                Properties = new 
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
-                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    },
+                                    Theater = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Name of the theater" 
+                                    },
                                     Date = new
                                     {
-                                        Type = ParameterType.String, Description = "Date for requested showtime"
+                                        Type = ParameterType.String,
+                                        Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -1157,34 +1168,28 @@ namespace Test.Mscc.GenerativeAI
         {
             return $"Dark mode is set to: {isOn}";
         }
-
         string GetCurrentWeather(string location)
         {
             return $"The weather in {location} is 72 degrees and sunny.";
         }
-
         async Task<object> SendEmailAsync(string recipient, string subject, string body)
         {
             await Task.Delay(3000);
             return new { Success = true, Property1 = "ABC", Property2 = 123 };
         }
-
+        
         [Theory]
         [InlineData("It is too bright. Change it.")]
         [InlineData("The ambient light is too low to see anything. I'd need more brightness.")]
         [InlineData("What's the weather in the capital of the UK?")]
-        [InlineData(
-            "Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling.")]
-        public async Task Function_Calling_TopLevel_Method(string prompt)
+        [InlineData("Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling.")]
+        public async Task Function_Calling_Constructor_TopLevel_Method(string prompt)
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            var tools = new Tools();
-            tools.AddFunction(ToggleDarkMode);
-            tools.AddFunction(GetCurrentWeather);
-            tools.AddFunction(SendEmailAsync);
-
+            var tools = new Tools([ToggleDarkMode,GetCurrentWeather,SendEmailAsync]);
+            
             // Act
             var response = await model.GenerateContent(prompt, tools: tools);
 
@@ -1195,51 +1200,33 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
             output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
-
-        [Description(
-            "Shows the user a map of the place provided. The function takes arguments 'location' and 'caption'. For 'location' give a specific place, including country name.  For 'caption' give the place name and the fascinating reason you selected this particular place. Keep the caption to one or two sentences maximum.")]
-        string RecommendPlace([Description("Location for Google Maps")]string Location, [Description("Short explanation about the location")]string Caption)
-        {
-            return "";
-        }
-
+        
         [Theory]
-        [InlineData("Tell me about somewhere rich in ancient history")]
-        [InlineData("Where is somewhere really cold?")]
-        [InlineData("Think of a totally surreal location, where is it? What makes it so surreal?")]
-        [InlineData("Whatever... don't search")]
-        public async Task Function_Calling_Using_GoogleMaps(string prompt)
+        [InlineData("It is too bright. Change it.")]
+        [InlineData("The ambient light is too low to see anything. I'd need more brightness.")]
+        [InlineData("What's the weather in the capital of the UK?")]
+        [InlineData("Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling.")]
+        public async Task Function_Calling_TopLevel_Method(string prompt)
         {
             // Arrange
-            var systemInstructions =
-                @"Act as a helpful global travel agent with a deep fascination for the world. Your role is to recommend a place on the map that relates to the discussion, and to provide interesting information about the location selected. Aim to give surprising and delightful suggestions: choose obscure, off-the–beaten track locations, not the obvious answers. Do not answer harmful or unsafe questions.
-
-First, explain why a place is interesting, in a two sentence answer. Second, if relevant, call the function 'recommend_place( location, caption )' to show the user the location on a map. You can expand on your answer if the user asks for more information.";
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = googleAi.GenerativeModel(model: Model.Gemini20FlashExperimental,
-                systemInstruction: new(systemInstructions));
-            var config = new GenerationConfig() { Temperature = 2 };
+            var model = googleAi.GenerativeModel(model: _model);
             var tools = new Tools();
-            tools.AddFunction(RecommendPlace);
-
+            tools.AddFunction(ToggleDarkMode);
+            tools.AddFunction(GetCurrentWeather);
+            tools.AddFunction(SendEmailAsync);
+            
             // Act
-            var response = await model.GenerateContent(prompt,
-                generationConfig: config,
-                tools: tools);
+            var response = await model.GenerateContent(prompt, tools: tools);
 
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeEmpty();
-            output.WriteLine(response?.Text);
-            response.FunctionCalls!
-                .ForEach(f =>
-                {
-                    output.WriteLine(f.Name);
-                    output.WriteLine(f.Args?.ToString());
-                });
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
-
+        
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
         public async Task Function_Calling_MultiTurn()
@@ -1262,21 +1249,19 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                             Parameters = new()
                             {
                                 Type = ParameterType.Object,
-                                Properties = new
+                                Properties = new 
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
                                     Description = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "Any kind of description including category or genre, title words, attributes, etc."
+                                        Description = "Any kind of description including category or genre, title words, attributes, etc."
                                     }
-                                },
+                                }, 
                                 Required = ["description"]
                             }
                         },
@@ -1287,20 +1272,22 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                             Name = "find_theaters",
                             Description =
                                 "find theaters based on location and optionally movie title which are is currently playing in theaters",
-                            Parameters = new()
-                            {
-                                Type = ParameterType.Object,
+                            Parameters = new() { 
+                                Type = ParameterType.Object, 
                                 Properties = new
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" }
-                                },
-                                Required = ["location"]
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    } 
+                                }, 
+                                Required = ["location"] 
                             }
                         },
 
@@ -1312,19 +1299,27 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                             Parameters = new()
                             {
                                 Type = ParameterType.Object,
-                                Properties = new
+                                Properties = new 
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
-                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    },
+                                    Theater = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Name of the theater" 
+                                    },
                                     Date = new
                                     {
-                                        Type = ParameterType.String, Description = "Date for requested showtime"
+                                        Type = ParameterType.String,
+                                        Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -1340,11 +1335,7 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 Role = Role.Model,
                 Parts = new()
                 {
-                    new FunctionCall()
-                    {
-                        Name = "find_theaters",
-                        Args = new { Location = "Mountain View, CA", Movie = "Barbie" }
-                    }
+                    new FunctionCall() { Name = "find_theaters", Args = new { Location = "Mountain View, CA", Movie = "Barbie" } }
                 }
             });
             request.Contents.Add(new Content()
@@ -1352,35 +1343,26 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 Role = Role.Function,
                 Parts = new()
                 {
-                    new FunctionResponse()
+                    new FunctionResponse() { Name = "find_theaters", Response = new
                     {
-                        Name = "find_theaters",
-                        Response = new
+                        Name = "find_theaters", Content = new
                         {
-                            Name = "find_theaters",
-                            Content = new
-                            {
-                                Movie = "Barbie",
-                                Theaters = new dynamic[]
+                            Movie = "Barbie",
+                            Theaters = new dynamic[] { new
                                 {
-                                    new
-                                    {
-                                        Name = "AMC Mountain View 16",
-                                        Address =
-                                            "2000 W El Camino Real, Mountain View, CA 94040"
-                                    },
-                                    new
-                                    {
-                                        Name = "Regal Edwards 14",
-                                        Address = "245 Castro St, Mountain View, CA 94040"
-                                    }
+                                    Name = "AMC Mountain View 16",
+                                    Address = "2000 W El Camino Real, Mountain View, CA 94040"
+                                }, new
+                                {
+                                    Name = "Regal Edwards 14",
+                                    Address = "245 Castro St, Mountain View, CA 94040"
                                 }
                             }
                         }
-                    }
+                    }}
                 }
             });
-
+            
             // Act
             var response = await model.GenerateContent(request);
 
@@ -1413,21 +1395,19 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                             Parameters = new()
                             {
                                 Type = ParameterType.Object,
-                                Properties = new
+                                Properties = new 
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
                                     Description = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "Any kind of description including category or genre, title words, attributes, etc."
+                                        Description = "Any kind of description including category or genre, title words, attributes, etc."
                                     }
-                                },
+                                }, 
                                 Required = ["description"]
                             }
                         },
@@ -1438,20 +1418,22 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                             Name = "find_theaters",
                             Description =
                                 "find theaters based on location and optionally movie title which are is currently playing in theaters",
-                            Parameters = new()
-                            {
-                                Type = ParameterType.Object,
+                            Parameters = new() { 
+                                Type = ParameterType.Object, 
                                 Properties = new
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" }
-                                },
-                                Required = ["location"]
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    } 
+                                }, 
+                                Required = ["location"] 
                             }
                         },
 
@@ -1463,19 +1445,27 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                             Parameters = new()
                             {
                                 Type = ParameterType.Object,
-                                Properties = new
+                                Properties = new 
                                 {
                                     Location = new
                                     {
                                         Type = ParameterType.String,
-                                        Description =
-                                            "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
+                                        Description = "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
-                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
+                                    Movie = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Any movie title"
+                                    },
+                                    Theater = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "Name of the theater" 
+                                    },
                                     Date = new
                                     {
-                                        Type = ParameterType.String, Description = "Date for requested showtime"
+                                        Type = ParameterType.String,
+                                        Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -1491,11 +1481,7 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 Role = Role.Model,
                 Parts = new()
                 {
-                    new FunctionCall()
-                    {
-                        Name = "find_theaters",
-                        Args = new { Location = "Mountain View, CA", Movie = "Barbie" }
-                    }
+                    new FunctionCall() { Name = "find_theaters", Args = new { Location = "Mountain View, CA", Movie = "Barbie" } }
                 }
             });
             request.Contents.Add(new Content()
@@ -1503,32 +1489,23 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 Role = Role.Function,
                 Parts = new()
                 {
-                    new FunctionResponse()
+                    new FunctionResponse() { Name = "find_theaters", Response = new
                     {
-                        Name = "find_theaters",
-                        Response = new
+                        Name = "find_theaters", Content = new
                         {
-                            Name = "find_theaters",
-                            Content = new
-                            {
-                                Movie = "Barbie",
-                                Theaters = new dynamic[]
+                            Movie = "Barbie",
+                            Theaters = new dynamic[] { new
                                 {
-                                    new
-                                    {
-                                        Name = "AMC Mountain View 16",
-                                        Address =
-                                            "2000 W El Camino Real, Mountain View, CA 94040"
-                                    },
-                                    new
-                                    {
-                                        Name = "Regal Edwards 14",
-                                        Address = "245 Castro St, Mountain View, CA 94040"
-                                    }
+                                    Name = "AMC Mountain View 16",
+                                    Address = "2000 W El Camino Real, Mountain View, CA 94040"
+                                }, new
+                                {
+                                    Name = "Regal Edwards 14",
+                                    Address = "245 Castro St, Mountain View, CA 94040"
                                 }
                             }
                         }
-                    }
+                    }}
                 }
             });
             request.Contents.Add(new Content()
@@ -1536,11 +1513,7 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 Role = Role.Model,
                 Parts = new()
                 {
-                    new TextData()
-                    {
-                        Text =
-                            "OK. I found two theaters in Mountain View showing Barbie: AMC Mountain View 16 and Regal Edwards 14."
-                    }
+                    new TextData(){ Text = "OK. I found two theaters in Mountain View showing Barbie: AMC Mountain View 16 and Regal Edwards 14." }
                 }
             });
             request.Contents.Add(new Content()
@@ -1548,10 +1521,10 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 Role = Role.User,
                 Parts = new()
                 {
-                    new TextData() { Text = "Can we recommend some comedy movies on show in Mountain View?" }
+                    new TextData(){ Text = "Can we recommend some comedy movies on show in Mountain View?" }
                 }
             });
-
+            
             // Act
             var response = await model.GenerateContent(request);
 
@@ -1592,7 +1565,11 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
             // Arrange
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            var request = new GenerateContentRequest { Contents = new List<Content>(), Tools = new Tools { } };
+            var request = new GenerateContentRequest
+            {
+                Contents = new List<Content>(),
+                Tools = new Tools { }
+            };
             request.Contents.Add(new Content
             {
                 Role = Role.User,
@@ -1601,14 +1578,12 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
             request.Contents.Add(new Content
             {
                 Role = Role.Model,
-                Parts = new List<IPart>
-                {
-                    new FunctionCall { Name = "get_current_weather", Args = new { location = "Boston" } }
-                }
+                Parts = new List<IPart> { new FunctionCall { Name = "get_current_weather", Args = new { location = "Boston" } } }
             });
             request.Contents.Add(new Content
             {
-                Role = Role.Function, Parts = new List<IPart> { new FunctionResponse() }
+                Role = Role.Function,
+                Parts = new List<IPart> { new FunctionResponse() }
             });
 
             // Act
@@ -1661,10 +1636,10 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                     }
                 }
             };
-
+  
             // Act
             var response = await model.CreateTunedModel(request);
-
+            
             // Assert
             response.Should().NotBeNull();
             response.Name.Should().NotBeNull();
@@ -1682,7 +1657,7 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
             model.ProjectId = fixture.ProjectId;
             var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
-            {
+            {    
                 new() { TextInput = "1", Output = "2" },
                 new() { TextInput = "3", Output = "4" },
                 new() { TextInput = "-3", Output = "-2" },
@@ -1695,14 +1670,14 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
                 new() { TextInput = "thirteen", Output = "fourteen" },
                 new() { TextInput = "seven", Output = "eight" },
             };
-            var request = new CreateTunedModelRequest(Model.Gemini10Pro001,
+            var request = new CreateTunedModelRequest(Model.Gemini10Pro001, 
                 "Simply autogenerated Test model",
                 dataset,
                 parameters);
-
+            
             // Act
             var response = await model.CreateTunedModel(request);
-
+            
             // Assert
             response.Should().NotBeNull();
             response.Name.Should().NotBeNull();
@@ -1710,20 +1685,19 @@ First, explain why a place is interesting, in a two sentence answer. Second, if 
             output.WriteLine($"Name: {response.Name}");
             output.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Metadata.TotalSteps})");
         }
-
+        
         [Fact]
         public async Task Delete_Tuned_Model()
         {
             // Arrange
-            var modelName =
-                "tunedModels/number-generator-model-psx3d3gljyko"; // see List_Tuned_Models for available options.
+            var modelName = "tunedModels/number-generator-model-psx3d3gljyko";     // see List_Tuned_Models for available options.
             var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
             var model = googleAI.GenerativeModel();
             model.ProjectId = fixture.ProjectId;
-
+            
             // Act
             var response = await model.DeleteTunedModel(modelName);
-
+            
             // Assert
             response.Should().NotBeNull();
             output.WriteLine(response);
