@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Candidate for the logprobs token and score.
     /// </summary>
-    public class LogprobsCandidate
+    public class LogprobsResultCandidate
     {
         /// <summary>
         /// The candidate’s token string value.
