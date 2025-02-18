@@ -88,6 +88,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public float? Temperature { get; set; } = default;
         /// <summary>
+        /// The maximum temperature this model can use.
+        /// </summary>
+        public float? MaxTemperature { get; set; } = default;
+        /// <summary>
         /// For Nucleus sampling.
         /// Nucleus sampling considers the smallest set of tokens whose probability sum is at least topP. This value specifies default to be used by the backend while making the call to the model.
         /// </summary>
