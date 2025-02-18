@@ -33,9 +33,6 @@ namespace Mscc.GenerativeAI
             {
                 functionsArray.Add(SerializeFunction(function));
             }
-
-//            var functions = new JsonObject() { { "function_declarations", functionsArray } };
-
             JsonSerializer.Serialize(writer, functionsArray, options);
         }
 
@@ -49,7 +46,44 @@ namespace Mscc.GenerativeAI
             {
                 // foreach (var parameter in function.Parameters)
                 // {
-                //     
+                    // var normalizedName = parameter.Name.ToSnakeCase();
+                    // if (string.IsNullOrWhiteSpace(normalizedName))
+                    // {
+                    //     continue;
+                    // }
+                    //
+                    // var propertyObject = SerializeProperty(parameter.Type);
+                    //
+                    // if (!string.IsNullOrWhiteSpace(parameter.Description))
+                    // {
+                    //     propertyObject.Add("description", parameter.Description);
+                    // }
+                    //
+                    // if (parameter.EnumValues.Count > 0)
+                    // {
+                    //     _ = propertiesObject.Remove("enum");
+                    //
+                    //     var enumValuesArray = new JsonArray();
+                    //     var normalizedEnumValues = parameter.EnumValues.Select(v => v.ToSnakeCase()).Distinct();
+                    //
+                    //     foreach (var enumValue in normalizedEnumValues)
+                    //     {
+                    //         enumValuesArray.Add(enumValue);
+                    //     }
+                    //
+                    //     propertyObject.Add("enum", enumValuesArray);
+                    // }
+                    //
+                    // propertiesObject.Add(normalizedName, propertyObject);
+                    //
+                    // if (parameter.IsRequired)
+                    // {
+                    //     requiredArray.Add(normalizedName);
+                    // }
+                    // else
+                    // {
+                    //     allRequired = false;
+                    // }
                 // }
             }
             else
@@ -116,7 +150,7 @@ namespace Mscc.GenerativeAI
             var propertyObject = SerializeProperty(parameterType);
             var description = GetDescription(parameter);
 
-            if (description is not null)
+            if (!string.IsNullOrWhiteSpace(description))
             {
                 propertyObject.Add("description", description);
             }
@@ -185,11 +219,6 @@ namespace Mscc.GenerativeAI
             return propertyObject;
         }
 
-        private static bool IsRequired(ParameterInfo parameter)
-        {
-            return parameter.GetCustomAttribute<RequiredAttribute>() is not null;
-        }
-
         private static string? GetDescription(MemberInfo member)
         {
             return member.GetCustomAttribute<DescriptionAttribute>()?.Description;
@@ -198,6 +227,11 @@ namespace Mscc.GenerativeAI
         private static string? GetDescription(ParameterInfo parameter)
         {
             return parameter.GetCustomAttribute<DescriptionAttribute>()?.Description;
+        }
+
+        private static bool IsRequired(ParameterInfo parameter)
+        {
+            return parameter.GetCustomAttribute<RequiredAttribute>() is not null;
         }
 
         private static (string name, string? description) GetTypeInfo(Type type)
