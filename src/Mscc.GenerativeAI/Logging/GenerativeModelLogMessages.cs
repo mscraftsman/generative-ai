@@ -54,5 +54,25 @@ namespace Mscc.GenerativeAI
         public static partial void LogRunExternalExe(
             this ILogger logger,
             string message);
+
+        /// <summary>
+        /// Logs <see cref="BaseModel"/> parsing the URL to call.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="url">Parsed URL.</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Request URL: {Url}")]
+        public static partial void LogParsedRequestUrl(
+            this ILogger logger,
+            string url);
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Request JSON: {json}")]
+        public static partial void LogJsonRequest(
+            this ILogger logger,
+            string json);
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Response JSON: {json}")]
+        public static partial void LogJsonResponse(
+            this ILogger logger,
+            string json);
     }
 }
