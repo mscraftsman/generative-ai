@@ -66,6 +66,12 @@ namespace Mscc.GenerativeAI
             _region = region ?? _region;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
+        /// </summary>
+        /// <param name="apiKey">API key for Vertex AI in express mode.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="apiKey"/> is <see langword="null"/>.</exception>
         public VertexAI(string? apiKey, ILogger? logger = null) : this(logger)
         {
             _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));

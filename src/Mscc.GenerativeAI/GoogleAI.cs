@@ -50,8 +50,8 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="GoogleAI"/> class with access to Google AI Gemini API.
         /// Either API key or access token is required.
         /// </summary>
-        /// <param name="apiKey">Identifier of the Google Cloud project</param>
-        /// <param name="accessToken">Access token for the Google Cloud project</param>
+        /// <param name="apiKey">API key for Google AI Studio.</param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="apiVersion">Version of the API.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public GoogleAI(string? apiKey = null, string? accessToken = null, string apiVersion = ApiVersion.V1Beta, ILogger? logger = null) : this(logger)
