@@ -231,6 +231,8 @@ namespace Mscc.GenerativeAI
                     match => replacements.TryGetValue(match.Groups["name"].Value, out var value) ? value : "");
             } while (url.Contains("{"));
 
+            Logger.LogParsedRequestUrl(url);
+            
             return url;
 
             Dictionary<string, string> GetReplacements()
@@ -259,7 +261,11 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         protected string Serialize<T>(T request)
         {
-            return JsonSerializer.Serialize(request, _options);
+            var json = JsonSerializer.Serialize(request, _options);
+
+            Logger.LogJsonRequest(json);
+            
+            return json;
         }
 
         /// <summary>
@@ -270,11 +276,13 @@ namespace Mscc.GenerativeAI
         /// <returns>An instance of type T.</returns>
         protected async Task<T> Deserialize<T>(HttpResponseMessage response)
         {
-#if NET472_OR_GREATER || NETSTANDARD2_0
             var json = await response.Content.ReadAsStringAsync();
+
+            Logger.LogJsonResponse(json);
+
+#if NET472_OR_GREATER || NETSTANDARD2_0
             return JsonSerializer.Deserialize<T>(json, _options);
 #else
-            var json = await response.Content.ReadAsStringAsync();
             return await response.Content.ReadFromJsonAsync<T>(_options);
 #endif
         }
