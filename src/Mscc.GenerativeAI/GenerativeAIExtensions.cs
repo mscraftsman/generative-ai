@@ -263,6 +263,20 @@ namespace Mscc.GenerativeAI
 #endif
         }
 
+        internal static bool IsValidJson(this string value)
+        {
+            try
+            {
+                using JsonDocument doc = JsonDocument.Parse(value);
+                return true; // doc is not null;
+            }
+            catch
+            {
+                return false;
+                throw;
+            }
+        }
+
         internal static async Task<string> ReadImageFileBase64Async(string url)
         {
             using (var client = new HttpClient())
