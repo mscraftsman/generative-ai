@@ -12,6 +12,19 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public sealed class Tools : List<Tool>
     {
+        public Tools() { }
+
+        public Tools(Delegate[] delegates)
+        {
+            if (delegates == null) throw new ArgumentNullException(nameof(delegates));
+
+            var functions = GetFunctions();
+            foreach (Delegate function in delegates)
+            {
+                functions.Add(new (function));
+            }
+        }
+
         public void AddGoogleSearch()
         {
             if (!this.Any(t => t.GoogleSearch is not null))
