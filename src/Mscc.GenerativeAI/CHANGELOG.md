@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.5
+
+### Added
+
+- add support for `enum` as response schema
+- add more logging
+
+### Changed
+
+- Flash 2.0 models removed bidiGenerateContent endpoint method
+- update NuGet packages
+
 ## 2.2.4
 
 ### Changed
