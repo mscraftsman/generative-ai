@@ -22,6 +22,8 @@ namespace Mscc.GenerativeAI
         public static string RawPredict = "rawPredict";
         public static string StreamRawPredict = "streamRawPredict";
 
+        public static string Query = "query";
+
         // Additional methods used for tuned models.
         public static string Create = "create";
         public static string CreateTunedModel = "createTunedModel";

@@ -15,6 +15,6 @@ namespace Mscc.GenerativeAI
         /// Length = total number of decoding steps.
         /// The chosen candidates may or may not be in topCandidates.
         /// </summary>
-        public List<LogprobsCandidate> ChosenCanditates { get; set; }
+        public List<LogprobsResultCandidate> ChosenCanditates { get; set; }
     }
 }
