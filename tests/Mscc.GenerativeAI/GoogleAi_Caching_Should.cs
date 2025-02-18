@@ -24,7 +24,7 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAi_Caching_Should
+    public class GoogleAiCachingShould
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
@@ -32,7 +32,7 @@ namespace Test.Mscc.GenerativeAI
         private readonly GoogleAI _genAi;
         private readonly CachedContentModel _cachedContent;
 
-        public GoogleAi_Caching_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public GoogleAiCachingShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             this.output = output;
             this.fixture = fixture;

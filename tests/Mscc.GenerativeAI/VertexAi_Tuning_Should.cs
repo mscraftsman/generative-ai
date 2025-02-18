@@ -18,7 +18,7 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class VertexAi_Tuning_Should
+    public class VertexAiTuningShould
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
@@ -26,7 +26,7 @@ namespace Test.Mscc.GenerativeAI
         private readonly VertexAI _genAi;
         private readonly SupervisedTuningJobModel _tuningJob;
 
-        public VertexAi_Tuning_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+        public VertexAiTuningShould(ITestOutputHelper output, ConfigurationFixture fixture)
         {
             this.output = output;
             this.fixture = fixture;
