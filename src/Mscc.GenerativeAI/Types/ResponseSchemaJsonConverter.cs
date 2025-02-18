@@ -1,5 +1,6 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 #endif
@@ -27,15 +28,29 @@ namespace Mscc.GenerativeAI
             JsonSerializerOptions options)
         {
             var type = value.GetType();
+            var typeValue = (Type)value;
             // How to figure out: type vs anonymous vs dynamic?
-            if (type == typeof(JsonDocument) || 
-                type == typeof(JsonElement) || 
-                type == typeof(JsonNode) || 
-                type.Name.Substring(0,Math.Min(type.Name.Length, 20)).Contains("AnonymousType"))
+            if (type == typeof(JsonDocument) ||
+                type == typeof(JsonElement) ||
+                type == typeof(JsonNode) ||
+                type.Name.Substring(0, Math.Min(type.Name.Length, 20)).Contains("AnonymousType"))
             {
                 var newOptions = new JsonSerializerOptions(options);
                 newOptions.Converters.Remove(this);
-                JsonSerializer.Serialize(writer, value, value.GetType(), newOptions);
+                JsonSerializer.Serialize(writer, value, type, newOptions);
+            }
+            else if (typeValue.IsEnum)
+            {
+                var schemaBuilder = new JsonSchemaBuilder();
+                var elements = typeValue.GetEnumValues()
+                    .OfType<object>()
+                    .Select(o => o.ToString())
+                    .ToArray();
+                var schema = schemaBuilder
+                    .Type(SchemaValueType.String)
+                    .Enum(elements)
+                    .Build();
+                JsonSerializer.Serialize(writer, schema, schema.GetType(), options);
             }
             else
             {
