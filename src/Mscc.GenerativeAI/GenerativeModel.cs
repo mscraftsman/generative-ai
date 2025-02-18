@@ -559,7 +559,11 @@ namespace Mscc.GenerativeAI
             var json = Serialize(tunedModel);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage();
+#if NET472_OR_GREATER || NETSTANDARD2_0
             httpRequest.Method = new HttpMethod("PATCH");
+#else
+            httpRequest.Method = HttpMethod.Patch;
+#endif
             httpRequest.RequestUri = new Uri(url);
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
