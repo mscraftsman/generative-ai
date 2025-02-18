@@ -23,7 +23,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiGeminiProShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini15Pro;
+        private readonly string _model = Model.Gemini20FlashExperimental;
 
         [Fact]
         public void Initialize_GoogleAI()
@@ -307,7 +307,26 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().BeEmpty();
-            // output.WriteLine(response?.Text);
+            output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task Generate_Content_Logprobs()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: Model.Gemini15Pro002);
+            var generationConfig = new GenerationConfig() { ResponseLogprobs = true };
+
+            // Act
+            var response = await model.GenerateContent(prompt, generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().BeEmpty();
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
@@ -843,6 +862,49 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(string.Join(Environment.NewLine,
                 response.Candidates[0].Content.Parts.Select(x => 
                     x.Text)
+//                    .Where(t => !string.IsNullOrEmpty(t))
+                    .ToArray()));
+        }
+
+        [Theory]
+        [InlineData(Model.Gemini15Flash)]
+        [InlineData(Model.Gemini20Flash)]
+        [InlineData(Model.Gemini20FlashLite)]
+        [InlineData(Model.Gemini20FlashThinking)]
+        [InlineData(Model.Gemini20Pro)]
+        // Ref: https://ai.google.dev/api/generate-content#code-execution
+        public async Task Generate_Content_Code_Execution_using_FileAPI(string modelName)
+        {
+            // Arrange
+            var prompt = "Calculate the sum of the column 'effect'.";
+            var genAi = new GoogleAI(fixture.ApiKey);
+            var model = genAi.GenerativeModel(modelName);
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "sampledata.csv");
+            var file = await ((GoogleAI)genAi).UploadFile(filePath);
+            output.WriteLine($"File: {file.File.Name}\tName: '{file.File.DisplayName}'");
+            var request = new GenerateContentRequest(prompt)
+            {
+                GenerationConfig = new GenerationConfig()
+                {
+                    Temperature = 1f,
+                    TopK = 40,
+                    TopP = 0.95f,
+                    MaxOutputTokens = 8192,
+                    ResponseMimeType = "text/plain"
+                },
+                Tools = [new Tool { CodeExecution = new() }]
+            };
+            request.AddMedia(file.File);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates[0].Content.Parts.Select(x => 
+                        x.Text)
 //                    .Where(t => !string.IsNullOrEmpty(t))
                     .ToArray()));
         }
