@@ -1971,7 +1971,7 @@
       }
     }
   },
-  "revision": "20250211",
+  "revision": "20250218",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3503,7 +3503,7 @@
       "id": "GenerationConfig",
       "properties": {
         "candidateCount": {
-          "description": "Optional. Number of generated responses to return. Currently, this value can only be set to 1. If unset, this will default to 1.",
+          "description": "Optional. Number of generated responses to return. If unset, this will default to 1. Please note that this doesn't work for previous generation models (Gemini 1.0 family)",
           "format": "int32",
           "type": "integer"
         },
@@ -4670,7 +4670,7 @@
           "type": "array"
         },
         "format": {
-          "description": "Optional. The format of the data. This is used only for primitive datatypes. Supported formats: for NUMBER type: float, double for INTEGER type: int32, int64 for STRING type: enum",
+          "description": "Optional. The format of the data. This is used only for primitive datatypes. Supported formats: for NUMBER type: float, double for INTEGER type: int32, int64 for STRING type: enum, date-time",
           "type": "string"
         },
         "items": {
