@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.6
+
+### Added
+
+- add more MIME types #71
+
+### Changed
+
+- review OpenAI get model endpoint
+
 ## 2.2.5
 
 ### Added
