@@ -482,6 +482,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData("gemini.pdf",
             "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context")]
         [InlineData("Big_Buck_Bunny.mp4", "Video clip (CC BY 3.0) from https://peach.blender.org/download/")]
+        [InlineData("GeminiDocumentProcessing.rtf", "Sample document in Rich Text Format")]
         public async Task Upload_File_Using_FileAPI(string filename, string displayName)
         {
             // Arrange
@@ -789,6 +790,34 @@ Do not make up any information that is not part of the audio and do not be verbo
             var request = new GenerateContentRequest(prompt);
             var files = await ((GoogleAI)genAi).ListFiles();
             var file = files.Files.Where(x => x.MimeType.StartsWith("application/pdf")).FirstOrDefault();
+            output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
+            request.AddMedia(file);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
+                .HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
+        [Theory]
+        [InlineData("application/rtf")]
+        [InlineData("text/rtf")]
+        public async Task Analyze_Document_RTF_From_FileAPI(string mimetype)
+        {
+            // Arrange
+            var prompt =
+                @"Your are a very professional document summarization specialist. Please summarize the given document.";
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
+            var model = genAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            var files = await ((GoogleAI)genAi).ListFiles();
+            var file = files.Files.Where(x => x.MimeType.StartsWith(mimetype)).FirstOrDefault();
             output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
             request.AddMedia(file);
 
