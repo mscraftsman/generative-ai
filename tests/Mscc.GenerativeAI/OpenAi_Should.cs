@@ -14,9 +14,9 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAi_OpenAi_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+    public class OpenAi_Should(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini15Flash;
+        private readonly string _model = Model.Gemini20Flash;
 
         [Fact]
         public async Task List_Models()
@@ -39,6 +39,7 @@ namespace Test.Mscc.GenerativeAI
         [Theory]
         [InlineData(Model.Gemini15Pro)]
         [InlineData(Model.Gemini15Flash)]
+        [InlineData(Model.Gemini20Flash)]
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange

@@ -7,7 +7,7 @@ x-goog-api-key: {{apiKey}}
 ###
 
 # Get information a model.
-GET https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash
+GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash
 x-goog-api-key: {{apiKey}}
 
 ###
