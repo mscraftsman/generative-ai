@@ -83,8 +83,8 @@ namespace Mscc.GenerativeAI
                 "image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
                 "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac",
                 "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp",
-                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python", "application/rtf", "application/x-rtf",
-                "text/x-python", "text/plain", "text/html", "text/css", "text/md", "text/csv", "text/xml", "text/rtf", "text/richtext"
+                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python",
+                "text/x-python", "text/plain", "text/html", "text/css", "text/md", "text/csv", "text/xml", "text/rtf"
             ];
 
             if (!allowedMimeTypes.Contains(mimeType.ToLowerInvariant()))
@@ -671,7 +671,7 @@ namespace Mscc.GenerativeAI
                 case "roff": return "application/x-troff";
                 case "rpm": return "audio/x-pn-realaudio-plugin";
                 case "rqy": return "text/x-ms-rqy";
-                case "rtf": return "application/rtf";
+                case "rtf": return "text/rtf";  // "application/rtf";
                 case "rtx": return "text/richtext";
                 case "ruleset": return "application/xml";
                 case "s": return "text/plain";
