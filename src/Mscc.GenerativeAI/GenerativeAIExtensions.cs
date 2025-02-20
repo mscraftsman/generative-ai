@@ -671,7 +671,7 @@ namespace Mscc.GenerativeAI
                 case "roff": return "application/x-troff";
                 case "rpm": return "audio/x-pn-realaudio-plugin";
                 case "rqy": return "text/x-ms-rqy";
-                case "rtf": return "text/rtf";  // "application/rtf";
+                case "rtf": return "text/rtf";  // "application/rtf" // although correct, it is not accepted by Gemini API;
                 case "rtx": return "text/richtext";
                 case "ruleset": return "application/xml";
                 case "s": return "text/plain";
