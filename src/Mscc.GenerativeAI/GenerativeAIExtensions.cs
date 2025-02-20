@@ -83,7 +83,7 @@ namespace Mscc.GenerativeAI
                 "image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
                 "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac",
                 "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp",
-                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python",
+                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python", "application/rtf", 
                 "text/x-python", "text/plain", "text/html", "text/css", "text/md", "text/csv", "text/xml", "text/rtf"
             ];
 
