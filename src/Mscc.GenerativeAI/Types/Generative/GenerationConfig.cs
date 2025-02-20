@@ -28,8 +28,11 @@ namespace Mscc.GenerativeAI
         public int? TopK { get; set; } = default;
         /// <summary>
         /// Optional. Number of generated responses to return.
-        /// This value must be between [1, 8], inclusive. If unset, this will default to 1.
+        /// If unset, this will default to 1. 
         /// </summary>
+        /// <remarks>
+        /// Please note that this doesn't work for previous generation models (Gemini 1.0 family)
+        /// </remarks>
         public int? CandidateCount { get; set; }
         /// <summary>
         /// Optional. The maximum number of output tokens to generate per message.

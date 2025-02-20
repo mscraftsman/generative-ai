@@ -13,9 +13,11 @@ namespace Mscc.GenerativeAI
         public ParameterType? Type { get; set; }
         /// <summary>
         /// Optional. The format of the data.
+        /// This is used only for primitive datatypes.
         /// Supported formats:
         ///  for NUMBER type: float, double
         ///  for INTEGER type: int32, int64
+        ///  for STRING type: enum, date-time
         /// </summary>
         public string Format { get; set; } = "";
         /// <summary>
