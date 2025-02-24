@@ -12,10 +12,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 #endif
-using FluentAssertions;
 using Mscc.GenerativeAI;
-using System.IO;
-using System.Runtime.InteropServices;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -27,12 +24,21 @@ namespace Test.Mscc.GenerativeAI
         private readonly string _model = Model.Gemini20FlashThinkingExperimental;
 
         [Theory]
-        [InlineData("Tell me a programming joke")]
-        [InlineData("Tell me a dad joke")]
+        [InlineData("Tell me a random programming joke")]
+        [InlineData("Tell me a random dad joke.")]
         public async Task Tell_A_Joke(string prompt)
         {
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = googleAi.GenerativeModel(model: _model);
+            var modelInfo = await googleAi.GenerativeModel().GetModel(_model);
+            var model = googleAi.GenerativeModel(model: _model,
+                systemInstruction: new Content("Take today's date and special occasion into consideration."),
+                generationConfig: new GenerationConfig()
+                {
+                    Temperature = modelInfo.MaxTemperature,
+                    CandidateCount = 1,
+                    Seed = Guid.NewGuid().GetHashCode()
+                });
+            model.UseGoogleSearch = true;
             var response = await model.GenerateContent(
                 prompt: prompt);
             output.WriteLine(response.Text);
@@ -46,7 +52,7 @@ namespace Test.Mscc.GenerativeAI
 Give you response some thought and explain certain prompts in more details than the usual answer.
 In case that you are providing mathematical formula and equations, then use LaTeX syntax with inline mode");
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = googleAi.GenerativeModel(model: _model, 
+            var model = googleAi.GenerativeModel(model: _model,
                 systemInstruction: systemInstruction);
             var response = await model.GenerateContent(prompt: prompt);
             output.WriteLine(response.Text);
