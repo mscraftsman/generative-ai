@@ -3,8 +3,6 @@ name: Create Release
 on:
   push:
     tags: [ 'v*' ]
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       version:
@@ -21,29 +19,16 @@ jobs:
         with:
           fetch-tags: 'true'
 
-      - name: Generate release notes
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          output-file: 'false'
-          git-branch: 'main'
-          git-push: 'false'
-#          skip-git-pull: 'true'
-          skip-commit: 'true'
-          skip-version-file: 'true'
-          skip-bump: 'true'
-          skip-on-empty: 'false'
-          create-summary: 'true'
-
       - name: Create release
         uses: actions/create-release@v1
-        if: ${{ false || steps.changelog.outputs.skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref_name }}
           release_name: ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+          body: |
+            ## What's changed
+            
+            
           draft: false
           prerelease: false
