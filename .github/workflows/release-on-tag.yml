@@ -29,10 +29,11 @@ jobs:
           output-file: 'false'
           git-branch: 'main'
           git-push: 'false'
-          skip-git-pull: 'false'
+#          skip-git-pull: 'true'
           skip-commit: 'true'
           skip-version-file: 'true'
           skip-bump: 'true'
+          skip-on-empty: 'false'
           create-summary: 'true'
 
       - name: Create release
