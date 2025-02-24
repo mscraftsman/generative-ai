@@ -3,7 +3,14 @@ name: Create Release
 on:
   push:
     tags: [ 'v*' ]
-  workflow_dispatch:   
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        type: string
 
 jobs:
   release:
@@ -11,6 +18,8 @@ jobs:
     steps:
       - name: Check-out latest sources
         uses: actions/checkout@v4
+        with:
+          fetch-tags: 'true'
 
       - name: Generate release notes
         id: changelog
@@ -20,7 +29,7 @@ jobs:
           output-file: 'false'
           git-branch: 'main'
           git-push: 'false'
-          skip-git-pull: 'true'
+          skip-git-pull: 'false'
           skip-commit: 'true'
           skip-version-file: 'true'
           skip-bump: 'true'
@@ -28,7 +37,7 @@ jobs:
 
       - name: Create release
         uses: actions/create-release@v1
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        if: ${{ false || steps.changelog.outputs.skipped == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
