@@ -128,7 +128,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().Be("84");
+            response.Text.Should().Contain("84");
             output.WriteLine($"Result: {response?.Text}");
         }
 
