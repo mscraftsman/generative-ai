@@ -449,8 +449,8 @@ Sometimes you might have authentication warnings **HTTP 403** (Forbidden). Espec
 ```bash
 gcloud config set project "$PROJECT_ID"
 
-gcloud auth application-default set-quota-project "$PROJECT_ID"
 gcloud auth application-default login
+gcloud auth application-default set-quota-project "$PROJECT_ID"
 ```
 
 Make sure that the required API have been enabled.
