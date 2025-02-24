@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.8
+
+### Added
+
+- add v1alpha types/resources
+- add `MaxTemperature` property
+- add cancellationToken for .NET 8+
+- add more test cases
+- add IsValidJson helper method
+- create release notes on tag
+
+### Changed
+
+- use .NET version-specific PATCH method
+- improve XML doc
+- update NuGet packages
+
 ## 2.2.7
 
 ### Changed
