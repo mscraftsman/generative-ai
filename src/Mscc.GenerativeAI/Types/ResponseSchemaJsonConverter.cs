@@ -28,7 +28,16 @@ namespace Mscc.GenerativeAI
             JsonSerializerOptions options)
         {
             var type = value.GetType();
-            var typeValue = (Type)value;
+            Type typeValue = null;
+            try
+            {
+                typeValue = (Type)value;
+            }
+            catch
+            {
+                // ignored
+            }
+
             // How to figure out: type vs anonymous vs dynamic?
             if (type == typeof(JsonDocument) ||
                 type == typeof(JsonElement) ||
@@ -39,7 +48,7 @@ namespace Mscc.GenerativeAI
                 newOptions.Converters.Remove(this);
                 JsonSerializer.Serialize(writer, value, type, newOptions);
             }
-            else if (typeValue.IsEnum)
+            else if (typeValue != null && typeValue.IsEnum)
             {
                 var schemaBuilder = new JsonSchemaBuilder();
                 var elements = typeValue.GetEnumValues()
