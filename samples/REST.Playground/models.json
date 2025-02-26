@@ -44,63 +44,6 @@
       "version": "001"
     },
     {
-      "description": "The original Gemini 1.0 Pro model. This model will be discontinued on February 15th, 2025. Move to a newer Gemini version.",
-      "displayName": "Gemini 1.0 Pro Latest",
-      "inputTokenLimit": 30720,
-      "name": "models/gemini-1.0-pro-latest",
-      "outputTokenLimit": 2048,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 0.9,
-      "topP": 1,
-      "version": "001"
-    },
-    {
-      "description": "The best model for scaling across a wide range of tasks",
-      "displayName": "Gemini 1.0 Pro",
-      "inputTokenLimit": 30720,
-      "name": "models/gemini-1.0-pro",
-      "outputTokenLimit": 2048,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 0.9,
-      "topP": 1,
-      "version": "001"
-    },
-    {
-      "description": "The best model for scaling across a wide range of tasks",
-      "displayName": "Gemini 1.0 Pro",
-      "inputTokenLimit": 30720,
-      "name": "models/gemini-pro",
-      "outputTokenLimit": 2048,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 0.9,
-      "topP": 1,
-      "version": "001"
-    },
-    {
-      "description": "The original Gemini 1.0 Pro model version that supports tuning. Gemini 1.0 Pro will be discontinued on February 15th, 2025. Move to a newer Gemini version.",
-      "displayName": "Gemini 1.0 Pro 001 (Tuning)",
-      "inputTokenLimit": 30720,
-      "name": "models/gemini-1.0-pro-001",
-      "outputTokenLimit": 2048,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createTunedModel"
-      ],
-      "temperature": 0.9,
-      "topP": 1,
-      "version": "001"
-    },
-    {
       "description": "The original Gemini 1.0 Pro Vision model version which was optimized for image understanding. Gemini 1.0 Pro Vision was deprecated on July 12, 2024. Move to a newer Gemini version.",
       "displayName": "Gemini 1.0 Pro Vision",
       "inputTokenLimit": 12288,
@@ -412,36 +355,36 @@
       "version": "2.0"
     },
     {
-      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash Lite",
-      "displayName": "Gemini 2.0 Flash-Lite Preview",
+      "description": "Stable version of Gemini 2.0 Flash Lite",
+      "displayName": "Gemini 2.0 Flash-Lite 001",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-lite-preview",
+      "name": "models/gemini-2.0-flash-lite-001",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens"
       ],
       "temperature": 1,
-      "topK": 64,
+      "topK": 40,
       "topP": 0.95,
-      "version": "preview-02-05"
+      "version": "2.0"
     },
     {
-      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash Lite",
-      "displayName": "Gemini 2.0 Flash-Lite Preview 02-05",
+      "description": "Gemini 2.0 Flash-Lite",
+      "displayName": "Gemini 2.0 Flash-Lite",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-lite-preview-02-05",
+      "name": "models/gemini-2.0-flash-lite",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens"
       ],
       "temperature": 1,
-      "topK": 64,
+      "topK": 40,
       "topP": 0.95,
-      "version": "preview-02-05"
+      "version": "2.0"
     },
     {
       "description": "Experimental release (February 5th, 2025) of Gemini 2.0 Pro",

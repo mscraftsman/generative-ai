@@ -461,8 +461,7 @@ namespace Mscc.GenerativeAI
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request, 
             CancellationToken cancellationToken = default)
         {
-            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase) ||
-                _model.Equals($"{GenerativeAI.Model.Gemini10Pro001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
+            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NotSupportedException();
             }
