@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.10
+
+### Added
+
+- add `ThoughtsTokenCount` property
+
+### Changed 
+
+- remove Gemini 1.0 references
+- update NuGet packages
+
 ## 2.2.9
 
 ### Fixed
