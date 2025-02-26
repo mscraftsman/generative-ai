@@ -67,7 +67,8 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         public float? PresencePenalty { get; set; }
         /// <summary>
-        /// Optional. Frequency penalty applied to the next token's logprobs, multiplied by the number of times each token has been seen in the respponse so far.
+        /// Optional. Frequency penalty applied to the next token's logprobs, multiplied by the number
+        /// of times each token has been seen in the response so far.
         /// </summary>
         /// <remarks>
         /// A positive penalty will discourage the use of tokens that have already been used, proportional to the number
