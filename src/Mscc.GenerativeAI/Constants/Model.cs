@@ -1,4 +1,4 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Linq;
 #endif
@@ -58,7 +58,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini20ProExperimental0205 = "gemini-2.0-pro-exp-02-05";
         public const string Gemini20Flash = "gemini-2.0-flash";
         public const string Gemini20Flash001 = "gemini-2.0-flash-001";
-        public const string Gemini20FlashLite = Gemini20FlashLitePreview;
+        public const string Gemini20FlashLite = "gemini-2.0-flash-lite";
+        public const string Gemini20FlashLite001 = "gemini-2.0-flash-lite-001";
         public const string Gemini20FlashLitePreview = "gemini-2.0-flash-lite-preview";
         public const string Gemini20FlashLitePreview0205 = "gemini-2.0-flash-lite-preview-02-05";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
@@ -67,7 +68,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashThinkingExperimentalNoThoughts = "gemini-2.0-flash-thinking-exp-no-thoughts";
         public const string Gemini20FlashThinkingExperimental1219 = Gemini20FlashThinkingExperimental0121;
         public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
-        
+
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
