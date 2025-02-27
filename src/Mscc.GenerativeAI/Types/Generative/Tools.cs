@@ -1,8 +1,9 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 #endif
 
 namespace Mscc.GenerativeAI
@@ -21,7 +22,7 @@ namespace Mscc.GenerativeAI
             var functions = GetFunctions();
             foreach (Delegate function in delegates)
             {
-                functions.Add(new (function));
+                functions.Add(new(function));
             }
         }
 
@@ -124,5 +125,8 @@ namespace Mscc.GenerativeAI
 
             return functions!.FunctionDeclarations!;
         }
+
+        internal Func<string, string, CancellationToken, ValueTask<object?>> DefaultFunctionCallback { get; set; } =
+            (_, _, _) => throw new NotImplementedException("Function callback has not been implemented.");
     }
 }

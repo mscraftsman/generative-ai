@@ -2,12 +2,14 @@
 using System;
 using System.Text.Json.Serialization;
 #endif
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// Structured representation of a function declaration as defined by the OpenAPI 3.03 specification. Included in this declaration are the function name and parameters. This FunctionDeclaration is a representation of a block of code that can be used as a Tool by the model and executed by the client.
     /// </summary>
+    [DebuggerDisplay("{Name,nq} ({Description,nq})")]
     public sealed class FunctionDeclaration
     {
         /// <summary>
@@ -16,12 +18,14 @@ namespace Mscc.GenerativeAI
         /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 63.
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
         /// <summary>
         /// Required. A brief description of the function.
         /// Description and purpose of the function.
         /// Model uses it to decide how and whether to call the function.
         /// </summary>
         public string? Description { get; set; }
+
         /// <summary>
         /// Optional. Describes the parameters to this function.
         /// </summary>
@@ -38,6 +42,7 @@ namespace Mscc.GenerativeAI
         ///   required: - 
         /// </remarks>
         public Schema? Parameters { get; set; }
+
         //public Dictionary<string, object> ParametersPython { get; set; }
         /// <summary>
         /// Optional. Describes the output from this function in JSON Schema format.
@@ -47,10 +52,10 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         [JsonConverter(typeof(ResponseSchemaJsonConverter))]
         public object? Response { get; set; }
-        
+
         public Delegate? Callback { get; set; }
-        
-        public FunctionDeclaration() {}
+
+        public FunctionDeclaration() { }
 
         public FunctionDeclaration(string name, string? description)
         {
