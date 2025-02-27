@@ -135,6 +135,6 @@ namespace Mscc.GenerativeAI
         public const string Imagen = ImageGeneration002;
         public const string ImageGeneration = Imagen2;
         public const string ImageText001 = "imagetext@001";
-        public const string ImageText = ImageText001;
+        public const string ImageText = "imagetext";
     }
 }
