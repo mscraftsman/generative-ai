@@ -12,10 +12,15 @@ namespace Mscc.GenerativeAI
     public static class Model
     {
         // Gemini 1.0
-        // Gemini 1.0 Pro will be discontinued on February 15, 2025.
+        // Discontinuation date: April 9, 2025.
+        public const string Gemini10Pro = Gemini10Pro002;
+        // Discontinuation date: April 9, 2025.
+        public const string Gemini10Pro001 = "gemini-1.0-pro-001";
+        // Discontinuation date: April 9, 2025.
         public const string Gemini10Pro002 = "gemini-1.0-pro-002";
         public const string GeminiProVision = "gemini-pro-vision";
         public const string Gemini10ProVision = "gemini-1.0-pro-vision";
+        // Discontinuation date: April 9, 2025.
         public const string Gemini10ProVision001 = "gemini-1.0-pro-vision-001";
         public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
         public const string GeminiUltra = "gemini-ultra";
@@ -88,6 +93,7 @@ namespace Mscc.GenerativeAI
         public const string CodeBisonChat32k002 = "codechat-bison-32k-002";
         public const string CodeBisonChat32k = BisonChat32k002;
         public const string CodeGecko001 = "code-gecko-001";
+        // Discontinuation date: April 9, 2025.
         public const string CodeGecko002 = "code-gecko-002";    // Vertex: code-gecko@002
         public const string CodeGeckoLatest = "code-gecko@latest";
         public const string CodeGecko = "code-gecko";
@@ -97,14 +103,21 @@ namespace Mscc.GenerativeAI
         public const string AttributedQuestionAnswering = "aqa";
         
         // Text Embeddings on Vertex AI
+        // Discontinuation date: Nov 18, 2025.
         public const string TextEmbedding004 = "text-embedding-004";
+        public const string TextEmbedding005 = "text-embedding-005";
         public const string TextEmbedding = TextEmbedding004;
         public const string TextEmbeddingPreview0815 = "text-embedding-preview-0815";
         public const string TextEmbeddingPreview = TextEmbeddingPreview0815;
         public const string TextMultilingualEmbedding = "text-multilingual-embedding-002";
+        // Discontinuation date: April 9, 2025.
         public const string GeckoTextEmbedding001 = "textembedding-gecko@001";
+        // Discontinuation date: April 9, 2025.
+        public const string GeckoTextEmbedding002 = "textembedding-gecko@002";
+        // Discontinuation date: May 14, 2025.
         public const string GeckoTextEmbedding003 = "textembedding-gecko@003";
         public const string GeckoTextEmbedding = GeckoTextEmbedding003;
+        // Discontinuation date: May 14, 2025.
         public const string GeckoTextMultilingualEmbedding001 = "textembedding-gecko-multilingual@001";
         public const string GeckoTextMultilingualEmbedding = GeckoTextMultilingualEmbedding001;
 
