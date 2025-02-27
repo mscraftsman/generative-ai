@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
+using System.Collections;
+using System.ComponentModel;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
@@ -1226,7 +1228,8 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
-        string ToggleDarkMode(bool isOn)
+        [Description("Toogles the current between dark and light.")]
+        string ToggleDarkMode([Description("Flag indicating whether dark mode is on or not.")]bool isOn)
         {
             return $"Dark mode is set to: {isOn}";
         }
@@ -1264,10 +1267,7 @@ namespace Test.Mscc.GenerativeAI
         }
         
         [Theory]
-        [InlineData("It is too bright. Change it.")]
-        [InlineData("The ambient light is too low to see anything. I'd need more brightness.")]
-        [InlineData("What's the weather in the capital of the UK?")]
-        [InlineData("Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling.")]
+        [ClassData(typeof(FunctionCallPrompts))]
         public async Task Function_Calling_TopLevel_Method(string prompt)
         {
             // Arrange
@@ -1277,6 +1277,99 @@ namespace Test.Mscc.GenerativeAI
             tools.AddFunction(ToggleDarkMode);
             tools.AddFunction(GetCurrentWeather);
             tools.AddFunction(SendEmailAsync);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Lambda_Expression(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            tools.AddFunction((bool isOn) => $"Dark mode is set to: {isOn}");
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+            // foreach (var item in response.FunctionCalls)
+            // {
+            //     tools.ForEach(action: tool =>
+            //     {
+            //         var function = tool.FunctionDeclarations.FirstOrDefault(declaration =>
+            //             declaration.Name.ToSnakeCase() == item.Name);
+            //         if (function is not null)
+            //         {
+            //             if (function.Callback is not null)
+            //             {
+            //                 var functionValue = function.Callback.DynamicInvoke(item.Args);
+            //             }
+            //             else
+            //             {
+            //                 var functionValue = tools.DefaultFunctionCallback(item.Name, item.Args.ToString(), CancellationToken.None);
+            //             }
+            //         }
+            //     });
+            // }
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Lambda_Statement(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            tools.AddFunction(async (string recipient, string subject, string body) =>
+            {
+                await Task.Delay(3000);
+                return new { Success = true, Property1 = "ABC", Property2 = 123 };
+            });
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Lambda_Statement_ActionFunc(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            Action<bool> toggleDarkMode = (isOn) => Console.WriteLine($"Dark mode is set to: {isOn}");
+            Func<string, string, string, object> sendEmailAsync = (recipient, subject, body) =>
+            {
+                Task.Delay(3000);
+                return new { Success = true, Property1 = "ABC", Property2 = 123 };
+            };
+            tools.AddFunction(toggleDarkMode);
+            tools.AddFunction(sendEmailAsync);
             
             // Act
             var response = await model.GenerateContent(prompt, tools: tools);
@@ -1786,6 +1879,18 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             output.WriteLine(response?.Text);
             response?.Text.Should().Be(expected);
+        }
+
+        public class FunctionCallPrompts : IEnumerable<object[]>
+        {
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new[] { "It is too bright. Change it." };
+                yield return new[] { "The ambient light is too low to see anything. I'd need more brightness." };
+                yield return new[] { "What's the weather in the capital of the UK?" };
+                yield return new[] { "Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling." };
+            }
         }
     }
 }
