@@ -14,9 +14,9 @@ client = genai.Client(
 
 response = client.models.generate_images(
     model='imagen-3.0-generate-002',
-    prompt='Fuzzy bunnies in my kitchen',
+    prompt='Photorealistic wide shot of eagles flying across a canyon',
     config=types.GenerateImagesConfig(
-        number_of_images= 4,
+        number_of_images= 2,
     )
 )
 for generated_image in response.generated_images:
