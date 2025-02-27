@@ -18,15 +18,18 @@ namespace Mscc.GenerativeAI
         /// Format: models/{model}.
         /// </summary>
         public string Model { get; set; }
+
         /// <summary>
         /// Required. The content of the current conversation with the model.
         /// For single-turn queries, this is a single instance. For multi-turn queries, this is a repeated field that contains conversation history + latest request.
         /// </summary>
         public List<Content> Contents { get; set; }
+
         /// <summary>
         /// Optional. Configuration options for model generation and outputs.
         /// </summary>
         public GenerationConfig? GenerationConfig { get; set; }
+
         /// <summary>
         /// Optional. A list of unique `<see cref="SafetySetting"/>` instances for blocking unsafe content.
         /// </summary>
@@ -43,6 +46,7 @@ namespace Mscc.GenerativeAI
         /// to learn how to incorporate safety considerations in your AI applications.
         /// </remarks>
         public List<SafetySetting>? SafetySettings { get; set; }
+
         /// <summary>
         /// Optional. Available for gemini-1.5-pro and gemini-1.0-pro-002.
         /// Instructions for the model to steer it toward better performance. For example, "Answer as concisely as possible" or "Don't use technical terms in your response".
@@ -53,24 +57,29 @@ namespace Mscc.GenerativeAI
         /// Note: only text should be used in parts and content in each part will be in a separate paragraph.
         /// </remarks>
         public Content? SystemInstruction { get; set; }
+
         /// <summary>
         /// Optional. Configuration of tools used by the model.
         /// </summary>
         public ToolConfig? ToolConfig { get; set; }
+
         /// <summary>
         /// Optional. A list of Tools the model may use to generate the next response.
         /// A <see cref="Tool"/> is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. The only supported tool is currently Function.
         /// </summary>
         public List<Tool>? Tools { get; set; }
+
         /// <summary>
         /// Optional. The name of the content cached to use as context to serve the prediction.
         /// Format: cachedContents/{cachedContent}
         /// </summary>
         public string? CachedContent { get; set; }
+
         /// <summary>
         /// The ETag of the item.
         /// </summary>
         public virtual string? ETag { get; set; }
+
         /// <summary>
         /// Optional. The labels with user-defined metadata for the request.
         /// </summary>
@@ -106,14 +115,10 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            Contents = new List<Content> { new Content
+            Contents = new List<Content>
             {
-                Role = Role.User,
-                Parts = new List<IPart> { new TextData
-                {
-                    Text = prompt
-                }}
-            }};
+                new Content { Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } } }
+            };
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
@@ -140,17 +145,13 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            Contents = new List<Content> { new Content
-            {
-                Parts = parts
-            }};
+            Contents = new List<Content> { new Content { Parts = parts } };
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
             if (systemInstruction != null) SystemInstruction = systemInstruction;
             if (toolConfig != null) ToolConfig = toolConfig;
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
@@ -171,11 +172,14 @@ namespace Mscc.GenerativeAI
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
 
-            Contents = new List<Content> { new Content
+            Contents = new List<Content>
             {
-                Role = Role.User,
-                Parts = new List<IPart> { new FileData { FileUri = file.Uri, MimeType = file.MimeType } }
-            }};
+                new Content
+                {
+                    Role = Role.User,
+                    Parts = new List<IPart> { new FileData { FileUri = file.Uri, MimeType = file.MimeType } }
+                }
+            };
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
@@ -202,10 +206,7 @@ namespace Mscc.GenerativeAI
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            Contents = new List<Content> { new Content
-            {
-                PartTypes = parts
-            }};
+            Contents = new List<Content> { new Content { PartTypes = parts } };
             if (generationConfig != null) GenerationConfig = generationConfig;
             if (safetySettings != null) SafetySettings = safetySettings;
             if (tools != null) Tools = tools;
@@ -243,11 +244,7 @@ namespace Mscc.GenerativeAI
                 mimeType ??= GenerativeAIExtensions.GetMimeType(uri);
                 // Strangely, the MIME type is not checked for FileData but InlineData only.
                 // GenerativeAIExtensions.GuardMimeType(mimeType);
-                AddPart(new FileData
-                {
-                    FileUri = uri,
-                    MimeType = mimeType
-                });
+                AddPart(new FileData { FileUri = uri, MimeType = mimeType });
                 await Task.CompletedTask;
             }
             else
@@ -256,7 +253,9 @@ namespace Mscc.GenerativeAI
                 if (uri.IsValidBase64String())
                 {
                     base64data = uri;
-                    if (mimeType == null) throw new ArgumentNullException(nameof(mimeType), "MIME type for base64-encoded string is missing.");
+                    if (mimeType == null)
+                        throw new ArgumentNullException(nameof(mimeType),
+                            "MIME type for base64-encoded string is missing.");
                 }
                 else
                 {
@@ -264,14 +263,14 @@ namespace Mscc.GenerativeAI
                     if (File.Exists(uri))
                     {
 #if NET472_OR_GREATER || NETSTANDARD2_0
-                base64data = Convert.ToBase64String(File.ReadAllBytes(uri));
+                        base64data = Convert.ToBase64String(File.ReadAllBytes(uri));
 #else
                         base64data = Convert.ToBase64String(await File.ReadAllBytesAsync(uri));
 #endif
                     }
                     else
                     {
-                        base64data =  await GenerativeAIExtensions.ReadImageFileBase64Async(uri);
+                        base64data = await GenerativeAIExtensions.ReadImageFileBase64Async(uri);
                     }
                 }
 
@@ -302,7 +301,9 @@ namespace Mscc.GenerativeAI
         /// <param name="index">Zero-based index of element in the Contents collection.</param>
         public void AddPart(IPart part, int index = 0)
         {
-            if (Contents[index] == null) throw new ArgumentNullException(nameof(index), "The contents collection has no item at the specified index.");
+            if (Contents[index] == null)
+                throw new ArgumentNullException(nameof(index),
+                    "The contents collection has no item at the specified index.");
             Contents[index].Parts?.Add(part);
         }
     }

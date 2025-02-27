@@ -6,6 +6,9 @@ using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ListTuningJobResponse
     {
         public List<TuningJob> TuningJobs { get; set; }
