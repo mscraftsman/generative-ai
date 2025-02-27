@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.2.11
+
+### Added
+
+- add more model constants for Imagen 3
+- add model `code-gecko`
+
+### Changed
+
+- rename model `imagetext`
+
+### Fixed
+
+- fix regression error
+
 ## 2.2.10
 
 ### Added
