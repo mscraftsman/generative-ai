@@ -2832,7 +2832,7 @@
           "type": "integer"
         },
         "taskType": {
-          "description": "Optional. Optional task type for which the embeddings will be used. Not supported on earlier models (`models/embedding-001`).",
+          "description": "Optional. Optional task type for which the embeddings will be used. Can only be set for `models/embedding-001`.",
           "enum": [
             "TASK_TYPE_UNSPECIFIED",
             "RETRIEVAL_QUERY",
@@ -2841,8 +2841,7 @@
             "CLASSIFICATION",
             "CLUSTERING",
             "QUESTION_ANSWERING",
-            "FACT_VERIFICATION",
-            "CODE_RETRIEVAL_QUERY"
+            "FACT_VERIFICATION"
           ],
           "enumDescriptions": [
             "Unset value, which will default to one of the other enum values.",
@@ -2852,8 +2851,7 @@
             "Specifies that the given text will be classified.",
             "Specifies that the embeddings will be used for clustering.",
             "Specifies that the given text will be used for question answering.",
-            "Specifies that the given text will be used for fact verification.",
-            "Specifies that the given text will be used for code retrieval."
+            "Specifies that the given text will be used for fact verification."
           ],
           "type": "string"
         },
