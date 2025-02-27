@@ -87,7 +87,7 @@ namespace Mscc.GenerativeAI
         public const string CodeBisonChat32k002 = "codechat-bison-32k-002";
         public const string CodeBisonChat32k = BisonChat32k002;
         public const string CodeGecko001 = "code-gecko-001";
-        public const string CodeGecko002 = "code-gecko-002";
+        public const string CodeGecko002 = "code-gecko-002";    // Vertex: code-gecko@002
         public const string CodeGeckoLatest = "code-gecko@latest";
         public const string CodeGecko = "code-gecko";
         public const string GeckoEmbedding = "embedding-gecko-001";
