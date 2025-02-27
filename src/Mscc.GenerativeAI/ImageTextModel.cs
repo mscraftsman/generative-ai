@@ -15,12 +15,12 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public sealed class ImageTextModel : BaseModel
     {
-        private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/models/{model}:{method}";
+        private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/{model}:{method}";
 
+        internal override string Version => ApiVersion.V1;
         private string Url => UrlVertexAi;
-
         private string Method => GenerativeAI.Method.Predict;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageTextModel"/> class.
         /// </summary>
