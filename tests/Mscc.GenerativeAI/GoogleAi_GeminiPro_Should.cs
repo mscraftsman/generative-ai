@@ -1228,7 +1228,7 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
-        [Description("Toogles the current between dark and light.")]
+        [Description("Toggles the current between dark and light.")]
         string ToggleDarkMode([Description("Flag indicating whether dark mode is on or not.")]bool isOn)
         {
             return $"Dark mode is set to: {isOn}";
@@ -1242,12 +1242,9 @@ namespace Test.Mscc.GenerativeAI
             await Task.Delay(3000);
             return new { Success = true, Property1 = "ABC", Property2 = 123 };
         }
-        
+
         [Theory]
-        [InlineData("It is too bright. Change it.")]
-        [InlineData("The ambient light is too low to see anything. I'd need more brightness.")]
-        [InlineData("What's the weather in the capital of the UK?")]
-        [InlineData("Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling.")]
+        [ClassData(typeof(FunctionCallPrompts))]
         public async Task Function_Calling_Constructor_TopLevel_Method(string prompt)
         {
             // Arrange
@@ -1370,6 +1367,43 @@ namespace Test.Mscc.GenerativeAI
             };
             tools.AddFunction(toggleDarkMode);
             tools.AddFunction(sendEmailAsync);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+        
+        public void TestFormat(int num, string text, bool flag, List<string> names, string[] codes, FinishReason myEnum,
+            List<Instance> myClasses, Uri myUri, double? numberNullable, DateTimeOffset myDateTimeOffset,
+            DateTime myDateTime
+#if NET8_0_OR_GREATER
+, DateOnly date, TimeOnly time
+#endif
+        )
+        {
+            // Method body
+        }
+
+        [Description("Provide undefined information along with details.")]
+        public void TestNullable(
+            [Description("Expected temperature of the day")] double? numberNullable, 
+            [Description("Mood of the day")] string? stringNullable) { }
+
+        [Fact]
+        public async Task Function_Calling_Constructor_Format()
+        {
+            // Arrange
+            var prompt = "Today's weather forecast hits mild temperatures around 20.5 degrees Celsius. The mood is great.";
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model,
+                systemInstruction: new Content("We are trying to test undefined information. You can call the declared function to pass parameters."));
+            var tools = new Tools([TestNullable]);
             
             // Act
             var response = await model.GenerateContent(prompt, tools: tools);

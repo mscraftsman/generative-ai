@@ -6,11 +6,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 #endif
+using Json.Schema.Generation;
 using System.Collections;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
+using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
 namespace Mscc.GenerativeAI
 {
@@ -24,7 +25,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="JsonConverter"/>
-        public override void Write(Utf8JsonWriter writer, 
+        public override void Write(Utf8JsonWriter writer,
             List<FunctionDeclaration> value,
             JsonSerializerOptions options)
         {
@@ -33,6 +34,7 @@ namespace Mscc.GenerativeAI
             {
                 functionsArray.Add(SerializeFunction(function));
             }
+
             JsonSerializer.Serialize(writer, functionsArray, options);
         }
 
@@ -41,49 +43,49 @@ namespace Mscc.GenerativeAI
             var propertiesObject = new JsonObject();
             var requiredArray = new JsonArray();
             var allRequired = true;
-            
+
             if (function.Parameters is not null)
             {
                 // foreach (var parameter in function.Parameters)
                 // {
-                    // var normalizedName = parameter.Name.ToSnakeCase();
-                    // if (string.IsNullOrWhiteSpace(normalizedName))
-                    // {
-                    //     continue;
-                    // }
-                    //
-                    // var propertyObject = SerializeProperty(parameter.Type);
-                    //
-                    // if (!string.IsNullOrWhiteSpace(parameter.Description))
-                    // {
-                    //     propertyObject.Add("description", parameter.Description);
-                    // }
-                    //
-                    // if (parameter.EnumValues.Count > 0)
-                    // {
-                    //     _ = propertiesObject.Remove("enum");
-                    //
-                    //     var enumValuesArray = new JsonArray();
-                    //     var normalizedEnumValues = parameter.EnumValues.Select(v => v.ToSnakeCase()).Distinct();
-                    //
-                    //     foreach (var enumValue in normalizedEnumValues)
-                    //     {
-                    //         enumValuesArray.Add(enumValue);
-                    //     }
-                    //
-                    //     propertyObject.Add("enum", enumValuesArray);
-                    // }
-                    //
-                    // propertiesObject.Add(normalizedName, propertyObject);
-                    //
-                    // if (parameter.IsRequired)
-                    // {
-                    //     requiredArray.Add(normalizedName);
-                    // }
-                    // else
-                    // {
-                    //     allRequired = false;
-                    // }
+                // var normalizedName = parameter.Name.ToSnakeCase();
+                // if (string.IsNullOrWhiteSpace(normalizedName))
+                // {
+                //     continue;
+                // }
+                //
+                // var propertyObject = SerializeProperty(parameter.Type);
+                //
+                // if (!string.IsNullOrWhiteSpace(parameter.Description))
+                // {
+                //     propertyObject.Add("description", parameter.Description);
+                // }
+                //
+                // if (parameter.EnumValues.Count > 0)
+                // {
+                //     _ = propertiesObject.Remove("enum");
+                //
+                //     var enumValuesArray = new JsonArray();
+                //     var normalizedEnumValues = parameter.EnumValues.Select(v => v.ToSnakeCase()).Distinct();
+                //
+                //     foreach (var enumValue in normalizedEnumValues)
+                //     {
+                //         enumValuesArray.Add(enumValue);
+                //     }
+                //
+                //     propertyObject.Add("enum", enumValuesArray);
+                // }
+                //
+                // propertiesObject.Add(normalizedName, propertyObject);
+                //
+                // if (parameter.IsRequired)
+                // {
+                //     requiredArray.Add(normalizedName);
+                // }
+                // else
+                // {
+                //     allRequired = false;
+                // }
                 // }
             }
             else
@@ -97,7 +99,7 @@ namespace Mscc.GenerativeAI
 
                     var parameterName = parameter.Name.ToSnakeCase();
                     var propertyObject = SerializeParameter(parameter);
-                    
+
                     propertiesObject.Add(parameterName, propertyObject);
 
                     if (!parameter.IsOptional || IsRequired(parameter))
@@ -107,19 +109,15 @@ namespace Mscc.GenerativeAI
                 }
             }
 
-            var parametersObject = new JsonObject
-            {
-                { "type", "object" },
-                { "properties", propertiesObject }
-            };
-            
+            var parametersObject = new JsonObject { { "type", "object" }, { "properties", propertiesObject } };
+
             if (requiredArray.Count != 0)
             {
                 parametersObject.Add("required", requiredArray);
             }
-            
+
             var functionObject = new JsonObject { { "name", function.Name.ToSnakeCase() } };
-            
+
             var description = function.Description;
             if (string.IsNullOrWhiteSpace(description) && function.Callback is not null)
             {
@@ -140,7 +138,7 @@ namespace Mscc.GenerativeAI
             {
                 functionObject.Add("parameters", parametersObject);
             }
-            
+
             return functionObject;
         }
 
@@ -149,10 +147,22 @@ namespace Mscc.GenerativeAI
             var parameterType = parameter.ParameterType;
             var propertyObject = SerializeProperty(parameterType);
             var description = GetDescription(parameter);
+            var format = GetFormatInfo(parameterType);
 
             if (!string.IsNullOrWhiteSpace(description))
             {
+                propertyObject.Remove("description");
                 propertyObject.Add("description", description);
+            }
+
+            if (!string.IsNullOrWhiteSpace(format))
+            {
+//                propertyObject.Add("format", format);
+            }
+
+            if (parameterType.IsNullableNumber())
+            {
+                propertyObject.Add("nullable", true);
             }
 
             if (parameter.IsOptional && parameter.DefaultValue is not null)
@@ -166,11 +176,17 @@ namespace Mscc.GenerativeAI
         private static JsonObject SerializeProperty(Type propertyType)
         {
             var (typeName, typeDescription) = GetTypeInfo(propertyType);
+            var format = GetFormatInfo(propertyType);
             var propertyObject = new JsonObject { { "type", typeName.ToSnakeCase() } };
 
             if (typeDescription is not null)
             {
                 propertyObject.Add("description", typeDescription);
+            }
+
+            if (!string.IsNullOrWhiteSpace(format))
+            {
+                propertyObject.Add("format", format);
             }
 
             if (propertyType.IsEnum)
@@ -234,8 +250,19 @@ namespace Mscc.GenerativeAI
             return parameter.GetCustomAttribute<RequiredAttribute>() is not null;
         }
 
+        private static bool IsNullable(ParameterInfo parameter)
+        {
+            return parameter.ParameterType.IsNullableNumber();
+        }
+
         private static (string name, string? description) GetTypeInfo(Type type)
         {
+            var isNullable = type.IsNullableNumber();
+            if (isNullable && type.GenericTypeArguments.Length == 1)
+            {
+                type = type.GenericTypeArguments[0];
+            }
+
             if (type == typeof(bool))
             {
                 return ("boolean", null);
@@ -273,7 +300,7 @@ namespace Mscc.GenerativeAI
 
             if (type == typeof(float) || type == typeof(double) || type == typeof(decimal))
             {
-                return ("integer", "floating point number");
+                return ("number", "floating point number");
             }
 
             if (type == typeof(char))
@@ -305,17 +332,19 @@ namespace Mscc.GenerativeAI
             {
                 return ("string", "time interval in C# .NET ISO 8601 format hh:mm:ss");
             }
+            
 #if NET8_0_OR_GREATER
-        if (type == typeof(DateOnly))
-        {
-            return ("string", "date in C# .NET ISO 8601 format yyyy-mm-dd");
-        }
+            if (type == typeof(DateOnly))
+            {
+                return ("string", "date in C# .NET ISO 8601 format yyyy-mm-dd");
+            }
 
-        if (type == typeof(TimeOnly))
-        {
-            return ("string", "time in C# .NET ISO 8601 format hh:mm:ss");
-        }
+            if (type == typeof(TimeOnly))
+            {
+                return ("string", "time in C# .NET ISO 8601 format hh:mm:ss");
+            }
 #endif
+
             if (type.IsEnum)
             {
                 return ("string", null);
@@ -332,6 +361,46 @@ namespace Mscc.GenerativeAI
             }
 
             return ("object", null);
+        }
+
+        private static string GetFormatInfo(Type type)
+        {
+            if (type.GenericTypeArguments.Length == 1)
+            {
+                type = type.GenericTypeArguments[0];
+            }
+            
+            if (type == typeof(int) || type == typeof(nint) || type == typeof(uint) || type == typeof(nuint))
+            {
+                return "int32";
+            }
+
+            if (type == typeof(long) || type == typeof(ulong))
+            {
+                return "int64";
+            }
+
+            if (type == typeof(float) || type == typeof(decimal))
+            {
+                return "float";
+            }
+            
+            if (type == typeof(double))
+            {
+                return "double";
+            }
+
+            if (type == typeof(DateTime) || type == typeof(DateTimeOffset))
+            {
+                return "date-time";
+            }
+
+            if (type.IsEnum)
+            {
+                return "enum";
+            }
+
+            return "";
         }
     }
 }
