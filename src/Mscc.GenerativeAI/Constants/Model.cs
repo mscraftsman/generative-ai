@@ -89,7 +89,7 @@ namespace Mscc.GenerativeAI
         public const string CodeGecko001 = "code-gecko-001";
         public const string CodeGecko002 = "code-gecko-002";
         public const string CodeGeckoLatest = "code-gecko@latest";
-        public const string CodeGecko = CodeGeckoLatest;
+        public const string CodeGecko = "code-gecko";
         public const string GeckoEmbedding = "embedding-gecko-001";
         public const string Embedding001 = "embedding-001";
         public const string Embedding = Embedding001;
