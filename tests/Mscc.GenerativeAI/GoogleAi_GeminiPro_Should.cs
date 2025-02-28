@@ -406,22 +406,22 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Write a short poem about koi fish.";
             var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
             var model = googleAi.GenerativeModel(model: _model);
-            var request = new GenerateContentRequest
-            {
-                Contents = new List<Content>(), 
-                GenerationConfig = new GenerationConfig()
+            var request = new GenerateContentRequest(prompt:prompt,
+                generationConfig:new GenerationConfig()
                 {
                     CandidateCount = 3
-                }
-            };
-            request.Contents.Add(new Content
-            {
-                Role = Role.User,
-                Parts = new List<IPart> { new TextData { Text = prompt } }
-            });
+                });
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(request));
+            // await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(request));
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCountGreaterOrEqualTo(1);
+            response.Text.Should().NotBeEmpty();
+            output.WriteLine(response?.Text);
         }
 
         [Fact]
