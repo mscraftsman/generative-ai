@@ -74,5 +74,11 @@ namespace Mscc.GenerativeAI
         public static partial void LogJsonResponse(
             this ILogger logger,
             string json);
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message =
+            "There are {count} Candidates, returning text from the first candidate. Access response.Candidates directly to get text from other candidates.")]
+        public static partial void LogMultipleCandidates(
+            this ILogger logger,
+            int count);
     }
 }

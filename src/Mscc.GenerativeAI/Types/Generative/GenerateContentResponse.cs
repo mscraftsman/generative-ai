@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 #endif
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Mscc.GenerativeAI
 {
@@ -21,12 +23,16 @@ namespace Mscc.GenerativeAI
         {
             get
             {
+                if (Candidates is null) return string.Empty;
+                if (Candidates?.Count == 0) return string.Empty;
                 if (Candidates?.FirstOrDefault()?.FinishReason is
                     FinishReason.MaxTokens or
                     FinishReason.Safety or
                     FinishReason.Recitation or
                     FinishReason.Other)
                     return string.Empty;
+                if (Candidates?.Count > 1) Logger.LogMultipleCandidates(Candidates!.Count);
+
                 return Candidates?.FirstOrDefault()?.Content?.Parts.FirstOrDefault()?.Text;
             }
         }
@@ -49,6 +55,14 @@ namespace Mscc.GenerativeAI
         /// Output only. The model version used to generate the response.
         /// </summary>
         public string? ModelVersion { get; set; }
+
+        protected ILogger Logger { get; }
+
+        /// <summary>
+        /// Base constructor to set the <see cref="ILogger"/> instance.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        protected GenerateContentResponse(ILogger? logger) => Logger = logger ?? NullLogger.Instance;
 
         /// <summary>
         /// A convenience overload to easily access the responded text.
