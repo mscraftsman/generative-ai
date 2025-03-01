@@ -1,0 +1,16 @@
+
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={{apiKey}}
+Content-Type: application/json
+
+{
+  "model" : "models/gemini-2.0-flash-exp",
+  "contents" : [ {
+    "role" : "user",
+    "parts" : [ {
+      "text" : "When is the next total solar eclipse in Mauritius?"
+    } ]
+  } ],
+  "tools" : [ {
+    "googleSearch" : { }
+  } ]
+}
