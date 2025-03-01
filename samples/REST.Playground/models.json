@@ -387,6 +387,38 @@
       "version": "2.0"
     },
     {
+      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash Lite",
+      "displayName": "Gemini 2.0 Flash-Lite Preview 02-05",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.0-flash-lite-preview-02-05",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 40,
+      "topP": 0.95,
+      "version": "preview-02-05"
+    },
+    {
+      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash Lite",
+      "displayName": "Gemini 2.0 Flash-Lite Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.0-flash-lite-preview",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 40,
+      "topP": 0.95,
+      "version": "preview-02-05"
+    },
+    {
       "description": "Experimental release (February 5th, 2025) of Gemini 2.0 Pro",
       "displayName": "Gemini 2.0 Pro Experimental",
       "inputTokenLimit": 2097152,
