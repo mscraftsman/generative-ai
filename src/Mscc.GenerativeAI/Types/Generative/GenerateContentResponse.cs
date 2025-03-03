@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
     /// Response from the model supporting multiple candidates.
     /// Ref: https://ai.google.dev/api/rest/v1beta/GenerateContentResponse
     /// </summary>
-    public class GenerateContentResponse
+    public class GenerateContentResponse : BaseLogger
     {
         /// <summary>
         /// A convenience property to get the responded text information of first candidate.
@@ -56,18 +56,16 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string? ModelVersion { get; set; }
 
-        protected ILogger Logger { get; }
-
         /// <summary>
         /// Default constructor.
         /// </summary>
         public GenerateContentResponse() { }
-        
+
         /// <summary>
         /// Base constructor to set the <see cref="ILogger"/> instance.
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        protected GenerateContentResponse(ILogger? logger) => Logger = logger ?? NullLogger.Instance;
+        protected GenerateContentResponse(ILogger? logger) : base(logger) { }
 
         /// <summary>
         /// A convenience overload to easily access the responded text.

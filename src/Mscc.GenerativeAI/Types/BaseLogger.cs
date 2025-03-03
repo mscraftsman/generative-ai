@@ -11,6 +11,11 @@ namespace Mscc.GenerativeAI
         protected ILogger Logger { get; }
 
         /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected BaseLogger() : this(null) { }
+
+        /// <summary>
         /// Base constructor to set the <see cref="ILogger"/> instance.
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
