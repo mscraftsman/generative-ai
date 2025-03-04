@@ -15,10 +15,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <remarks>Accepted integer values: 1-8 (v.002), 1-4 (v.005, v.006). Default value: 4.</remarks>
         public int? SampleCount { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public int? NumberOfImages
         {
             get => SampleCount;
@@ -29,21 +30,28 @@ namespace Mscc.GenerativeAI
         /// Optional. Cloud Storage uri where to store the generated images.
         /// </summary>
         public string? StorageUri { get; set; }
+
         /// <summary>
-        /// Optional. Pseudo random seed for reproducible generated outcome; setting the seed lets you generate deterministic output.
+        /// Optional. Pseudo random seed for reproducible generated outcome;
+        /// setting the seed lets you generate deterministic output.
         /// </summary>
-        /// <remarks>Version 006 model only: To use the seed field you must also set "addWatermark": false in the list of parameters.</remarks>
+        /// <remarks>
+        /// Version 006 model only: To use the seed field you must also set "addWatermark": false in the list of parameters.
+        /// </remarks>
         public int? Seed { get; set; }
+
         /// <summary>
         /// Optional. The text prompt for guiding the response.
         /// </summary>
         /// <remarks>en (default), de, fr, it, es</remarks>
         public string? Language { get; set; }
+
         /// <summary>
         /// Optional. Description of what to discourage in the generated images.
         /// </summary>
         [Obsolete("Setting negativePrompt is no longer supported.")]
         public string? NegativePrompt { get; set; }
+
         /// <summary>
         /// Optional. For model version 006 and greater use editConfig.guidanceScale.
         /// </summary>
@@ -52,11 +60,13 @@ namespace Mscc.GenerativeAI
         /// Large values increase output and prompt alignment, but may compromise image quality.
         /// </remarks>
         public int? GuidanceScale { get; set; }
+
         /// <summary>
         /// Optional. Whether to disable the person/face safety filter (so that person/face can be included in the generated images).
         /// </summary>
         /// <remarks>Deprecated (v.006 only): Use personGeneration instead.</remarks>
         public bool? DisablePersonFace { get; set; }
+
         /// <summary>
         /// Optional. With input prompt, image, mask - backgroundEditing mode enables background editing.
         /// </summary>
@@ -65,25 +75,30 @@ namespace Mscc.GenerativeAI
         /// upscale
         /// </remarks>
         public string? Mode { get; set; }
+
         /// <summary>
         /// Optional. Sample image size when mode is set to upscale. This field is no longer required when upscaling. Use upscaleConfig.upscaleFactor to set the upscaled image size.
         /// </summary>
         /// <remarks>2048 or 4096</remarks>
         public string? SampleImageSize { get; set; }
+
         /// <summary>
         /// Optional. The aspect ratio of the generated image.
         /// </summary>
         /// <remarks>Value: 1:1, 9:16*, 16:9*, 3:4*, or 4:3*</remarks>
         public string? AspectRatio { get; set; }
+
         /// <summary>
         /// Optional. Whether to enable the Responsible AI filtered reason or error code for blocked output in the response content.
         /// </summary>
         public bool? IncludeRaiReason { get; set; }
+
         /// <summary>
         /// Optional. Whether to enable rounded Responsible AI scores for a list of safety attributes in responses for unfiltered input and output.
         /// </summary>
         /// <remarks>Safety attribute categories: "Death, Harm and Tragedy", "Firearms and Weapons", "Hate", "Health", "Illicit Drugs", "Politics", "Porn", "Religion and Belief", "Toxic", "Violence", "Vulgarity", "War and Conflict".</remarks>
         public bool? IncludeSafetyAttributes { get; set; }
+
         /// <summary>
         /// Optional. The safety setting that controls the type of people or face generation allowed.
         /// </summary>
@@ -95,6 +110,7 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         //public PersonGeneration? PersonGeneration { get; set; }
         public string? PersonGeneration { get; set; }
+
         /// <summary>
         /// Optional. The safety setting that controls safety filter thresholds.
         /// </summary>
@@ -105,35 +121,43 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         //public SafetyFilterLevel? SafetyFilterLevel { get; set; }
         public string? SafetyFilterLevel { get; set; }
+
         /// <summary>
         /// Defines whether the image will include a SynthID. For more information, see Identifying AI-generated content with SynthID.
         /// </summary>
         public bool? AddWatermark { get; set; }
+
         /// <summary>
         /// edit config object for model versions 006 and greater. All editConfig subfields are optional. If not specified, the default editing mode is inpainting.
         /// </summary>
         public EditConfig? EditConfig { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         public UpscaleConfig? UpscaleConfig { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         public OutputOptions? OutputOptions { get; set; }
+
         /// <summary>
         /// Whether to use the prompt rewriting logic.
         /// </summary>
         public bool? EnhancePrompt { get; set; }
+
         // public HttpOptions HttpOptions {get;set;}
         /// <summary>
         /// Cloud Storage URI used to store the generated images.
         /// </summary>
         public string? OutputGcsUri { get; set; }
+
         /// <summary>
         /// MIME type of the generated image.
         /// </summary>
         public string? OutputMimeType { get; set; }
+
         /// <summary>
         /// Compression quality of the generated image (for `image/jpeg` only).
         /// </summary>

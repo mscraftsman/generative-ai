@@ -461,8 +461,7 @@ namespace Mscc.GenerativeAI
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request, 
             CancellationToken cancellationToken = default)
         {
-            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase) ||
-                _model.Equals($"{GenerativeAI.Model.Gemini10Pro001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
+            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new NotSupportedException();
             }
@@ -553,7 +552,11 @@ namespace Mscc.GenerativeAI
             var json = Serialize(tunedModel);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage();
+#if NET472_OR_GREATER || NETSTANDARD2_0
             httpRequest.Method = new HttpMethod("PATCH");
+#else
+            httpRequest.Method = HttpMethod.Patch;
+#endif
             httpRequest.RequestUri = new Uri(url);
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
@@ -1103,7 +1106,11 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync();
             if (response.Content is not null)
             {
+#if NET472_OR_GREATER || NETSTANDARD2_0
                 using var stream = await response.Content.ReadAsStreamAsync();
+#else
+                using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+#endif
                 // Ref: https://github.com/dotnet/runtime/issues/97128 - HttpIOException
                 // https://github.com/grpc/grpc-dotnet/issues/2361#issuecomment-1895805167 
                 await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(

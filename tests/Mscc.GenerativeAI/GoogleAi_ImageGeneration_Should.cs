@@ -22,7 +22,7 @@ using GoogleAI = Mscc.GenerativeAI.GoogleAI;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAi_ImageGeneration_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+    public class GoogleAiImageGenerationShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
         private readonly string _model = Model.Imagen3;
 

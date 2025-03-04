@@ -27,6 +27,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public int ToolUsePromptTokenCount { get; set; } = default;
         /// <summary>
+        /// Output only. Number of tokens of thoughts for thinking models.
+        /// </summary>
+        public int ThoughtsTokenCount { get; set; } = default;
+        /// <summary>
         /// Output only. List of modalities that were processed in the request input.
         /// </summary>
         public List<ModalityTokenCount>? PromptTokensDetails { get; set; }

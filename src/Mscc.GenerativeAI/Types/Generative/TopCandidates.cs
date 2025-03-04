@@ -10,6 +10,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Sorted by log probability in descending order.
         /// </summary>
-        public List<LogprobsCandidate> Candidates { get; set; }
+        public List<LogprobsResultCandidate> Candidates { get; set; }
     }
 }

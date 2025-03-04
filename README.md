@@ -38,7 +38,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.2.7" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.2.11" />
   </ItemGroup>
 ```
 
@@ -449,8 +449,8 @@ Sometimes you might have authentication warnings **HTTP 403** (Forbidden). Espec
 ```bash
 gcloud config set project "$PROJECT_ID"
 
-gcloud auth application-default set-quota-project "$PROJECT_ID"
 gcloud auth application-default login
+gcloud auth application-default set-quota-project "$PROJECT_ID"
 ```
 
 Make sure that the required API have been enabled.

@@ -137,7 +137,8 @@ namespace Test.Mscc.GenerativeAI
             var model = googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new List<Recipe>()
             };
 
             // Act
@@ -729,6 +730,42 @@ namespace Test.Mscc.GenerativeAI
                 output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
+                .HaveCountGreaterThanOrEqualTo(1);
+            output.WriteLine(response?.Text);
+        }
+
+        [Theory]
+        [InlineData(Model.Gemini20Flash)]
+        [InlineData(Model.Gemini20FlashLite)]
+        [InlineData(Model.Gemini20FlashThinking)]
+        [InlineData(Model.Gemini20Pro)]
+        public async Task Describe_Audio_with_Timestamps(string modelName)
+        {
+            // Arrange
+            var prompt =
+                @"Transcribe this audio into english texts. Break the text into small logical segments. Include punctuation where appropriate. Timestamps should have milli-second level accuracy.
+
+Output the segments in the SRT format:
+
+subtitle_id
+start_time → end_time
+content";
+            IGenerativeAI genAi = new GoogleAI(fixture.ApiKey);
+            var model = genAi.GenerativeModel(modelName);
+            var request = new GenerateContentRequest(prompt);
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "out.mp3");
+            var file = await ((GoogleAI)genAi).UploadFile(filePath);
+            output.WriteLine($"File: {file.File.Name}\tName: '{file.File.DisplayName}'");
+            request.AddMedia(file.File);
 
             // Act
             var response = await model.GenerateContent(request);

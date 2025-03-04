@@ -35,8 +35,8 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         public int? CandidateCount { get; set; }
         /// <summary>
-        /// Optional. The maximum number of output tokens to generate per message.
-        /// Token limit determines the maximum amount of text output from one prompt. A token is approximately four characters. 
+        /// Optional. Number of generated responses to return.
+        /// If unset, this will default to 1. Please note that this doesn't work for previous generation models (Gemini 1.0 family) 
         /// </summary>
         public int? MaxOutputTokens { get; set; } = default;
         /// <summary>
@@ -70,7 +70,8 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         public float? PresencePenalty { get; set; }
         /// <summary>
-        /// Optional. Frequency penalty applied to the next token's logprobs, multiplied by the number of times each token has been seen in the respponse so far.
+        /// Optional. Frequency penalty applied to the next token's logprobs, multiplied by the number
+        /// of times each token has been seen in the response so far.
         /// </summary>
         /// <remarks>
         /// A positive penalty will discourage the use of tokens that have already been used, proportional to the number

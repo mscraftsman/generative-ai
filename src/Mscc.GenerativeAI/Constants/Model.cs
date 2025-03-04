@@ -13,12 +13,7 @@ namespace Mscc.GenerativeAI
     {
         // Gemini 1.0
         // Gemini 1.0 Pro will be discontinued on February 15, 2025.
-        public const string GeminiPro = "gemini-pro";
-        public const string Gemini10Pro = "gemini-1.0-pro";
-        public const string Gemini10Pro001 = "gemini-1.0-pro-001";
         public const string Gemini10Pro002 = "gemini-1.0-pro-002";
-        public const string Gemini10ProTuning = Gemini10Pro001;
-        public const string GeminiProLatest = "gemini-1.0-pro-latest";
         public const string GeminiProVision = "gemini-pro-vision";
         public const string Gemini10ProVision = "gemini-1.0-pro-vision";
         public const string Gemini10ProVision001 = "gemini-1.0-pro-vision-001";
@@ -26,6 +21,7 @@ namespace Mscc.GenerativeAI
         public const string GeminiUltra = "gemini-ultra";
         public const string GeminiUltraLatest = "gemini-1.0-ultra-latest";
         // Gemini 1.5
+        public const string GeminiPro = Gemini15Pro;
         public const string Gemini15Pro = "gemini-1.5-pro";
         public const string Gemini15Pro001 = "gemini-1.5-pro-001";
         public const string Gemini15Pro002 = "gemini-1.5-pro-002";
@@ -91,9 +87,9 @@ namespace Mscc.GenerativeAI
         public const string CodeBisonChat32k002 = "codechat-bison-32k-002";
         public const string CodeBisonChat32k = BisonChat32k002;
         public const string CodeGecko001 = "code-gecko-001";
-        public const string CodeGecko002 = "code-gecko-002";
+        public const string CodeGecko002 = "code-gecko-002";    // Vertex: code-gecko@002
         public const string CodeGeckoLatest = "code-gecko@latest";
-        public const string CodeGecko = CodeGeckoLatest;
+        public const string CodeGecko = "code-gecko";
         public const string GeckoEmbedding = "embedding-gecko-001";
         public const string Embedding001 = "embedding-001";
         public const string Embedding = Embedding001;
@@ -116,9 +112,13 @@ namespace Mscc.GenerativeAI
         public const string MultimodalEmbedding = MultimodalEmbedding001;
         
         // Models for Imagen on Vertex AI - image generation and editing
-        public const string Imagen3 = "imagen-3.0-generate-002";
+        public const string Imagen3 = Imagen3Generate002;
+        public const string Imagen3Generate001 = "imagen-3.0-generate-001";
+        public const string Imagen3Generate002 = "imagen-3.0-generate-002";
         public const string Imagen3Experimental = "imagen-3.0-generate-002-exp";
-        public const string Imagen3Fast = "imagen-3.0-fast-generate-001";
+        public const string Imagen3Fast = Imagen3GenerateFast001;
+        public const string Imagen3GenerateFast = Imagen3GenerateFast001;
+        public const string Imagen3GenerateFast001 = "imagen-3.0-fast-generate-001";
         /// <summary>
         /// Imagen 3 Generation is a Pre-GA. Allowlisting required.
         /// </summary>
@@ -139,6 +139,6 @@ namespace Mscc.GenerativeAI
         public const string Imagen = ImageGeneration002;
         public const string ImageGeneration = Imagen2;
         public const string ImageText001 = "imagetext@001";
-        public const string ImageText = ImageText001;
+        public const string ImageText = "imagetext";
     }
 }

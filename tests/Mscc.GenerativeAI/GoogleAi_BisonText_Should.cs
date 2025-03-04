@@ -155,7 +155,6 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.Gemini10Pro001)]
         [InlineData(Model.GeminiProVision)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
@@ -189,7 +188,6 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.Gemini10Pro001)]
         [InlineData(Model.GeminiProVision)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]

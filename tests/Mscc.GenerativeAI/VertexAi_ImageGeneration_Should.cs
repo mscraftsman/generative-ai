@@ -21,7 +21,7 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class VertexAi_ImageGeneration_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+    public class VertexAiImageGenerationShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
         private readonly string _model = Model.Imagen3;
 

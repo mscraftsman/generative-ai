@@ -14,7 +14,7 @@ namespace Mscc.GenerativeAI
     public class ImageGenerationRequest
     {
         /// <summary>
-        /// 
+        /// An array that contains the object with image details to get information about.
         /// </summary>
         public IEnumerable<Instance> Instances { get; set; }
 
