@@ -67,7 +67,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashThinkingExperimentalNoThoughts = "gemini-2.0-flash-thinking-exp-no-thoughts";
         public const string Gemini20FlashThinkingExperimental1219 = Gemini20FlashThinkingExperimental0121;
         public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
-
+        
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
         public const string BisonText002 = "text-bison-002";
@@ -140,5 +140,11 @@ namespace Mscc.GenerativeAI
         public const string ImageGeneration = Imagen2;
         public const string ImageText001 = "imagetext@001";
         public const string ImageText = "imagetext";
+        
+        // Veo
+        public const string Veo = Veo2Generate001;
+        public const string Veo2 = Veo2Generate001;
+        public const string Veo2Generate = Veo2Generate001;
+        public const string Veo2Generate001 = "veo-2.0-generate-001";
     }
 }
