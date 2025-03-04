@@ -1379,6 +1379,36 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
         
+        [Theory]
+        [InlineData("Capital of the UK")]
+        public async Task Function_Calling_Forced(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var model = googleAi.GenerativeModel(model: _model);
+            var tools = new Tools([ToggleDarkMode,GetCurrentWeather,SendEmailAsync]);
+            
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: new () {Temperature = 0f},
+                tools: tools,
+                toolConfig: new ToolConfig()
+                {
+                    FunctionCallingConfig = new FunctionCallingConfig()
+                    {
+                        Mode = FunctionCallingMode.Any,
+                        AllowedFunctionNames = [nameof(GetCurrentWeather)]
+                    }
+                });
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
         public void TestFormat(int num, string text, bool flag, List<string> names, string[] codes, FinishReason myEnum,
             List<Instance> myClasses, Uri myUri, double? numberNullable, DateTimeOffset myDateTimeOffset,
             DateTime myDateTime
