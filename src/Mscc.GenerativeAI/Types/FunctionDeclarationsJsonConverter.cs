@@ -116,7 +116,8 @@ namespace Mscc.GenerativeAI
                 parametersObject.Add("required", requiredArray);
             }
 
-            var functionObject = new JsonObject { { "name", function.Name.ToSnakeCase() } };
+            // var functionObject = new JsonObject { { "name", function.Name.ToSnakeCase() } };
+            var functionObject = new JsonObject { { "name", function.Name } };
 
             var description = function.Description;
             if (string.IsNullOrWhiteSpace(description) && function.Callback is not null)
