@@ -51,12 +51,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Raw media bytes sent directly in the request. 
         /// </summary>
-        // [JsonPropertyName("inline_data")]
         public InlineData InlineData { get; set; }
         /// <summary>
         /// URI based data.
         /// </summary>
-        // [JsonPropertyName("file_data")]
         public FileData FileData { get; set; }
         /// <summary>
         /// The result output of a FunctionCall that contains a string representing the FunctionDeclaration.name and a structured JSON object containing any output from the function is used as context to the model.

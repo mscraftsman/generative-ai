@@ -7,8 +7,11 @@ using System.Diagnostics;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Response from `ListCorpora` containing a paginated list of `Corpora`. The results are sorted by ascending `corpus.create_time`.
+    /// Response from `ListCorpora` containing a paginated list of `Corpora`.
     /// </summary>
+    /// <remarks>
+    /// The results are sorted by ascending `corpus.create_time`.
+    /// </remarks>
     internal class ListCorporaResponse
     {
         /// <summary>
