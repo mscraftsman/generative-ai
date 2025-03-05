@@ -102,9 +102,9 @@ namespace Test.Mscc.GenerativeAI.Google
         }
 
         [Theory]
-        [InlineData(Model.Gemini10Pro)]
         [InlineData(Model.Gemini10ProVision)]
         [InlineData(Model.Gemini15Pro)]
+        [InlineData(Model.Gemini20Pro)]
         public void Initiate_Model(string expected)
         {
             // Arrange
