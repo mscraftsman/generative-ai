@@ -74,13 +74,14 @@ Content-Type: application/json
 
 ###
 
-POST https://generativelanguage.googleapis.com/v1beta/openai/images
+POST https://generativelanguage.googleapis.com/v1beta/openai/images/generations
 Authorization: Bearer {{apiKey}}
 Content-Type: application/json
 
 {
   "prompt": "High-resolution image of Andromeda galaxy, 8k",
   "model": "imagen-3.0-generate-002",
+  "response_format": "b64_json",
   "n": 1,
   "quality": "hd"
 }
