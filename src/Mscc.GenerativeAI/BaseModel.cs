@@ -178,12 +178,17 @@ namespace Mscc.GenerativeAI
                 "x-goog-api-client", 
                 _defaultUserAgent.ToString());
             _options = DefaultJsonSerializerOptions();
+
             GenerativeAIExtensions.ReadDotEnv();
-            ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+            ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
+                     Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
                     GenerativeAI.Model.Gemini15Pro;
-            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
+            _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
+                      Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION") ?? _region;
         }
 
         /// <summary>
@@ -205,7 +210,6 @@ namespace Mscc.GenerativeAI
             AccessToken = _accessToken ?? 
                           GetAccessTokenFromAdc();
             ProjectId = projectId ??
-                        Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
                         credentials?.ProjectId ?? 
                         _projectId;
             _region = region ?? _region;

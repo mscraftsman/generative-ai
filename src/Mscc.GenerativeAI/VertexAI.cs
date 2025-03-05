@@ -18,14 +18,11 @@ namespace Mscc.GenerativeAI
     {
         private readonly string? _projectId;
         private readonly string _region = "us-central1";
+        private readonly string _version;
         private readonly string? _apiKey;
         private readonly bool _isExpressMode = false;
 
         private string _endpointId;
-        private GenerativeModel? _generativeModel;
-        private ImageGenerationModel? _imageGenerationModel;
-        private ImageTextModel? _imageTextModel;
-        private SupervisedTuningJobModel? _tuningJobModel;
 
         public string EndpointId
         {
@@ -49,21 +46,31 @@ namespace Mscc.GenerativeAI
         private VertexAI(ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
-            _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
-            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ?? _region;
+            _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+            _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
+                      Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION") ?? _region;
+            _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
+                      Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+            _version = ApiVersion.V1;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="endpointId">Optional. Endpoint ID of the deployed model to use.</param>
+        /// <param name="apiVersion">Version of the API.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
-        public VertexAI(string? projectId, string? region = null, ILogger? logger = null) : this(logger)
+        public VertexAI(string? projectId, string? region = null, string? endpointId = null,
+            string? apiVersion = null, ILogger? logger = null) : this(logger)
         {
-            _projectId ??= projectId ?? throw new ArgumentNullException(nameof(projectId));
+            _projectId = projectId ?? _projectId ?? throw new ArgumentNullException(nameof(projectId));
             _region = region ?? _region;
+            _endpointId = endpointId?.SanitizeEndpointName() ?? _endpointId;
+            _version = apiVersion ?? _version;
         }
 
         /// <summary>
@@ -71,10 +78,13 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">API key for Vertex AI in express mode.</param>
         /// <param name="logger">Optional. Logger instance used for logging.</param>
+        /// <param name="apiVersion">Version of the API.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="apiKey"/> is <see langword="null"/>.</exception>
-        public VertexAI(string? apiKey, ILogger? logger = null) : this(logger)
+        public VertexAI(string? apiKey, 
+            string? apiVersion = null, ILogger? logger = null) : this(logger)
         {
-            _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
+            _apiKey = apiKey ?? _apiKey ?? throw new ArgumentNullException(nameof(apiKey));
+            _version = apiVersion ?? _version;
             _isExpressMode = true;
         }
 
@@ -94,23 +104,20 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null,
             Content? systemInstruction = null)
         {
+            Guard();
+
             if (_isExpressMode)
             {
-                if (_apiKey is null) throw new ArgumentNullException(message: "API key has not been set", null);
-                _generativeModel = new GenerativeModel(_apiKey,
+                return new GenerativeModel(_apiKey,
                     model,
                     generationConfig,
                     safetySettings,
                     tools,
                     systemInstruction,
                     vertexAi: true);
-                return _generativeModel;
             }
-            
-            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
-            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
 
-            _generativeModel = new GenerativeModel(_projectId,
+            return new GenerativeModel(_projectId,
                 _region,
                 model,
                 _endpointId,
@@ -118,7 +125,6 @@ namespace Mscc.GenerativeAI
                 safetySettings,
                 tools,
                 systemInstruction);
-            return _generativeModel;
         }
 
         /// <summary>
@@ -135,17 +141,15 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null)
         {
             if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
-            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
-            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+            Guard();
 
-            _generativeModel = new GenerativeModel(cachedContent,
+            return new GenerativeModel(cachedContent,
                 generationConfig,
                 safetySettings)
             {
                 ProjectId = _projectId,
                 Region = _region,
             };
-            return _generativeModel;
         }
 
         /// <summary>
@@ -162,17 +166,15 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null)
         {
             if (tuningJob == null) throw new ArgumentNullException(nameof(tuningJob));
-            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
-            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+            Guard();
 
-            _generativeModel = new GenerativeModel(tuningJob,
+            return new GenerativeModel(tuningJob,
                 generationConfig,
                 safetySettings)
             {
                 ProjectId = _projectId, 
                 Region = _region,
             };
-            return _generativeModel;
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
@@ -189,11 +191,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.Gemini15Pro002)
         {
-            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
-            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+            Guard();
 
-            _tuningJobModel = new SupervisedTuningJobModel(_projectId, _region, model);
-            return _tuningJobModel;
+            return new SupervisedTuningJobModel(_projectId, _region, model);
         }
 
         /// <summary>
@@ -204,11 +204,9 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public ImageGenerationModel ImageGenerationModel(string model = Model.ImageGeneration)
         {
-            if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
-            if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
+            Guard();
 
-            _imageGenerationModel = new ImageGenerationModel(_projectId, _region, model);
-            return _imageGenerationModel;
+            return new ImageGenerationModel(_projectId, _region, model);
         }
 
         /// <summary>
@@ -219,11 +217,40 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public ImageTextModel ImageTextModel(string model = Model.ImageText)
         {
+            Guard();
+
+            return new ImageTextModel(_projectId, _region, model);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
+        public RagEngineModel RagEngineModel()
+        {
+            Guard();
+
+            return new RagEngineModel(_projectId, _region)
+            {
+                Version = _version
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when "apiKey" is <see langword="null"/></exception>
+        /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
+        private void Guard()
+        {
+            if (_isExpressMode)
+            {
+                if (_apiKey is null) throw new ArgumentNullException(message: "API key has not been set", null);
+            }
+
             if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
             if (_region is null) throw new ArgumentNullException(message: "Region has not been set", null);
-
-            _imageTextModel = new ImageTextModel(_projectId, _region, model);
-            return _imageTextModel;
         }
     }
 }
