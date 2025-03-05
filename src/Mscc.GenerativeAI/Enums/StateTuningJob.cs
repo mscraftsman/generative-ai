@@ -29,6 +29,13 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The tuning job has been cancelled.
         /// </summary>
-        JobStateCancelled
+        JobStateCancelled,
+        JobStateCancelling,
+        JobStateExpired,
+        JobStatePartiallySucceeded,
+        JobStatePaused,
+        JobStateQueued,
+        JobStateSucceeded,
+        JobStateUpdating
     }
 }

@@ -29,6 +29,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Adapter size 16.
         /// </summary>
-        AdapterSizeSixteen
+        AdapterSizeSixteen,
+        /// <summary>
+        /// Adapter size 32.
+        /// </summary>
+        AdapterSizeThirtyTwo
     }
 }

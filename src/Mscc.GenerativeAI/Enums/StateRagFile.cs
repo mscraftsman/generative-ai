@@ -5,27 +5,22 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The state of the tuned model.
+    /// The state of a RAG file.
     /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<State>))]
-    public enum State
+    [JsonConverter(typeof(JsonStringEnumConverter<StateRagFile>))]
+    public enum StateRagFile
     {
         /// <summary>
         /// The default value. This value is unused.
         /// </summary>
         StateUnspecified = 0, 
         /// <summary>
-        /// The model is being created.
-        /// </summary>
-        Creating = 1,
-        /// <summary>
         /// The model is ready to be used.
         /// </summary>
-        Active = 2,
+        Active,
         /// <summary>
-        /// The model failed to be created.
+        /// 
         /// </summary>
-        Failed = 3,
         Error
     }
 }

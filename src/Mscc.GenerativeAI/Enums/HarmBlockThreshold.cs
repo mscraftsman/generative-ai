@@ -34,6 +34,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Turn off the safety filter.
         /// </summary>
-        None
+        None,
+        Off
     }
 }
