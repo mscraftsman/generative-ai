@@ -16,7 +16,7 @@ client = OpenAI(
 response = client.images.generate(
     model="imagen-3.0-generate-002",
     prompt="a portrait of a sheepadoodle wearing a cape",
-    response_format='b64_json',
+    response_format='b64_json', # or "url"
     n=1,
 )
 
