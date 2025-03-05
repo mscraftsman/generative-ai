@@ -12,7 +12,7 @@ namespace Mscc.GenerativeAI
     /// You can specify at most 1 image with inlineData. To specify up to 16 images, use fileData.
     /// </remarks>
     [DebuggerDisplay("{MimeType}")]
-    public class InlineData : IPart
+    public class InlineData : IPart     // Blob
     {
         /// <summary>
         /// The base64 encoding of the image, PDF, or video to include inline in the prompt.
@@ -40,7 +40,6 @@ namespace Mscc.GenerativeAI
         /// video/flv
         /// Maximum video length: 2 minutes. No limit on image resolution. 
         ///</remarks>
-        // [JsonPropertyName("mime_type")]
         public string MimeType { get; set; } = "";
     }
 }
