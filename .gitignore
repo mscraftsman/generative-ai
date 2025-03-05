@@ -398,3 +398,4 @@ FodyWeavers.xsd
 **/client_secret*.json
 *.p12
 *.DotSettings
+**/.venv/
