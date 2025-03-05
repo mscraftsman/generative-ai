@@ -91,7 +91,7 @@ namespace Test.Mscc.GenerativeAI
                 prompt: "Fuzzy bunnies in my kitchen",
                 numberOfImages: 4,
                 safetyFilterLevel: "block_only_high",
-                personGeneration: "allow_adult",
+                personGeneration: PersonGeneration.AllowAdult,
                 aspectRatio: "3:4"
 //                negativePrompt: "Outside"
             );
