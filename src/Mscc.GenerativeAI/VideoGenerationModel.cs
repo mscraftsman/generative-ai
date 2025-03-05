@@ -1,6 +1,5 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,17 +10,12 @@ using System.Text;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Name of the model that supports image generation.
-    /// The <see cref="ImageGenerationModel"/> can create high quality visual assets in seconds and brings Google's state-of-the-art vision and multimodal generative AI capabilities to application developers.
+    /// Generates a video from the model given an input.
     /// </summary>
-    public sealed class ImageGenerationModel : BaseModel
+    public sealed class VideoGenerationModel : BaseModel
     {
         private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
         private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/{model}:{method}";
-
-        private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
-        private static readonly string[] SafetyFilterLevel =
-            ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
 
         private readonly bool _useVertexAi;
 
@@ -34,24 +28,23 @@ namespace Mscc.GenerativeAI
         internal bool IsVertexAI => _useVertexAi;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
+        /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class.
         /// </summary>
-        public ImageGenerationModel() : this(logger: null) { }
+        public VideoGenerationModel() : this(logger: null) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
-        /// The default constructor attempts to read <c>.env</c> file and environment variables.
-        /// Sets default values, if available.
+        /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class.
         /// </summary>
-        public ImageGenerationModel(ILogger? logger = null) : base(logger) { }
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        public VideoGenerationModel(ILogger? logger) : base(logger) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Google AI Gemini API.
+        /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class with access to Google AI Gemini API.
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
         /// <param name="model">Model to use</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        internal ImageGenerationModel(string? apiKey = null,
+        internal VideoGenerationModel(string? apiKey = null,
             string? model = null, 
             ILogger? logger = null) : this(logger)
         {
@@ -60,26 +53,26 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Vertex AI Gemini API.
+        /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public ImageGenerationModel(string? projectId = null, string? region = null,
+        public VideoGenerationModel(string? projectId = null, string? region = null,
             string? model = null, ILogger? logger = null) : base(projectId, region, model, logger)
         {
             _useVertexAi = true;
         }
 
         /// <summary>
-        /// Generates images from the specified <see cref="ImageGenerationRequest"/>.
+        /// Generates videos from the specified <see cref="VideoGenerationRequest"/>.
         /// </summary>
-        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="request"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Response from the model for generated images.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<ImageGenerationResponse> GenerateImages(ImageGenerationRequest request,
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<GenerateVideosResponse> GenerateVideos(GenerateVideosRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -90,61 +83,53 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            return await Deserialize<ImageGenerationResponse>(response);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<GenerateVideosResponse>(response);
         }
 
         /// <summary>
         /// Generates images from text prompt.
         /// </summary>
         /// <param name="prompt">Required. String to process.</param>
-        /// <param name="numberOfImages">Number of images to generate. Range: 1..8.</param>
+        /// <param name="numberOfVideos">Number of images to generate. Range: 1..8.</param>
         /// <param name="negativePrompt">A description of what you want to omit in the generated images.</param>
         /// <param name="aspectRatio">Aspect ratio for the image.</param>
-        /// <param name="guidanceScale">Controls the strength of the prompt. Suggested values are - * 0-9 (low strength) * 10-20 (medium strength) * 21+ (high strength)</param>
-        /// <param name="language">Language of the text prompt for the image.</param>
         /// <param name="safetyFilterLevel">Adds a filter level to Safety filtering.</param>
         /// <param name="personGeneration">Allow generation of people by the model.</param>
         /// <param name="enhancePrompt">Option to enhance your provided prompt.</param>
-        /// <param name="addWatermark">Explicitly set the watermark</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageGenerationResponse> GenerateImages(string prompt,
-            int numberOfImages = 1, string? negativePrompt = null, 
-            string? aspectRatio = null, int? guidanceScale = null,
-            string? language = null, string? safetyFilterLevel = null,
+        public async Task<GenerateVideosResponse> GenerateVideos(string prompt,
+            int numberOfVideos = 1, string? negativePrompt = null, 
+            string? aspectRatio = null, string? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
-            bool? addWatermark = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new ImageGenerationRequest(prompt, numberOfImages);
+            var request = new GenerateVideosRequest(prompt, numberOfVideos);
             if (!string.IsNullOrEmpty(aspectRatio))
             {
-                if (!AspectRatio.Contains(aspectRatio)) 
-                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
-                request.Parameters.AspectRatio = aspectRatio;
+//                if (!AspectRatio.Contains(aspectRatio)) 
+//                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
+//                request.Parameters.AspectRatio = aspectRatio;
             }
             request.Parameters.NegativePrompt ??= negativePrompt;
-            request.Parameters.GuidanceScale ??= guidanceScale;
-            request.Parameters.Language ??= language;
             if (!string.IsNullOrEmpty(safetyFilterLevel))
-            {
-                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
-                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
-                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
+            { 
+//              if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
+//                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
+//                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
             }
             if (personGeneration is not null)
             {
                 request.Parameters.PersonGeneration = personGeneration;
             }
             request.Parameters.EnhancePrompt = enhancePrompt;
-            request.Parameters.AddWatermark = addWatermark;
             
-            return await GenerateImages(request, cancellationToken);
+            return await GenerateVideos(request, cancellationToken);
         }
 
         /// <summary>
@@ -155,10 +140,10 @@ namespace Mscc.GenerativeAI
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ImageGenerationResponse> GenerateContent(string prompt,
+        public async Task<GenerateVideosResponse> GenerateContent(string prompt,
             CancellationToken cancellationToken = default)
         {
-            return await GenerateImages(prompt, cancellationToken: cancellationToken);
+            return await GenerateVideos(prompt, cancellationToken: cancellationToken);
         }
     }
 }

@@ -6,6 +6,11 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
+    /// The config for generating an images.
+    /// </summary>
+    public class GenerateImagesConfig : ImageGenerationParameters;
+
+    /// <summary>
     /// 
     /// </summary>
     public class ImageGenerationParameters
@@ -108,8 +113,8 @@ namespace Mscc.GenerativeAI
         /// allow_adult (default): Allow generation of adults only.
         /// dont_allow: Disables the inclusion of people or faces in images.
         /// </remarks>
-        //public PersonGeneration? PersonGeneration { get; set; }
-        public string? PersonGeneration { get; set; }
+        public PersonGeneration? PersonGeneration { get; set; }
+        //public string? PersonGeneration { get; set; }
 
         /// <summary>
         /// Optional. The safety setting that controls safety filter thresholds.
@@ -147,7 +152,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public bool? EnhancePrompt { get; set; }
 
-        // public HttpOptions HttpOptions {get;set;}
+        /// <summary>
+        /// Used to override HTTP request options.
+        /// </summary>
+        public HttpOptions HttpOptions {get;set;}
         /// <summary>
         /// Cloud Storage URI used to store the generated images.
         /// </summary>
@@ -163,6 +171,4 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public int? OutputCompressionQuality { get; set; }
     }
-
-    public class GenerateImagesConfig : ImageGenerationParameters;
 }

@@ -30,7 +30,6 @@ namespace Mscc.GenerativeAI
         private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
         private static readonly string[] SafetyFilterLevel =
             ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
-        private static readonly string[] PersonGeneration = ["DONT_ALLOW", "ALLOW_ADULT", "ALLOW_ALL"];
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
@@ -103,6 +102,8 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Method.Predict;
                     case GenerativeAI.Model.Imagen3Fast:
                         return GenerativeAI.Method.Predict;
+                    case GenerativeAI.Model.Veo2:
+                        return GenerativeAI.Method.Predict;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
                     case GenerativeAI.Model.Gemini20Flash:
@@ -129,8 +130,9 @@ namespace Mscc.GenerativeAI
                     GenerativeAI.Model.GeckoEmbedding => GenerativeAI.Method.EmbedText,
                     GenerativeAI.Model.Embedding => GenerativeAI.Method.EmbedContent,
                     GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
-                    GenerativeAI.Model.Imagen3  => GenerativeAI.Method.Predict,
+                    GenerativeAI.Model.Imagen3 => GenerativeAI.Method.Predict,
                     GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Predict,
+                    GenerativeAI.Model.Veo2 => GenerativeAI.Method.Predict,
                     GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
                     GenerativeAI.Model.Gemini20Flash => UseRealtime
                         ? GenerativeAI.Method.BidirectionalGenerateContent
@@ -1322,7 +1324,7 @@ namespace Mscc.GenerativeAI
             int numberOfImages = 1, string? negativePrompt = null, 
             string? aspectRatio = null, int? guidanceScale = null,
             string? language = null, string? safetyFilterLevel = null,
-            string? personGeneration = null, bool? enhancePrompt = null,
+            PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
             CancellationToken cancellationToken = default)
         {
@@ -1344,16 +1346,117 @@ namespace Mscc.GenerativeAI
                     throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
                 request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
             }
-            if (!string.IsNullOrEmpty(personGeneration))
+            if (personGeneration is not null)
             {
-                if (!PersonGeneration.Contains(personGeneration.ToUpperInvariant()))
-                    throw new ArgumentException("Not a valid safety filter level", nameof(personGeneration));
-                request.Parameters.PersonGeneration = personGeneration.ToUpperInvariant();
+                request.Parameters.PersonGeneration = personGeneration;
             }
             request.Parameters.EnhancePrompt = enhancePrompt;
             request.Parameters.AddWatermark = addWatermark;
             
             return await GenerateImages(request, cancellationToken);
+        }
+
+        // ToDo: https://googleapis.github.io/python-genai/genai.html#genai.models.AsyncModels.edit_image
+        //public async Task<GenerateImagesResponse> EditImage() { }
+
+        // ToDo: https://googleapis.github.io/python-genai/genai.html#genai.models.AsyncModels.upscale_image
+        //public async Task<GenerateImagesResponse> UpscaleImage() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<GenerateVideosResponse> GenerateVideos(GenerateVideosRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var url = ParseUrl(Url, Method);
+            var json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<GenerateVideosResponse>(response);
+            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="prompt"></param>
+        /// <param name="config"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public async Task<GenerateVideosResponse> GenerateVideos(string model,
+            string prompt, GenerateVideosConfig? config = null,
+            CancellationToken cancellationToken = default)
+        {
+            Model = model ?? throw new ArgumentNullException(nameof(model));
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new GenerateVideosRequest(prompt);
+            request.Parameters = config ?? request.Parameters;
+            
+            return await GenerateVideos(request, cancellationToken);
+        }
+        
+        /// <summary>
+        /// Generates images from text prompt.
+        /// </summary>
+        /// <param name="prompt">Required. String to process.</param>
+        /// <param name="numberOfImages">Number of images to generate. Range: 1..8.</param>
+        /// <param name="negativePrompt">A description of what you want to omit in the generated images.</param>
+        /// <param name="aspectRatio">Aspect ratio for the image.</param>
+        /// <param name="guidanceScale">Controls the strength of the prompt. Suggested values are - * 0-9 (low strength) * 10-20 (medium strength) * 21+ (high strength)</param>
+        /// <param name="language">Language of the text prompt for the image.</param>
+        /// <param name="safetyFilterLevel">Adds a filter level to Safety filtering.</param>
+        /// <param name="personGeneration">Allow generation of people by the model.</param>
+        /// <param name="enhancePrompt">Option to enhance your provided prompt.</param>
+        /// <param name="addWatermark">Explicitly set the watermark</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GenerateVideosResponse> GenerateVideos(string prompt,
+            int numberOfImages = 1, string? negativePrompt = null, 
+            string? aspectRatio = null, int? guidanceScale = null,
+            string? language = null, string? safetyFilterLevel = null,
+            PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
+            bool? addWatermark = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new GenerateVideosRequest(prompt, numberOfImages);
+            if (!string.IsNullOrEmpty(aspectRatio))
+            {
+                if (!AspectRatio.Contains(aspectRatio)) 
+                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
+//                request.Parameters.AspectRatio = aspectRatio;
+            }
+//            request.Parameters.NegativePrompt ??= negativePrompt;
+//            request.Parameters.GuidanceScale ??= guidanceScale;
+//            request.Parameters.Language ??= language;
+            if (!string.IsNullOrEmpty(safetyFilterLevel))
+            {
+                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
+                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
+//                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
+            }
+            if (personGeneration is not null)
+            {
+                request.Parameters.PersonGeneration = personGeneration;
+            }
+            request.Parameters.EnhancePrompt = enhancePrompt;
+//            request.Parameters.AddWatermark = addWatermark;
+            
+            return await GenerateVideos(request, cancellationToken);
         }
         
         //ToDo: Implement new endpoint method createCachedContent 
