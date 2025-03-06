@@ -8,9 +8,9 @@ GET https://generativelanguage.googleapis.com/v1beta/listModels
 Authorization: Bearer {{apiKey}}
 
 ###
-#GET https://generativelanguage.googleapis.com/v1beta/openai/models?model=gemini-1.5-flash
+#GET https://generativelanguage.googleapis.com/v1beta/openai/models?model=gemini-2.0-flash
 
-GET https://generativelanguage.googleapis.com/v1beta/openai/models/gemini-1.5-flash
+GET https://generativelanguage.googleapis.com/v1beta/openai/models/gemini-2.0-flash
 Authorization: Bearer {{apiKey}}
 
 ###
@@ -33,7 +33,7 @@ Content-Type: application/json
 #-H "Content-Type: application/json" 
 #-H "Authorization: Bearer GEMINI_API_KEY" 
 #-d '{
-#    "model": "gemini-1.5-flash",
+#    "model": "gemini-2.0-flash",
 #    "messages": [
 #        {"role": "user", "content": "Explain to me how AI works"}
 #    ],
@@ -44,7 +44,7 @@ Authorization: Bearer {{apiKey}}
 Content-Type: application/json
 
 {
-  "model": "gemini-1.5-flash",
+  "model": "gemini-2.0-flash",
   "messages": [
     {
       "role": "user",
@@ -92,7 +92,7 @@ Authorization: Bearer {{apiKey}}
 Content-Type: application/json
 
 {
-  "model": "gemini-1.5-flash",
+  "model": "gemini-2.0-flash",
   "messages": [
     {
       "role": "user",
@@ -133,7 +133,7 @@ base64_image=$(base64 -i "Path/to/agi/image.jpeg");
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer GEMINI_API_KEY" \
     -d "{
-\"model\": \"gemini-1.5-flash\",
+\"model\": \"gemini-2.0-flash\",
 \"messages\": [
 {
 \"role\": \"user\",
