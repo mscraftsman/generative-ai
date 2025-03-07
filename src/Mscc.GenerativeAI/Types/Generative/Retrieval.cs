@@ -1,3 +1,5 @@
+using System;
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -14,6 +16,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Set to use data source powered by Vertex AI Search.
         /// </summary>
-        public VertexAISearch VertexAiSearch { get; set; }
+        public VertexAISearch? VertexAiSearch { get; set; }
+        /// <summary>
+        /// Optional. Set to use a data source powered by Vertex AI RAG store.
+        /// </summary>
+        public VertexRagStore? VertexRagStore { get; set; }
     }
 }
