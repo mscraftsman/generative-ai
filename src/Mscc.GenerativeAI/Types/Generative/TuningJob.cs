@@ -36,7 +36,7 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         public string BaseModel { get; set; } = string.Empty;
         /// <summary>
-        /// 
+        /// Output only. Time when the Job was created.
         /// </summary>
         public DateTime? CreateTime { get; set; }
         /// <summary>
@@ -72,7 +72,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public SupervisedTuningSpec? SupervisedTuningSpec { get; set; }
         /// <summary>
-        /// 
+        /// Output only. Only populated when the job’s state is JOB_STATE_FAILED or JOB_STATE_CANCELLED.
         /// </summary>
         public Status? Error { get; set; }
 
