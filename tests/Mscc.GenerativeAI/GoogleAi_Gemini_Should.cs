@@ -18,6 +18,8 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
+using System.Collections;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Runtime.Serialization;
 using Xunit;
@@ -38,7 +40,7 @@ namespace Test.Mscc.GenerativeAI
         {
             _output = output;
             _fixture = fixture;
-            _googleAi = new(apiKey: fixture.ApiKey, logger: Logger);
+            _googleAi = new(apiKey: _fixture.ApiKey, logger: Logger);
         }
 
         [Fact]
@@ -542,9 +544,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -573,9 +575,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -683,7 +685,7 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(prompt);
             _output.WriteLine(response?.Text);
-            //output.WriteLine(response?.PromptFeedback);
+            //_output.WriteLine(response?.PromptFeedback);
         }
 
         [Fact]
@@ -851,9 +853,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
 
             chat.History.Count.Should().Be(2);
@@ -1251,6 +1253,224 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
+        [Description("Toggles the current between dark and light.")]
+        string ToggleDarkMode([Description("Flag indicating whether dark mode is on or not.")]bool isOn)
+        {
+            return $"Dark mode is set to: {isOn}";
+        }
+        string GetCurrentWeather(string location)
+        {
+            return $"The weather in {location} is 72 degrees and sunny.";
+        }
+        async Task<object> SendEmailAsync(string recipient, string subject, string body)
+        {
+            await Task.Delay(3000);
+            return new { Success = true, Property1 = "ABC", Property2 = 123 };
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Constructor_TopLevel_Method(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var tools = new Tools([ToggleDarkMode,GetCurrentWeather,SendEmailAsync]);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+        
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_TopLevel_Method(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            tools.AddFunction(ToggleDarkMode);
+            tools.AddFunction(GetCurrentWeather);
+            tools.AddFunction(SendEmailAsync);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Lambda_Expression(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            tools.AddFunction((bool isOn) => $"Dark mode is set to: {isOn}");
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+            // foreach (var item in response.FunctionCalls)
+            // {
+            //     tools.ForEach(action: tool =>
+            //     {
+            //         var function = tool.FunctionDeclarations.FirstOrDefault(declaration =>
+            //             declaration.Name.ToSnakeCase() == item.Name);
+            //         if (function is not null)
+            //         {
+            //             if (function.Callback is not null)
+            //             {
+            //                 var functionValue = function.Callback.DynamicInvoke(item.Args);
+            //             }
+            //             else
+            //             {
+            //                 var functionValue = tools.DefaultFunctionCallback(item.Name, item.Args.ToString(), CancellationToken.None);
+            //             }
+            //         }
+            //     });
+            // }
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Lambda_Statement(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            tools.AddFunction(async (string recipient, string subject, string body) =>
+            {
+                await Task.Delay(3000);
+                return new { Success = true, Property1 = "ABC", Property2 = 123 };
+            });
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        [Theory]
+        [ClassData(typeof(FunctionCallPrompts))]
+        public async Task Function_Calling_Lambda_Statement_ActionFunc(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var tools = new Tools();
+            Action<bool> toggleDarkMode = (isOn) => Console.WriteLine($"Dark mode is set to: {isOn}");
+            Func<string, string, string, object> sendEmailAsync = (recipient, subject, body) =>
+            {
+                Task.Delay(3000);
+                return new { Success = true, Property1 = "ABC", Property2 = 123 };
+            };
+            tools.AddFunction(toggleDarkMode);
+            tools.AddFunction(sendEmailAsync);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+        
+        [Theory]
+        [InlineData("Capital of the UK")]
+        public async Task Function_Calling_Forced(string prompt)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var tools = new Tools([ToggleDarkMode,GetCurrentWeather,SendEmailAsync]);
+            
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: new () {Temperature = 0f},
+                tools: tools,
+                toolConfig: new ToolConfig()
+                {
+                    FunctionCallingConfig = new FunctionCallingConfig()
+                    {
+                        Mode = FunctionCallingConfigMode.Any,
+                        AllowedFunctionNames = [nameof(GetCurrentWeather)]
+                    }
+                });
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        public void TestFormat(int num, string text, bool flag, List<string> names, string[] codes, FinishReason myEnum,
+            List<Instance> myClasses, Uri myUri, double? numberNullable, DateTimeOffset myDateTimeOffset,
+            DateTime myDateTime
+#if NET8_0_OR_GREATER
+, DateOnly date, TimeOnly time
+#endif
+        )
+        {
+            // Method body
+        }
+
+        [Description("Provide undefined information along with details.")]
+        public void TestNullable(
+            [Description("Expected temperature of the day")] double? numberNullable, 
+            [Description("Mood of the day")] string? stringNullable) { }
+
+        [Fact]
+        public async Task Function_Calling_Constructor_Format()
+        {
+            // Arrange
+            var prompt = "Today's weather forecast hits mild temperatures around 20.5 degrees Celsius. The mood is great.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model,
+                systemInstruction: new Content("We are trying to test undefined information. You can call the declared function to pass parameters."));
+            var tools = new Tools([TestNullable]);
+            
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
         public async Task Function_Calling_MultiTurn()
@@ -1607,7 +1827,7 @@ namespace Test.Mscc.GenerativeAI
             //response1.Should().NotBeNull();
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Text.Should().NotBeEmpty();
-            //output.WriteLine(response?.Text);
+            //_output.WriteLine(response?.Text);
             return Task.FromResult(Task.CompletedTask);
         }
 
@@ -1642,11 +1862,11 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             // response.FirstOrDefault().Should().NotBeNull();
-            // response.ForEach(x => output.WriteLine(x.Text));
+            // response.ForEach(x => _output.WriteLine(x.Text));
             // response.LastOrDefault().UsageMetadata.Should().NotBeNull();
-            // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
-            // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            // _output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
+            // _output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
+            // _output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
             return Task.FromResult(Task.CompletedTask);
         }
 
@@ -1655,7 +1875,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = googleAI.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
             var request = new CreateTunedModelRequest()
             {
@@ -1703,7 +1923,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = googleAI.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
             var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
@@ -1743,7 +1963,7 @@ namespace Test.Mscc.GenerativeAI
             var modelName =
                 "tunedModels/number-generator-model-psx3d3gljyko"; // see List_Tuned_Models for available options.
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = googleAI.GenerativeModel();
+            var model = _googleAi.GenerativeModel();
             model.ProjectId = _fixture.ProjectId;
 
             // Act
@@ -1763,7 +1983,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = googleAI.GenerativeModel(model: "tunedModels/autogenerated-test-model-48gob9c9v54p");
+            var model = _googleAi.GenerativeModel(model: "tunedModels/autogenerated-test-model-48gob9c9v54p");
             model.ProjectId = _fixture.ProjectId;
 
             // Act
@@ -2356,10 +2576,10 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
-//            output.WriteLine($"Retrieved file '{sut.DisplayName}'");
-//            output.WriteLine(
+//            _output.WriteLine($"Retrieved file '{sut.DisplayName}'");
+//            _output.WriteLine(
 //                $"File: {sut.Name} (MimeType: {sut.MimeType}, Size: {sut.SizeBytes} bytes, Created: {sut.CreateTime} UTC, Updated: {sut.UpdateTime} UTC)");
-//            output.WriteLine(($"Uri: {sut.Uri}"));
+//            _output.WriteLine(($"Uri: {sut.Uri}"));
         }
 
         [Fact]
@@ -2604,9 +2824,9 @@ Use speaker A, speaker B, etc. to identify the speakers.
                 // response.Text.Should().NotBeEmpty();
                 _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -2975,6 +3195,18 @@ Answer:";
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
                 .HaveCountGreaterThanOrEqualTo(1);
             _output.WriteLine(response?.Text);
+        }
+
+        public class FunctionCallPrompts : IEnumerable<object[]>
+        {
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new[] { "It is too bright. Change it." };
+                yield return new[] { "The ambient light is too low to see anything. I'd need more brightness." };
+                yield return new[] { "What's the weather in the capital of the UK?" };
+                yield return new[] { "Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling." };
+            }
         }
     }
 }
