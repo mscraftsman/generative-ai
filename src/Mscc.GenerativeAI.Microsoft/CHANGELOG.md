@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.0
+
+### Changed
+
+- update NuGet packages
+- bump version
+
 ## 2.2.11
 
 ### Changed

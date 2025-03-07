@@ -13,6 +13,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.0
+
+### Added
+
+- add model `gemini-embedding-exp-03-07`
+- add new `CodeRetrievalQuery` task type
+- add model `gemini-2.0-flash-lite`
+- add model `gemini-2.0-flash-lite-001`
+- add model `veo-2.0-generate-001`
+- add video generation
+- add `genai` config types
+- add RAG Engine API (Vertex AI only)
+- add new metadata properties
+- add discontinuation dates
+- add more and consistent use of `ILogger` #6
+- add logging when there are multiple candidates
+- add OpenAI compatible enums for image generation
+- add OpenAI properties
+- add extension to (download and) inline remote resources
+- add extension methods to create `Part` types
+- add more environment variables to read
+
+### Changed
+
+- improvements to test cases
+- extend REST playground samples
+- extend Python playground samples (incl. setup env)
+- update NuGet packages
+- remove Gemini 1.0 test case
+- add and update enums
+- rename enum `FunctionCallingMode` to `FunctionCallingConfigMode`
+
+### Fixed
+
+- add workaround for MIME type of Rich Text Format (RTF)
+- add default constructor due to serialization
+- fix OpenAI endpoints for image generation
+
 ## 2.2.11
 
 ### Added
