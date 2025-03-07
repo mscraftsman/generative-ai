@@ -67,8 +67,7 @@ namespace Mscc.GenerativeAI
         /// Optional. A list of Tools the model may use to generate the next response.
         /// A <see cref="Tool"/> is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. The only supported tool is currently Function.
         /// </summary>
-        public List<Tool>? Tools { get; set; }
-
+        public Tools? Tools { get; set; }
         /// <summary>
         /// Optional. The name of the content cached to use as context to serve the prediction.
         /// Format: cachedContents/{cachedContent}
@@ -109,7 +108,7 @@ namespace Mscc.GenerativeAI
         public GenerateContentRequest(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null) : this()
         {
@@ -139,7 +138,7 @@ namespace Mscc.GenerativeAI
         public GenerateContentRequest(List<IPart> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null) : this()
         {
@@ -152,6 +151,7 @@ namespace Mscc.GenerativeAI
             if (systemInstruction != null) SystemInstruction = systemInstruction;
             if (toolConfig != null) ToolConfig = toolConfig;
         }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateContentRequest"/> class.
@@ -166,7 +166,7 @@ namespace Mscc.GenerativeAI
         public GenerateContentRequest(FileResource file,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null) : this()
         {
@@ -200,7 +200,7 @@ namespace Mscc.GenerativeAI
         public GenerateContentRequest(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null) : this()
         {

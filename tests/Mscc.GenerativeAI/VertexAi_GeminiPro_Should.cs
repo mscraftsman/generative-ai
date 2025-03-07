@@ -367,7 +367,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var response = await model.GenerateContent(prompt, 
-                tools: new List<Tool>() { googleSearchRetrievalTool });
+                tools: new Tools() { googleSearchRetrievalTool });
 
             // Assert
             response.Should().NotBeNull();
@@ -412,7 +412,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var response = await model.GenerateContent(prompt, 
-                tools: new List<Tool>() { vertexAiRetrievalTool });
+                tools: new Tools() { vertexAiRetrievalTool });
 
             // Assert
             response.Should().NotBeNull();
@@ -639,7 +639,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
-                Tools = new List<Tool> { }
+                Tools = new Tools { }
             };
             request.Contents.Add(new Content
             {

@@ -365,7 +365,7 @@ Answer:";
             var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = fixture.AccessToken;
-            var chat = model.StartChat(tools: new List<Tool>());
+            var chat = model.StartChat(tools: new Tools());
             var chatInput1 = "What is the weather in Boston?";
 
             // Act
@@ -391,7 +391,7 @@ Answer:";
             var request = new GenerateContentRequest
             {
                 Contents = new List<Content>(),
-                Tools = new List<Tool> { }
+                Tools = new Tools { }
             };
             request.Contents.Add(new Content
             {

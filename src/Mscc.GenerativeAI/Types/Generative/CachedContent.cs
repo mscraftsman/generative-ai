@@ -103,7 +103,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Input only. Immutable. A list of `Tools` the model may use to generate the next response
         /// </summary>
-        public List<Tool>? Tools { get; set; }
+        public Tools? Tools { get; set; }
         /// <summary>
         /// Optional. Input only. Immutable. Tool config. This config is shared for all tools.
         /// </summary>
