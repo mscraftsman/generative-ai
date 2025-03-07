@@ -31,7 +31,7 @@ function activate_venv() {
 function install_dependencies() {
     echo "Installing dependencies..."
     pip install --upgrade pip
-    pip install -e "${PROJECT_DIR}"
+    pip install --upgrade -e "${PROJECT_DIR}"
     if [[ $? -ne 0 ]]; then
         echo "Error: Could not install dependencies."
         exit 1
