@@ -97,15 +97,5 @@ namespace Mscc.GenerativeAI
         public static partial void LogParsedRequestUrl(
             this ILogger logger,
             string url);
-
-        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Request JSON: {json}")]
-        public static partial void LogJsonRequest(
-            this ILogger logger,
-            string json);
-
-        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Response JSON: {json}")]
-        public static partial void LogJsonResponse(
-            this ILogger logger,
-            string json);
     }
 }
