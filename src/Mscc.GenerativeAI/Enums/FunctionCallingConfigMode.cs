@@ -7,8 +7,8 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Mode of function calling to define the execution behavior for function calling.
     /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
-    public enum FunctionCallingMode
+    [JsonConverter(typeof(JsonStringEnumConverter<FunctionCallingConfigMode>))]
+    public enum FunctionCallingConfigMode
     {
         /// <summary>
         /// Unspecified function calling mode. This value should not be used.
