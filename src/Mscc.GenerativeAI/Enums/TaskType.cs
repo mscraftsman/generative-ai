@@ -18,30 +18,34 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Specifies the given text is a query in a search/retrieval setting.
         /// </summary>
-        RetrievalQuery = 1,
+        RetrievalQuery,
         /// <summary>
         /// Specifies the given text is a document from the corpus being searched.
         /// </summary>
-        RetrievalDocument = 2,
+        RetrievalDocument,
         /// <summary>
         /// Specifies the given text will be used for STS.
         /// </summary>
-        SemanticSimilarity = 3,
+        SemanticSimilarity,
         /// <summary>
         /// Specifies that the given text will be classified.
         /// </summary>
-        Classification = 4,
+        Classification,
         /// <summary>
         /// Specifies that the embeddings will be used for clustering.
         /// </summary>
-        Clustering = 5,
+        Clustering,
         /// <summary>
         /// Specifies that the given text will be used for question answering.
         /// </summary>
-        QuestionAnswering = 6,
+        QuestionAnswering,
         /// <summary>
         /// Specifies that the given text will be used for fact verification.
         /// </summary>
-        FactVerification = 7,
+        FactVerification,
+        /// <summary>
+        /// Specifies that the given text will be used for code retrieval.
+        /// </summary>
+        CodeRetrievalQuery,
     }
 }
