@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Response from `QueryCorpus` containing a list of relevant chunks.
     /// </summary>
-    public class QueryCorpusResponse
+    public class CorpusQueryResponse
     {
         /// <summary>
         /// The relevant chunks.

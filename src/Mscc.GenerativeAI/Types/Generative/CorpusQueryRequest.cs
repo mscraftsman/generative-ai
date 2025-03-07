@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Request for querying a `Corpus`.
     /// </summary>
-    public class QueryCorpusRequest
+    public class CorpusQueryRequest
     {
         /// <summary>
         /// Required. Query string to perform semantic search.
