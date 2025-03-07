@@ -19,6 +19,22 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public int TotalTokenCount { get; set; } = default;
         /// <summary>
+        /// Number of text characters.
+        /// </summary>
+        public int TextCount { get; set; } = default;
+        /// <summary>
+        /// Number of images.
+        /// </summary>
+        public int ImageCount { get; set; } = default;
+        /// <summary>
+        /// Duration of video in seconds.
+        /// </summary>
+        public int VideoDurationSeconds { get; set; } = default;
+        /// <summary>
+        /// Duration of audio in seconds.
+        /// </summary>
+        public int AudioDurationSeconds { get; set; } = default;
+        /// <summary>
         /// Number of tokens in the cached content.
         /// </summary>
         public int CachedContentTokenCount { get; set; } = default;
