@@ -14,3 +14,28 @@ Content-Type: application/json
     "googleSearch" : { }
   } ]
 }
+
+###
+
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent
+x-goog-api-key: {{apiKey}}
+User-Agent: Mscc.GenerativeAI/2.2.11.0
+x-goog-api-client: Mscc.GenerativeAI/2.2.11.0
+Content-Type: application/json; charset=utf-8
+
+{
+  "model": "models/gemini-2.0-flash-exp",
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
+        {
+          "text": "List a few popular cookie recipes."
+        }
+      ]
+    }
+  ],
+  "generationConfig": {
+    "responseMimeType": "application/json"
+  }
+}
