@@ -36,12 +36,12 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task<GenerateImagesResponse> Images(GenerateImagesRequest request,
+        public async Task<ImagesGenerationsResponse> Images(ImagesGenerationsRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var url = $"{BaseUrlGoogleAi}/images:generate";
+            var url = $"{BaseUrlGoogleAi}/images/generations";
             url = ParseUrl(url, Method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -49,7 +49,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
-            return await Deserialize<GenerateImagesResponse>(response);
+            return await Deserialize<ImagesGenerationsResponse>(response);
         }
     }
 }
