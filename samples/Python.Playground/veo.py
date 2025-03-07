@@ -1,4 +1,5 @@
 import os
+import time
 from google import genai
 from google.genai import types
 import httpx
@@ -17,9 +18,9 @@ operation = client.models.generate_videos(
     prompt='A neon hologram of a cat driving at top speed',
     config=types.GenerateVideosConfig(
         number_of_videos=1,
-        fps=24,
+        # fps=24,
         duration_seconds=5,
-        enhance_prompt=True,
+        # enhance_prompt=True,
     ),
 )
 
