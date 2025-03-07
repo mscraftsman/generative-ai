@@ -553,6 +553,17 @@
       "version": "004"
     },
     {
+      "description": "Obtain a distributed representation of a text.",
+      "displayName": "Gemini Embedding Experimental 03-07",
+      "inputTokenLimit": 2048,
+      "name": "models/gemini-embedding-exp-03-07",
+      "outputTokenLimit": 1,
+      "supportedGenerationMethods": [
+        "embedContent"
+      ],
+      "version": "exp-03-07"
+    },
+    {
       "description": "Model trained to return answers to questions that are grounded in provided sources, along with estimating answerable probability.",
       "displayName": "Model that performs Attributed Question Answering.",
       "inputTokenLimit": 7168,
