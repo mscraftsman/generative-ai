@@ -128,7 +128,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertexAi.GenerativeModel(model: _model);
-            var image = new Part().FromUri("gs://cloud-samples-data/ai-platform/flowers/daisy/10559679065_50d2b16f6d.jpg", "image/jpeg");
+            var image = Part.FromUri("gs://cloud-samples-data/ai-platform/flowers/daisy/10559679065_50d2b16f6d.jpg", "image/jpeg");
             var parts = new List<IPart>
             {
                 new TextData { Text = "what is this image?" },

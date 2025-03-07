@@ -7,6 +7,7 @@ using System;
 using System.IO;
 #endif
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Text;
 using Xunit;
@@ -23,6 +24,7 @@ namespace Test.Mscc.GenerativeAI
         public string? Region { get; set; }
         public string? AccessToken { get; set; }
         public string? ServiceAccount { get; set; }
+        public ILogger Logger { get; set; }
 
 
         // Todo: Handle envVar GOOGLE_APPLICATION_CREDENTIALS
@@ -70,6 +72,17 @@ namespace Test.Mscc.GenerativeAI
             }
 
             ServiceAccount = Configuration["service_account"];
+            
+            // Create a logger (or use dependency injection)
+            using var loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder
+                    .AddFilter("Microsoft", LogLevel.Warning)
+                    .AddFilter("System", LogLevel.Warning)
+                    .AddFilter("Mscc.GenerativeAI", LogLevel.Debug)
+                    .AddConsole();
+            });
+            ILogger logger = loggerFactory.CreateLogger<ConfigurationFixture>();
         }
 
         private string RunExternalExe(string filename, string arguments)

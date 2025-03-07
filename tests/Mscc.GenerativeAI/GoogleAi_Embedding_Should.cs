@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Threading.Tasks;
 #endif
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Neovolve.Logging.Xunit;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -15,6 +17,7 @@ namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiEmbeddingShould(ITestOutputHelper output, ConfigurationFixture fixture)
+        : LoggingTestsBase(output, LogLevel.Information)
     {
         private readonly string _model = Model.Embedding;
 
