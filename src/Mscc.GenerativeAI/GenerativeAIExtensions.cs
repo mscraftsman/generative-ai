@@ -204,6 +204,70 @@ namespace Mscc.GenerativeAI
 
             return value;
         }
+
+        public static Part FromBytes(this Part part, string value, string mimeType)
+        {
+            if (string.IsNullOrEmpty(value)) return part;
+
+            part.Text = value;
+            return part;
+        }
+
+        public static Part FromCodeExecutionResult(this Part part, string outcome, string output)
+        {
+            if (string.IsNullOrEmpty(outcome)) return part;
+
+            part.Text = outcome;
+            return part;
+        }
+
+        public static Part FromExecutableCode(this Part part, string code, Language language)
+        {
+            if (string.IsNullOrEmpty(code)) return part;
+
+            part.Text = code;
+            return part;
+        }
+
+        public static Part FromFunctionCall(this Part part, string name, string[] args)
+        {
+            if (string.IsNullOrEmpty(name)) return part;
+
+            part.Text = name;
+            return part;
+        }
+
+        public static Part FromFunctionResponse(this Part part, string name, dynamic response)
+        {
+            if (string.IsNullOrEmpty(name)) return part;
+
+            part.Text = name;
+            return part;
+        }
+
+        public static Part FromText(this Part part, string value)
+        {
+            if (string.IsNullOrEmpty(value)) return part;
+
+            part.Text = value;
+            return part;
+        }
+
+        public static Part FromUri(this Part part, string uri, string? mimeType)
+        {
+            if (string.IsNullOrEmpty(uri)) return part;
+
+            mimeType ??= GetMimeType(uri);
+            part.FileData = new FileData() { FileUri = uri, MimeType = mimeType };
+            return part;
+        }
+
+        public static Part FromVideoMetadata(this Part part, Duration startOffset, Duration endOffset)
+        {
+            part.VideoMetadata.StartOffset = startOffset;
+            part.VideoMetadata.EndOffset = endOffset;
+            return part;
+        }
         
         public static string GetValue(this JsonElement element, string key)
         {
