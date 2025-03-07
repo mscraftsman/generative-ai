@@ -76,7 +76,8 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            Content? systemInstruction = null)
+            Content? systemInstruction = null,
+            ILogger? logger = null)
         {
             Guard();
             
@@ -85,7 +86,8 @@ namespace Mscc.GenerativeAI
                 generationConfig,
                 safetySettings,
                 tools,
-                systemInstruction)
+                systemInstruction,
+                logger: Logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null, 
                 Version = _version
@@ -103,14 +105,16 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
         public GenerativeModel GenerativeModel(CachedContent cachedContent,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null)
+            List<SafetySetting>? safetySettings = null,
+            ILogger? logger = null)
         {
             if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
             Guard();
 
             _generativeModel = new GenerativeModel(cachedContent,
                 generationConfig,
-                safetySettings)
+                safetySettings,
+                logger: Logger)
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -128,11 +132,12 @@ namespace Mscc.GenerativeAI
         /// Returns an instance of CachedContent to use with a model.
         /// </summary>
         /// <returns>Cached content instance.</returns>
-        public CachedContentModel CachedContent()
+        public CachedContentModel CachedContent(
+        ILogger? logger = null)
         {
             Guard();
 
-            var cachedContent = new CachedContentModel() 
+            var cachedContent = new CachedContentModel(logger: logger) 
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -145,11 +150,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
         /// <returns>Imagen model</returns>
-        public ImageGenerationModel ImageGenerationModel(string model = Model.Imagen3)
+        public ImageGenerationModel ImageGenerationModel(string model = Model.Imagen3,
+            ILogger? logger = null)
         {
             Guard();
 
-            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model)
+            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model, logger: logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null
             };

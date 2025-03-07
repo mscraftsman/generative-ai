@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endif
+using Microsoft.Extensions.Logging;
 
 namespace Mscc.GenerativeAI
 {
@@ -26,7 +27,8 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            Content? systemInstruction = null);
+            Content? systemInstruction = null,
+            ILogger? logger = null);
 
         /// <summary>
         /// Create an instance of a generative model to use.
@@ -37,7 +39,8 @@ namespace Mscc.GenerativeAI
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(CachedContent cachedContent,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null);
+            List<SafetySetting>? safetySettings = null,
+            ILogger? logger = null);
         
         /// <summary>
         /// Gets information about a specific Model.
@@ -52,6 +55,7 @@ namespace Mscc.GenerativeAI
         /// Returns an instance of an image generation model.
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
-        public ImageGenerationModel ImageGenerationModel(string model);
+        public ImageGenerationModel ImageGenerationModel(string model,
+            ILogger? logger = null);
     }
 }

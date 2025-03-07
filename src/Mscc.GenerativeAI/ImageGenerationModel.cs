@@ -114,7 +114,7 @@ namespace Mscc.GenerativeAI
         public async Task<ImageGenerationResponse> GenerateImages(string prompt,
             int numberOfImages = 1, string? negativePrompt = null, 
             string? aspectRatio = null, int? guidanceScale = null,
-            string? language = null, string? safetyFilterLevel = null,
+            ImagePromptLanguage? language = null, string? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
             CancellationToken cancellationToken = default)

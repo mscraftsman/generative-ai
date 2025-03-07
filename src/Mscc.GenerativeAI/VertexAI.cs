@@ -102,7 +102,8 @@ namespace Mscc.GenerativeAI
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
-            Content? systemInstruction = null)
+            Content? systemInstruction = null,
+            ILogger? logger = null)
         {
             Guard();
 
@@ -114,7 +115,8 @@ namespace Mscc.GenerativeAI
                     safetySettings,
                     tools,
                     systemInstruction,
-                    vertexAi: true);
+                    vertexAi: true, 
+                    logger: logger);
             }
 
             return new GenerativeModel(_projectId,
@@ -124,7 +126,8 @@ namespace Mscc.GenerativeAI
                 generationConfig,
                 safetySettings,
                 tools,
-                systemInstruction);
+                systemInstruction,
+                logger: logger);
         }
 
         /// <summary>
@@ -138,14 +141,16 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public GenerativeModel GenerativeModel(CachedContent cachedContent,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null)
+            List<SafetySetting>? safetySettings = null,
+            ILogger? logger = null)
         {
             if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
             Guard();
 
             return new GenerativeModel(cachedContent,
                 generationConfig,
-                safetySettings)
+                safetySettings,
+                logger: logger)
             {
                 ProjectId = _projectId,
                 Region = _region,
@@ -163,14 +168,16 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public GenerativeModel GenerativeModel(TuningJob tuningJob,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null)
+            List<SafetySetting>? safetySettings = null,
+            ILogger? logger = null)
         {
             if (tuningJob == null) throw new ArgumentNullException(nameof(tuningJob));
             Guard();
 
             return new GenerativeModel(tuningJob,
                 generationConfig,
-                safetySettings)
+                safetySettings,
+                logger: logger)
             {
                 ProjectId = _projectId, 
                 Region = _region,
@@ -189,11 +196,12 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.Gemini15Pro002)
+        public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.Gemini15Pro002,
+            ILogger? logger = null)
         {
             Guard();
 
-            return new SupervisedTuningJobModel(_projectId, _region, model);
+            return new SupervisedTuningJobModel(_projectId, _region, model, logger: logger);
         }
 
         /// <summary>
@@ -202,11 +210,12 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "imagegeneration")</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public ImageGenerationModel ImageGenerationModel(string model = Model.ImageGeneration)
+        public ImageGenerationModel ImageGenerationModel(string model = Model.ImageGeneration,
+            ILogger? logger = null)
         {
             Guard();
 
-            return new ImageGenerationModel(_projectId, _region, model);
+            return new ImageGenerationModel(_projectId, _region, model, logger: logger);
         }
 
         /// <summary>
@@ -215,11 +224,12 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use (default: "imagetext")</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public ImageTextModel ImageTextModel(string model = Model.ImageText)
+        public ImageTextModel ImageTextModel(string model = Model.ImageText,
+            ILogger? logger = null)
         {
             Guard();
 
-            return new ImageTextModel(_projectId, _region, model);
+            return new ImageTextModel(_projectId, _region, model, logger: logger);
         }
 
         /// <summary>
@@ -227,11 +237,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public RagEngineModel RagEngineModel()
+        public RagEngineModel RagEngineModel(
+        ILogger? logger = null)
         {
             Guard();
 
-            return new RagEngineModel(_projectId, _region)
+            return new RagEngineModel(_projectId, _region, logger: logger)
             {
                 Version = _version
             };

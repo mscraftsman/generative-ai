@@ -1,5 +1,8 @@
 using Microsoft.Extensions.Logging;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Mscc.GenerativeAI
 {
@@ -16,10 +19,48 @@ namespace Mscc.GenerativeAI
     internal static partial class GenerativeModelLogMessages
     {
         /// <summary>
+        /// Logs <see cref="BaseModel"/> parsing the URL to call.
+        /// </summary>
+        /// <param name="logger">Logger instance used for logging</param>
+        /// <param name="method">HTTP method of the request.</param>
+        /// <param name="uri">Parsed URL.</param>
+        /// <param name="headers"></param>
+        /// <param name="content"></param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Trace, Message = "Request URL: \n{Method} {Uri}\n{Headers}\n{Content}")]
+        public static partial void LogParsedRequest(
+            this ILogger logger,
+            HttpMethod method,
+            Uri? uri,
+            string? headers,
+            string? content);
+        
+        /// <summary>
+        /// Logs <see cref="GenerativeModel"/> invoking an API request.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="methodName">Calling method</param>
+        /// <param name="url">URL of Gemini API endpoint</param>
+        /// <param name="payload">Data sent to the API endpoint</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "[{MethodName}]")]
+        public static partial void LogMethodInvokingRequest(
+            this ILogger logger,
+            string methodName);
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Request JSON: \n{json}")]
+        public static partial void LogJsonRequest(
+            this ILogger logger,
+            string json);
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Response JSON: \n{json}")]
+        public static partial void LogJsonResponse(
+            this ILogger logger,
+            string json);
+
+        /// <summary>
         /// Logs <see cref="GenerativeModel"/>
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Generative model starting")]
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Generative model starting")]
         public static partial void LogGenerativeModelInvoking(
             this ILogger logger);
 
@@ -30,20 +71,12 @@ namespace Mscc.GenerativeAI
         [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Generative model started")]
         public static partial void LogGenerativeModelInvoked(
             this ILogger logger);
-        
-        /// <summary>
-        /// Logs <see cref="GenerativeModel"/> invoking an API request.
-        /// </summary>
-        /// <param name="logger">Optional. Logger instance used for logging</param>
-        /// <param name="methodName">Calling method</param>
-        /// <param name="url">URL of Gemini API endpoint</param>
-        /// <param name="payload">Data sent to the API endpoint</param>
-        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "[{MethodName}] Request: {Url} - {Payload}")]
-        public static partial void LogGenerativeModelInvokingRequest(
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message =
+            "There are {count} Candidates, returning text from the first candidate. Access response.Candidates directly to get text from other candidates.")]
+        public static partial void LogMultipleCandidates(
             this ILogger logger,
-            string methodName,
-            string url,
-            string payload);
+            int count);
 
         /// <summary>
         /// Logs <see cref="BaseModel"/> when exception thrown to run an external application.
@@ -54,31 +87,5 @@ namespace Mscc.GenerativeAI
         public static partial void LogRunExternalExe(
             this ILogger logger,
             string message);
-
-        /// <summary>
-        /// Logs <see cref="BaseModel"/> parsing the URL to call.
-        /// </summary>
-        /// <param name="logger">Optional. Logger instance used for logging</param>
-        /// <param name="url">Parsed URL.</param>
-        [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Request URL: {Url}")]
-        public static partial void LogParsedRequestUrl(
-            this ILogger logger,
-            string url);
-
-        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Request JSON: {json}")]
-        public static partial void LogJsonRequest(
-            this ILogger logger,
-            string json);
-
-        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Response JSON: {json}")]
-        public static partial void LogJsonResponse(
-            this ILogger logger,
-            string json);
-
-        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message =
-            "There are {count} Candidates, returning text from the first candidate. Access response.Candidates directly to get text from other candidates.")]
-        public static partial void LogMultipleCandidates(
-            this ILogger logger,
-            int count);
     }
 }

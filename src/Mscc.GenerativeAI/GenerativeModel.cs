@@ -902,7 +902,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, Method);
             var json = Serialize(request);
             
-            Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContent), url, json);
+            Logger.LogMethodInvokingRequest(nameof(GenerateContent));
             
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
 
@@ -1089,7 +1089,7 @@ namespace Mscc.GenerativeAI
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method);
 
-            if (Logger.IsEnabled(LogLevel.Debug)) Logger.LogGenerativeModelInvokingRequest(nameof(GenerateContentStream), url, Serialize(request));
+            if (Logger.IsEnabled(LogLevel.Debug)) Logger.LogMethodInvokingRequest(nameof(GenerateContentStream));
             
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
@@ -1323,7 +1323,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateImagesResponse> GenerateImages(string prompt,
             int numberOfImages = 1, string? negativePrompt = null, 
             string? aspectRatio = null, int? guidanceScale = null,
-            string? language = null, string? safetyFilterLevel = null,
+            ImagePromptLanguage? language = null, string? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
             CancellationToken cancellationToken = default)

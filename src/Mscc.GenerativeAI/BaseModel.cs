@@ -99,12 +99,12 @@ namespace Mscc.GenerativeAI
                 request.Headers.Add("x-goog-api-key", _apiKey);
             }
         }
-        
+
         /// <summary>
         /// Sets the access token to use for the request.
         /// </summary>
         public string? AccessToken { set => _accessToken = value; }
-        
+
         protected virtual void AddAccessTokenHeader(HttpRequestMessage request)
         {
             if (!string.IsNullOrEmpty(_accessToken))
@@ -116,7 +116,7 @@ namespace Mscc.GenerativeAI
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
             }
         }
-        
+
         /// <summary>
         /// Sets the project ID to use for the request.
         /// </summary>
@@ -124,6 +124,7 @@ namespace Mscc.GenerativeAI
         /// The value can only be set or modified before the first request is made.
         /// </remarks>
         public string? ProjectId { set => _projectId = value; }
+
         protected virtual void AddProjectIdHeader(HttpRequestMessage request)
         {
             if (!string.IsNullOrEmpty(_projectId))
@@ -171,11 +172,11 @@ namespace Mscc.GenerativeAI
         {
             // Initialize the default headers in constructor
             var productHeaderValue = new ProductHeaderValue(
-                name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI", 
+                name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
                 version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
             _defaultUserAgent = new ProductInfoHeaderValue(productHeaderValue);
             _defaultApiClientHeader = new KeyValuePair<string, string>(
-                "x-goog-api-client", 
+                "x-goog-api-client",
                 _defaultUserAgent.ToString());
             _options = DefaultJsonSerializerOptions();
 
@@ -183,7 +184,7 @@ namespace Mscc.GenerativeAI
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                      Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
-            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? 
+            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ??
                     GenerativeAI.Model.Gemini15Pro;
             _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
                          Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
@@ -198,24 +199,24 @@ namespace Mscc.GenerativeAI
         /// <param name="region"></param>
         /// <param name="model"></param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseModel(string? projectId = null, string? region = null, 
+        public BaseModel(string? projectId = null, string? region = null,
             string? model = null, ILogger? logger = null) : this(logger)
         {
-            var credentialsFile = 
-                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ?? 
-                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ?? 
+            var credentialsFile =
+                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ??
+                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ??
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
                     "application_default_credentials.json");
             var credentials = GetCredentialsFromFile(credentialsFile);
-            AccessToken = _accessToken ?? 
+            AccessToken = _accessToken ??
                           GetAccessTokenFromAdc();
             ProjectId = projectId ??
-                        credentials?.ProjectId ?? 
+                        credentials?.ProjectId ??
                         _projectId;
             _region = region ?? _region;
             Model = model ?? _model;
         }
-        
+
         /// <summary>
         /// Parses the URL template and replaces the placeholder with current values.
         /// Given two API endpoints for Google AI Gemini and Vertex AI Gemini this
@@ -235,8 +236,6 @@ namespace Mscc.GenerativeAI
                     match => replacements.TryGetValue(match.Groups["name"].Value, out var value) ? value : "");
             } while (url.Contains("{"));
 
-            Logger.LogParsedRequestUrl(url);
-            
             return url;
 
             Dictionary<string, string> GetReplacements()
@@ -268,7 +267,7 @@ namespace Mscc.GenerativeAI
             var json = JsonSerializer.Serialize(request, _options);
 
             Logger.LogJsonRequest(json);
-            
+
             return json;
         }
 
@@ -337,7 +336,7 @@ namespace Mscc.GenerativeAI
 
             return credentials;
         }
- 
+
         /// <summary>
         /// This method uses the gcloud command-line tool to retrieve an access token from the Application Default Credentials (ADC).
         /// It is specific to Google Cloud Platform and allows easy authentication with the Gemini API on Google Cloud.
@@ -355,7 +354,7 @@ namespace Mscc.GenerativeAI
                 return RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
             }
         }
-        
+
         /// <summary>
         /// Run an external application as process in the underlying operating system, if possible.
         /// </summary>
@@ -393,7 +392,7 @@ namespace Mscc.GenerativeAI
             }
             catch (Exception e)
             {
-                Logger.LogRunExternalExe("OS error while executing " + Format(filename, arguments)+ ": " + e.Message);
+                Logger.LogRunExternalExe("OS error while executing " + Format(filename, arguments) + ": " + e.Message);
                 return string.Empty;
             }
 
@@ -417,7 +416,8 @@ namespace Mscc.GenerativeAI
                     message.AppendLine(stdOutput.ToString());
                 }
 
-                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode + ": " + message);
+                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode +
+                                    ": " + message);
             }
         }
 
@@ -429,9 +429,9 @@ namespace Mscc.GenerativeAI
         /// <returns>Formatted string containing parameter values.</returns>
         private string Format(string filename, string? arguments)
         {
-            return "'" + filename + 
-                ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
-                "'";
+            return "'" + filename +
+                   ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
+                   "'";
         }
 
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
@@ -446,6 +446,13 @@ namespace Mscc.GenerativeAI
             // Add instance default headers
             request.Headers.UserAgent.Add(_defaultUserAgent);
             request.Headers.Add(_defaultApiClientHeader.Key, _defaultApiClientHeader.Value);
+
+            Logger.LogParsedRequest(
+                request.Method,
+                request.RequestUri,
+                $"{request.Headers.ToFormattedString()}{(request.Content is null ? string.Empty : request.Content.Headers.ToFormattedString())}",
+                request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync()
+            );
 
             return await Client.SendAsync(request, completionOption, cancellationToken);
         }
