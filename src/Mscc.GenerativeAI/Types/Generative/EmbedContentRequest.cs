@@ -19,10 +19,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public ContentResponse? Content { get; set; }
         /// <summary>
-        /// Optional. Optional task type for which the embeddings will be used.
+        /// Optional. Task type for which the embeddings will be used.
         /// </summary>
         /// <remarks>
-        /// Can only be set for `models/embedding-001`.
+        /// Not supported on earlier models (`models/embedding-001`).
         /// </remarks>
         public TaskType? TaskType { get; set; }
         /// <summary>
