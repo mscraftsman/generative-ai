@@ -9,7 +9,7 @@ namespace Mscc.GenerativeAI
     /// Configuration options for model generation and outputs. Not all parameters may be configurable for every model.
     /// Ref: https://ai.google.dev/api/rest/v1beta/GenerationConfig
     /// </summary>
-    public class GenerationConfig
+    public class GenerationConfig : BaseConfig
     {
         /// <summary>
         /// Optional. Controls the randomness of predictions.
@@ -25,7 +25,7 @@ namespace Mscc.GenerativeAI
         /// Optional. If specified, top-k sampling will be used.
         /// Top-k changes how the model selects tokens for output. A top-k of 1 means that the selected token is the most probable among all tokens in the model's vocabulary (also called greedy decoding), while a top-k of 3 means that the next token is selected from among the three most probable tokens (using temperature). 
         /// </summary>
-        public int? TopK { get; set; } = default;
+        public float? TopK { get; set; } = default;
         /// <summary>
         /// Optional. Number of generated responses to return.
         /// If unset, this will default to 1. 

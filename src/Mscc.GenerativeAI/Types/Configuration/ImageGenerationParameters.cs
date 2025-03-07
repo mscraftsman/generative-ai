@@ -1,19 +1,12 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Text.Json.Serialization;
-#endif
 
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The config for generating an images.
-    /// </summary>
-    public class GenerateImagesConfig : ImageGenerationParameters;
-
-    /// <summary>
     /// 
     /// </summary>
-    public class ImageGenerationParameters
+    public class ImageGenerationParameters : BaseConfig
     {
         /// <summary>
         /// The number of generated images.
@@ -49,7 +42,7 @@ namespace Mscc.GenerativeAI
         /// Optional. The text prompt for guiding the response.
         /// </summary>
         /// <remarks>en (default), de, fr, it, es</remarks>
-        public string? Language { get; set; }
+        public ImagePromptLanguage? Language { get; set; }
 
         /// <summary>
         /// Optional. Description of what to discourage in the generated images.
@@ -92,12 +85,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <remarks>Value: 1:1, 9:16*, 16:9*, 3:4*, or 4:3*</remarks>
         public string? AspectRatio { get; set; }
-
-        /// <summary>
-        /// Optional. Whether to enable the Responsible AI filtered reason or error code for blocked output in the response content.
-        /// </summary>
-        public bool? IncludeRaiReason { get; set; }
-
+        
         /// <summary>
         /// Optional. Whether to enable rounded Responsible AI scores for a list of safety attributes in responses for unfiltered input and output.
         /// </summary>
@@ -135,7 +123,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// edit config object for model versions 006 and greater. All editConfig subfields are optional. If not specified, the default editing mode is inpainting.
         /// </summary>
-        public EditConfig? EditConfig { get; set; }
+        public EditImageConfig? EditConfig { get; set; }
 
         /// <summary>
         /// 
@@ -152,10 +140,6 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public bool? EnhancePrompt { get; set; }
 
-        /// <summary>
-        /// Used to override HTTP request options.
-        /// </summary>
-        public HttpOptions HttpOptions {get;set;}
         /// <summary>
         /// Cloud Storage URI used to store the generated images.
         /// </summary>
