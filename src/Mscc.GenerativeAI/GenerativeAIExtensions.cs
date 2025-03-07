@@ -4,15 +4,37 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Authentication;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
+using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Mscc.GenerativeAI
 {
     public static class GenerativeAIExtensions
     {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+        private static readonly Version _httpVersion = HttpVersion.Version11;
+        private static readonly HttpClient Client = new HttpClient(new HttpClientHandler
+        {
+            SslProtocols = SslProtocols.Tls12
+        });
+#else
+        private static readonly Version _httpVersion = HttpVersion.Version11;
+        private static readonly HttpClient Client =
+            new HttpClient(new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(30), EnableMultipleHttp2Connections = true
+            })
+            {
+                DefaultRequestVersion = _httpVersion, DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+            };
+#endif
+
         /// <summary>
         /// Checks whether the API key has the right conditions.
         /// </summary>
@@ -27,7 +49,8 @@ namespace Mscc.GenerativeAI
                 throw new ArgumentException("API key has extra whitespace at the start or end", nameof(apiKey));
             if (apiKey.Length == 39 && !apiKey.Substring(0, 4).Equals("AIza"))
                 throw new ArgumentException("API key should start with 'AIza'", nameof(apiKey));
-            if (apiKey.Length is not (39 or 53)) throw new ArgumentException("API key has not the correct length", nameof(apiKey));
+            if (apiKey.Length is not (39 or 53))
+                throw new ArgumentException("API key has not the correct length", nameof(apiKey));
 
             return apiKey;
         }
@@ -82,8 +105,10 @@ namespace Mscc.GenerativeAI
             [
                 "image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
                 "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac",
-                "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp",
-                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python", "application/rtf", 
+                "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm",
+                "video/wmv", "video/3gpp",
+                "application/pdf", "application/x-javascript", "text/javascript", "application/x-python",
+                "application/rtf",
                 "text/x-python", "text/plain", "text/html", "text/css", "text/md", "text/csv", "text/xml", "text/rtf"
             ];
 
@@ -273,32 +298,57 @@ namespace Mscc.GenerativeAI
             catch
             {
                 return false;
-                throw;
             }
         }
 
-        internal static async Task<string> ReadImageFileBase64Async(string url)
+        /// <summary>
+        /// Throws an exception if the IsSuccessStatusCode property for the HTTP response is false.
+        /// </summary>
+        /// <param name="response">The HTTP response message to check.</param>
+        /// <param name="errorMessage">Custom error message to prepend the <see cref="HttpRequestException"/> message."/></param>
+        /// <param name="includeResponseContent">Include the response content in the error message.</param>
+        /// <returns>The HTTP response message if the call is successful.</returns>
+        /// <exception cref="HttpRequestException"></exception>
+        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response,
+            string? errorMessage = null, bool includeResponseContent = true)
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync(url))
-                {
-                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-                    return Convert.ToBase64String(imageBytes);
-                }
-            }
+            if (response.IsSuccessStatusCode) return response;
+
+            errorMessage = !string.IsNullOrEmpty(errorMessage)
+                ? errorMessage
+                : Constants.RequestFailed;
+            string errorMessageContent = includeResponseContent
+                ? Environment.NewLine + await response.Content.ReadAsStringAsync()
+                : string.Empty;
+
+#if NET8_0_OR_GREATER
+            throw new HttpRequestException(
+                $"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}",
+                inner: null, statusCode: response.StatusCode);
+#else
+            throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}");
+#endif
         }
 
-        internal static async Task<byte[]> ReadImageFileAsync(string url)
+        internal static async Task<byte[]> ReadImageFileAsync(string url,
+            CancellationToken cancellationToken = default)
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync(url))
-                {
-                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-                    return imageBytes;
-                }
-            }
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            using var response = await Client.SendAsync(httpRequest, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            await response.EnsureSuccessAsync($"Download of '{url}' failed");
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
+#else
+            byte[] imageBytes = await response.Content.ReadAsByteArrayAsync(cancellationToken);
+#endif            
+            return imageBytes;
+        }
+
+        internal static async Task<string> ReadImageFileBase64Async(string url,
+            CancellationToken cancellationToken = default)
+        {
+            byte[] imageBytes = await ReadImageFileAsync(url, cancellationToken);
+            return Convert.ToBase64String(imageBytes);
         }
 
         internal static string GetMimeType(string uri)
@@ -880,33 +930,6 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Throws an exception if the IsSuccessStatusCode property for the HTTP response is false.
-        /// </summary>
-        /// <param name="response">The HTTP response message to check.</param>
-        /// <param name="errorMessage">Custom error message to prepend the <see cref="HttpRequestException"/> message."/></param>
-        /// <param name="includeResponseContent">Include the response content in the error message.</param>
-        /// <returns>The HTTP response message if the call is successful.</returns>
-        /// <exception cref="HttpRequestException"></exception>
-        internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response,
-            string? errorMessage = null, bool includeResponseContent = true)
-        {
-            if (response.IsSuccessStatusCode) return response;
-
-            errorMessage = !string.IsNullOrEmpty(errorMessage) 
-                ? errorMessage 
-                : Constants.RequestFailed;
-            string errorMessageContent = includeResponseContent
-                ? Environment.NewLine + await response.Content.ReadAsStringAsync()
-                : string.Empty;
-            
-#if NET8_0_OR_GREATER
-            throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}", inner: null, statusCode: response.StatusCode);
-#else
-            throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}");
-#endif
-        }
-
-        /// <summary>
         /// Truncates/abbreviates a string and places a user-facing indicator at the end.
         /// </summary>
         /// <param name="value">The string to truncate.</param>
@@ -915,7 +938,7 @@ namespace Mscc.GenerativeAI
         /// <returns>The truncated string</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="suffix"/> parameter is null or empty.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the length of the <paramref name="suffix"/> is larger than the <paramref name="maxLength"/>.</exception>
-        internal static string Truncate(this string value, 
+        internal static string Truncate(this string value,
             int maxLength = 4096, string suffix = "…")
         {
             if (string.IsNullOrWhiteSpace(value)) return value;
@@ -938,6 +961,21 @@ namespace Mscc.GenerativeAI
             }
 
             return value;
+        }
+        
+        public static string ToFormattedString(this HttpHeaders headers)
+        {
+            if (headers == null)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+            foreach (var header in headers)
+            {
+                sb.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
+            }
+            return sb.ToString();
         }
     }
 }
