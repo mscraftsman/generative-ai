@@ -258,6 +258,7 @@ namespace Mscc.GenerativeAI
             if (_isExpressMode)
             {
                 if (_apiKey is null) throw new ArgumentNullException(message: "API key has not been set", null);
+                return;
             }
 
             if (_projectId is null) throw new ArgumentNullException(message: "ProjectId has not been set", null);
