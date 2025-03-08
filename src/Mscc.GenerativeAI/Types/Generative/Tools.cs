@@ -34,6 +34,14 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        public void AddGoogleSearchRetrieval()
+        {
+            if (!this.Any(t => t.GoogleSearchRetrieval is not null))
+            {
+                this.Add(new Tool() { GoogleSearchRetrieval = new() });
+            }
+        }
+
         public void AddCodeExecution()
         {
             if (!this.Any(t => t.CodeExecution is not null))
