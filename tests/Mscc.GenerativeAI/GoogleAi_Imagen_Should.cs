@@ -90,9 +90,9 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateImages(
                 prompt: "Fuzzy bunnies in my kitchen",
                 numberOfImages: 4,
-                safetyFilterLevel: "block_only_high",
+                safetyFilterLevel: SafetyFilterLevel.BlockOnlyHigh,
                 personGeneration: PersonGeneration.AllowAdult,
-                aspectRatio: "3:4"
+                aspectRatio: ImageAspectRatio.Ratio3x4
 //                negativePrompt: "Outside"
             );
 
@@ -174,7 +174,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [ClassData(typeof(ImagePrompts))]
-        public async Task Generate_Images_Samples(string prompt, string aspectRatio)
+        public async Task Generate_Images_Samples(string prompt, ImageAspectRatio aspectRatio)
         {
             // Arrange
             var genAi = new GoogleAI(apiKey: fixture.ApiKey);
