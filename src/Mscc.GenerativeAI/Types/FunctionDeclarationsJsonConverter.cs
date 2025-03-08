@@ -109,7 +109,11 @@ namespace Mscc.GenerativeAI
                 }
             }
 
-            var parametersObject = new JsonObject { { "type", "object" }, { "properties", propertiesObject } };
+            var parametersObject = new JsonObject
+            {
+                { "type", Enum.GetName(typeof(SchemaType), SchemaType.Object)!.ToLower() }, 
+                { "properties", propertiesObject }
+            };
 
             if (requiredArray.Count != 0)
             {
@@ -178,7 +182,10 @@ namespace Mscc.GenerativeAI
         {
             var (typeName, typeDescription) = GetTypeInfo(propertyType);
             var format = GetFormatInfo(propertyType);
-            var propertyObject = new JsonObject { { "type", typeName.ToSnakeCase() } };
+            var propertyObject = new JsonObject
+            {
+                { "type", Enum.GetName(typeof(SchemaType), typeName)!.ToLower() }
+            };
 
             if (typeDescription is not null)
             {
@@ -256,7 +263,7 @@ namespace Mscc.GenerativeAI
             return parameter.ParameterType.IsNullableNumber();
         }
 
-        private static (string name, string? description) GetTypeInfo(Type type)
+        private static (SchemaType name, string? description) GetTypeInfo(Type type)
         {
             var isNullable = type.IsNullableNumber();
             if (isNullable && type.GenericTypeArguments.Length == 1)
@@ -266,102 +273,102 @@ namespace Mscc.GenerativeAI
 
             if (type == typeof(bool))
             {
-                return ("boolean", null);
+                return (SchemaType.Boolean, null);
             }
 
             if (type == typeof(sbyte))
             {
-                return ("integer", "8-bit signed integer from -128 to 127");
+                return (SchemaType.Integer, "8-bit signed integer from -128 to 127");
             }
 
             if (type == typeof(byte))
             {
-                return ("integer", "8-bit unsigned integer from 0 to 255");
+                return (SchemaType.Integer, "8-bit unsigned integer from 0 to 255");
             }
 
             if (type == typeof(short))
             {
-                return ("integer", "16-bit signed integer from -32,768 to 32,767");
+                return (SchemaType.Integer, "16-bit signed integer from -32,768 to 32,767");
             }
 
             if (type == typeof(ushort))
             {
-                return ("integer", "16-bit unsigned integer from 0 to 65,535");
+                return (SchemaType.Integer, "16-bit unsigned integer from 0 to 65,535");
             }
 
             if (type == typeof(int) || type == typeof(long) || type == typeof(nint))
             {
-                return ("integer", null);
+                return (SchemaType.Integer, null);
             }
 
             if (type == typeof(uint) || type == typeof(ulong) || type == typeof(nuint))
             {
-                return ("integer", "unsigned integer, greater than or equal to 0");
+                return (SchemaType.Integer, "unsigned integer, greater than or equal to 0");
             }
 
             if (type == typeof(float) || type == typeof(double) || type == typeof(decimal))
             {
-                return ("number", "floating point number");
+                return (SchemaType.Number, "floating point number");
             }
 
             if (type == typeof(char))
             {
-                return ("string", "single character");
+                return (SchemaType.String, "single character");
             }
 
             if (type == typeof(string))
             {
-                return ("string", null);
+                return (SchemaType.String, null);
             }
 
             if (type == typeof(Uri))
             {
-                return ("string", "URI in C# .NET format https://example.com/abc");
+                return (SchemaType.String, "URI in C# .NET format https://example.com/abc");
             }
 
             if (type == typeof(Guid))
             {
-                return ("string", "GUID in C# .NET format separated by hyphens xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+                return (SchemaType.String, "GUID in C# .NET format separated by hyphens xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
             }
 
             if (type == typeof(DateTime) || type == typeof(DateTimeOffset))
             {
-                return ("string", "date and time in C# .NET ISO 8601 format yyyy-mm-ddThh:mm:ss");
+                return (SchemaType.String, "date and time in C# .NET ISO 8601 format yyyy-mm-ddThh:mm:ss");
             }
 
             if (type == typeof(TimeSpan))
             {
-                return ("string", "time interval in C# .NET ISO 8601 format hh:mm:ss");
+                return (SchemaType.String, "time interval in C# .NET ISO 8601 format hh:mm:ss");
             }
             
 #if NET8_0_OR_GREATER
             if (type == typeof(DateOnly))
             {
-                return ("string", "date in C# .NET ISO 8601 format yyyy-mm-dd");
+                return (SchemaType.String, "date in C# .NET ISO 8601 format yyyy-mm-dd");
             }
 
             if (type == typeof(TimeOnly))
             {
-                return ("string", "time in C# .NET ISO 8601 format hh:mm:ss");
+                return (SchemaType.String, "time in C# .NET ISO 8601 format hh:mm:ss");
             }
 #endif
 
             if (type.IsEnum)
             {
-                return ("string", null);
+                return (SchemaType.String, null);
             }
 
             if (type.IsArray && type.HasElementType)
             {
-                return ("array", null);
+                return (SchemaType.Array, null);
             }
 
             if (typeof(IEnumerable).IsAssignableFrom(type) && type.GenericTypeArguments.Length == 1)
             {
-                return ("array", null);
+                return (SchemaType.Array, null);
             }
 
-            return ("object", null);
+            return (SchemaType.Object, null);
         }
 
         private static string GetFormatInfo(Type type)
