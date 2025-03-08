@@ -1319,7 +1319,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             var tools = new Tools();
-            tools.AddFunction((bool isOn) => $"Dark mode is set to: {isOn}");
+            tools.AddFunction("ToggleDarkMode", (bool isOn) => $"Dark mode is set to: {isOn}");
             
             // Act
             var response = await model.GenerateContent(prompt, tools: tools);
@@ -2042,6 +2042,14 @@ namespace Test.Mscc.GenerativeAI
 #if NET9_0
             public required string RecipeName { get; set; }
 #endif
+            public List<Ingredient> Ingredients { get; set; }
+        }
+
+        class Ingredient
+        {
+            public string Name { get; set; }
+            public int Quantity { get; set; }
+            public string Unit { get; set; }
         }
 
         [Fact]
@@ -2053,7 +2061,8 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new List<Recipe>()
             };
 
             // Act
