@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.1
+
+### Changed
+
+- use named parameter to initialize Vertex AI
+- bump version
+
 ## 2.3.0
 
 ### Changed

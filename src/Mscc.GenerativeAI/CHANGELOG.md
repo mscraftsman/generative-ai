@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.1
+
+### Added
+
+- add model `gemini-embedding-exp`
+
 ## 2.3.0
 
 ### Added
