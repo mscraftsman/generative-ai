@@ -39,7 +39,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// <param name="model">Model to use.</param>
     public GeminiChatClient(string projectId, string? region = null, string model = Model.Gemini15Pro)
     {
-        var genAi = new VertexAI(projectId, region);
+        var genAi = new VertexAI(projectId: projectId, region: region);
         _client = genAi.GenerativeModel(model);
         _metadata = new(ProviderName, null, model);
     }

@@ -40,7 +40,7 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <param name="model">Model to use.</param>
         public GeminiEmbeddingGenerator(string projectId, string? region = null, string model = Model.Embedding)
         {
-            var genAi = new VertexAI(projectId, region);
+            var genAi = new VertexAI(projectId: projectId, region: region);
             _client = genAi.GenerativeModel(model);
             Metadata = new(providerName, null, model);
         }
