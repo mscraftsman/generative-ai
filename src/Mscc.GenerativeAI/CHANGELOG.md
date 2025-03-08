@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.2
+
+### Added
+
+- add API key of Vertex AI in express mode
+- add sample using safety settings
+
+### Fixed
+
+- fix for Vertex AI in express mode
+
 ## 2.3.1
 
 ### Added
