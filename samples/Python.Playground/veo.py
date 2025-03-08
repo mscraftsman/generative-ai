@@ -2,7 +2,6 @@ import os
 import time
 from google import genai
 from google.genai import types
-import httpx
 from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
