@@ -46,13 +46,13 @@ public sealed class GeminiChatClient : mea.IChatClient
     
     /// <inheritdoc/>
     public async Task<mea.ChatResponse> GetResponseAsync(
-        IList<mea.ChatMessage> chatMessages, 
+        IEnumerable<mea.ChatMessage> messages, 
         mea.ChatOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        if (chatMessages == null) throw new ArgumentNullException(nameof(chatMessages));
+        if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
+        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(messages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		var response = await _client.GenerateContent(request, requestOptions);
 		return MicrosoftAi.AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
@@ -60,13 +60,13 @@ public sealed class GeminiChatClient : mea.IChatClient
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<mea.ChatResponseUpdate> GetStreamingResponseAsync(
-        IList<mea.ChatMessage> chatMessages, 
+        IEnumerable<mea.ChatMessage> messages, 
         mea.ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        if (chatMessages == null) throw new ArgumentNullException(nameof(chatMessages));
+        if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
+        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(messages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
 			yield return MicrosoftAi.AbstractionMapper.ToChatResponseUpdate(response);
