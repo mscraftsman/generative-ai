@@ -325,7 +325,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
             // Act
@@ -890,6 +890,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
+        [InlineData(Model.Gemma3)]
         [InlineData(Model.Gemini15Flash)]
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini20FlashLite)]
