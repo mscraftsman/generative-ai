@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI.Web
             var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini15Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
-                _generativeAi = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
+                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region);
             }
             else
             {
@@ -32,16 +32,15 @@ namespace Mscc.GenerativeAI.Web
 
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, string model) : base()
         {
-            IGenerativeAI genAI;
             if (!string.IsNullOrEmpty(options?.Value?.ProjectId))
             {
-                genAI = new VertexAI(options?.Value.ProjectId, options?.Value.Region);
+                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region);
             }
             else
             {
-                genAI = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
+                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
             }
-            _model = genAI.GenerativeModel(model: model);
+            _model = _generativeAi.GenerativeModel(model: model);
         }
         
         /// <summary>
