@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.4
+
+### Changed
+
+- Update to M.E.AI 9.3.0-preview.1.25161.3 [#72](https://github.com/mscraftsman/generative-ai/pull/72) thanks to @stephentoub
+- bump version
+
 ## 2.3.3
 
 ### Changed
