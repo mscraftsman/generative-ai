@@ -15,12 +15,12 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// <summary>
         /// Converts a Microsoft.Extensions.AI messages and options to a <see cref="GenerateContentRequest"/>.
         /// </summary>
-        /// <param name="chatMessages">A list of chat messages.</param>
+        /// <param name="messages">A list of chat messages.</param>
         /// <param name="options">Optional. Chat options to configure the request.</param>
         /// <returns></returns>
-        public static GenerateContentRequest? ToGeminiGenerateContentRequest(IList<mea.ChatMessage> chatMessages, mea.ChatOptions? options)
+        public static GenerateContentRequest? ToGeminiGenerateContentRequest(IEnumerable<mea.ChatMessage> messages, mea.ChatOptions? options)
         {
-            var prompt = string.Join<mea.ChatMessage>(" ", chatMessages.ToArray()) ?? "";
+            var prompt = string.Join<mea.ChatMessage>(" ", messages.ToArray()) ?? "";
             
             GenerationConfig? generationConfig = null;
             if (options?.AdditionalProperties?.Any() ?? false)
@@ -102,7 +102,6 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
             {
                 FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
                 AdditionalProperties = null,
-                Choices = [chatMessage],
                 CreatedAt = null,
                 ModelId = null,
                 RawRepresentation = response,
@@ -117,16 +116,13 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// <param name="response">The response stream to convert.</param>
         public static mea.ChatResponseUpdate ToChatResponseUpdate(GenerateContentResponse? response)
         {
-            return new mea.ChatResponseUpdate
+            return new mea.ChatResponseUpdate(ToAbstractionRole(response?.Candidates?.FirstOrDefault()?.Content?.Role), response?.Text)
             {
                 // no need to set "Contents" as we set the text
-                ChoiceIndex = 0, // should be left at 0 as Mscc.GenerativeAI does not support this
                 CreatedAt = null,
                 AdditionalProperties = null,
                 FinishReason = response?.Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Other ? mea.ChatFinishReason.Stop : null,
                 RawRepresentation = response,
-                Text = response?.Text,
-                Role = ToAbstractionRole(response?.Candidates?.FirstOrDefault()?.Content?.Role)
             };
         }
 
@@ -158,7 +154,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         {
             var contents = new List<mea.AIContent>();
             if (response.Text?.Length > 0)
-                contents.Insert(0, new mea.TextContent(response.Text));
+                contents.Add(new mea.TextContent(response.Text));
 
             return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role), contents)
             {
