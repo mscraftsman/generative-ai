@@ -23,9 +23,13 @@ jobs:
       - name: Get Previous Tag
         id: previous_tag
         run: |
+          CURRENT_TAG=${{ github.ref_name }}
+          echo "Current tag: $CURRENT_TAG"
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          PREVIOUS_TAG2=$(git tag --sort=-v:refname | awk "NR==2" | xargs)
           echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
           echo "Previous tag: $PREVIOUS_TAG"
+          echo "Previous tag: $PREVIOUS_TAG2"
 
       - name: Create release
         uses: actions/create-release@v1
