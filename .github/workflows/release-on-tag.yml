@@ -29,6 +29,7 @@ jobs:
           body: |
             ## What's changed
             
-            
+            ---- 
+            **Full Changelog**: https://github.com/mscraftsman/generative-ai/compare/vx.x.x...${{ github.ref_name }}
           draft: false
           prerelease: false
