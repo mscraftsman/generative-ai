@@ -531,6 +531,20 @@
       "version": "001"
     },
     {
+      "displayName": "Gemma 3 27B",
+      "inputTokenLimit": 131072,
+      "name": "models/gemma-3-27b-it",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "001"
+    },
+    {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Embedding 001",
       "inputTokenLimit": 2048,

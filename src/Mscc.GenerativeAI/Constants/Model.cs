@@ -77,6 +77,10 @@ namespace Mscc.GenerativeAI
         public const string GeminiEmbedding = GeminiEmbeddingExperimental;
         public const string GeminiEmbeddingExperimental = "gemini-embedding-exp";
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
+        
+        // Gemma
+        public const string Gemma3 = Gemma3_27B;
+        public const string Gemma3_27B = "gemma-3-27b-it";
 
         // PaLM 2 models
         public const string BisonText001 = "text-bison-001";
