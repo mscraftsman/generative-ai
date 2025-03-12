@@ -48,19 +48,19 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.2" />
-		<PackageReference Include="Mscc.GenerativeAI" Version="2.2.11" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
+		<PackageReference Include="Mscc.GenerativeAI" Version="2.3.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
-		<PackageReference Include="System.Text.Encodings.Web" Version="9.0.2" />
+		<PackageReference Include="System.Text.Encodings.Web" Version="9.0.3" />
 	</ItemGroup>
 
 	<ItemGroup Condition="!$(TargetFramework.StartsWith('net6.0'))">
-		<PackageReference Include="System.Text.Encodings.Web" Version="9.0.2" />
+		<PackageReference Include="System.Text.Encodings.Web" Version="9.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
