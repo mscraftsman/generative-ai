@@ -569,7 +569,7 @@
     {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Gemini Embedding Experimental 03-07",
-      "inputTokenLimit": 2048,
+      "inputTokenLimit": 8192,
       "name": "models/gemini-embedding-exp-03-07",
       "outputTokenLimit": 1,
       "supportedGenerationMethods": [
@@ -580,7 +580,7 @@
     {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Gemini Embedding Experimental",
-      "inputTokenLimit": 2048,
+      "inputTokenLimit": 8192,
       "name": "models/gemini-embedding-exp",
       "outputTokenLimit": 1,
       "supportedGenerationMethods": [

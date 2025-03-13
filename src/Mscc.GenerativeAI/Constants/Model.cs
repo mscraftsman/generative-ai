@@ -46,8 +46,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini15Flash8B001 = "gemini-1.5-flash-8b-001";
         public const string Gemini15Flash8BLatest = "gemini-1.5-flash-8b-latest";
         public const string Gemini15FlashExperimental0827 = GeminiExperimental1206;
-        public const string Gemini15FlashExperimental0827_8B = Gemini15Flash8B;
-        public const string Gemini15FlashExperimental0924_8B = Gemini15Flash8B;
+        public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
+        public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
 
         public const string GeminiExperimental = GeminiExperimental1206;
         public const string GeminiExperimental1114 = GeminiExperimental1206;
@@ -71,7 +71,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
         public const string Gemini20FlashThinkingExperimentalNoThoughts = "gemini-2.0-flash-thinking-exp-no-thoughts";
-        public const string Gemini20FlashThinkingExperimental1219 = Gemini20FlashThinkingExperimental0121;
+        public const string Gemini20FlashThinkingExperimental1219 = "gemini-2.0-flash-thinking-exp-1219";
         public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
 
         public const string GeminiEmbedding = GeminiEmbeddingExperimental;
