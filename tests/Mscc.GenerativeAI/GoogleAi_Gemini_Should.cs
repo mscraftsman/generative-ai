@@ -523,6 +523,68 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Generate_Content_with_Modalities()
+        {
+            // Arrange
+            var prompt = "Hi, can you create a 3d rendered image of a pig with wings and a top hat flying over a happy futuristic scifi city with lots of greenery?";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var request = new GenerateContentRequest(prompt, generationConfig: new()
+            {
+                ResponseModalities = [ResponseModality.Text, ResponseModality.Image]
+            });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                _output.WriteLine($"{part.Text}");
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        part.InlineData.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                _output.WriteLine($"Wrote image to {fileName}");
+            });
+        }
+
+        [Fact]
+        public async Task Generate_Content_with_Modalities_multiple_Images()
+        {
+            // Arrange
+            var prompt = "Show me how to cook a macaron with images.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var request = new GenerateContentRequest(prompt, generationConfig: new()
+            {
+                ResponseModalities = [ResponseModality.Text, ResponseModality.Image]
+            });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    _output.WriteLine($"{part.Text}");
+                if (part.InlineData is not null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                _output.WriteLine($"Wrote image to {fileName}");
+                }
+            });
+        }
+
+        [Fact]
         public async Task Generate_Content_Stream()
         {
             // Arrange
