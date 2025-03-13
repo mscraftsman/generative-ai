@@ -1220,18 +1220,11 @@ namespace Test.Mscc.GenerativeAI
                                         Description =
                                             "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new
-                                    {
-                                        Type = ParameterType.String, Description = "Any movie title"
-                                    },
-                                    Theater = new
-                                    {
-                                        Type = ParameterType.String, Description = "Name of the theater"
-                                    },
+                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
+                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
                                     Date = new
                                     {
-                                        Type = ParameterType.String,
-                                        Description = "Date for requested showtime"
+                                        Type = ParameterType.String, Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -1332,18 +1325,11 @@ namespace Test.Mscc.GenerativeAI
                                         Description =
                                             "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new
-                                    {
-                                        Type = ParameterType.String, Description = "Any movie title"
-                                    },
-                                    Theater = new
-                                    {
-                                        Type = ParameterType.String, Description = "Name of the theater"
-                                    },
+                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
+                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
                                     Date = new
                                     {
-                                        Type = ParameterType.String,
-                                        Description = "Date for requested showtime"
+                                        Type = ParameterType.String, Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -1490,18 +1476,11 @@ namespace Test.Mscc.GenerativeAI
                                         Description =
                                             "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new
-                                    {
-                                        Type = ParameterType.String, Description = "Any movie title"
-                                    },
-                                    Theater = new
-                                    {
-                                        Type = ParameterType.String, Description = "Name of the theater"
-                                    },
+                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
+                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
                                     Date = new
                                     {
-                                        Type = ParameterType.String,
-                                        Description = "Date for requested showtime"
+                                        Type = ParameterType.String, Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -2654,6 +2633,28 @@ Use speaker A, speaker B, etc. to identify the speakers.
                 _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
+                .HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task Describe_Videos_From_Youtube()
+        {
+            // Arrange
+            var prompt = "Describe this video clip.";// Can you summarize this video?
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            await request.AddMedia("https://www.youtube.com/watch?v=1XALhtem2h0", useOnline: true);
 
             // Act
             var response = await model.GenerateContent(request);
