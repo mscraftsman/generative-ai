@@ -1971,7 +1971,7 @@
       }
     }
   },
-  "revision": "20250311",
+  "revision": "20250312",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -4660,6 +4660,13 @@
       "description": "The `Schema` object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema).",
       "id": "Schema",
       "properties": {
+        "anyOf": {
+          "description": "Optional. The value should be validated against any (one or more) of the subschemas in the list.",
+          "items": {
+            "$ref": "Schema"
+          },
+          "type": "array"
+        },
         "description": {
           "description": "Optional. A brief description of the parameter. This could contain examples of use. Parameter description may be formatted as Markdown.",
           "type": "string"
@@ -4684,10 +4691,20 @@
           "format": "int64",
           "type": "string"
         },
+        "maximum": {
+          "description": "Optional. Maximum value of the Type.INTEGER and Type.NUMBER",
+          "format": "double",
+          "type": "number"
+        },
         "minItems": {
           "description": "Optional. Minimum number of the elements for Type.ARRAY.",
           "format": "int64",
           "type": "string"
+        },
+        "minimum": {
+          "description": "Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER",
+          "format": "double",
+          "type": "number"
         },
         "nullable": {
           "description": "Optional. Indicates if the value may be null.",

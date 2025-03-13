@@ -59,5 +59,19 @@ namespace Mscc.GenerativeAI
         /// Optional. Required properties of Type.OBJECT.
         /// </summary>
         public List<string>? Required { get; set; }
+        /// <summary>
+        /// Optional. The value should be validated against any (one or more) of the subschemas in the list.
+        /// </summary>
+        public List<Schema>? AnyOf { get; set; }
+        /// <summary>
+        /// Optional. Maximum value of the Type.INTEGER and Type.NUMBER
+        /// </summary>
+        /// <remarks>SCHEMA FIELDS FOR TYPE INTEGER and NUMBER</remarks>
+        public long? Maximum { get; set; }
+        /// <summary>
+        /// Optional. Minimum value of the Type.INTEGER and Type.NUMBER
+        /// </summary>
+        /// <remarks>SCHEMA FIELDS FOR TYPE INTEGER and NUMBER</remarks>
+        public long? Minimum { get; set; }
     }
 }
