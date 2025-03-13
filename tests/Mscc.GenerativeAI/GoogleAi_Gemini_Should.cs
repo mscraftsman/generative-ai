@@ -1973,6 +1973,43 @@ namespace Test.Mscc.GenerativeAI
             }
         }
 
+        [Theory]
+        [InlineData("https://storage.googleapis.com/generativeai-downloads/images/instrument.jpg")]
+        public async Task Generate_Content_Using_ResponseSchema_with_Enumeration_and_Image(string uri)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+
+            var generationConfig = new GenerationConfig
+            {
+                ResponseMimeType = "text/x.enum", // Important for enum handling
+                ResponseSchema = typeof(Instrument) // Provide the enum type
+            };
+            var request = new GenerateContentRequest(prompt: "what category of instrument is this?", 
+                generationConfig: generationConfig);
+            await request.AddMedia(uri);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine($"Response: {response.Text}");
+
+            // Parse the enum (more robust error handling)
+            if (Enum.TryParse(response.Text, out Instrument instrument))
+            {
+                _output.WriteLine($"Parsed Instrument: {instrument}");
+            }
+            else
+            {
+                _output.WriteLine($"Could not parse '{response.Text}' as a valid Instrument enum.");
+            }
+        }
+
         [Fact]
         public async Task Generate_Content_Using_ResponseSchema_with_Anonymous()
         {
