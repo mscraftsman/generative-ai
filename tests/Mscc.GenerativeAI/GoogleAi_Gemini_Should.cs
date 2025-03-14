@@ -1102,15 +1102,24 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData(Model.Gemini15Pro002)]
+        [InlineData(Model.Gemini15Flash)]
+        [InlineData(Model.Gemini20Flash)]
+        [InlineData(Model.Gemini20Flash001)]
+        [InlineData(Model.Gemini20FlashLite)]
+        [InlineData(Model.Gemini20ProExperimental)]
         // Ref: https://ai.google.dev/gemini-api/docs/grounding
-        public async Task Generate_Content_Grounding_Search_Default()
+        public async Task Generate_Content_Grounding_Search_Default(string modelName)
         {
             // Arrange
-            var prompt = "Who won Wimbledon this year?";
+            var prompt = "When and where does F1 start this year?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel("gemini-1.5-pro-002",
-                tools: [new Tool { GoogleSearchRetrieval = new() }]);
+            var model = _googleAi.GenerativeModel(modelName,
+                tools: [new Tool { GoogleSearchRetrieval = new()
+                {
+                    DynamicRetrievalConfig = new () { DynamicThreshold = 0.6f } 
+                } }]);
 
             // Act
             var response = await model.GenerateContent(prompt);
