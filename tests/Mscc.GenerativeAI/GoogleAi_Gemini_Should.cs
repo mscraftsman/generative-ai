@@ -20,6 +20,7 @@ using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
 using System.Dynamic;
 using System.Runtime.Serialization;
+using System.Text.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -1316,6 +1317,70 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
+        protected string SearchEvent(string name)
+        {
+            return name.ToLower() switch
+            {
+                "player move" => "on move",
+                _ => "not found"
+            };
+        }
+        
+        [Fact]
+        public async Task Function_Calling_Issue74()
+        {
+            // Arrange
+            var prompt = "Is there an event when a player moves?";
+            var model = _googleAi.GenerativeModel(model: _model);
+            List<Tool> tools =
+            [
+                new Tool()
+                {
+                    FunctionDeclarations =
+                    [
+                        new()
+                        {
+                            Name = "find_event",
+                            Description = "search for an event in the documentation",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new
+                                {
+                                    Name = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The name of the event to search for"
+                                    },
+                                },
+                                Required = ["name"]
+                            }
+                        },
+                    ]
+                }
+            ];
+            var chatSession = new ChatSession(model, tools: tools);
+            var response = await chatSession.SendMessage(prompt);
+            var functionArgs = response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args as JsonElement?;
+            string? name = functionArgs?.GetProperty("name").GetString();
+            string result = SearchEvent(name);
+            var functionResponsePart = new Part
+            {
+                FunctionResponse = new FunctionResponse
+                {
+                    Name = "find_event",
+                    Response = new { content = result }
+                }
+            };
+            
+            // Act
+            var followUpResponse = await chatSession.SendMessage([functionResponsePart]);
+            
+            // Assert
+            followUpResponse.Should().NotBeNull();
+            _output.WriteLine(followUpResponse.Text);
+        }
+        
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
         public async Task Function_Calling_MultiTurn()
