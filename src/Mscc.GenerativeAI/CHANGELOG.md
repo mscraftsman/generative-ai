@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.6
+
+### Added
+
+- add test for issue #74
+
+### Fixed
+
+- Problems with generating a response based on the function call #74 thanks to @NotroDev
+
 ## 2.3.5
 
 ### Added
@@ -29,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Problems with generating a response based on the function call #74
+- Problems with generating a response based on the function call #74 thanks to @NotroDev
 
 ## 2.3.4
 
