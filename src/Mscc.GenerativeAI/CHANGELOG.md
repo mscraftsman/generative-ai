@@ -13,6 +13,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.3.5
+
+### Added
+
+- add new Schema attributes
+- add tests for ResponseModality
+- add test to use Youtube video
+- add test to classify (remote) image using enum
+- add test for models using GoogleSearchRetrieval tool
+
+### Changed
+
+- update NuGet packages
+
+### Fixed
+
+- Problems with generating a response based on the function call #74
+
+## 2.3.4
+
+### Changed
+
+- bump version
+
 ## 2.3.3
 
 ### Added
@@ -21,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- upgrade NuGet packages
+- update NuGet packages
 
 ## 2.3.2
 
