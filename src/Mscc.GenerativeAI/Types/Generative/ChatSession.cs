@@ -123,7 +123,7 @@ namespace Mscc.GenerativeAI
                     _tools);
             }
             
-            _lastReceived = new() { Role = Role.Model, Text = response.Text ?? string.Empty };
+            _lastReceived = new() { Role = Role.Model, Parts = request.Contents[0].PartTypes! };
             History.Add(_lastReceived);
             return response;
         }
