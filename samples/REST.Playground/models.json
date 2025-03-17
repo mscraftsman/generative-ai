@@ -355,6 +355,23 @@
       "version": "2.0"
     },
     {
+      "description": "Gemini 2.0 Flash (Image Generation) Experimental",
+      "displayName": "Gemini 2.0 Flash (Image Generation) Experimental",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.0-flash-exp-image-generation",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 40,
+      "topP": 0.95,
+      "version": "2.0"
+    },
+    {
       "description": "Stable version of Gemini 2.0 Flash Lite",
       "displayName": "Gemini 2.0 Flash-Lite 001",
       "inputTokenLimit": 1048576,

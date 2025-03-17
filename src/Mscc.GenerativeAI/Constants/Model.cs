@@ -68,6 +68,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashLitePreview = "gemini-2.0-flash-lite-preview";
         public const string Gemini20FlashLitePreview0205 = "gemini-2.0-flash-lite-preview-02-05";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
+        public const string Gemini20FlashImageGeneration = Gemini20FlashImageGenerationExperimental;
+        public const string Gemini20FlashImageGenerationExperimental = "gemini-2.0-flash-exp-image-generation";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
         public const string Gemini20FlashThinkingExperimentalNoThoughts = "gemini-2.0-flash-thinking-exp-no-thoughts";
