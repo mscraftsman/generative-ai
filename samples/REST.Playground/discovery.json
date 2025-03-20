@@ -1971,7 +1971,7 @@
       }
     }
   },
-  "revision": "20250313",
+  "revision": "20250318",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -2644,6 +2644,14 @@
       "description": "A response from `CountTokens`. It returns the model's `token_count` for the `prompt`.",
       "id": "CountTokensResponse",
       "properties": {
+        "cacheTokensDetails": {
+          "description": "Output only. List of modalities that were processed in the cached content.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
         "cachedContentTokenCount": {
           "description": "Number of tokens in the cached part of the prompt (the cached content).",
           "format": "int32",
