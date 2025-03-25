@@ -1971,7 +1971,7 @@
       }
     }
   },
-  "revision": "20250318",
+  "revision": "20250323",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -4738,6 +4738,10 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "title": {
+          "description": "Optional. The title of the schema.",
+          "type": "string"
         },
         "type": {
           "description": "Required. Data type.",
