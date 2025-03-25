@@ -306,6 +306,22 @@
       "version": "001"
     },
     {
+      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
+      "displayName": "Gemini 2.5 Pro Experimental 03-25",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-pro-exp-03-25",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5-exp-03-25"
+    },
+    {
       "description": "Gemini 2.0 Flash Experimental",
       "displayName": "Gemini 2.0 Flash Experimental",
       "inputTokenLimit": 1048576,

@@ -80,7 +80,12 @@ namespace Mscc.GenerativeAI
         public const string GeminiEmbeddingExperimental = "gemini-embedding-exp";
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
         
-        // Gemma
+        // Gemini 2.5
+        public const string Gemini25Pro = Gemini20ProExperimental;
+        public const string Gemini25ProExperimental = Gemini25ProExperimental0325;
+        public const string Gemini25ProExperimental0325 = "gemini-2.5-pro-exp-03-25";
+        
+        // Gemma 3
         public const string Gemma3 = Gemma3_27B;
         public const string Gemma3_27B = "gemma-3-27b-it";
 
