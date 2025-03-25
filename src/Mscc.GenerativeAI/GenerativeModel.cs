@@ -103,7 +103,7 @@ namespace Mscc.GenerativeAI
                     case GenerativeAI.Model.Imagen3Fast:
                         return GenerativeAI.Method.Predict;
                     case GenerativeAI.Model.Veo2:
-                        return GenerativeAI.Method.Predict;
+                        return GenerativeAI.Method.PredictLongRunning;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
                     case GenerativeAI.Model.Gemini20Flash:
@@ -132,7 +132,7 @@ namespace Mscc.GenerativeAI
                     GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
                     GenerativeAI.Model.Imagen3 => GenerativeAI.Method.Predict,
                     GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Predict,
-                    GenerativeAI.Model.Veo2 => GenerativeAI.Method.Predict,
+                    GenerativeAI.Model.Veo2 => GenerativeAI.Method.PredictLongRunning,
                     GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
                     GenerativeAI.Model.Gemini20Flash => UseRealtime
                         ? GenerativeAI.Method.BidirectionalGenerateContent
