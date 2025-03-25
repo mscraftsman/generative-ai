@@ -239,7 +239,8 @@ namespace Mscc.GenerativeAI
             _toolConfig ??= toolConfig;
             _systemInstruction ??= systemInstruction;
 
-            _useVertexAi = vertexAi;
+            var useVertexAi = Environment.GetEnvironmentVariable("GOOGLE_GENAI_USE_VERTEXAI") ?? bool.FalseString;
+            _useVertexAi = Convert.ToBoolean(useVertexAi) || vertexAi;
             _useVertexAiExpress = vertexAi;
         }
 
@@ -1366,7 +1367,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<GenerateVideosResponse> GenerateVideos(GenerateVideosRequest request,
             CancellationToken cancellationToken = default)
@@ -1390,7 +1391,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model"></param>
         /// <param name="prompt"></param>
         /// <param name="config"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<GenerateVideosResponse> GenerateVideos(string model,
