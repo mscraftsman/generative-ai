@@ -13,7 +13,17 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Number of output videos.
         /// </summary>
-        public int? NumberOfVideos { get; set; } = 1;
+        public int? SampleCount { get; set; } = 1;
+        
+        /// <summary>
+        /// Number of output videos.
+        /// </summary>
+        [JsonIgnore]
+        public int? NumberOfVideos
+        {
+            get => SampleCount;
+            set => SampleCount = value;
+        }
 
         /// <summary>
         /// Optional. The aspect ratio for the generated video. 16:9 (landscape) and 9:16 (portrait) are supported.

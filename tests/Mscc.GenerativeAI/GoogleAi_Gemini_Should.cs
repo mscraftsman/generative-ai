@@ -1003,7 +1003,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "What is the current Google stock price?";
             var genAi = new GoogleAI(_fixture.ApiKey, logger: Logger);
-            var model = _googleAi.GenerativeModel("gemini-1.5-pro-002");
+            var model = _googleAi.GenerativeModel(Model.Gemini20Flash);
             model.UseGrounding = true;
 
             // Act
