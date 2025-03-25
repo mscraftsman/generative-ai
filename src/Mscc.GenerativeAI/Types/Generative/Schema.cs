@@ -12,6 +12,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public ParameterType? Type { get; set; }
         /// <summary>
+        /// Optional. The title of the schema.
+        /// </summary>
+        public string? Title { get; set; }
+        /// <summary>
         /// Optional. The format of the data.
         /// This is used only for primitive datatypes.
         /// Supported formats:
