@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.4.0
+
+### Added
+
+- add model `gemini-2.5-pro-exp-03-25`
+- add model `gemini-2.0-flash-exp-image-generation`
+- add `CacheTokensDetails` attribute in response
+- add `title` attribute
+
+### Changed
+
+- read envVar `GOOGLE_GENAI_USE_VERTEXAI`
+- adjust endpoint method of Veo 2 model
+- update NuGet packages
+
 ## 2.3.6
 
 ### Added
