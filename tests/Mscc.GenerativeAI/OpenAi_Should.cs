@@ -79,6 +79,39 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task ChatCompletions_with_FileAPI_Using_OpenAiModel()
+        {
+            // Arrange
+            var model = new OpenAIModel(Logger) { ApiKey = fixture.ApiKey, Model = _model };
+            var request = new ChatCompletionsRequest()
+            {
+                Model = _model, 
+                Messages = [
+                    new { Role = Role.System, Content = "You are a helpful assistant in the field of space travelling."},
+                    new { Role = Role.User, Content = (object[])[
+                        new
+                        {
+                            Type = "file",
+                            File = new
+                            {
+                                File_id = "https://generativelanguage.googleapis.com/v1beta/files/3c02j9p8oge0",
+                                // MimeType = "text/plain"
+                            }
+                        },
+                        new { Type = "text", Text = "Explain to me how the Apollo lunar module works"}
+                    ]}
+                ]
+            };
+            
+            // Act
+            var response = await model.Completions(request);
+            
+            // Assert
+            response.Should().NotBeNull();
+            output.WriteLine($"{response.Choices[0].Message.Content}");
+        }
+
+        [Fact]
         public async Task ChatCompletions_Using_ChatModel()
         {
             // Arrange
