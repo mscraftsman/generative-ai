@@ -452,12 +452,12 @@
       "version": "preview-02-05"
     },
     {
-      "description": "Experimental release (February 5th, 2025) of Gemini 2.0 Pro",
+      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
       "displayName": "Gemini 2.0 Pro Experimental",
-      "inputTokenLimit": 2097152,
+      "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-pro-exp",
-      "outputTokenLimit": 8192,
+      "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens"
@@ -465,15 +465,15 @@
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.0"
+      "version": "2.5-exp-03-25"
     },
     {
-      "description": "Experimental release (February 5th, 2025) of Gemini 2.0 Pro",
+      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
       "displayName": "Gemini 2.0 Pro Experimental 02-05",
-      "inputTokenLimit": 2097152,
+      "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-pro-exp-02-05",
-      "outputTokenLimit": 8192,
+      "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens"
@@ -481,15 +481,15 @@
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.0"
+      "version": "2.5-exp-03-25"
     },
     {
-      "description": "Experimental release (February 5th, 2025) of Gemini 2.0 Pro",
+      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
       "displayName": "Gemini Experimental 1206",
-      "inputTokenLimit": 2097152,
+      "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-exp-1206",
-      "outputTokenLimit": 8192,
+      "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens"
@@ -497,7 +497,7 @@
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.0"
+      "version": "2.5-exp-03-25"
     },
     {
       "description": "Experimental release (January 21st, 2025) of Gemini 2.0 Flash Thinking",
@@ -645,6 +645,17 @@
         "predict"
       ],
       "version": "002"
+    },
+    {
+      "description": "Vertex served Veo 2 model.",
+      "displayName": "Veo 2",
+      "inputTokenLimit": 480,
+      "name": "models/veo-2.0-generate-001",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predictLongRunning"
+      ],
+      "version": "2.0"
     }
   ]
 }
