@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 #endif
 using Json.Schema;
 using Json.Schema.Generation;
+using System.Reflection;
 using System.Text.Json.Nodes;
 
 namespace Mscc.GenerativeAI
@@ -28,6 +29,7 @@ namespace Mscc.GenerativeAI
             JsonSerializerOptions options)
         {
             var type = value.GetType();
+            
             Type typeValue = null;
             try
             {
@@ -69,14 +71,46 @@ namespace Mscc.GenerativeAI
             }
             else
             {
+                var schemaBuilder = new JsonSchemaBuilder();
                 var config = new SchemaGeneratorConfiguration()
                 {
                     PropertyNameResolver = PropertyNameResolvers.CamelCase
                 };
-                var schemaBuilder = new JsonSchemaBuilder();
-                var schema = schemaBuilder.FromType(type, config).Build();
-                JsonSerializer.Serialize(writer, schema, schema.GetType(), options);
+                if (IsRecord(type))
+                {
+                    // Problem with `readOnly` keys...
+                    var schema = schemaBuilder.FromType(type, config).Build();
+                    JsonSerializer.Serialize(writer, schema, schema.GetType(), options);
+                }
+                else
+                {
+                    var schema = schemaBuilder.FromType(type, config).Build();
+                    JsonSerializer.Serialize(writer, schema, schema.GetType(), options);
+                }
             }
+        }
+        
+        private static bool IsRecord(Type type)
+        {
+            // Check for the IsRecord property (C# 10 and later)
+            var isRecordProperty = type.GetProperty("IsRecord", BindingFlags.Public | BindingFlags.Static);
+            if (isRecordProperty != null)
+            {
+                return (bool)isRecordProperty.GetValue(null);
+            }
+            // Check for the EqualityContract property (C# 9 and later)
+            var equalityContractProperty = type.GetProperty("EqualityContract", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (equalityContractProperty != null)
+            {
+                return true;
+            }
+            // Check for the <Clone>$ method (C# 9)
+            var cloneMethod = type.GetMethod("<Clone>$", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (cloneMethod != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

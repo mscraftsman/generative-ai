@@ -2113,6 +2113,113 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_with_String()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var schema = """
+                         {
+                           "type": "object",
+                           "properties": {
+                             "menus": {
+                               "type": "array",
+                               "description": "A list of menus, each representing a specific day.",
+                               "items": {
+                                 "type": "object",
+                                 "properties": {
+                                   "date": {
+                                     "type": "string",
+                                     "description": "The date of the menu in YYYY-MM-DD format."
+                                   },
+                                   "meals": {
+                                     "type": "array",
+                                     "description": "A list of meals available on this day.",
+                                     "items": {
+                                       "type": "object",
+                                       "properties": {
+                                         "type": {
+                                           "type": "string",
+                                           "enum": ["regular", "diet"],
+                                           "description": "Indicates whether the meal is a regular option or a dietary option."
+                                         },
+                                         "name": {
+                                           "type": "string",
+                                           "description": "The name of the meal."
+                                         },
+                                         "weight": {
+                                           "type": "number",
+                                           "description": "The weight of the meal in grams."
+                                         },
+                                         "selected": {
+                                           "type": "boolean",
+                                           "description": "Indicates whether the meal was selected by the user."
+                                         }
+                                       },
+                                       "required": ["type", "name", "selected"]
+                                     }
+                                   }
+                                 },
+                                 "required": ["date", "meals"]
+                               }
+                             }
+                           },
+                           "required": ["menus"]
+                         }
+                         """;
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = schema
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+#if NET9_0
+        public record Root([Description("A list of menus, each representing a specific day.")] List<Menu> Menus);
+        public record Menu(DateOnly Date, List<Meal> Meals);
+        public record Meal(string Type, string Name, double? Weight, bool Selected)
+        {
+            public string FullName => $"{Weight}g {Name}";
+        }
+        
+        // [Fact(Skip = "ReadOnly declaration not accepted.")]
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_with_Record()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new Root([])
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+#endif
+        
         [Fact(Skip = "ReadOnly declaration not accepted.")]
         public async Task Generate_Content_Using_ResponseSchema_with_Dynamic()
         {
