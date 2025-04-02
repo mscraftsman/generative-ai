@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="Mscc.GenerativeAI.Microsoft" Version="2.3.0" />
+        <PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="9.4.0-preview.1.25207.5" />
     </ItemGroup>
 
 <!--    <ItemGroup>-->
