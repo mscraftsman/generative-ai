@@ -38,6 +38,12 @@ namespace Mscc.GenerativeAI
                 // ignored
             }
 
+            if (type == typeof(String))
+            {
+                value = JsonSerializer.Deserialize<JsonElement>(value.ToString());
+                type = value.GetType();
+            }
+
             // How to figure out: type vs anonymous vs dynamic?
             if (type == typeof(JsonDocument) ||
                 type == typeof(JsonElement) ||
