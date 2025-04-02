@@ -434,6 +434,35 @@ namespace Mscc.GenerativeAI
                    "'";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="url"></param>
+        /// <param name="method"></param>
+        /// <param name="completionOption"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request,
+            string url, string method,
+            HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var requestUri = ParseUrl(url, method);
+            var json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri);
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken, completionOption);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<TResponse>(response);
+        }
+
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken = default,
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
