@@ -2186,6 +2186,36 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
+        public class AiWeaponModel
+        {
+            public string WeaponName { get; set; }
+            public string WeaponDescription { get; set; }
+        }
+        
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_Issue77()
+        {
+            // Arrange
+            var prompt = "List a few popular arny weapons with name and summary";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new List<AiWeaponModel>()
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
 #if NET9_0
         public record Root([Description("A list of menus, each representing a specific day.")] List<Menu> Menus);
         public record Menu(DateOnly Date, List<Meal> Meals);
