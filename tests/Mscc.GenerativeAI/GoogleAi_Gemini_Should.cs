@@ -18,6 +18,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -29,7 +30,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiGeminiShould : LoggingTestsBase
     {
-        private readonly string _model = Model.Gemini20FlashExperimental;
+        private readonly string _model = Model.Gemini25ProExperimental;
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly GoogleAI _googleAi;
@@ -53,7 +54,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini20FlashExperimental.SanitizeModelName());
+            model.Name.Should().Be(Model.Gemini25ProExperimental.SanitizeModelName());
         }
 
         [Fact]
@@ -193,6 +194,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
+        [InlineData(Model.Gemini25Pro)]
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
@@ -287,7 +289,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.ApiKey = _fixture.ApiKey;
 
             // Act
@@ -306,7 +308,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "AIzaTESTkJmQDe5tghndp6UvqPX0HAA9XpBNGWY");
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
 
             // Act
@@ -345,7 +347,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.Gemini15Pro002);
+            var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig() { ResponseLogprobs = true };
 
             // Act
@@ -364,7 +366,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
             // Act
@@ -527,13 +529,12 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_with_Modalities()
         {
             // Arrange
-            var prompt = "Hi, can you create a 3d rendered image of a pig with wings and a top hat flying over a happy futuristic scifi city with lots of greenery?";
+            var prompt =
+                "Hi, can you create a 3d rendered image of a pig with wings and a top hat flying over a happy futuristic scifi city with lots of greenery?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var request = new GenerateContentRequest(prompt, generationConfig: new()
-            {
-                ResponseModalities = [ResponseModality.Text, ResponseModality.Image]
-            });
+            var request = new GenerateContentRequest(prompt,
+                generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
 
             // Act
             var response = await model.GenerateContent(request);
@@ -559,10 +560,8 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "Show me how to cook a macaron with images.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var request = new GenerateContentRequest(prompt, generationConfig: new()
-            {
-                ResponseModalities = [ResponseModality.Text, ResponseModality.Image]
-            });
+            var request = new GenerateContentRequest(prompt,
+                generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
 
             // Act
             var response = await model.GenerateContent(request);
@@ -579,8 +578,8 @@ namespace Test.Mscc.GenerativeAI
                     var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
                         Path.ChangeExtension($"{Guid.NewGuid():D}",
                             part.InlineData.MimeType.Replace("image/", "")));
-                File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
-                _output.WriteLine($"Wrote image to {fileName}");
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
                 }
             });
         }
@@ -936,7 +935,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "What is the sum of the first 50 prime numbers?";
             var googleAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(Model.Gemini15Flash,
+            var model = _googleAi.GenerativeModel(model: _model,
                 tools: [new Tool { CodeExecution = new() }]);
 
             // Act
@@ -959,6 +958,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemini20FlashLite)]
         [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
+        [InlineData(Model.Gemini25Pro)]
         // Ref: https://ai.google.dev/api/generate-content#code-execution
         public async Task Generate_Content_Code_Execution_using_FileAPI(string modelName)
         {
@@ -1001,9 +1001,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_Grounding_Search()
         {
             // Arrange
-            var prompt = "What is the current Google stock price?";
+            var prompt = "What is the current Google (GOOG) stock price?";
             var genAi = new GoogleAI(_fixture.ApiKey, logger: Logger);
-            var model = _googleAi.GenerativeModel(Model.Gemini20Flash);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.UseGrounding = true;
 
             // Act
@@ -1110,6 +1110,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemini20Flash001)]
         [InlineData(Model.Gemini20FlashLite)]
         [InlineData(Model.Gemini20ProExperimental)]
+        [InlineData(Model.Gemini25Pro)]
         // Ref: https://ai.google.dev/gemini-api/docs/grounding
         public async Task Generate_Content_Grounding_Search_Default(string modelName)
         {
@@ -1117,10 +1118,13 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "When and where does F1 start this year?";
             var genAi = new GoogleAI(_fixture.ApiKey);
             var model = _googleAi.GenerativeModel(modelName,
-                tools: [new Tool { GoogleSearchRetrieval = new()
-                {
-                    DynamicRetrievalConfig = new () { DynamicThreshold = 0.6f } 
-                } }]);
+                tools:
+                [
+                    new Tool
+                    {
+                        GoogleSearchRetrieval = new() { DynamicRetrievalConfig = new() { DynamicThreshold = 0.6f } }
+                    }
+                ]);
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -1150,7 +1154,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "When is the next total solar eclipse in Mauritius?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(Model.Gemini20FlashExperimental);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.UseGoogleSearch = true;
 
             // Act
@@ -1184,7 +1188,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "When is the next total solar eclipse in Mauritius?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(Model.Gemini20FlashExperimental);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.UseGoogleSearch = true;
 
             // Act
@@ -1325,7 +1329,7 @@ namespace Test.Mscc.GenerativeAI
                 _ => "not found"
             };
         }
-        
+
         [Fact]
         public async Task Function_Calling_Issue74()
         {
@@ -1366,21 +1370,17 @@ namespace Test.Mscc.GenerativeAI
             string result = SearchEvent(name);
             var functionResponsePart = new Part
             {
-                FunctionResponse = new FunctionResponse
-                {
-                    Name = "find_event",
-                    Response = new { content = result }
-                }
+                FunctionResponse = new FunctionResponse { Name = "find_event", Response = new { content = result } }
             };
-            
+
             // Act
             var followUpResponse = await chatSession.SendMessage([functionResponsePart]);
-            
+
             // Assert
             followUpResponse.Should().NotBeNull();
             _output.WriteLine(followUpResponse.Text);
         }
-        
+
         [Fact]
         // Ref: https://ai.google.dev/docs/function_calling#function-calling-one-and-a-half-turn-curl-sample
         public async Task Function_Calling_MultiTurn()
@@ -1938,6 +1938,7 @@ namespace Test.Mscc.GenerativeAI
 #if NET9_0
             public required string RecipeName { get; set; }
 #endif
+            public List<string> Ingredients { get; set; }
         }
 
         [Fact]
@@ -2060,7 +2061,7 @@ namespace Test.Mscc.GenerativeAI
                 ResponseMimeType = "text/x.enum", // Important for enum handling
                 ResponseSchema = typeof(Instrument) // Provide the enum type
             };
-            var request = new GenerateContentRequest(prompt: "what category of instrument is this?", 
+            var request = new GenerateContentRequest(prompt: "what category of instrument is this?",
                 generationConfig: generationConfig);
             await request.AddMedia(uri);
 
@@ -2617,6 +2618,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemini20FlashLite)]
         [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
+        [InlineData(Model.Gemini25Pro)]
         public async Task Describe_Audio_with_Timestamps(string modelName)
         {
             // Arrange
@@ -2823,7 +2825,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
         public async Task Describe_Videos_From_Youtube()
         {
             // Arrange
-            var prompt = "Describe this video clip.";// Can you summarize this video?
+            var prompt = "Describe this video clip."; // Can you summarize this video?
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = _googleAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
@@ -3075,7 +3077,7 @@ Answer:";
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.GeminiProVision);
+            model.Name.Should().Be(Model.Gemini25ProExperimental);
         }
 
         [Fact]
