@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.4.1
+
+### Added
+
+- add test case for #77
+
+### Changed
+
+- process `ResponseSchema` as string #53 #76
+- separate `record` type in `ResponseSchema` due to disallowed properties #76
+- refactor POST calls
+- update NuGet packages
+
+### Fixed
+
+- fix typo in model constant.
+
 ## 2.4.0
 
 ### Added
