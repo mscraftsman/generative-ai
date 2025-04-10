@@ -9,12 +9,12 @@ var prompt = "What is AI?";
 
 IChatClient chatClient = new GeminiChatClient(apiKey, model);
 
-var response = await chatClient.CompleteAsync(prompt);
-Console.WriteLine(response.Message);
+var response = await chatClient.GetResponseAsync(prompt);
+Console.WriteLine(response.Text);
 
-response = await chatClient.CompleteAsync( 
+response = await chatClient.GetResponseAsync( 
     "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference."); 
-Console.WriteLine(response.Message);
+Console.WriteLine(response.Text);
 
 // Create embeddings using the appropriate model.
 model = "text-embedding-004";
