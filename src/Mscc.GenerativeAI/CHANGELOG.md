@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.5.0
+
+### Added
+
+- add model `lyria-base-001`
+- add model `gemini-2.5-pro-preview-03-25`
+- add model `gemini-2.0-flash-live-001`
+- add model `gemma-3-1b-it`
+- add model `gemma-3-4b-it`
+- add model `gemma-3-12b-it`
+
+### Changed
+
+- Update Microsoft.Extensions.AI version
+
 ## 2.4.1
 
 ### Added
