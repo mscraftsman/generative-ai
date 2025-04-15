@@ -363,7 +363,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -379,7 +380,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -664,7 +666,8 @@
       "name": "models/gemini-embedding-exp-03-07",
       "outputTokenLimit": 1,
       "supportedGenerationMethods": [
-        "embedContent"
+        "embedContent",
+        "countTextTokens"
       ],
       "version": "exp-03-07"
     },
@@ -675,7 +678,8 @@
       "name": "models/gemini-embedding-exp",
       "outputTokenLimit": 1,
       "supportedGenerationMethods": [
-        "embedContent"
+        "embedContent",
+        "countTextTokens"
       ],
       "version": "exp-03-07"
     },
