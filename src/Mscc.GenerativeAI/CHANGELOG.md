@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.5.1
+
+### Added
+
+- add model `gemini-2.5-flash-preview-04-17`
+- add `dynamic` API
+- add language code
+
+### Changed
+
+- upgrade NuGet packages
+
 ## 2.5.0
 
 ### Added
