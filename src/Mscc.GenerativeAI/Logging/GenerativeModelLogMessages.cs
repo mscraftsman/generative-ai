@@ -64,6 +64,15 @@ namespace Mscc.GenerativeAI
         public static partial void LogGenerativeModelInvoking(
             this ILogger logger);
 
+
+        /// <summary>
+        /// Logs <see cref="DynamicModel"/>
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Dynamic model starting")]
+        public static partial void LogDynamiceModelInvoking(
+            this ILogger logger);
+        
         /// <summary>
         /// Logs <see cref="GenerativeModel"/>
         /// </summary>
