@@ -894,6 +894,60 @@
         }
       }
     },
+    "dynamic": {
+      "methods": {
+        "generateContent": {
+          "description": "Generates a model response given an input `GenerateContentRequest`. Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information. Input capabilities differ between models, including tuned models. Refer to the [model guide](https://ai.google.dev/gemini-api/docs/models/gemini) and [tuning guide](https://ai.google.dev/gemini-api/docs/model-tuning) for details.",
+          "flatPath": "v1beta/dynamic/{dynamicId}:generateContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.dynamic.generateContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^dynamic/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:generateContent",
+          "request": {
+            "$ref": "GenerateContentRequest"
+          },
+          "response": {
+            "$ref": "GenerateContentResponse"
+          }
+        },
+        "streamGenerateContent": {
+          "description": "Generates a [streamed response](https://ai.google.dev/gemini-api/docs/text-generation?lang=python#generate-a-text-stream) from the model given an input `GenerateContentRequest`.",
+          "flatPath": "v1beta/dynamic/{dynamicId}:streamGenerateContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.dynamic.streamGenerateContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^dynamic/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:streamGenerateContent",
+          "request": {
+            "$ref": "GenerateContentRequest"
+          },
+          "response": {
+            "$ref": "GenerateContentResponse"
+          }
+        }
+      }
+    },
     "files": {
       "methods": {
         "delete": {
@@ -1971,7 +2025,7 @@
       }
     }
   },
-  "revision": "20250331",
+  "revision": "20250408",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3609,6 +3663,10 @@
           "format": "float",
           "type": "number"
         },
+        "thinkingConfig": {
+          "$ref": "ThinkingConfig",
+          "description": "Optional. Config for thinking features. An error will be returned if this field is set for models that don't support thinking."
+        },
         "topK": {
           "description": "Optional. The maximum number of tokens to consider when sampling. Gemini models use Top-p (nucleus) sampling or a combination of Top-k and nucleus sampling. Top-k sampling considers the set of `top_k` most probable tokens. Models running with nucleus sampling don't allow top_k setting. Note: The default value varies by `Model` and is specified by the`Model.top_p` attribute returned from the `getModel` function. An empty `top_k` attribute indicates that the model doesn't apply top-k sampling and doesn't allow setting `top_k` on requests.",
           "format": "int32",
@@ -4280,6 +4338,10 @@
         "text": {
           "description": "Inline text.",
           "type": "string"
+        },
+        "thought": {
+          "description": "Optional. Indicates if the part is thought from the model.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -4752,7 +4814,8 @@
             "INTEGER",
             "BOOLEAN",
             "ARRAY",
-            "OBJECT"
+            "OBJECT",
+            "NULL"
           ],
           "enumDescriptions": [
             "Not specified, should not be used.",
@@ -4761,7 +4824,8 @@
             "Integer type.",
             "Boolean type.",
             "Array type.",
-            "Object type."
+            "Object type.",
+            "Null type. HACK: We use this to handle optional parameters, which users are specifying optional things by using a OneOf with a second type of NULL."
           ],
           "type": "string"
         }
@@ -4867,9 +4931,13 @@
       "description": "The speech generation config.",
       "id": "SpeechConfig",
       "properties": {
+        "languageCode": {
+          "description": "Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.",
+          "type": "string"
+        },
         "voiceConfig": {
           "$ref": "VoiceConfig",
-          "description": "The configuration for the speaker to use."
+          "description": "The configuration in case of single-voice output."
         }
       },
       "type": "object"
@@ -4946,6 +5014,17 @@
         "text": {
           "description": "Required. The prompt text.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ThinkingConfig": {
+      "description": "Config for thinking features.",
+      "id": "ThinkingConfig",
+      "properties": {
+        "includeThoughts": {
+          "description": "Indicates whether to include thoughts in the response. If true, thoughts are returned only when available.",
+          "type": "boolean"
         }
       },
       "type": "object"
