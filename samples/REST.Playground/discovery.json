@@ -2025,7 +2025,7 @@
       }
     }
   },
-  "revision": "20250408",
+  "revision": "20250417",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3182,13 +3182,15 @@
             "MODE_UNSPECIFIED",
             "AUTO",
             "ANY",
-            "NONE"
+            "NONE",
+            "VALIDATED"
           ],
           "enumDescriptions": [
             "Unspecified function calling mode. This value should not be used.",
             "Default model behavior, model decides to predict either a function call or a natural language response.",
             "Model is constrained to always predicting a function call only. If \"allowed_function_names\" are set, the predicted function call will be limited to any one of \"allowed_function_names\", else the predicted function call will be any one of the provided \"function_declarations\".",
-            "Model will not predict any function call. Model behavior is same as when not passing any function declarations."
+            "Model will not predict any function call. Model behavior is same as when not passing any function declarations.",
+            "Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding."
           ],
           "type": "string"
         }
@@ -5025,6 +5027,11 @@
         "includeThoughts": {
           "description": "Indicates whether to include thoughts in the response. If true, thoughts are returned only when available.",
           "type": "boolean"
+        },
+        "thinkingBudget": {
+          "description": "The number of thoughts tokens that the model should generate.",
+          "format": "int32",
+          "type": "integer"
         }
       },
       "type": "object"
