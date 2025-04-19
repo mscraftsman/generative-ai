@@ -2215,6 +2215,30 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(response?.Text);
         }
+        
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_Issue80()
+        {
+            // Arrange
+            var prompt = "List a few popular arny weapons with name and summary";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseSchema = """{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}...""",
+                ResponseMimeType = "application/json"
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
 
 #if NET9_0
         public record Root([Description("A list of menus, each representing a specific day.")] List<Menu> Menus);
