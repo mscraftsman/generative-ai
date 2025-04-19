@@ -314,7 +314,8 @@
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -330,12 +331,30 @@
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
       "version": "2.5-preview-03-25"
+    },
+    {
+      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash Preview 04-17",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-preview-04-17",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5-preview-04-17"
     },
     {
       "description": "Gemini 2.0 Flash Experimental",
@@ -382,23 +401,6 @@
         "generateContent",
         "countTokens",
         "createCachedContent"
-      ],
-      "temperature": 1,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "2.0"
-    },
-    {
-      "description": "Gemini 2.0 Flash (Image Generation) Experimental",
-      "displayName": "Gemini 2.0 Flash (Image Generation) Experimental",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-exp-image-generation",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "bidiGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -478,7 +480,8 @@
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -494,7 +497,8 @@
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -510,7 +514,8 @@
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -580,6 +585,22 @@
       "topK": 64,
       "topP": 0.95,
       "version": "001"
+    },
+    {
+      "description": "LearnLM 2.0 Flash Experimental",
+      "displayName": "LearnLM 2.0 Flash Experimental",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/learnlm-2.0-flash-experimental",
+      "outputTokenLimit": 32768,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.0"
     },
     {
       "displayName": "Gemma 3 1B",
