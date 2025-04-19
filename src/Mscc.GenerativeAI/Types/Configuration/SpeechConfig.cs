@@ -6,8 +6,15 @@ namespace Mscc.GenerativeAI
     public class SpeechConfig
     {
         /// <summary>
-        /// The configuration for the speaker to use.
+        /// The configuration in case of single-voice output.
         /// </summary>
         public VoiceConfig VoiceConfig { get; set; }
+        /// <summary>
+        /// Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis.
+        /// </summary>
+        /// <remarks>
+        /// Valid values are: de-DE, en-AU, en-GB, en-IN, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.
+        /// </remarks>
+        public string? LanguageCode { get; set; }
     }
 }
