@@ -77,5 +77,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <remarks>SCHEMA FIELDS FOR TYPE INTEGER and NUMBER</remarks>
         public long? Minimum { get; set; }
+        /// <summary>
+        /// Optional. Default value of the field.
+        /// Per JSON Schema, this field is intended for documentation generators and doesn't affect validation. Thus it's included here and ignored so that developers who send schemas with a `default` field don't get unknown-field errors.
+        /// </summary>
+        public object? Default { get; set; }
     }
 }

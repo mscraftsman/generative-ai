@@ -2025,7 +2025,7 @@
       }
     }
   },
-  "revision": "20250417",
+  "revision": "20250422",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -4739,6 +4739,10 @@
           },
           "type": "array"
         },
+        "default": {
+          "description": "Optional. Default value of the field. Per JSON Schema, this field is intended for documentation generators and doesn't affect validation. Thus it's included here and ignored so that developers who send schemas with a `default` field don't get unknown-field errors.",
+          "type": "any"
+        },
         "description": {
           "description": "Optional. A brief description of the parameter. This could contain examples of use. Parameter description may be formatted as Markdown.",
           "type": "string"
@@ -4934,7 +4938,7 @@
       "id": "SpeechConfig",
       "properties": {
         "languageCode": {
-          "description": "Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.",
+          "description": "Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, en-US, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.",
           "type": "string"
         },
         "voiceConfig": {
