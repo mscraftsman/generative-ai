@@ -408,6 +408,23 @@
       "version": "2.0"
     },
     {
+      "description": "Gemini 2.0 Flash (Image Generation) Experimental",
+      "displayName": "Gemini 2.0 Flash (Image Generation) Experimental",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.0-flash-exp-image-generation",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 40,
+      "topP": 0.95,
+      "version": "2.0"
+    },
+    {
       "description": "Stable version of Gemini 2.0 Flash Lite",
       "displayName": "Gemini 2.0 Flash-Lite 001",
       "inputTokenLimit": 1048576,
@@ -416,7 +433,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -432,7 +450,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -448,7 +467,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -464,7 +484,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -523,52 +544,55 @@
       "version": "2.5-exp-03-25"
     },
     {
-      "description": "Experimental release (January 21st, 2025) of Gemini 2.0 Flash Thinking",
-      "displayName": "Gemini 2.0 Flash Thinking Experimental 01-21",
+      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash Preview 04-17",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-thinking-exp-01-21",
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
-      "temperature": 0.7,
+      "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.0-exp-01-21"
+      "version": "2.5-preview-04-17"
     },
     {
-      "description": "Experimental release (January 21st, 2025) of Gemini 2.0 Flash Thinking",
-      "displayName": "Gemini 2.0 Flash Thinking Experimental 01-21",
+      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash Preview 04-17",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-thinking-exp",
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
-      "temperature": 0.7,
+      "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.0-exp-01-21"
+      "version": "2.5-preview-04-17"
     },
     {
-      "description": "Gemini 2.0 Flash Thinking Experimental",
-      "displayName": "Gemini 2.0 Flash Thinking Experimental",
+      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash Preview 04-17",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-thinking-exp-1219",
       "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "createCachedContent"
       ],
-      "temperature": 0.7,
+      "temperature": 1,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.0"
+      "version": "2.5-preview-04-17"
     },
     {
       "description": "Alias that points to the most recent stable version of Gemini 1.5 Pro, our mid-size multimodal model that supports up to 2 million tokens.",
