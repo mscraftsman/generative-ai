@@ -2025,7 +2025,7 @@
       }
     }
   },
-  "revision": "20250422",
+  "revision": "20250425",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
