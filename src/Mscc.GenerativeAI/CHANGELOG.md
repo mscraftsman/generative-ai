@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.5.3
+
+### Added
+
+- add model `gemini-2.0-flash-exp-image-generation`
+
+### Changed
+
+- fix typo for Gemini 2.5 Flash constants #84 thanks to @Oskar-Przyborski
+- upgrade NuGet packages
+
 ## 2.5.2
 
 ### Added
