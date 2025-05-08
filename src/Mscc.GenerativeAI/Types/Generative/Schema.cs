@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -82,5 +84,29 @@ namespace Mscc.GenerativeAI
         /// Per JSON Schema, this field is intended for documentation generators and doesn't affect validation. Thus it's included here and ignored so that developers who send schemas with a `default` field don't get unknown-field errors.
         /// </summary>
         public object? Default { get; set; }
+        /// <summary>
+        /// Optional. Example of the object. Will only populated when the object is the root.
+        /// </summary>
+        public object? Example { get; set; }
+        /// <summary>
+        /// Optional. Maximum length of the Type.STRING
+        /// </summary>
+        public string? MaxLength { get; set; }
+        /// <summary>
+        /// Optional. Minimum length of the Type.STRING
+        /// </summary>
+        public string? MinLength { get; set; }
+        /// <summary>
+        /// Optional. Maximum number of the properties for Type.OBJECT.
+        /// </summary>
+        public string? MaxProperties { get; set; }
+        /// <summary>
+        /// Optional. Minimum number of the properties for Type.OBJECT.
+        /// </summary>
+        public string? MinProperties { get; set; }
+        /// <summary>
+        /// Optional. Pattern of the Type.STRING to restrict a string to a regular expression.
+        /// </summary>
+        public string? Pattern { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
     /// set "start_offset": { "seconds": 60 } and "end_offset": { "seconds": 70 }.
     /// </remarks>
     [DebuggerDisplay("{StartOffset.Seconds} - {EndOffset.Seconds}")]
-    public class VideoMetadata : IPart
+    public class VideoFileMetadata : IPart
     {
         /// <summary>
         /// Duration of the video.
@@ -27,5 +27,9 @@ namespace Mscc.GenerativeAI
         /// Ending offset of a video. Should be larger than the <see cref="StartOffset"/>.
         /// </summary>
         public Duration EndOffset { get; set; }
+    }
+
+    public class VideoMetadata : VideoFileMetadata
+    {
     }
 }
