@@ -70,7 +70,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashLive = Gemini20FlashLive001;
         public const string Gemini20FlashLive001 = "gemini-2.0-flash-live-001";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
-        public const string Gemini20FlashImageGeneration = Gemini20FlashImageGenerationExperimental;
+        public const string Gemini20FlashImageGeneration = Gemini20FlashPreviewImageGeneration;
+        public const string Gemini20FlashPreviewImageGeneration = "gemini-2.0-flash-preview-image-generation";
         public const string Gemini20FlashImageGenerationExperimental = "gemini-2.0-flash-exp-image-generation";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
@@ -86,11 +87,15 @@ namespace Mscc.GenerativeAI
         public const string Gemini25Flash = Gemini25FlashPreview;
         public const string Gemini25FlashPreview = Gemini25FlashPreview0417;
         public const string Gemini25FlashPreview0417 = "gemini-2.5-flash-preview-04-17";
+        public const string Gemini25FlashThinking = Gemini25FlashPreviewThinking;
+        public const string Gemini25FlashPreviewThinking = Gemini25FlashPreview0417Thinking;
+        public const string Gemini25FlashPreview0417Thinking = "gemini-2.5-flash-preview-04-17-thinking";
         public const string Gemini25Pro = Gemini25ProExperimental;
         public const string Gemini25ProExperimental = Gemini25ProExperimental0325;
         public const string Gemini25ProExperimental0325 = "gemini-2.5-pro-exp-03-25";
-        public const string Gemini25ProPreview = Gemini25ProPreview0325;
+        public const string Gemini25ProPreview = Gemini25ProPreview0506;
         public const string Gemini25ProPreview0325 = "gemini-2.5-pro-preview-03-25";
+        public const string Gemini25ProPreview0506 = "gemini-2.5-pro-preview-05-06";
         
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;

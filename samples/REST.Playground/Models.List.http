@@ -1,7 +1,7 @@
 #@apiKey={{$dotenv GOOGLE_API_KEY}}
 
 # Get a list of available models.
-GET https://generativelanguage.googleapis.com/v1beta/models
+GET https://generativelanguage.googleapis.com/v1beta/models?pageSize=60
 x-goog-api-key: {{apiKey}}
 
 ###
@@ -37,3 +37,21 @@ Authorization: Bearer {{apiKey}}
 
 GET https://generativelanguage.googleapis.com/v1/models/gemini-2.0-pro-exp-02-05
 Authorization: Bearer {{apiKey}}
+
+###
+
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-preview-03-25:generateContent?key={{apiKey}}
+Content-Type: application/json
+
+{
+  "model" : "gemini-2.5-pro-preview-03-25",
+  "contents" : [ {
+    "role" : "user",
+    "parts" : [ {
+      "text" : "When is the next total solar eclipse in Mauritius?"
+    } ]
+  } ],
+  "tools" : [ {
+    "googleSearch" : { }
+  } ]
+}
