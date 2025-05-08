@@ -52,7 +52,7 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
-		<PackageReference Include="Mscc.GenerativeAI" Version="2.5.2" />
+		<PackageReference Include="Mscc.GenerativeAI" Version="2.5.4" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0'))">
