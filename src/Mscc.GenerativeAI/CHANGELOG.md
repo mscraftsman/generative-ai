@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.5.4
+
+### Added
+
+- add model 'gemini-2.5-flash-preview-04-17-thinking' 
+- add model 'gemini-2.5-pro-preview-05-06' 
+- add model 'gemini-2.0-flash-preview-image-generation'
+- add Schema properties
+- add property 'UrlRetrievalMetadata' to 'Candidate'
+
+### Changed
+
+- rename type 'VideoMetadata' to 'VideoFileMetadata'
+
 ## 2.5.3
 
 ### Added
