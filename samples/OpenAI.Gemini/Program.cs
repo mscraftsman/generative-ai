@@ -4,10 +4,13 @@ using OpenAI.Models;
 using System.ClientModel;
 
 var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-var model = "gemini-1.5-flash";
+var model = "gemini-2.0-flash";
 var prompt = "Explain to me how AI works.";
 
-OpenAIClientOptions options = new() { Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/") };
+OpenAIClientOptions options = new()
+{
+    Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/")
+};
 ChatClient client = new(model, new ApiKeyCredential(apiKey), options);
 ChatCompletion completion = client.CompleteChat(prompt);
 Console.WriteLine($"[ASSISTANT]: {completion.Content[0].Text}");

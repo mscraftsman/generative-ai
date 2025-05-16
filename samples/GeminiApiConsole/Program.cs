@@ -21,7 +21,7 @@ if (apiKey is null)
 try
 {
     var genAi = new GoogleAI(apiKey);
-    client = genAi.GenerativeModel("gemini-1.5-flash-latest");
+    client = genAi.GenerativeModel("gemini-2.0-flash");
     var models = await client.ListModels();
     if (!models.Any())
     {

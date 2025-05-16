@@ -4,7 +4,7 @@ using Mscc.GenerativeAI.Microsoft;
 
 GenerativeAIExtensions.ReadDotEnv();
 var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY")!;
-var model = "gemini-1.5-pro-latest";
+var model = "gemini-2.0-flash";
 var prompt = "What is AI?";
 
 IChatClient chatClient = new GeminiChatClient(apiKey, model);
