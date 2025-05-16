@@ -1950,7 +1950,6 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
                 ResponseMimeType = "application/json", 
                 ResponseSchema = new List<Recipe>()
             };
