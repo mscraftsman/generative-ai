@@ -645,22 +645,6 @@
       "version": "2.5-preview-04-17"
     },
     {
-      "description": "Alias that points to the most recent stable version of Gemini 1.5 Pro, our mid-size multimodal model that supports up to 2 million tokens.",
-      "displayName": "LearnLM 1.5 Pro Experimental",
-      "inputTokenLimit": 32767,
-      "maxTemperature": 2,
-      "name": "models/learnlm-1.5-pro-experimental",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "001"
-    },
-    {
       "description": "LearnLM 2.0 Flash Experimental",
       "displayName": "LearnLM 2.0 Flash Experimental",
       "inputTokenLimit": 1048576,
