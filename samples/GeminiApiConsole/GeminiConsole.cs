@@ -66,7 +66,7 @@ public abstract class GeminiConsole(GenerativeModel client)
 	protected void WriteChatInstructionHint()
 	{
 		AnsiConsole.MarkupLine($"[{HintTextColor}]Enter [{AccentTextColor}]{START_NEW_COMMAND}[/] to start over or [{AccentTextColor}]{EXIT_COMMAND}[/] to leave.[/]");
-		AnsiConsole.MarkupLine($"[{HintTextColor}]Begin with [{AccentTextColor}]{Markup.Escape(MULTILINE_OPEN.ToString())}[/] to start multiline input. Sumbmit it by ending with [{AccentTextColor}]{Markup.Escape(MULTILINE_CLOSE.ToString())}[/].[/]");
+		AnsiConsole.MarkupLine($"[{HintTextColor}]Begin with [{AccentTextColor}]{Markup.Escape(MULTILINE_OPEN.ToString())}[/] to start multiline input. Submit it by ending with [{AccentTextColor}]{Markup.Escape(MULTILINE_CLOSE.ToString())}[/].[/]");
 	}
 
 	protected async Task<string> SelectModel(string prompt, string additionalInformation = "")
