@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.5.6
+
+### Changed
+
+- Update Microsoft.Extensions.AI version to 9.5.0-preview.1.25262.9
+
 ## 2.5.5
 
 ### Changed
