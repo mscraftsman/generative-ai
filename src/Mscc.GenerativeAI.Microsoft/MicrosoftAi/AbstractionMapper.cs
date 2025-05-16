@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 #endif
+using System.Text;
 using mea = Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
@@ -15,35 +16,129 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         /// <summary>
         /// Converts a Microsoft.Extensions.AI messages and options to a <see cref="GenerateContentRequest"/>.
         /// </summary>
+        /// <param name="client">The chat client.</param>
         /// <param name="messages">A list of chat messages.</param>
         /// <param name="options">Optional. Chat options to configure the request.</param>
         /// <returns></returns>
-        public static GenerateContentRequest? ToGeminiGenerateContentRequest(IEnumerable<mea.ChatMessage> messages, mea.ChatOptions? options)
+        public static GenerateContentRequest? ToGeminiGenerateContentRequest(mea.IChatClient client, IEnumerable<mea.ChatMessage> messages, mea.ChatOptions? options)
         {
-            var prompt = string.Join<mea.ChatMessage>(" ", messages.ToArray()) ?? "";
-            
-            GenerationConfig? generationConfig = null;
-            if (options?.AdditionalProperties?.Any() ?? false)
+            GenerateContentRequest request = options?.RawRepresentationFactory?.Invoke(client) as GenerateContentRequest ?? new();
+
+            StringBuilder? systemMessage = null;
+
+            request.Contents ??= [];
+            foreach (var message in messages)
             {
-                generationConfig = new GenerationConfig();
-                TryAddOption<float?>(options, "Temperature", v => generationConfig.Temperature = v);
-                TryAddOption<float?>(options, "TopP", v => generationConfig.TopP = v);
-                TryAddOption<int?>(options, "TopK", v => generationConfig.TopK = v);
-                TryAddOption<int?>(options, "MaxOutputTokens", v => generationConfig.MaxOutputTokens = v);
-                TryAddOption<string?>(options, "ResponseMimeType", v => generationConfig.ResponseMimeType = v);
-                // TryAddOption<string?>(options, "ResponseSchema", v => generationConfig.ResponseSchema = v);
-                TryAddOption<float?>(options, "PresencePenalty", v => generationConfig.PresencePenalty = v);
-                TryAddOption<float?>(options, "FrequencyPenalty", v => generationConfig.FrequencyPenalty = v);
-                TryAddOption<bool?>(options, "ResponseLogprobs", v => generationConfig.ResponseLogprobs = v);
-                TryAddOption<int?>(options, "Logprobs", v => generationConfig.Logprobs = v);
+                if (message.Role == mea.ChatRole.System)
+                {
+                    (systemMessage ??= new()).Append(message.Text);
+                    continue;
+                }
+
+                Content c = new(message.Text);
+                c.Parts ??= [];
+                c.Parts.Clear();
+
+                c.Role = message.Role == mea.ChatRole.Assistant ? "model" : "user";
+
+                foreach (var content in message.Contents)
+                {
+                    switch (content)
+                    {
+                        case mea.TextContent tc:
+                            c.Parts.Add(new TextData() { Text = tc.Text });
+                            break;
+
+                        case mea.DataContent dc:
+                            c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
+                            break;
+
+                        case mea.FunctionCallContent fcc:
+                            c.Parts.Add(new FunctionCall() { Id = fcc.CallId, Name = fcc.Name, Args = fcc.Arguments });
+                            break;
+
+                        case mea.FunctionResultContent frc:
+                            c.Parts.Add(new FunctionResponse() { Id = frc.CallId, Response = frc.Result });
+                            break;
+                    }
+                }
+
+                if (c.Parts.Count > 0)
+                {
+                    request.Contents.Add(c);
+                }
             }
 
-            if (options?.Tools is { Count: > 0 })
+            if (systemMessage is not null)
             {
-                
+                string systemInstruction = systemMessage.ToString();
+                if (!string.IsNullOrEmpty(systemInstruction))
+                {
+                    request.SystemInstruction ??= new Content(systemMessage.ToString());
+                }
             }
-            
-            return new GenerateContentRequest(prompt, generationConfig: generationConfig);
+
+            if (options is not null)
+            {
+                request.GenerationConfig ??= new();
+                request.GenerationConfig.FrequencyPenalty = options.FrequencyPenalty;
+                request.GenerationConfig.PresencePenalty = options.PresencePenalty;
+                request.GenerationConfig.TopP = options.TopP;
+                request.GenerationConfig.TopK = options.TopK;
+                request.GenerationConfig.StopSequences = options.StopSequences?.ToList();
+                request.GenerationConfig.MaxOutputTokens = options.MaxOutputTokens;
+                request.GenerationConfig.Seed = (int?)options.Seed;
+                request.GenerationConfig.Temperature = options.Temperature;
+
+                if (options.Tools is { } aiTools)
+                {
+                    foreach (var tool in aiTools)
+                    {
+                        switch (tool)
+                        {
+                            case mea.AIFunction aif:
+                                // TODO: Handle AIFunction
+                                break;
+
+                            case mea.HostedWebSearchTool wst:
+                                (request.Tools ??= []).Add(new Tool() { GoogleSearch = new() });
+                                break;
+
+                            case mea.HostedCodeInterpreterTool cit:
+                                (request.Tools ??= []).Add(new Tool() { CodeExecution = new() });
+                                break;
+                        }
+                    }
+
+                    switch (options.ToolMode)
+                    {
+                        case mea.NoneChatToolMode:
+                            request.ToolConfig ??= new();
+                            request.ToolConfig.FunctionCallingConfig ??= new();
+                            request.ToolConfig.FunctionCallingConfig.Mode = FunctionCallingConfigMode.None;
+                            break;
+
+                        case mea.AutoChatToolMode:
+                        case null:
+                            request.ToolConfig ??= new();
+                            request.ToolConfig.FunctionCallingConfig ??= new();
+                            request.ToolConfig.FunctionCallingConfig.Mode = FunctionCallingConfigMode.Auto;
+                            break;
+
+                        case mea.RequiredChatToolMode rctm:
+                            request.ToolConfig ??= new();
+                            request.ToolConfig.FunctionCallingConfig ??= new();
+                            request.ToolConfig.FunctionCallingConfig.Mode = FunctionCallingConfigMode.Any;
+                            if (rctm.RequiredFunctionName is string name)
+                            {
+                                (request.ToolConfig.FunctionCallingConfig.AllowedFunctionNames ??= []).Add(name);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            return request;
         }
 
         /// <summary>
@@ -88,7 +183,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         }
         
         /// <summary>
-        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatCompletion"/>.
+        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatResponse"/>.
         /// </summary>
         /// <param name="response">The response with completion data.</param>
         /// <returns></returns>
@@ -111,7 +206,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         }
 
         /// <summary>
-        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.StreamingChatCompletionUpdate"/>.
+        /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatResponseUpdate"/>.
         /// </summary>
         /// <param name="response">The response stream to convert.</param>
         public static mea.ChatResponseUpdate ToChatResponseUpdate(GenerateContentResponse? response)
@@ -228,7 +323,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
         private static void TryAddOption<T>(mea.ChatOptions chatOptions, string option, Action<T> optionSetter)
         {
             if (chatOptions.AdditionalProperties?.TryGetValue(option, out var value) ?? false)
-                optionSetter((T)value);
+                optionSetter((T)value!);
         }
     }
 }
