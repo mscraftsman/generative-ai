@@ -557,9 +557,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_with_Modalities_multiple_Images()
         {
             // Arrange
-            var prompt = "Show me how to cook a macaron with images.";
+            var prompt = "Show me how to bake a macaron with images.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini20FlashImageGeneration);
             var request = new GenerateContentRequest(prompt,
                 generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
 
@@ -1951,6 +1951,8 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerationConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new List<Recipe>()
             };
 
             // Act
