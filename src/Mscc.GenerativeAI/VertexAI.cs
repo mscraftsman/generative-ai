@@ -1,6 +1,7 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
@@ -185,7 +186,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
-        public Task<ModelResponse> GetModel(string model)
+        public Task<ModelResponse> GetModel(string model, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
