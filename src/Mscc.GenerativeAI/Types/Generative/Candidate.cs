@@ -74,10 +74,15 @@ namespace Mscc.GenerativeAI
         /// Output only. Log-likelihood scores for the response tokens and top tokens
         /// </summary>
         public LogprobsResult? LogprobsResult { get; set; }
-        
+
         /// <summary>
         /// Output only. Metadata related to url context retrieval tool.
         /// </summary>
         public UrlRetrievalMetadata? UrlRetrievalMetadata { get; set; }
+
+        /// <summary>
+        /// Output only. Metadata related to url context retrieval tool.
+        /// </summary>
+        public UrlContextMetadata? UrlContextMetadata { get; set; }
     }
 }

@@ -41,5 +41,9 @@
         /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
         /// </remarks>
         public Schema? Response { get; set; }
+        /// <summary>
+        /// Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.
+        /// </summary>
+        public BehaviorType? Behavior { get; set; }
     }
 }

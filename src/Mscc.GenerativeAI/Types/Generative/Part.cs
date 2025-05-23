@@ -100,7 +100,7 @@ namespace Mscc.GenerativeAI
         {
             if (string.IsNullOrEmpty(value)) return new InlineData();
 
-            return new InlineData() { Data = value, MimeType = mimeType};
+            return new InlineData() { Data = value, MimeType = mimeType };
         }
 
         public static CodeExecutionResult FromCodeExecutionResult(Outcome outcome, string output)
@@ -141,9 +141,9 @@ namespace Mscc.GenerativeAI
             return new FileData { FileUri = uri, MimeType = mimetype };
         }
 
-        public static VideoMetadata FromVideoMetadata(Duration startOffset, Duration endOffset)
+        public static VideoMetadata FromVideoMetadata(string startOffset, string endOffset, double fps = 1.0f)
         {
-            return new VideoMetadata() { StartOffset = startOffset, EndOffset = endOffset };
+            return new VideoMetadata() { StartOffset = startOffset, EndOffset = endOffset, Fps = fps };
         }
     }
 
