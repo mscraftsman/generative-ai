@@ -52,7 +52,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     {
         if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(messages, options);
+        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		var response = await _client.GenerateContent(request, requestOptions);
 		return MicrosoftAi.AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
@@ -66,7 +66,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     {
         if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(messages, options);
+        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
 			yield return MicrosoftAi.AbstractionMapper.ToChatResponseUpdate(response);
