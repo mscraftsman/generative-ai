@@ -2025,7 +2025,7 @@
       }
     }
   },
-  "revision": "20250515",
+  "revision": "20250519",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -2364,6 +2364,11 @@
           "format": "int32",
           "readOnly": true,
           "type": "integer"
+        },
+        "urlContextMetadata": {
+          "$ref": "UrlContextMetadata",
+          "description": "Output only. Metadata related to url context retrieval tool.",
+          "readOnly": true
         },
         "urlRetrievalMetadata": {
           "$ref": "UrlRetrievalMetadata",
@@ -3207,6 +3212,20 @@
       "description": "Structured representation of a function declaration as defined by the [OpenAPI 3.03 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name and parameters. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client.",
       "id": "FunctionDeclaration",
       "properties": {
+        "behavior": {
+          "description": "Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.",
+          "enum": [
+            "UNSPECIFIED",
+            "BLOCKING",
+            "NON_BLOCKING"
+          ],
+          "enumDescriptions": [
+            "This value is unused.",
+            "If set, the system will wait to receive the function response before continuing the conversation.",
+            "If set, the system will not wait to receive the function response. Instead, it will attempt to handle function responses as they become available while maintaining the conversation between the user and the model."
+          ],
+          "type": "string"
+        },
         "description": {
           "description": "Required. A brief description of the function.",
           "type": "string"
@@ -3245,6 +3264,26 @@
           },
           "description": "Required. The function response in JSON object format.",
           "type": "object"
+        },
+        "scheduling": {
+          "description": "Optional. Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE.",
+          "enum": [
+            "SCHEDULING_UNSPECIFIED",
+            "SILENT",
+            "WHEN_IDLE",
+            "INTERRUPT"
+          ],
+          "enumDescriptions": [
+            "This value is unused.",
+            "Only add the result to the conversation context, do not interrupt or trigger generation.",
+            "Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.",
+            "Add the result to the conversation context, interrupt ongoing generation and prompt to generate output."
+          ],
+          "type": "string"
+        },
+        "willContinue": {
+          "description": "Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -3322,7 +3361,7 @@
       "type": "object"
     },
     "GenerateContentRequest": {
-      "description": "Request to generate a completion from the model.",
+      "description": "Request to generate a completion from the model. NEXT ID: 13",
       "id": "GenerateContentRequest",
       "properties": {
         "cachedContent": {
@@ -3692,7 +3731,10 @@
       "description": "GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google.",
       "id": "GoogleSearch",
       "properties": {
-
+        "timeRangeFilter": {
+          "$ref": "Interval",
+          "description": "Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa)."
+        }
       },
       "type": "object"
     },
@@ -3895,6 +3937,23 @@
             "$ref": "SafetyRating"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Interval": {
+      "description": "Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time.",
+      "id": "Interval",
+      "properties": {
+        "endTime": {
+          "description": "Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "startTime": {
+          "description": "Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start.",
+          "format": "google-datetime",
+          "type": "string"
         }
       },
       "type": "object"
@@ -4280,6 +4339,20 @@
       },
       "type": "object"
     },
+    "MultiSpeakerVoiceConfig": {
+      "description": "The configuration for the multi-speaker setup.",
+      "id": "MultiSpeakerVoiceConfig",
+      "properties": {
+        "speakerVoiceConfigs": {
+          "description": "Required. All the enabled speaker voices.",
+          "items": {
+            "$ref": "SpeakerVoiceConfig"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "Operation": {
       "description": "This resource represents a long-running operation that is the result of a network API call.",
       "id": "Operation",
@@ -4350,6 +4423,10 @@
         "thought": {
           "description": "Optional. Indicates if the part is thought from the model.",
           "type": "boolean"
+        },
+        "videoMetadata": {
+          "$ref": "VideoMetadata",
+          "description": "Optional. Video metadata. The metadata should only be specified while the video data is presented in inline_data or file_data."
         }
       },
       "type": "object"
@@ -4967,6 +5044,21 @@
       },
       "type": "object"
     },
+    "SpeakerVoiceConfig": {
+      "description": "The configuration for a single speaker in a multi speaker setup.",
+      "id": "SpeakerVoiceConfig",
+      "properties": {
+        "speaker": {
+          "description": "Required. The name of the speaker to use. Should be the same as in the prompt.",
+          "type": "string"
+        },
+        "voiceConfig": {
+          "$ref": "VoiceConfig",
+          "description": "Required. The configuration for the voice to use."
+        }
+      },
+      "type": "object"
+    },
     "SpeechConfig": {
       "description": "The speech generation config.",
       "id": "SpeechConfig",
@@ -4974,6 +5066,10 @@
         "languageCode": {
           "description": "Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, en-US, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.",
           "type": "string"
+        },
+        "multiSpeakerVoiceConfig": {
+          "$ref": "MultiSpeakerVoiceConfig",
+          "description": "Optional. The configuration for the multi-speaker setup. It is mutually exclusive with the voice_config field."
         },
         "voiceConfig": {
           "$ref": "VoiceConfig",
@@ -5096,6 +5192,10 @@
         "googleSearchRetrieval": {
           "$ref": "GoogleSearchRetrieval",
           "description": "Optional. Retrieval tool that is powered by Google search."
+        },
+        "urlContext": {
+          "$ref": "UrlContext",
+          "description": "Optional. Tool to support URL context retrieval."
         }
       },
       "type": "object"
@@ -5355,6 +5455,53 @@
       },
       "type": "object"
     },
+    "UrlContext": {
+      "description": "Tool to support URL context retrieval.",
+      "id": "UrlContext",
+      "properties": {
+
+      },
+      "type": "object"
+    },
+    "UrlContextMetadata": {
+      "description": "Metadata related to url context retrieval tool.",
+      "id": "UrlContextMetadata",
+      "properties": {
+        "urlMetadata": {
+          "description": "List of url context.",
+          "items": {
+            "$ref": "UrlMetadata"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UrlMetadata": {
+      "description": "Context of the a single url retrieval.",
+      "id": "UrlMetadata",
+      "properties": {
+        "retrievedUrl": {
+          "description": "Retrieved url by the tool.",
+          "type": "string"
+        },
+        "urlRetrievalStatus": {
+          "description": "Status of the url retrieval.",
+          "enum": [
+            "URL_RETRIEVAL_STATUS_UNSPECIFIED",
+            "URL_RETRIEVAL_STATUS_SUCCESS",
+            "URL_RETRIEVAL_STATUS_ERROR"
+          ],
+          "enumDescriptions": [
+            "Default value. This value is unused.",
+            "Url retrieval is successful.",
+            "Url retrieval is failed due to error."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "UrlRetrievalContext": {
       "description": "Context of the a single url retrieval.",
       "id": "UrlRetrievalContext",
@@ -5457,6 +5604,28 @@
       "properties": {
         "videoDuration": {
           "description": "Duration of the video.",
+          "format": "google-duration",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "VideoMetadata": {
+      "description": "Metadata describes the input video content.",
+      "id": "VideoMetadata",
+      "properties": {
+        "endOffset": {
+          "description": "Optional. The end offset of the video.",
+          "format": "google-duration",
+          "type": "string"
+        },
+        "fps": {
+          "description": "Optional. The frame rate of the video sent to the model. If not specified, the default value will be 1.0. The fps range is (0.0, 24.0].",
+          "format": "double",
+          "type": "number"
+        },
+        "startOffset": {
+          "description": "Optional. The start offset of the video.",
           "format": "google-duration",
           "type": "string"
         }
