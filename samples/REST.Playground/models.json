@@ -1,37 +1,6 @@
 {
   "models": [
     {
-      "description": "A legacy text-only model optimized for chat conversations",
-      "displayName": "PaLM 2 Chat (Legacy)",
-      "inputTokenLimit": 4096,
-      "name": "models/chat-bison-001",
-      "outputTokenLimit": 1024,
-      "supportedGenerationMethods": [
-        "generateMessage",
-        "countMessageTokens"
-      ],
-      "temperature": 0.25,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "001"
-    },
-    {
-      "description": "A legacy model that understands text and generates text as an output",
-      "displayName": "PaLM 2 (Legacy)",
-      "inputTokenLimit": 8196,
-      "name": "models/text-bison-001",
-      "outputTokenLimit": 1024,
-      "supportedGenerationMethods": [
-        "generateText",
-        "countTextTokens",
-        "createTunedTextModel"
-      ],
-      "temperature": 0.7,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "001"
-    },
-    {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Embedding Gecko",
       "inputTokenLimit": 1024,
@@ -315,7 +284,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -332,7 +302,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -349,12 +320,31 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
       "version": "2.5-preview-04-17"
+    },
+    {
+      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
+      "displayName": "Gemini 2.5 Flash Preview 05-20",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-preview-05-20",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5-preview-05-20"
     },
     {
       "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
@@ -366,7 +356,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -383,7 +374,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -417,7 +409,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -434,7 +427,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -468,7 +462,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -485,7 +480,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -518,7 +514,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -535,7 +532,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 40,
@@ -552,7 +550,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -569,7 +568,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -586,7 +586,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -603,7 +604,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -620,7 +622,8 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -637,12 +640,45 @@
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
-        "createCachedContent"
+        "createCachedContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
       "topP": 0.95,
       "version": "2.5-preview-04-17"
+    },
+    {
+      "description": "Gemini 2.5 Flash Preview TTS",
+      "displayName": "Gemini 2.5 Flash Preview TTS",
+      "inputTokenLimit": 32768,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-preview-tts",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "generateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "gemini-2.5-flash-exp-tts-2025-05-19"
+    },
+    {
+      "description": "Gemini 2.5 Pro Preview TTS",
+      "displayName": "Gemini 2.5 Pro Preview TTS",
+      "inputTokenLimit": 65536,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-pro-preview-tts",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "generateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "gemini-2.5-pro-preview-tts-2025-05-19"
     },
     {
       "description": "LearnLM 2.0 Flash Experimental",
@@ -707,6 +743,20 @@
       "inputTokenLimit": 131072,
       "name": "models/gemma-3-27b-it",
       "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "001"
+    },
+    {
+      "displayName": "Gemma 3n E4B",
+      "inputTokenLimit": 8192,
+      "name": "models/gemma-3n-e4b-it",
+      "outputTokenLimit": 2048,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens"
@@ -797,6 +847,38 @@
         "predictLongRunning"
       ],
       "version": "2.0"
+    },
+    {
+      "description": "Gemini 2.5 Flash Preview Native Audio Dialog",
+      "displayName": "Gemini 2.5 Flash Preview Native Audio Dialog",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-preview-native-audio-dialog",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
+    },
+    {
+      "description": "Gemini 2.5 Flash Exp Native Audio Thinking Dialog",
+      "displayName": "Gemini 2.5 Flash Exp Native Audio Thinking Dialog",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-exp-native-audio-thinking-dialog",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "gemini-2.5-flash-exp-native-audio-thinking-dialog-2025-05-19"
     },
     {
       "description": "Gemini 2.0 Flash 001",
