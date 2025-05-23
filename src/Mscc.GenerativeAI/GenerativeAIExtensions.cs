@@ -262,10 +262,11 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
-        public static Part FromVideoMetadata(this Part part, Duration startOffset, Duration endOffset)
+        public static Part FromVideoMetadata(this Part part, string startOffset, string endOffset, double fps)
         {
             part.VideoMetadata.StartOffset = startOffset;
             part.VideoMetadata.EndOffset = endOffset;
+            part.VideoMetadata.Fps = fps;
             return part;
         }
         
