@@ -13,6 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.0
+
+### Added
+
+- add model `gemini-2.5-flash-preview-05-20`
+- add model `gemini-2.5-flash-preview-tts`
+- add model `gemini-2.5-pro-preview-tts`
+- add model `gemma-3n-e4b-it`
+- add model `gemini-2.5-flash-preview-native-audio-dialog`
+- add model `gemini-2.5-flash-exp-native-audio-thinking-dialog`
+- add model `imagen-4.0-generate-preview-05-20`
+- add model `imagen-4.0-ultra-generate-exp-05-20`
+- add model `lyria-002`
+- add multi-speaker configuration
+- add function behavior
+- add URL context and metadata
+
+### Changed
+
+- Update to stable Microsoft.Extensions.AI and update some implementation [#87](https://github.com/mscraftsman/generative-ai/pull/87) thanks to @stephentoub
+
+### Fixed
+
+- Add missing optional CancellationToken parameters [#89](https://github.com/mscraftsman/generative-ai/pull/89) thanks to @Ibuki-Suika
+
 ## 2.5.6
 
 ### Changed
