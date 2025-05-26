@@ -181,6 +181,18 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        public static string SanitizeBatchesName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (!value.StartsWith("batch", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"batches/{value}";
+            }
+
+            return value;
+        }
+
         public static string SanitizeTuningJobsName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
