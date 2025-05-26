@@ -36,6 +36,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <remarks>The following environment variables are used:
         /// <list type="table">
         /// <item><term>GOOGLE_PROJECT_ID</term>
@@ -78,8 +79,8 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// </summary>
         /// <param name="apiKey">API key for Vertex AI in express mode.</param>
-        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <param name="apiVersion">Version of the API.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="apiKey"/> is <see langword="null"/>.</exception>
         public VertexAI(string? apiKey, 
             string? apiVersion = null, ILogger? logger = null) : this(logger)
@@ -97,6 +98,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
@@ -137,6 +139,7 @@ namespace Mscc.GenerativeAI
         /// <param name="cachedContent">Content that has been preprocessed.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
@@ -164,6 +167,7 @@ namespace Mscc.GenerativeAI
         /// <param name="tuningJob">Tuning Job to use with the model.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="tuningJob"/> is null.</exception>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
@@ -195,6 +199,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="model">Model to use.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.Gemini15Pro002,
@@ -209,6 +214,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public ImageGenerationModel ImageGenerationModel(string model = Model.ImageGeneration,
@@ -223,6 +229,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="model">Model to use (default: "imagetext")</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
         public ImageTextModel ImageTextModel(string model = Model.ImageText,
@@ -236,10 +243,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public RagEngineModel RagEngineModel(
-        ILogger? logger = null)
+        public RagEngineModel RagEngineModel(ILogger? logger = null)
         {
             Guard();
 
