@@ -149,6 +149,23 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Returns an instance of <see cref="BatchesModel"/> to use with a model.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <returns>Batches instance.</returns>
+        public BatchesModel Batches(ILogger? logger = null)
+        {
+            Guard();
+
+            var batches = new BatchesModel(logger: logger)
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return batches;
+        }
+
+        /// <summary>
         /// Returns an instance of <see cref="ImageGenerationModel"/> to use with a model.
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
