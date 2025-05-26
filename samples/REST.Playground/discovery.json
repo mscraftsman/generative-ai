@@ -96,6 +96,70 @@
   },
   "protocol": "rest",
   "resources": {
+    "batches": {
+      "methods": {
+        "get": {
+          "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+          "flatPath": "v1beta/batches/{batchesId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.batches.get",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "The name of the operation resource.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "Operation"
+          }
+        },
+        "list": {
+          "description": "Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`.",
+          "flatPath": "v1beta/batches",
+          "httpMethod": "GET",
+          "id": "generativelanguage.batches.list",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "filter": {
+              "description": "The standard list filter.",
+              "location": "query",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the operation's parent resource.",
+              "location": "path",
+              "pattern": "^batches$",
+              "required": true,
+              "type": "string"
+            },
+            "pageSize": {
+              "description": "The standard list page size.",
+              "format": "int32",
+              "location": "query",
+              "type": "integer"
+            },
+            "pageToken": {
+              "description": "The standard list page token.",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "ListOperationsResponse"
+          }
+        }
+      }
+    },
     "cachedContents": {
       "methods": {
         "create": {
@@ -2025,7 +2089,7 @@
       }
     }
   },
-  "revision": "20250519",
+  "revision": "20250523",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3427,6 +3491,11 @@
         "promptFeedback": {
           "$ref": "PromptFeedback",
           "description": "Returns the prompt's feedback related to the content filters."
+        },
+        "responseId": {
+          "description": "Output only. response_id is used to identify each response.",
+          "readOnly": true,
+          "type": "string"
         },
         "usageMetadata": {
           "$ref": "UsageMetadata",
