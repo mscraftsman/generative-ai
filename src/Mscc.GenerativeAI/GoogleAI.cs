@@ -31,6 +31,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <remarks>The following environment variables are used:
         /// <list type="table">
         /// <item><term>GOOGLE_API_KEY</term>
@@ -71,6 +72,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
             GenerationConfig? generationConfig = null,
@@ -101,6 +103,7 @@ namespace Mscc.GenerativeAI
         /// <param name="cachedContent">Content that has been preprocessed.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
         public GenerativeModel GenerativeModel(CachedContent cachedContent,
@@ -129,11 +132,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Returns an instance of CachedContent to use with a model.
+        /// Returns an instance of <see cref="CachedContentModel"/> to use with a model.
         /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Cached content instance.</returns>
-        public CachedContentModel CachedContent(
-        ILogger? logger = null)
+        public CachedContentModel CachedContent(ILogger? logger = null)
         {
             Guard();
 
@@ -149,6 +152,7 @@ namespace Mscc.GenerativeAI
         /// Returns an instance of <see cref="ImageGenerationModel"/> to use with a model.
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Imagen model</returns>
         public ImageGenerationModel ImageGenerationModel(string model = Model.Imagen3,
             ILogger? logger = null)
