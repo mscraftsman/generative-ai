@@ -838,7 +838,7 @@
       "version": "002"
     },
     {
-      "description": "Vertex served Veo 2 model.",
+      "description": "Vertex served Veo 2 model. Access to this model requires billing to be enabled on the associated Google Cloud Platform account. Please visit https://console.cloud.google.com/billing to enable it.",
       "displayName": "Veo 2",
       "inputTokenLimit": 480,
       "name": "models/veo-2.0-generate-001",
