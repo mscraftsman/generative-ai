@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.2
+
+### Added
+
+- add model `gemini-2.5-flash-preview-native-audio-dialog-rai-v3`
+- add image manipulation config types
+- add reference image types
+- add types to edit and upscale images
+- add upscale factor enum
+- add batches `Cancel` method
+- add properties `ParametersJsonSchema`, `ResponseJsonSchema` and `ThoughtSignature`
+
+### Changes
+
+- add optional `role` to Content constructor
+
 ## 2.6.1
 
 ### Added
