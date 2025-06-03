@@ -98,6 +98,28 @@
   "resources": {
     "batches": {
       "methods": {
+        "cancel": {
+          "description": "Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of `1`, corresponding to `Code.CANCELLED`.",
+          "flatPath": "v1beta/batches/{batchesId}:cancel",
+          "httpMethod": "POST",
+          "id": "generativelanguage.batches.cancel",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "The name of the operation resource to be cancelled.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}:cancel",
+          "response": {
+            "$ref": "Empty"
+          }
+        },
         "get": {
           "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
           "flatPath": "v1beta/batches/{batchesId}",
@@ -2089,7 +2111,7 @@
       }
     }
   },
-  "revision": "20250523",
+  "revision": "20250601",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -2431,11 +2453,6 @@
         },
         "urlContextMetadata": {
           "$ref": "UrlContextMetadata",
-          "description": "Output only. Metadata related to url context retrieval tool.",
-          "readOnly": true
-        },
-        "urlRetrievalMetadata": {
-          "$ref": "UrlRetrievalMetadata",
           "description": "Output only. Metadata related to url context retrieval tool.",
           "readOnly": true
         }
@@ -3302,9 +3319,17 @@
           "$ref": "Schema",
           "description": "Optional. Describes the parameters to this function. Reflects the Open API 3.03 Parameter Object string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter."
         },
+        "parametersJsonSchema": {
+          "description": "Optional. Describes the parameters to the function in JSON Schema format. The schema must describe an object where the properties are the parameters to the function. For example: ``` { \"type\": \"object\", \"properties\": { \"name\": { \"type\": \"string\" }, \"age\": { \"type\": \"integer\" } }, \"additionalProperties\": false, \"required\": [\"name\", \"age\"], \"propertyOrdering\": [\"name\", \"age\"] } ``` This field is mutually exclusive with `parameters`.",
+          "type": "any"
+        },
         "response": {
           "$ref": "Schema",
           "description": "Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function."
+        },
+        "responseJsonSchema": {
+          "description": "Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`.",
+          "type": "any"
         }
       },
       "type": "object"
@@ -3726,6 +3751,10 @@
           "description": "Optional. Presence penalty applied to the next token's logprobs if the token has already been seen in the response. This penalty is binary on/off and not dependant on the number of times the token is used (after the first). Use frequency_penalty for a penalty that increases with each use. A positive penalty will discourage the use of tokens that have already been used in the response, increasing the vocabulary. A negative penalty will encourage the use of tokens that have already been used in the response, decreasing the vocabulary.",
           "format": "float",
           "type": "number"
+        },
+        "responseJsonSchema": {
+          "description": "Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set.",
+          "type": "any"
         },
         "responseLogprobs": {
           "description": "Optional. If true, export the logprobs results in response.",
@@ -4492,6 +4521,11 @@
         "thought": {
           "description": "Optional. Indicates if the part is thought from the model.",
           "type": "boolean"
+        },
+        "thoughtSignature": {
+          "description": "Optional. An opaque signature for the thought so it can be reused in subsequent requests.",
+          "format": "byte",
+          "type": "string"
         },
         "videoMetadata": {
           "$ref": "VideoMetadata",
@@ -5567,31 +5601,6 @@
             "Url retrieval is failed due to error."
           ],
           "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "UrlRetrievalContext": {
-      "description": "Context of the a single url retrieval.",
-      "id": "UrlRetrievalContext",
-      "properties": {
-        "retrievedUrl": {
-          "description": "Retrieved url by the tool.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "UrlRetrievalMetadata": {
-      "description": "Metadata related to url context retrieval tool.",
-      "id": "UrlRetrievalMetadata",
-      "properties": {
-        "urlRetrievalContexts": {
-          "description": "List of url retrieval contexts.",
-          "items": {
-            "$ref": "UrlRetrievalContext"
-          },
-          "type": "array"
         }
       },
       "type": "object"
