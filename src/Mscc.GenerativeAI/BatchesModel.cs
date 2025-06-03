@@ -83,5 +83,40 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync();
             return await Deserialize<Operation>(response);
         }
+        
+        /// <summary>
+        /// Starts asynchronous cancellation on a long-running operation.
+        /// The server makes a best effort to cancel the operation, but success is not guaranteed.
+        /// If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`.
+        /// Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded
+        /// or whether the operation completed despite cancellation. On successful cancellation, the operation is
+        /// not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of `1`,
+        /// corresponding to `Code.CANCELLED`.
+        /// </summary>
+        /// <param name="batchesName">Required. The name of the operation resource. Format: `batches/{id}`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>If successful, the response body is empty.</returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
+        public async Task<string> Cancel(string batchesName,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(batchesName)) throw new ArgumentException("Value cannot be null or empty.", nameof(batchesName));
+
+            batchesName = batchesName.SanitizeBatchesName();
+
+            var url = $"{BaseUrlGoogleAi}/{batchesName}:cancel";
+            url = ParseUrl(url);
+            // var json = Serialize(request);
+            // var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            // httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken);
+            await response.EnsureSuccessAsync();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            return await response.Content.ReadAsStringAsync();
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+        }
     }
 }
