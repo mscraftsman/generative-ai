@@ -865,6 +865,22 @@
       "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
     },
     {
+      "description": "Gemini 2.5 Flash Preview Native Audio Dialog RAI v3",
+      "displayName": "Gemini 2.5 Flash Preview Native Audio Dialog RAI v3",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-preview-native-audio-dialog-rai-v3",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
+    },
+    {
       "description": "Gemini 2.5 Flash Exp Native Audio Thinking Dialog",
       "displayName": "Gemini 2.5 Flash Exp Native Audio Thinking Dialog",
       "inputTokenLimit": 131072,
