@@ -89,6 +89,11 @@ namespace Mscc.GenerativeAI
         /// Optional. Indicates if the part is thought from the model.
         /// </summary>
         public bool? Thought { get; set; }
+        
+        /// <summary>
+        /// Optional. An opaque signature for the thought so it can be reused in subsequent requests.
+        /// </summary>
+        public string? ThoughtSignature { get; set; }
 
         /// <summary>
         /// The ETag of the item.
