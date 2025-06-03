@@ -58,8 +58,10 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="Content"/> class.
         /// </summary>
         /// <param name="text">String to process.</param>
-        public Content(string text) : this()
+        /// <param name="role">Provide the <see cref="GenerativeAI.Role"/> of the text.</param>
+        public Content(string text, string role = GenerativeAI.Role.User) : this()
         {
+            Role = role;
             Parts?.Add(new TextData { Text = text });
         }
 
