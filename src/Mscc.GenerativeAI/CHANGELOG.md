@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.3
+
+### Added 
+
+- add model `gemini-2.5-pro-preview-06-05`
+
+### Changed
+
+- upgrade NuGet packages
+
 ## 2.6.2
 
 ### Added
