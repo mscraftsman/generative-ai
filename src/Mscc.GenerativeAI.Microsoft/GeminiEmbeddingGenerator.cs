@@ -17,8 +17,20 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         private readonly GenerativeModel _client;
 
-        /// <inheritdoc/>
+        /// <summary/>
         public EmbeddingGeneratorMetadata Metadata { get; }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="GeminiEmbeddingGenerator"/> class for the specified Gemini API client.
+        /// </summary>
+        /// <param name="client">The underlying client.</param>
+        /// <param name="defaultModelDimensions"></param>
+        /// <exception cref="ArgumentNullException">Thrown when the specified client is null.</exception>
+        public GeminiEmbeddingGenerator(GenerativeModel client, int? defaultModelDimensions = null)
+        {
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            Metadata = new(providerName, null, client.Model);
+        }
 
         /// <summary>
         /// Creates an instance of the Gemini API client using Google AI.
@@ -59,8 +71,8 @@ namespace Mscc.GenerativeAI.Microsoft
         }
 
         /// <inheritdoc/>
-        public object? GetService(Type serviceType, object? key)
-            => key is null && serviceType?.IsInstanceOfType(this) is true ? this : null;
+        public object? GetService(Type serviceType, object? serviceKey)
+            => serviceKey is null && serviceType?.IsInstanceOfType(this) is true ? this : null;
 
         /// <inheritdoc/>
         public void Dispose() { }
