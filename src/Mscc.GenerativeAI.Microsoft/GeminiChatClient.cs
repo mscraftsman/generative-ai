@@ -65,7 +65,7 @@ public sealed class GeminiChatClient : mea.IChatClient
 
         var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
         var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
-		var response = await _client.GenerateContent(request, requestOptions);
+		var response = await _client.GenerateContent(request, requestOptions, cancellationToken);
 		return MicrosoftAi.AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
     }
 

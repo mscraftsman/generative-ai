@@ -8,9 +8,9 @@ using Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft
 {
-    public class GeminiEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<float>>
+    public sealed class GeminiEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<float>>
     {
-        private const string providerName = "gemini";
+        private const string ProviderName = "gemini";
     
         /// <summary>
         /// Gets the Gemini model that is used to communicate with.
@@ -29,7 +29,7 @@ namespace Mscc.GenerativeAI.Microsoft
         public GeminiEmbeddingGenerator(GenerativeModel client, int? defaultModelDimensions = null)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
-            Metadata = new(providerName, null, client.Model);
+            Metadata = new(ProviderName, null, client.Model);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Mscc.GenerativeAI.Microsoft
         {
             var genAi = new GoogleAI(apiKey);
             _client = genAi.GenerativeModel(model);
-            Metadata = new(providerName, null, model);
+            Metadata = new(ProviderName, null, model);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Mscc.GenerativeAI.Microsoft
         {
             var genAi = new VertexAI(projectId: projectId, region: region);
             _client = genAi.GenerativeModel(model);
-            Metadata = new(providerName, null, model);
+            Metadata = new(ProviderName, null, model);
         }
 
         /// <inheritdoc/>
@@ -66,7 +66,7 @@ namespace Mscc.GenerativeAI.Microsoft
             if (values == null) throw new ArgumentNullException(nameof(values));
 
             var request = MicrosoftAi.AbstractionMapper.ToGeminiEmbedContentRequest(values, options);
-            var response = await _client.EmbedContent(request);
+            var response = await _client.EmbedContent(request, cancellationToken: cancellationToken);
             return MicrosoftAi.AbstractionMapper.ToGeneratedEmbeddings(request, response);
         }
 
