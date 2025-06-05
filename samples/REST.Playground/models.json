@@ -383,6 +383,24 @@
       "version": "2.5-preview-05-06"
     },
     {
+      "description": "Preview release (June 5th, 2025) of Gemini 2.5 Pro",
+      "displayName": "Gemini 2.5 Pro Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-pro-preview-06-05",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5-preview-06-05"
+    },
+    {
       "description": "Gemini 2.0 Flash Experimental",
       "displayName": "Gemini 2.0 Flash Experimental",
       "inputTokenLimit": 1048576,

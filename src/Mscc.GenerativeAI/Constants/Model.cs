@@ -102,9 +102,10 @@ namespace Mscc.GenerativeAI
         public const string Gemini25Pro = Gemini25ProExperimental;
         public const string Gemini25ProExperimental = Gemini25ProExperimental0325;
         public const string Gemini25ProExperimental0325 = "gemini-2.5-pro-exp-03-25";
-        public const string Gemini25ProPreview = Gemini25ProPreview0506;
+        public const string Gemini25ProPreview = Gemini25ProPreview0605;
         public const string Gemini25ProPreview0325 = "gemini-2.5-pro-preview-03-25";
         public const string Gemini25ProPreview0506 = "gemini-2.5-pro-preview-05-06";
+        public const string Gemini25ProPreview0605 = "gemini-2.5-pro-preview-06-05";
         public const string Gemini25ProPreviewTts = "gemini-2.5-pro-preview-tts";
 
         // Gemma 3
