@@ -22,3 +22,14 @@ IEmbeddingGenerator<string,Embedding<float>> generator =
     new GeminiEmbeddingGenerator(apiKey, model);
 var embeddings = await generator.GenerateAsync([prompt]);
 Console.WriteLine(string.Join(", ", embeddings[0].Vector.ToArray()));
+
+// Use fluent approach. Issue #90
+// var chatClient2 = new GeminiClient(apiKey)
+//     .GetChatClient(model)
+//     .AsIChatClient()
+//     .AsBuilder()
+//     .UseFunctionInvocation()
+//     .Build();
+//
+// response = await chatClient2.GetResponseAsync(prompt);
+// Console.WriteLine(response.Text);
