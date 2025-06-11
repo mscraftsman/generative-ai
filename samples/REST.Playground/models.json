@@ -250,6 +250,7 @@
       "name": "models/gemini-1.5-flash-8b-exp-0827",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
+        "createCachedContent",
         "generateContent",
         "countTokens"
       ],
@@ -266,6 +267,7 @@
       "name": "models/gemini-1.5-flash-8b-exp-0924",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
+        "createCachedContent",
         "generateContent",
         "countTokens"
       ],
@@ -814,7 +816,8 @@
       "outputTokenLimit": 1,
       "supportedGenerationMethods": [
         "embedContent",
-        "countTextTokens"
+        "countTextTokens",
+        "countTokens"
       ],
       "version": "exp-03-07"
     },
@@ -826,7 +829,8 @@
       "outputTokenLimit": 1,
       "supportedGenerationMethods": [
         "embedContent",
-        "countTextTokens"
+        "countTextTokens",
+        "countTokens"
       ],
       "version": "exp-03-07"
     },
