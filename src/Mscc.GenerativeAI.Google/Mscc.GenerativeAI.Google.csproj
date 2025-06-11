@@ -64,7 +64,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
+        <PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
         <PackageReference Include="Mscc.GenerativeAI" Version="2.6.3" />
     </ItemGroup>
 
