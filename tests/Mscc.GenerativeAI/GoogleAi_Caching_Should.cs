@@ -28,7 +28,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string _model = Model.Gemini15Flash001;
+        private readonly string _model = Model.Gemini15Flash;
         private readonly GoogleAI _genAi;
         private readonly CachedContentModel _cachedContent;
 

@@ -32,7 +32,7 @@ namespace Mscc.GenerativeAI
         // Gemini 1.5
         public const string GeminiPro = Gemini15Pro;
         public const string Gemini15Pro = "gemini-1.5-pro";
-        public const string Gemini15Pro001 = "gemini-1.5-pro-001";
+        //public const string Gemini15Pro001 = "gemini-1.5-pro-001";
         public const string Gemini15Pro002 = "gemini-1.5-pro-002";
         public const string Gemini15ProTuning = Gemini15Pro002;
         public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
@@ -42,16 +42,16 @@ namespace Mscc.GenerativeAI
         public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
         public const string Gemini15Flash = "gemini-1.5-flash";
         public const string Gemini15FlashLatest = "gemini-1.5-flash-latest";
-        public const string Gemini15Flash001 = "gemini-1.5-flash-001";
+        //public const string Gemini15Flash001 = "gemini-1.5-flash-001";
         public const string Gemini15Flash002 = "gemini-1.5-flash-002";
-        public const string Gemini15Flash001Tuning = "gemini-1.5-flash-001-tuning";
-        public const string Gemini15FlashTuning = Gemini15Flash001Tuning;
+        //public const string Gemini15Flash001Tuning = "gemini-1.5-flash-001-tuning";
+        //public const string Gemini15FlashTuning = Gemini15Flash001Tuning;
         public const string Gemini15Flash8B = "gemini-1.5-flash-8b";
         public const string Gemini15Flash8B001 = "gemini-1.5-flash-8b-001";
         public const string Gemini15Flash8BLatest = "gemini-1.5-flash-8b-latest";
         public const string Gemini15FlashExperimental0827 = GeminiExperimental1206;
-        public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
-        public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
+        //public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
+        //public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
 
         public const string GeminiExperimental = GeminiExperimental1206;
         public const string GeminiExperimental1114 = GeminiExperimental1206;
