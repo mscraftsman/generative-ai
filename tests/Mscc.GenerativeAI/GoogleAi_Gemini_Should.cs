@@ -30,7 +30,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiGeminiShould : LoggingTestsBase
     {
-        private readonly string _model = Model.Gemini25ProExperimental;
+        private readonly string _model = Model.Gemini25ProPreview;
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly GoogleAI _googleAi;
