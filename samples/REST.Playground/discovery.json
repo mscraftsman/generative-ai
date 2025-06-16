@@ -2111,7 +2111,7 @@
       }
     }
   },
-  "revision": "20250612",
+  "revision": "20250613",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AttributionSourceId": {
@@ -3450,7 +3450,7 @@
       "type": "object"
     },
     "GenerateContentRequest": {
-      "description": "Request to generate a completion from the model. NEXT ID: 13",
+      "description": "Request to generate a completion from the model. NEXT ID: 14",
       "id": "GenerateContentRequest",
       "properties": {
         "cachedContent": {
