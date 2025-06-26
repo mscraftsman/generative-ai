@@ -30,7 +30,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiGeminiShould : LoggingTestsBase
     {
-        private readonly string _model = Model.Gemini25ProPreview;
+        private readonly string _model = Model.Gemini25Pro;
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly GoogleAI _googleAi;
@@ -1214,6 +1214,42 @@ namespace Test.Mscc.GenerativeAI
                     .Select(w => w)
                     .ToArray()));
             _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+        }
+
+        [Fact]
+        public async Task Generate_Content_with_Thinking()
+        {
+            // Arrange
+            var prompt = "Give me a tutorial to create a landing page";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ThinkingConfig = new ThinkingConfig()
+                {
+                    IncludeThoughts = true,
+                    ThinkingBudget = 8192
+                }
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt, generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine("Thinking part:");
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Where(p => p.Thought == true)
+                    .Select(x => x.Text)
+                    .ToArray()));
+            _output.WriteLine(string.Join(Environment.NewLine,"Response:"));
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Where(p => p.Thought is null or false)
+                    .Select(x => x.Text)
+                    .ToArray()));
         }
 
         [Fact]

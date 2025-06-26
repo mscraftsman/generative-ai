@@ -278,7 +278,7 @@ Console.WriteLine(string.Join(Environment.NewLine,
 
 More details are described in the API documentation on [Search as a tool](https://ai.google.dev/gemini-api/docs/models/gemini-v2#search-tool).
 
-### Grounding with Google Search
+### Grounding with Google Search (deprecated)
 
 The simplest version is to toggle the boolean property `UseGrounding`, like so.
 
@@ -309,6 +309,29 @@ Console.WriteLine(response.Text);
 
 In either case, the returned `Candidates` item type has an additional property `GroundingMetadata` which provides the details of the Google Search based grounding
 
+### Thinking and budget
+
+```csharp
+using Mscc.GenerativeAI;
+
+var apiKey = "your_api_key";
+var prompt = "Give me a tutorial to create a landing page";
+var googleAI = new GoogleAI(apiKey: apiKey);
+var model = googleAi.GenerativeModel(model: Model.Gemini25Pro);
+var generationConfig = new GenerationConfig()
+{
+    ThinkingConfig = new ThinkingConfig()
+    {
+        IncludeThoughts = true,
+        ThinkingBudget = 8192
+    }
+};
+
+var response = await model.GenerateContent(prompt, 
+    generationConfig: generationConfig);
+Console.WriteLine(response?.Text);
+```
+
 ### Text-and-image input
 
 ```csharp
@@ -316,7 +339,7 @@ using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
 var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
-var googleAI = new GoogleAI(apiKey: "your API key");
+var googleAI = new GoogleAI(apiKey: apiKey);
 var model = googleAI.GenerativeModel(model: Model.GeminiVisionPro);
 var request = new GenerateContentRequest(prompt);
 await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
