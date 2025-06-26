@@ -264,6 +264,24 @@
       "version": "2.5-preview-05-20"
     },
     {
+      "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
+      "displayName": "Gemini 2.5 Flash",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "001"
+    },
+    {
       "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
       "displayName": "Gemini 2.5 Flash Preview 04-17 for cursor testing",
       "inputTokenLimit": 1048576,
@@ -280,6 +298,24 @@
       "topK": 64,
       "topP": 0.95,
       "version": "2.5-preview-04-17"
+    },
+    {
+      "description": "Preview release (June 11th, 2025) of Gemini 2.5 Flash-Lite",
+      "displayName": "Gemini 2.5 Flash-Lite Preview 06-17",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-lite-preview-06-17",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5-preview-06-17"
     },
     {
       "description": "Preview release (May 6th, 2025) of Gemini 2.5 Pro",
@@ -316,6 +352,24 @@
       "topK": 64,
       "topP": 0.95,
       "version": "2.5-preview-06-05"
+    },
+    {
+      "description": "Stable release (June 17th, 2025) of Gemini 2.5 Pro",
+      "displayName": "Gemini 2.5 Pro",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-pro",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5"
     },
     {
       "description": "Gemini 2.0 Flash Experimental",
@@ -371,24 +425,7 @@
       "version": "2.0"
     },
     {
-      "description": "Gemini 2.0 Flash (Image Generation) Experimental",
-      "displayName": "Gemini 2.0 Flash (Image Generation) Experimental",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-exp-image-generation",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "bidiGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "2.0"
-    },
-    {
-      "description": "Stable version of Gemini 2.0 Flash Lite",
+      "description": "Stable version of Gemini 2.0 Flash-Lite",
       "displayName": "Gemini 2.0 Flash-Lite 001",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
@@ -424,23 +461,7 @@
       "version": "2.0"
     },
     {
-      "description": "Gemini 2.0 Flash Preview Image Generation",
-      "displayName": "Gemini 2.0 Flash Preview Image Generation",
-      "inputTokenLimit": 32768,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-preview-image-generation",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.0"
-    },
-    {
-      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash Lite",
+      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash-Lite",
       "displayName": "Gemini 2.0 Flash-Lite Preview 02-05",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
@@ -458,7 +479,7 @@
       "version": "preview-02-05"
     },
     {
-      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash Lite",
+      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash-Lite",
       "displayName": "Gemini 2.0 Flash-Lite Preview",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
@@ -775,6 +796,28 @@
       "version": "002"
     },
     {
+      "description": "Vertex served Imagen 4.0 model",
+      "displayName": "Imagen 4 (Preview)",
+      "inputTokenLimit": 480,
+      "name": "models/imagen-4.0-generate-preview-06-06",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predict"
+      ],
+      "version": "01"
+    },
+    {
+      "description": "Vertex served Imagen 4.0 ultra model",
+      "displayName": "Imagen 4 Ultra (Preview)",
+      "inputTokenLimit": 480,
+      "name": "models/imagen-4.0-ultra-generate-preview-06-06",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predict"
+      ],
+      "version": "01"
+    },
+    {
       "description": "Vertex served Veo 2 model. Access to this model requires billing to be enabled on the associated Google Cloud Platform account. Please visit https://console.cloud.google.com/billing to enable it.",
       "displayName": "Veo 2",
       "inputTokenLimit": 480,
@@ -791,22 +834,6 @@
       "inputTokenLimit": 131072,
       "maxTemperature": 2,
       "name": "models/gemini-2.5-flash-preview-native-audio-dialog",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "countTokens",
-        "bidiGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
-    },
-    {
-      "description": "Gemini 2.5 Flash Preview Native Audio Dialog RAI v3",
-      "displayName": "Gemini 2.5 Flash Preview Native Audio Dialog RAI v3",
-      "inputTokenLimit": 131072,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-preview-native-audio-dialog-rai-v3",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "countTokens",
@@ -840,6 +867,22 @@
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-live-001",
       "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "bidiGenerateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "001"
+    },
+    {
+      "description": "Gemini Live 2.5 Flash Preview",
+      "displayName": "Gemini Live 2.5 Flash Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-live-2.5-flash-preview",
+      "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "bidiGenerateContent",
         "countTokens"
