@@ -13,6 +13,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.4
+
+### Added
+
+- add model `gemini-2.5-pro`
+- add model `gemini-2.5-flash`
+- add model `gemini-2.5-flash-lite-preview-06-17`
+- add model `gemini-live-2.5-flash-preview`
+- add model `imagen-4.0-generate-preview-06-06`
+- add model `imagen-4.0-ultra-generate-preview-06-06`
+- add model `gemini-2.5-pro-preview-06-05`
+- add `DateTimeFormatJsonConverter`
+- add test for 3rd party libraries
+- add test to handle Thinking response
+
+### Changed
+
+- upgrade NuGet packages
+- change model to run tests with
+- change test to use Gemini 2.0 Flash
+- remove model `gemini-1.5-pro-001`
+- remove model `gemini-1.5-flash-001`
+- remove model `gemini-1.5-flash-001-tuning`
+- remove model `gemini-1.5-flash-8b-exp-0827`
+- remove model `gemini-1.5-flash-8b-exp-0924`
+
 ## 2.6.3
 
 ### Added 
