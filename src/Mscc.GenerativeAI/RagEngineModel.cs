@@ -338,7 +338,7 @@ namespace Mscc.GenerativeAI
         {
             var method = GenerativeAI.Method.RetrieveContexts;
             var url = "{BaseUrlVertexAi}:{method}";
-            url = ParseUrl(url);
+            url = ParseUrl(url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
