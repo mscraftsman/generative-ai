@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.5
+
+### Added
+
+- add model `gemini-2.0-flash-exp-image-generation`
+- add model `gemini-2.0-flash-preview-image-generation`
+- add model `gemma-3n-e2b-it`
+- add model `gemini-2.5-flash-live-preview`
+- add method `delete` for batches
+- add enum value `UnexpectedToolCall`
+- add property `Thinking`
+
+### Changed
+
+- remove model `gemini-2.5-pro-exp-03-25`
+- upgrade NuGet packages
+
+### Fixed
+
+- Update RagEngineModel.cs [#94](https://github.com/mscraftsman/generative-ai/pull/94) thanks to @rfrcarvalho
+
 ## 2.6.4
 
 ### Added
