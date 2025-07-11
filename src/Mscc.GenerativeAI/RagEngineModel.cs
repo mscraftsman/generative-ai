@@ -333,19 +333,19 @@ namespace Mscc.GenerativeAI
 #endif
         }
 
-        public async Task<RagRetrievalQueryResponse> RetrievalQuery(RagRetrievalQueryRequest request,
+        public async Task<RagQueryResponse> RetrievalQuery(RagRetrievalQueryRequest request,
             CancellationToken cancellationToken = default)
         {
             var method = GenerativeAI.Method.RetrieveContexts;
             var url = "{BaseUrlVertexAi}:{method}";
-            url = ParseUrl(url);
+            url = ParseUrl(url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, cancellationToken);
             await response.EnsureSuccessAsync();
-            return await Deserialize<RagRetrievalQueryResponse>(response);
+            return await Deserialize<RagQueryResponse>(response);
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace Mscc.GenerativeAI
         /// <param name="similarityTopK"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<RagRetrievalQueryResponse> RetrievalQuery(RagResource[] ragResources,
+        public async Task<RagQueryResponse> RetrievalQuery(RagResource[] ragResources,
             string text,
             RagRetrievalConfig? ragRetrievalConfig,
             float? vectorDistanceThreshold,
