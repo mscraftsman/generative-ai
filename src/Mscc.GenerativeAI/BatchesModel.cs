@@ -118,5 +118,32 @@ namespace Mscc.GenerativeAI
             return await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
         }
+
+        /// <summary>
+        /// Deletes a long-running operation.
+        /// This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`.
+        /// </summary>
+        /// <param name="batchesName">Required. The name of the operation resource to be deleted. Format: `batches/{id}`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>If successful, the response body is empty.</returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
+        public async Task<string> Delete(string batchesName,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(batchesName)) throw new ArgumentException("Value cannot be null or empty.", nameof(batchesName));
+
+            batchesName = batchesName.SanitizeBatchesName();
+
+            var url = $"{BaseUrlGoogleAi}/{batchesName}";
+            url = ParseUrl(url);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
+            var response = await SendAsync(httpRequest, cancellationToken);
+            await response.EnsureSuccessAsync();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            return await response.Content.ReadAsStringAsync();
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+        }
     }
 }
