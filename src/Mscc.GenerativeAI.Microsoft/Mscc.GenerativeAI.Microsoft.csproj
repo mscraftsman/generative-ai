@@ -58,8 +58,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="9.6.0" />
-      <PackageReference Include="Mscc.GenerativeAI" Version="2.6.3" />
+      <PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="9.7.0" />
+      <PackageReference Include="Mscc.GenerativeAI" Version="2.6.4" />
     </ItemGroup>
 
     <Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">
