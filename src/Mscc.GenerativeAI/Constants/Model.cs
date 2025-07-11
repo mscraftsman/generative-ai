@@ -74,8 +74,9 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashLive = Gemini20FlashLive001;
         public const string Gemini20FlashLive001 = "gemini-2.0-flash-live-001";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
-        public const string Gemini20FlashImageGeneration = Gemini20FlashPreviewImageGeneration;
+        public const string Gemini20FlashImageGeneration = Gemini20FlashImageGenerationPreview;
         public const string Gemini20FlashPreviewImageGeneration = "gemini-2.0-flash-preview-image-generation";
+        public const string Gemini20FlashImageGenerationPreview = "gemini-2.0-flash-preview-image-generation";
         public const string Gemini20FlashImageGenerationExperimental = "gemini-2.0-flash-exp-image-generation";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
@@ -111,7 +112,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini25ProPreview0605 = "gemini-2.5-pro-preview-06-05";
         public const string Gemini25ProPreviewTts = "gemini-2.5-pro-preview-tts";
         public const string Gemini25LiveFlash = Gemini25LiveFlashPreview;
-        public const string Gemini25LiveFlashPreview = "gemini-live-2.5-flash-preview";
+        public const string Gemini25LiveFlashPreview = "gemini-2.5-flash-live-preview";
 
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
@@ -120,6 +121,7 @@ namespace Mscc.GenerativeAI
         public const string Gemma3_12B = "gemma-3-12b-it";
         public const string Gemma3_27B = "gemma-3-27b-it";
         public const string Gemma3n = Gemma3n_E4B;
+        public const string Gemma3n_E2B = "gemma-3n-e2b-it";
         public const string Gemma3n_E4B = "gemma-3n-e4b-it";
 
         // PaLM 2 models
