@@ -72,6 +72,7 @@ namespace Mscc.GenerativeAI
         /// <param name="role">Provide the <see cref="GenerativeAI.Role"/> of the text.</param>
         public Content(IPart part, string role = GenerativeAI.Role.User) : this()
         {
+            if (part is null) throw new ArgumentNullException(nameof(part));
             Role = role;
             Parts?.Add(part);
         }
@@ -83,6 +84,11 @@ namespace Mscc.GenerativeAI
         /// <param name="role">Provide the <see cref="GenerativeAI.Role"/> of the text.</param>
         public Content(IEnumerable<IPart> parts, string role = GenerativeAI.Role.User) : this()
         {
+            if (parts is null)
+            {
+                throw new ArgumentNullException(nameof(parts));
+            }
+
             Role = role;
             Parts?.AddRange(parts);
         }
