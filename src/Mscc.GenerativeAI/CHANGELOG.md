@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.6
+
+### Added
+
+- add model `gemini-embedding-001`
+- add handling for Gemini Embedding models
+
+### Changed
+
+- use parameter `logger`
+- update embedding tests
+- upgrade NuGet packages
+
 ## 2.6.5
 
 ### Added
