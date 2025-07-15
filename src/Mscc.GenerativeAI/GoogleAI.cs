@@ -89,7 +89,7 @@ namespace Mscc.GenerativeAI
                 safetySettings,
                 tools,
                 systemInstruction,
-                logger: Logger)
+                logger: logger ?? Logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null, 
                 Version = _version
@@ -117,7 +117,7 @@ namespace Mscc.GenerativeAI
             _generativeModel = new GenerativeModel(cachedContent,
                 generationConfig,
                 safetySettings,
-                logger: Logger)
+                logger: logger ?? Logger)
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
