@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - use parameter `logger`
 - update embedding tests
+- add IPart constructors to `Content` class and improve flexibility [#95](https://github.com/mscraftsman/generative-ai/pull/95) thanks to @dannyball710
 - upgrade NuGet packages
 
 ## 2.6.5
