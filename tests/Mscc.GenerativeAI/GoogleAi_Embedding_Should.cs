@@ -16,20 +16,30 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GoogleAiEmbeddingShould(ITestOutputHelper output, ConfigurationFixture fixture)
-        : LoggingTestsBase(output, LogLevel.Information)
+    public class GoogleAiEmbeddingShould : LoggingTestsBase
     {
-        private readonly string _model = Model.Embedding;
+        private readonly string _model = Model.GeminiEmbedding;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
+        private readonly GoogleAI _googleAi;
+
+        public GoogleAiEmbeddingShould(ITestOutputHelper output, ConfigurationFixture fixture)
+            : base(output, LogLevel.Trace)
+        {
+            _output = output;
+            _fixture = fixture;
+            _googleAi = new(apiKey: fixture.ApiKey, logger: Logger);
+        }
 
         [Fact]
         public void Initialize_Model()
         {
             // Arrange
-            var expected = Model.Embedding.SanitizeModelName();
-            var googleAi = new GoogleAI(apiKey: fixture.ApiKey);
+            var expected = Model.GeminiEmbedding.SanitizeModelName();
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
 
             // Act
-            var model = googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: _model);
 
             // Assert
             model.Should().NotBeNull();
@@ -41,8 +51,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = genAi.GenerativeModel(model: _model);
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
 
             // Act
             var response = await model.EmbedContent(prompt);
@@ -53,7 +63,49 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                output.WriteLine(x.ToString());
+                _output.WriteLine(x.ToString());
+            });
+        }
+
+        [Fact]
+        public async Task Embed_Content_Embedding()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+
+            // Act
+            var response = await model.EmbedContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Embedding.Should().NotBeNull();
+            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.Embedding.Values.ForEach(x =>
+            {
+                _output.WriteLine(x.ToString());
+            });
+        }
+
+        [Fact]
+        public async Task Embed_Content_GeminiEmbedding()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: Model.GeminiEmbedding);
+
+            // Act
+            var response = await model.EmbedContent(prompt);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Embedding.Should().NotBeNull();
+            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.Embedding.Values.ForEach(x =>
+            {
+                _output.WriteLine(x.ToString());
             });
         }
 
@@ -62,8 +114,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Write a story about a magic backpack.";
-            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = genAi.GenerativeModel(model: Model.TextEmbedding);
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: Model.TextEmbedding);
 
             // Act
             var response = await model.EmbedContent(prompt);
@@ -74,7 +126,7 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                output.WriteLine(x.ToString());
+                _output.WriteLine(x.ToString());
             });
         }
 
@@ -86,8 +138,8 @@ namespace Test.Mscc.GenerativeAI
                 "What is the meaning of life?",
                 "How much wood would a woodchuck chuck?",
                 "How does the brain work?"};
-            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
-            var model = genAi.GenerativeModel(model: _model);
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
 
             // Act
             var response = await model.EmbedContent(content: prompts, 
@@ -100,7 +152,7 @@ namespace Test.Mscc.GenerativeAI
             response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
-                output.WriteLine(x.ToString());
+                _output.WriteLine(x.ToString());
             });
         }
 
@@ -108,11 +160,11 @@ namespace Test.Mscc.GenerativeAI
         public async Task Use_EmbeddingsEndpoint()
         {
             // Arrange
-            IGenerativeAI genAi = new GoogleAI(apiKey: fixture.ApiKey);
+            IGenerativeAI genAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = new EmbeddingsModel()
             {
-                ApiKey = fixture.ApiKey, 
-                AccessToken = fixture.ApiKey is null ? fixture.AccessToken : null
+                ApiKey = _fixture.ApiKey, 
+                AccessToken = _fixture.ApiKey is null ? _fixture.AccessToken : null
             };
             var request = new GenerateEmbeddingsRequest()
             {
