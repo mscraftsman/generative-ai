@@ -89,6 +89,12 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
                 request.GenerationConfig.MaxOutputTokens = options.MaxOutputTokens;
                 request.GenerationConfig.Seed = (int?)options.Seed;
                 request.GenerationConfig.Temperature = options.Temperature;
+                if (options.ResponseFormat is mea.ChatResponseFormatJson jsonFormat)
+                {
+                    request.GenerationConfig.ResponseMimeType = "application/json";
+                    if (jsonFormat.Schema is not null)
+                        request.GenerationConfig.ResponseSchema = jsonFormat.Schema;
+                }
 
                 if (options.Tools is { } aiTools)
                 {
@@ -159,7 +165,7 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
                 TryAddOption<int?>(options, "RetryMaximum", v => retry.Maximum = v ?? 0);
                 TryAddOption<int?>(options, "RetryTimeout", v => retry.Timeout = v ?? 0);
                 TryAddOption<TimeSpan?>(options, "Timeout", v => timeout = v);
-                
+
                 if (retry.Initial > 0 || timeout is not null)
                     return new RequestOptions(retry, timeout);
 
