@@ -212,25 +212,6 @@
     },
     {
       "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 04-17",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-preview-04-17",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-04-17"
-    },
-    {
-      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
       "displayName": "Gemini 2.5 Flash Preview 05-20",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
@@ -266,25 +247,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "001"
-    },
-    {
-      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 04-17 for cursor testing",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-preview-04-17-thinking",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-04-17"
     },
     {
       "description": "Preview release (June 11th, 2025) of Gemini 2.5 Flash-Lite",
@@ -579,7 +541,7 @@
     },
     {
       "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 04-17",
+      "displayName": "Gemini 2.5 Flash Preview 05-20",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-thinking-exp-01-21",
@@ -594,11 +556,11 @@
       "thinking": true,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.5-preview-04-17"
+      "version": "2.5-preview-05-20"
     },
     {
       "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 04-17",
+      "displayName": "Gemini 2.5 Flash Preview 05-20",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-thinking-exp",
@@ -613,11 +575,11 @@
       "thinking": true,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.5-preview-04-17"
+      "version": "2.5-preview-05-20"
     },
     {
       "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 04-17",
+      "displayName": "Gemini 2.5 Flash Preview 05-20",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
       "name": "models/gemini-2.0-flash-thinking-exp-1219",
@@ -632,7 +594,7 @@
       "thinking": true,
       "topK": 64,
       "topP": 0.95,
-      "version": "2.5-preview-04-17"
+      "version": "2.5-preview-05-20"
     },
     {
       "description": "Gemini 2.5 Flash Preview TTS",
