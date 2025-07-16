@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.AI;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
+using System.Text.Json;
 
 GenerativeAIExtensions.ReadDotEnv();
 var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY")!;
@@ -13,7 +14,28 @@ var response = await chatClient.GetResponseAsync(prompt);
 Console.WriteLine(response.Text);
 
 response = await chatClient.GetResponseAsync( 
-    "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference."); 
+    "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference.");
+Console.WriteLine(response.Text);
+
+// structured output
+var responseFormat = ChatResponseFormat.ForJsonSchema(
+    JsonDocument.Parse("""
+    {
+        "type": "object",
+        "properties": {
+            "explanation": { "type": "string" },
+            "reference": { "type": "string" }
+        },
+        "required": ["explanation", "reference"]
+    }
+    """).RootElement);
+var options = new ChatOptions
+{
+    ResponseFormat = responseFormat
+};
+response = await chatClient.GetResponseAsync(
+    "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference.",
+    options);
 Console.WriteLine(response.Text);
 
 // Create embeddings using the appropriate model.
