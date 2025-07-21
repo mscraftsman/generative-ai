@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.8
+
+### Added
+
+- add model `veo-3.0-generate-preview`
+- add test for tool `UrlContext`
+- add convenience property `Thinking`
+
+### Changed
+
+- change convenience property `Text`
+- upgrade NuGet packages
+
 ## 2.6.7
 
 ### Changed
