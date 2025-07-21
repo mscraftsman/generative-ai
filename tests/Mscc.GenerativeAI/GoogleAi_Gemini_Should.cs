@@ -1248,14 +1248,13 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_with_Thinking_Dynamic()
         {
             // Arrange
-            var prompt = "Which one is heavier: a pound of feathers or a kilogram of bricks";
+            var prompt = "Which one is heavier, a pound of feathers or a kilogram of bricks";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
                 ThinkingConfig = new ThinkingConfig()
                 {
-                    IncludeThoughts = true,
                     ThinkingBudget = -1     // turn on dynamic thinking
                 }
             };
