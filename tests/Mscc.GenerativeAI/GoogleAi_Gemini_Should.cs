@@ -1239,17 +1239,9 @@ namespace Test.Mscc.GenerativeAI
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             _output.WriteLine("Thinking part:");
-            _output.WriteLine(string.Join(Environment.NewLine,
-                response.Candidates![0].Content!.Parts
-                    .Where(p => p.Thought == true)
-                    .Select(x => x.Text)
-                    .ToArray()));
+            _output.WriteLine(response.Thinking);
             _output.WriteLine(string.Join(Environment.NewLine,"Response:"));
-            _output.WriteLine(string.Join(Environment.NewLine,
-                response.Candidates![0].Content!.Parts
-                    .Where(p => p.Thought is null or false)
-                    .Select(x => x.Text)
-                    .ToArray()));
+            _output.WriteLine(response.Text);
         }
 
         [Fact]
