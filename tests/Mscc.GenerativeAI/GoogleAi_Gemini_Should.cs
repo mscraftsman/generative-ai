@@ -1253,6 +1253,27 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Generate_Content_with_UrlContext()
+        {
+            // Arrange
+            var url = "https://conference.mscc.mu/";
+            var prompt = $"Summarize this document: {url}";
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash,
+                tools: [new Tool { UrlContext = new() }]);
+            
+            // Act
+            var response = await model.GenerateContent(prompt);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine(response.Text);
+            response.Candidates![0].UrlContextMetadata!.UrlMetadata
+                .ForEach(m =>
+                    _output.WriteLine($"{m.RetrievedUrl} - {m.UrlRetrievalStatus}"));
+        }
+
+        [Fact]
         // Ref: https://ai.google.dev/docs/function_calling
         public async Task Function_Calling()
         {
