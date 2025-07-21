@@ -212,7 +212,8 @@ namespace Mscc.GenerativeAI
         public const string Veo2 = Veo2Generate001;
         public const string Veo2Generate = Veo2Generate001;
         public const string Veo2Generate001 = "veo-2.0-generate-001";
-        //public const string Veo3 = "";
+        public const string Veo3 = Veo3Preview;
+        public const string Veo3Preview = "veo-3.0-generate-preview";
 
         // Lyria
         public const string Lyria = LyriaBase001;
