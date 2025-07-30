@@ -13,5 +13,9 @@ namespace Mscc.GenerativeAI
         /// <see cref="Chunk"/> relevance to the query.
         /// </summary>
         public float ChunkRelevanceScore { get; set; }
+        /// <summary>
+        /// <see cref="Document"/> associated with the chunk.
+        /// </summary>
+        public Document Document { get; set; }
     }
 }
