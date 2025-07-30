@@ -1243,6 +1243,41 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Enqueues a batch of GenerateContent requests for batch processing.
+        /// </summary>
+        /// <remarks>
+        /// Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information.
+        /// Input capabilities differ between models, including tuned models.
+        /// Refer to the [model guide](https://ai.google.dev/gemini-api/docs/models/gemini) and [tuning guide](https://ai.google.dev/gemini-api/docs/model-tuning) for details.
+        /// </remarks>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
+        public async Task<Operation> BatchGenerateContent(BatchGenerateContentRequest request,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            ThrowIfUnsupportedRequest(request);
+            
+            var url = ParseUrl(Url, "batchGenerateContent");
+            var json = Serialize(request);
+            
+            Logger.LogMethodInvokingRequest(nameof(BatchGenerateContent));
+            
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<Operation>(response);
+        }
+
         // ToDo: Implement methode
         // Ref: https://ai.google.dev/gemini-api/docs/models/gemini-v2#live-api
         // Ref: https://ai.google.dev/api/multimodal-live
