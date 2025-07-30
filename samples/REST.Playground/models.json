@@ -13,36 +13,6 @@
       "version": "001"
     },
     {
-      "description": "The original Gemini 1.0 Pro Vision model version which was optimized for image understanding. Gemini 1.0 Pro Vision was deprecated on July 12, 2024. Move to a newer Gemini version.",
-      "displayName": "Gemini 1.0 Pro Vision",
-      "inputTokenLimit": 12288,
-      "name": "models/gemini-1.0-pro-vision-latest",
-      "outputTokenLimit": 4096,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 0.4,
-      "topK": 32,
-      "topP": 1,
-      "version": "001"
-    },
-    {
-      "description": "The original Gemini 1.0 Pro Vision model version which was optimized for image understanding. Gemini 1.0 Pro Vision was deprecated on July 12, 2024. Move to a newer Gemini version.",
-      "displayName": "Gemini 1.0 Pro Vision",
-      "inputTokenLimit": 12288,
-      "name": "models/gemini-pro-vision",
-      "outputTokenLimit": 4096,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 0.4,
-      "topK": 32,
-      "topP": 1,
-      "version": "001"
-    },
-    {
       "description": "Alias that points to the most recent production (non-experimental) release of Gemini 1.5 Pro, our mid-size multimodal model that supports up to 2 million tokens.",
       "displayName": "Gemini 1.5 Pro Latest",
       "inputTokenLimit": 2000000,
@@ -724,6 +694,25 @@
         "countTokens"
       ],
       "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "001"
+    },
+    {
+      "description": "Stable verion of Gemini 2.5 Flash-Lite, released in July of 2025",
+      "displayName": "Gemini 2.5 Flash-Lite",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-lite",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
       "topK": 64,
       "topP": 0.95,
       "version": "001"

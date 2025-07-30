@@ -20,12 +20,12 @@ namespace Mscc.GenerativeAI
 
         // Discontinuation date: April 9, 2025.
         public const string Gemini10Pro002 = "gemini-1.0-pro-002";
-        public const string GeminiProVision = "gemini-pro-vision";
+        //public const string GeminiProVision = "gemini-pro-vision";
         public const string Gemini10ProVision = "gemini-1.0-pro-vision";
 
         // Discontinuation date: April 9, 2025.
         public const string Gemini10ProVision001 = "gemini-1.0-pro-vision-001";
-        public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
+        //public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
         public const string GeminiUltra = "gemini-ultra";
         public const string GeminiUltraLatest = "gemini-1.0-ultra-latest";
 
@@ -93,7 +93,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini25Flash = "gemini-2.5-flash";
         public const string Gemini25FlashPreview = Gemini25FlashPreview0520;
         public const string Gemini25FlashPreview0520 = "gemini-2.5-flash-preview-05-20";
-        public const string Gemini25FlashLite = Gemini25FlashLitePreview;
+        public const string Gemini25FlashLite = "gemini-2.5-flash-lite";
         public const string Gemini25FlashLitePreview = Gemini25FlashLitePreview0617;
         public const string Gemini25FlashLitePreview0617 = "gemini-2.5-flash-lite-preview-06-17";
         public const string Gemini25FlashPreviewTts = "gemini-2.5-flash-preview-tts";
