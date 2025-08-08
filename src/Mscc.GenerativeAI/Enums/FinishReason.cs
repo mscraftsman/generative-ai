@@ -68,6 +68,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Model generated a tool call but no tools were enabled in the request.
         /// </summary>
-        UnexpectedToolCall
+        UnexpectedToolCall,
+        /// <summary>
+        /// Model called too many tools consecutively, thus the system exited execution.
+        /// </summary>
+        TooManyToolCalls
     }
 }
