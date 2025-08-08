@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.9
+
+### Added
+
+- add model `gemini-2.5-flash-lite`
+- add model `veo-3.0-fast-generate-preview`
+- add functionality of batched content generation
+- add more batch endpoints
+- add type `Document`
+- add enum `BatchState`
+- add finish reason `TooManyToolCalls`
+- add test with `Dynamic Thinking`
+
+### Changed
+
+- mark `HarmCategoryCivicIntegrity` obsolete
+- remove model `gemini-pro-vision`
+- remove model `gemini-1.0-pro-vision-latest`
+- replace model GeminiProVision with Gemini25Pro
+- upgrade NuGet packages
+
 ## 2.6.8
 
 ### Added
