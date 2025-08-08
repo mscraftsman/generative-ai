@@ -159,7 +159,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData(Model.GeminiUltra)]
-        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
@@ -193,7 +193,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData(Model.GeminiUltra)]
-        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]

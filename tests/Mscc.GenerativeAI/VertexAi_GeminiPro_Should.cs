@@ -103,7 +103,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData(Model.GeminiPro)]
-        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         public async Task Get_Model_Information(string modelName)
