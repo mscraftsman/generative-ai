@@ -1256,6 +1256,31 @@
     },
     "models": {
       "methods": {
+        "asyncBatchEmbedContent": {
+          "description": "Enqueues a batch of `EmbedContent` requests for batch processing. We have a `BatchEmbedContents` handler in `GenerativeService`, but it was synchronized. So we name this one to be `Async` to avoid confusion.",
+          "flatPath": "v1beta/models/{modelsId}:asyncBatchEmbedContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.models.asyncBatchEmbedContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^models/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:asyncBatchEmbedContent",
+          "request": {
+            "$ref": "AsyncBatchEmbedContentRequest"
+          },
+          "response": {
+            "$ref": "Operation"
+          }
+        },
         "batchEmbedContents": {
           "description": "Generates multiple embedding vectors from the input `Content` which consists of a batch of strings represented as `EmbedContentRequest` objects.",
           "flatPath": "v1beta/models/{modelsId}:batchEmbedContents",
@@ -1307,7 +1332,7 @@
           }
         },
         "batchGenerateContent": {
-          "description": "Enqueues a batch of GenerateContent requests for batch processing.",
+          "description": "Enqueues a batch of `GenerateContent` requests for batch processing.",
           "flatPath": "v1beta/models/{modelsId}:batchGenerateContent",
           "httpMethod": "POST",
           "id": "generativelanguage.models.batchGenerateContent",
@@ -1749,8 +1774,33 @@
     },
     "tunedModels": {
       "methods": {
+        "asyncBatchEmbedContent": {
+          "description": "Enqueues a batch of `EmbedContent` requests for batch processing. We have a `BatchEmbedContents` handler in `GenerativeService`, but it was synchronized. So we name this one to be `Async` to avoid confusion.",
+          "flatPath": "v1beta/tunedModels/{tunedModelsId}:asyncBatchEmbedContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.tunedModels.asyncBatchEmbedContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^tunedModels/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:asyncBatchEmbedContent",
+          "request": {
+            "$ref": "AsyncBatchEmbedContentRequest"
+          },
+          "response": {
+            "$ref": "Operation"
+          }
+        },
         "batchGenerateContent": {
-          "description": "Enqueues a batch of GenerateContent requests for batch processing.",
+          "description": "Enqueues a batch of `GenerateContent` requests for batch processing.",
           "flatPath": "v1beta/tunedModels/{tunedModelsId}:batchGenerateContent",
           "httpMethod": "POST",
           "id": "generativelanguage.tunedModels.batchGenerateContent",
@@ -2209,9 +2259,20 @@
       }
     }
   },
-  "revision": "20250729",
+  "revision": "20250807",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
+    "AsyncBatchEmbedContentRequest": {
+      "description": "Request for an `AsyncBatchEmbedContent` operation.",
+      "id": "AsyncBatchEmbedContentRequest",
+      "properties": {
+        "batch": {
+          "$ref": "EmbedContentBatch",
+          "description": "Required. The batch to create."
+        }
+      },
+      "type": "object"
+    },
     "AttributionSourceId": {
       "description": "Identifier for the source contributing to this attribution.",
       "id": "AttributionSourceId",
@@ -2335,7 +2396,7 @@
       "type": "object"
     },
     "BatchGenerateContentRequest": {
-      "description": "Request for a BatchGenerateContent operation.",
+      "description": "Request for a `BatchGenerateContent` operation.",
       "id": "BatchGenerateContentRequest",
       "properties": {
         "batch": {
@@ -2536,7 +2597,8 @@
             "SPII",
             "MALFORMED_FUNCTION_CALL",
             "IMAGE_SAFETY",
-            "UNEXPECTED_TOOL_CALL"
+            "UNEXPECTED_TOOL_CALL",
+            "TOO_MANY_TOOL_CALLS"
           ],
           "enumDescriptions": [
             "Default value. This value is unused.",
@@ -2551,7 +2613,8 @@
             "Token generation stopped because the content potentially contains Sensitive Personally Identifiable Information (SPII).",
             "The function call generated by the model is invalid.",
             "Token generation stopped because generated images contain safety violations.",
-            "Model generated a tool call but no tools were enabled in the request."
+            "Model generated a tool call but no tools were enabled in the request.",
+            "Model called too many tools consecutively, thus the system exited execution."
           ],
           "readOnly": true,
           "type": "string"
@@ -3110,6 +3173,130 @@
       },
       "type": "object"
     },
+    "EmbedContentBatch": {
+      "description": "A resource representing a batch of `EmbedContent` requests.",
+      "id": "EmbedContentBatch",
+      "properties": {
+        "batchStats": {
+          "$ref": "EmbedContentBatchStats",
+          "description": "Output only. Stats about the batch.",
+          "readOnly": true
+        },
+        "createTime": {
+          "description": "Output only. The time at which the batch was created.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Required. The user-defined name of this batch.",
+          "type": "string"
+        },
+        "endTime": {
+          "description": "Output only. The time at which the batch processing completed.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "inputConfig": {
+          "$ref": "InputEmbedContentConfig",
+          "description": "Required. Input configuration of the instances on which batch processing are performed."
+        },
+        "name": {
+          "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "output": {
+          "$ref": "EmbedContentBatchOutput",
+          "description": "Output only. The output of the batch request.",
+          "readOnly": true
+        },
+        "priority": {
+          "description": "Optional. The priority of the batch. Batches with a higher priority value will be processed before batches with a lower priority value. Negative values are allowed. Default is 0.",
+          "format": "int64",
+          "type": "string"
+        },
+        "state": {
+          "description": "Output only. The state of the batch.",
+          "enum": [
+            "BATCH_STATE_UNSPECIFIED",
+            "BATCH_STATE_PENDING",
+            "BATCH_STATE_RUNNING",
+            "BATCH_STATE_SUCCEEDED",
+            "BATCH_STATE_FAILED",
+            "BATCH_STATE_CANCELLED",
+            "BATCH_STATE_EXPIRED"
+          ],
+          "enumDescriptions": [
+            "The batch state is unspecified.",
+            "The service is preparing to run the batch.",
+            "The batch is in progress.",
+            "The batch completed successfully.",
+            "The batch failed.",
+            "The batch has been cancelled.",
+            "The batch has expired."
+          ],
+          "readOnly": true,
+          "type": "string"
+        },
+        "updateTime": {
+          "description": "Output only. The time at which the batch was last updated.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EmbedContentBatchOutput": {
+      "description": "The output of a batch request. This is returned in the `AsyncBatchEmbedContentResponse` or the `EmbedContentBatch.output` field.",
+      "id": "EmbedContentBatchOutput",
+      "properties": {
+        "inlinedResponses": {
+          "$ref": "InlinedEmbedContentResponses",
+          "description": "Output only. The responses to the requests in the batch. Returned when the batch was built using inlined requests. The responses will be in the same order as the input requests.",
+          "readOnly": true
+        },
+        "responsesFile": {
+          "description": "Output only. The file ID of the file containing the responses. The file will be a JSONL file with a single response per line. The responses will be `EmbedContentResponse` messages formatted as JSON. The responses will be written in the same order as the input requests.",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EmbedContentBatchStats": {
+      "description": "Stats about the batch.",
+      "id": "EmbedContentBatchStats",
+      "properties": {
+        "failedRequestCount": {
+          "description": "Output only. The number of requests that failed to be processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "pendingRequestCount": {
+          "description": "Output only. The number of requests that are still pending processing.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "requestCount": {
+          "description": "Output only. The number of requests in the batch.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "successfulRequestCount": {
+          "description": "Output only. The number of requests that were successfully processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "EmbedContentRequest": {
       "description": "Request containing the `Content` for the model to embed.",
       "id": "EmbedContentRequest",
@@ -3404,7 +3591,7 @@
       "id": "FunctionCallingConfig",
       "properties": {
         "allowedFunctionNames": {
-          "description": "Optional. A set of function names that, when provided, limits the functions the model will call. This should only be set when the Mode is ANY. Function names should match [FunctionDeclaration.name]. With mode set to ANY, model will predict a function call from the set of function names provided.",
+          "description": "Optional. A set of function names that, when provided, limits the functions the model will call. This should only be set when the Mode is ANY or VALIDATED. Function names should match [FunctionDeclaration.name]. When set, model will predict a function call from only allowed function names.",
           "items": {
             "type": "string"
           },
@@ -3424,7 +3611,7 @@
             "Default model behavior, model decides to predict either a function call or a natural language response.",
             "Model is constrained to always predicting a function call only. If \"allowed_function_names\" are set, the predicted function call will be limited to any one of \"allowed_function_names\", else the predicted function call will be any one of the provided \"function_declarations\".",
             "Model will not predict any function call. Model behavior is same as when not passing any function declarations.",
-            "Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding."
+            "Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding. If \"allowed_function_names\" are set, the predicted function call will be limited to any one of \"allowed_function_names\", else the predicted function call will be any one of the provided \"function_declarations\"."
           ],
           "type": "string"
         }
@@ -3592,7 +3779,7 @@
       "type": "object"
     },
     "GenerateContentBatch": {
-      "description": "A resource representing a batch of GenerateContent requests.",
+      "description": "A resource representing a batch of `GenerateContent` requests.",
       "id": "GenerateContentBatch",
       "properties": {
         "batchStats": {
@@ -3668,7 +3855,7 @@
       "type": "object"
     },
     "GenerateContentBatchOutput": {
-      "description": "The output of a batch request. This is returned in the BatchGenerateContentResponse or the GenerateContentBatch.output field.",
+      "description": "The output of a batch request. This is returned in the `BatchGenerateContentResponse` or the `GenerateContentBatch.output` field.",
       "id": "GenerateContentBatchOutput",
       "properties": {
         "inlinedResponses": {
@@ -3677,7 +3864,7 @@
           "readOnly": true
         },
         "responsesFile": {
-          "description": "Output only. The file ID of the file containing the responses. The file will be a JSONL file with a single response per line. The responses will be GenerateContentResponse messages formatted as JSON. The responses will be written in the same order as the input requests.",
+          "description": "Output only. The file ID of the file containing the responses. The file will be a JSONL file with a single response per line. The responses will be `GenerateContentResponse` messages formatted as JSON. The responses will be written in the same order as the input requests.",
           "readOnly": true,
           "type": "string"
         }
@@ -4246,6 +4433,80 @@
       },
       "type": "object"
     },
+    "InlinedEmbedContentRequest": {
+      "description": "The request to be processed in the batch.",
+      "id": "InlinedEmbedContentRequest",
+      "properties": {
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Optional. The metadata to be associated with the request.",
+          "type": "object"
+        },
+        "request": {
+          "$ref": "EmbedContentRequest",
+          "description": "Required. The request to be processed in the batch."
+        }
+      },
+      "type": "object"
+    },
+    "InlinedEmbedContentRequests": {
+      "description": "The requests to be processed in the batch if provided as part of the batch creation request.",
+      "id": "InlinedEmbedContentRequests",
+      "properties": {
+        "requests": {
+          "description": "Required. The requests to be processed in the batch.",
+          "items": {
+            "$ref": "InlinedEmbedContentRequest"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "InlinedEmbedContentResponse": {
+      "description": "The response to a single request in the batch.",
+      "id": "InlinedEmbedContentResponse",
+      "properties": {
+        "error": {
+          "$ref": "Status",
+          "description": "Output only. The error encountered while processing the request.",
+          "readOnly": true
+        },
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Output only. The metadata associated with the request.",
+          "readOnly": true,
+          "type": "object"
+        },
+        "response": {
+          "$ref": "EmbedContentResponse",
+          "description": "Output only. The response to the request.",
+          "readOnly": true
+        }
+      },
+      "type": "object"
+    },
+    "InlinedEmbedContentResponses": {
+      "description": "The responses to the requests in the batch.",
+      "id": "InlinedEmbedContentResponses",
+      "properties": {
+        "inlinedResponses": {
+          "description": "Output only. The responses to the requests in the batch.",
+          "items": {
+            "$ref": "InlinedEmbedContentResponse"
+          },
+          "readOnly": true,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "InlinedRequest": {
       "description": "The request to be processed in the batch.",
       "id": "InlinedRequest",
@@ -4330,6 +4591,21 @@
         },
         "requests": {
           "$ref": "InlinedRequests",
+          "description": "The requests to be processed in the batch."
+        }
+      },
+      "type": "object"
+    },
+    "InputEmbedContentConfig": {
+      "description": "Configures the input to the batch request.",
+      "id": "InputEmbedContentConfig",
+      "properties": {
+        "fileName": {
+          "description": "The name of the `File` containing the input requests.",
+          "type": "string"
+        },
+        "requests": {
+          "$ref": "InlinedEmbedContentRequests",
           "description": "The requests to be processed in the batch."
         }
       },
@@ -5150,6 +5426,20 @@
             "HARM_CATEGORY_DANGEROUS_CONTENT",
             "HARM_CATEGORY_CIVIC_INTEGRITY"
           ],
+          "enumDeprecated": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
           "enumDescriptions": [
             "Category is unspecified.",
             "**PaLM** - Negative or harmful comments targeting identity and/or protected attribute.",
@@ -5162,7 +5452,7 @@
             "**Gemini** - Hate speech and content.",
             "**Gemini** - Sexually explicit content.",
             "**Gemini** - Dangerous content.",
-            "**Gemini** - Content that may be used to harm civic integrity."
+            "**Gemini** - Content that may be used to harm civic integrity. DEPRECATED: use enable_enhanced_civic_answers instead."
           ],
           "type": "string"
         },
@@ -5207,6 +5497,20 @@
             "HARM_CATEGORY_DANGEROUS_CONTENT",
             "HARM_CATEGORY_CIVIC_INTEGRITY"
           ],
+          "enumDeprecated": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
           "enumDescriptions": [
             "Category is unspecified.",
             "**PaLM** - Negative or harmful comments targeting identity and/or protected attribute.",
@@ -5219,7 +5523,7 @@
             "**Gemini** - Hate speech and content.",
             "**Gemini** - Sexually explicit content.",
             "**Gemini** - Dangerous content.",
-            "**Gemini** - Content that may be used to harm civic integrity."
+            "**Gemini** - Content that may be used to harm civic integrity. DEPRECATED: use enable_enhanced_civic_answers instead."
           ],
           "type": "string"
         },
