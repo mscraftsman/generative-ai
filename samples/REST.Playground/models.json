@@ -837,10 +837,21 @@
       "version": "2.0"
     },
     {
-      "description": "Veo 3 preview. Access to this model requires billing to be enabled on the associated Google Cloud Platform account. Please visit https://console.cloud.google.com/billing to enable it.",
+      "description": "Veo 3 preview.",
       "displayName": "Veo 3",
       "inputTokenLimit": 480,
       "name": "models/veo-3.0-generate-preview",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predictLongRunning"
+      ],
+      "version": "3.0"
+    },
+    {
+      "description": "Veo 3 fast preview.",
+      "displayName": "Veo 3 fast",
+      "inputTokenLimit": 480,
+      "name": "models/veo-3.0-fast-generate-preview",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "predictLongRunning"
