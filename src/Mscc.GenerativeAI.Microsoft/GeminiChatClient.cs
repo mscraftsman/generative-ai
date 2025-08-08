@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 #endif
 using mea = Microsoft.Extensions.AI;
 using System.Runtime.CompilerServices;
+using Mscc.GenerativeAI.Microsoft.MicrosoftAi;
 
 namespace Mscc.GenerativeAI.Microsoft;
 
@@ -46,30 +47,30 @@ public sealed class GeminiChatClient : mea.IChatClient
     
     /// <inheritdoc/>
     public async Task<mea.ChatResponse> GetResponseAsync(
-        IList<mea.ChatMessage> chatMessages, 
+        IList<mea.ChatMessage> chatMessages,
         mea.ChatOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         if (chatMessages == null) throw new ArgumentNullException(nameof(chatMessages));
 
-        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
-        var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
-		var response = await _client.GenerateContent(request, requestOptions);
-		return MicrosoftAi.AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
+        var request = AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
+        var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
+        var response = await _client.GenerateContent(request, requestOptions, cancellationToken);
+        return AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<mea.ChatResponseUpdate> GetStreamingResponseAsync(
-        IList<mea.ChatMessage> chatMessages, 
+        IList<mea.ChatMessage> chatMessages,
         mea.ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (chatMessages == null) throw new ArgumentNullException(nameof(chatMessages));
 
-        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
-        var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
-		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
-			yield return MicrosoftAi.AbstractionMapper.ToChatResponseUpdate(response);
+        var request = AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
+        var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
+        await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
+            yield return AbstractionMapper.ToChatResponseUpdate(response);
     }
 
     /// <inheritdoc/>

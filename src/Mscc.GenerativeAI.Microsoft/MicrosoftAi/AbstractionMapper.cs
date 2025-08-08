@@ -40,10 +40,30 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
 
             if (options?.Tools is { Count: > 0 })
             {
-                
+                request.Tools = new List<Tool>();
+                foreach (var tool in options.Tools)
+                {
+                    request.Tools.Add(ToTool(tool));
+                }
             }
             
             return new GenerateContentRequest(prompt, generationConfig: generationConfig);
+        }
+
+        private static Tool ToTool(mea.AIFunction tool)
+        {
+            var functionDeclaration = new FunctionDeclaration
+            {
+                Name = tool.FunctionName,
+                Description = tool.FunctionDescription,
+                Parameters = tool.FunctionParameters is not null ? 
+                    JsonSerializer.Deserialize<JsonSchema>(tool.FunctionParameters.ToString(), Function.SerializerOptions) : null
+            };
+
+            return new Tool
+            {
+                FunctionDeclarations = new List<FunctionDeclaration> { functionDeclaration }
+            };
         }
 
         /// <summary>
@@ -159,6 +179,19 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
             var contents = new List<mea.AIContent>();
             if (response.Text?.Length > 0)
                 contents.Insert(0, new mea.TextContent(response.Text));
+
+            var functionCalls = response.Candidates?.FirstOrDefault()?.Content?.Parts?
+                .Where(p => p.FunctionCall != null)
+                .Select(p => p.FunctionCall)
+                .ToList();
+
+            if (functionCalls is { Count: > 0 })
+            {
+                foreach (var functionCall in functionCalls)
+                {
+                    contents.Add(new mea.ToolCallContent(functionCall.Name, functionCall.Args.ToString()));
+                }
+            }
 
             return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role), contents)
             {
