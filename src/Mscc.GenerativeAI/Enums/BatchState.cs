@@ -25,7 +25,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The batch completed successfully.
         /// </summary>
-        BatchStateSucceded,
+        BatchStateSucceeded,
         /// <summary>
         /// The batch failed.
         /// </summary>
