@@ -3,7 +3,10 @@ namespace Mscc.GenerativeAI
     public static class Method
     {
         // Methods used for models.
+        public static string AsyncBatchEmbedContent = "asyncBatchEmbedContent";
         public static string BatchEmbedContents = "batchEmbedContents";
+        public static string BatchEmbedText = "batchEmbedText";
+        public static string BatchGenerateContent = "batchGenerateContent";
         public static string CountTokens = "countTokens";
         public static string EmbedContent = "embedContent";
         public static string GenerateAnswer = "generateAnswer";
@@ -39,7 +42,6 @@ namespace Mscc.GenerativeAI
         public static string CachedContents = "cachedContents";
         
         // Methods used for PaLM models.
-        public static string BatchEmbedText = "batchEmbedText";
         public static string CountMessageTokens = "countMessageTokens";
         public static string CountTextTokens = "countTextTokens";
         public static string EmbedText = "embedText";
