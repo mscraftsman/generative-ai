@@ -1277,7 +1277,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var url = "https://conference.mscc.mu/";
             var prompt = $"Summarize this document: {url}";
-            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash,
+            var model = _googleAi.GenerativeModel(model: _model,
                 tools: [new Tool { UrlContext = new() }]);
             
             // Act
