@@ -25,6 +25,7 @@ namespace Mscc.GenerativeAI.Web
             //    });
             //services.AddTransient<GenerativeAIAuthenticationHandler<GenerativeAIOptions>>();
             //services.AddSingleton<IGenerativeAIOptions, GenerativeAIOptions>();
+            services.AddHttpClient();
             services.AddTransient<IGenerativeModelService, GenerativeModelService>();
 
             return services;

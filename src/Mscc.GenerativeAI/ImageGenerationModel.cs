@@ -43,7 +43,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
-        public ImageGenerationModel(ILogger? logger = null) : base(logger) { }
+        public ImageGenerationModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class with access to Google AI Gemini API.
@@ -53,7 +53,7 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging</param>
         internal ImageGenerationModel(string? apiKey = null,
             string? model = null, 
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
@@ -67,7 +67,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageGenerationModel(string? projectId = null, string? region = null,
-            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger)
+            string? model = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
         {
             _useVertexAi = true;
         }

@@ -21,8 +21,9 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="GeneratedFilesModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GeneratedFilesModel(ILogger? logger) : base(logger) { }
+        public GeneratedFilesModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
         
         /// <summary>
         /// Lists the generated files owned by the requesting project.

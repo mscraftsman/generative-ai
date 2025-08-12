@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="RagEngineModel"/> class.
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public RagEngineModel(ILogger logger) : base(logger)
+        public RagEngineModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             Version = ApiVersion.V1;
         }
@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
-            ILogger? logger = null) : base(projectId, region, model, logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
         {
         }
 

@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="SupervisedTuningJobModel"/> class.
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public SupervisedTuningJobModel(ILogger? logger = null) : base(logger) { }
+        public SupervisedTuningJobModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupervisedTuningJobModel"/> class with access to Vertex AI Gemini API.
@@ -34,7 +34,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model">Model to use</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public SupervisedTuningJobModel(string? projectId = null, string? region = null,
-            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger) { }
+            string? model = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger) { }
 
         /// <summary>
         /// 
