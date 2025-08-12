@@ -1627,6 +1627,7 @@ namespace Mscc.GenerativeAI
             string[] allowedModels =
             [
                 GenerativeAI.Model.Embedding.SanitizeModelName(), 
+                GenerativeAI.Model.GeminiEmbedding.SanitizeModelName(), 
                 GenerativeAI.Model.TextEmbedding.SanitizeModelName()
             ];
             if (!allowedModels.Contains(request.Model.SanitizeModelName())) throw new NotSupportedException();
@@ -2190,8 +2191,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException();
             }
 
-            var method = GenerativeAI.Method.BatchEmbedText;
-            var url = ParseUrl(Url, method);
+            var url = ParseUrl(Url, GenerativeAI.Method.BatchEmbedText);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
