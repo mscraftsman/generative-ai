@@ -48,10 +48,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.3" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.8" />
 		<PackageReference Include="Mscc.GenerativeAI" Version="2.6.8" />
 	</ItemGroup>
 
@@ -65,6 +65,12 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Test.Mscc.GenerativeAI" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Microsoft.Extensions.Http">
+	    <HintPath>..\..\..\..\..\home\jochen\.nuget\packages\microsoft.extensions.http\9.0.3\lib\net9.0\Microsoft.Extensions.Http.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">
