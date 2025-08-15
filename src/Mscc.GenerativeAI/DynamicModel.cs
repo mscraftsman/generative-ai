@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         public DynamicModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             _apiVersion = ApiVersion.V1Beta;
-            Logger.LogDynamiceModelInvoking();
+            Logger.LogDynamicModelInvoking();
         }
 
         /// <summary>
