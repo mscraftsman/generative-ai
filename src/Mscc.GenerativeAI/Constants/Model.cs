@@ -179,11 +179,15 @@ namespace Mscc.GenerativeAI
         public const string MultimodalEmbedding = MultimodalEmbedding001;
 
         // Models for Imagen on Vertex AI - image generation and editing
-        public const string Imagen4 = Imagen4Preview;
+        public const string Imagen4 = Imagen4Generate001;
+        public const string Imagen4Generate001 = "imagen-4.0-generate-001";
         public const string Imagen4Preview = Imagen4Preview0606;
         public const string Imagen4Preview0520 = "imagen-4.0-generate-preview-05-20";
         public const string Imagen4Preview0606 = "imagen-4.0-generate-preview-06-06";
-        public const string Imagen4Ultra = Imagen4UltraPreview;
+        public const string Imagen4Fast = Imagen4FastGenerate001;
+        public const string Imagen4FastGenerate001 = "imagen-4.0-fast-generate-001";
+        public const string Imagen4Ultra = Imagen4UltraGenerate001;
+        public const string Imagen4UltraGenerate001 = "imagen-4.0-ultra-generate-001";
         public const string Imagen4UltraPreview = Imagen4UltraPreview0606;
         public const string Imagen4UltraPreview0520 = "imagen-4.0-ultra-generate-exp-05-20";
         public const string Imagen4UltraPreview0606 = "imagen-4.0-ultra-generate-preview-06-06";
