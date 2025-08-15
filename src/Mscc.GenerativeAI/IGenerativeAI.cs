@@ -1,6 +1,7 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
@@ -46,10 +47,11 @@ namespace Mscc.GenerativeAI
         /// Gets information about a specific Model.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the models.list method. Format: models/model-id or tunedModels/my-model-id</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when model parameter is null.</exception>
         /// <exception cref="NotSupportedException">Thrown when the backend does not support this method or the model.</exception>
-        public Task<ModelResponse> GetModel(string model);
+        public Task<ModelResponse> GetModel(string model, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns an instance of an image generation model.

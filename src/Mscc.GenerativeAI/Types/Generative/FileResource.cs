@@ -68,7 +68,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Metadata for a video.
         /// </summary>
-        public VideoMetadata Metadata { get; set; }
+        public VideoFileMetadata VideoMetadata { get; set; }
         /// <summary>
         /// Output only. The download uri of the `File`.
         /// </summary>

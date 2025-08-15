@@ -35,24 +35,31 @@ namespace Mscc.GenerativeAI
         protected string _region = "us-central1";
         protected string? _endpointId;
 
+        protected readonly Version _httpVersion = HttpVersion.Version11;
+        private readonly IHttpClientFactory? _httpClientFactory;
+        private HttpClient? _httpClient;
+        protected HttpClient Client => _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
+
+        private HttpClient CreateDefaultHttpClient()
+        {
 #if NET472_OR_GREATER || NETSTANDARD2_0
-        protected static readonly Version _httpVersion = HttpVersion.Version11;
-        protected static readonly HttpClient Client = new HttpClient(new HttpClientHandler
-        {
-            SslProtocols = SslProtocols.Tls12
-        });
+            var client = new HttpClient(new HttpClientHandler
+            {
+                SslProtocols = SslProtocols.Tls12
+            });
 #else
-        protected static readonly Version _httpVersion = HttpVersion.Version11;
-        protected static readonly HttpClient Client = new HttpClient(new SocketsHttpHandler
-        {
-            PooledConnectionLifetime = TimeSpan.FromMinutes(30),
-            EnableMultipleHttp2Connections = true
-        })
-        {
-            DefaultRequestVersion = _httpVersion,
-            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
-        };
+            var client = new HttpClient(new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(30),
+                EnableMultipleHttp2Connections = true
+            })
+            {
+                DefaultRequestVersion = _httpVersion,
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
+            };
 #endif
+            return client;
+        }
 
         internal virtual string Version
         {
@@ -167,9 +174,11 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseModel(ILogger? logger = null) : base(logger)
+        public BaseModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
         {
+            _httpClientFactory = httpClientFactory;
             // Initialize the default headers in constructor
             var productHeaderValue = new ProductHeaderValue(
                 name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
@@ -198,9 +207,10 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId"></param>
         /// <param name="region"></param>
         /// <param name="model"></param>
+        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public BaseModel(string? projectId = null, string? region = null,
-            string? model = null, ILogger? logger = null) : this(logger)
+            string? model = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
         {
             var credentialsFile =
                 Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ??
@@ -313,6 +323,7 @@ namespace Mscc.GenerativeAI
 #endif
             };
             options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+            options.Converters.Add(new DateTimeFormatJsonConverter());
 
             return options;
         }
@@ -432,6 +443,35 @@ namespace Mscc.GenerativeAI
             return "'" + filename +
                    ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
                    "'";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="url"></param>
+        /// <param name="method"></param>
+        /// <param name="completionOption"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <typeparam name="TRequest"></typeparam>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request,
+            string url, string method,
+            HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var requestUri = ParseUrl(url, method);
+            var json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri);
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken, completionOption);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<TResponse>(response);
         }
 
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,

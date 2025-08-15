@@ -96,6 +96,114 @@
   },
   "protocol": "rest",
   "resources": {
+    "batches": {
+      "methods": {
+        "cancel": {
+          "description": "Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of `1`, corresponding to `Code.CANCELLED`.",
+          "flatPath": "v1beta/batches/{batchesId}:cancel",
+          "httpMethod": "POST",
+          "id": "generativelanguage.batches.cancel",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "The name of the operation resource to be cancelled.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}:cancel",
+          "response": {
+            "$ref": "Empty"
+          }
+        },
+        "delete": {
+          "description": "Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`.",
+          "flatPath": "v1beta/batches/{batchesId}",
+          "httpMethod": "DELETE",
+          "id": "generativelanguage.batches.delete",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "The name of the operation resource to be deleted.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "Empty"
+          }
+        },
+        "get": {
+          "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+          "flatPath": "v1beta/batches/{batchesId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.batches.get",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "The name of the operation resource.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "Operation"
+          }
+        },
+        "list": {
+          "description": "Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`.",
+          "flatPath": "v1beta/batches",
+          "httpMethod": "GET",
+          "id": "generativelanguage.batches.list",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "filter": {
+              "description": "The standard list filter.",
+              "location": "query",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the operation's parent resource.",
+              "location": "path",
+              "pattern": "^batches$",
+              "required": true,
+              "type": "string"
+            },
+            "pageSize": {
+              "description": "The standard list page size.",
+              "format": "int32",
+              "location": "query",
+              "type": "integer"
+            },
+            "pageToken": {
+              "description": "The standard list page token.",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "ListOperationsResponse"
+          }
+        }
+      }
+    },
     "cachedContents": {
       "methods": {
         "create": {
@@ -197,7 +305,7 @@
           ],
           "parameters": {
             "name": {
-              "description": "Optional. Identifier. The resource name referring to the cached content. Format: `cachedContents/{id}`",
+              "description": "Output only. Identifier. The resource name referring to the cached content. Format: `cachedContents/{id}`",
               "location": "path",
               "pattern": "^cachedContents/[^/]+$",
               "required": true,
@@ -755,6 +863,32 @@
             }
           }
         },
+        "operations": {
+          "methods": {
+            "get": {
+              "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+              "flatPath": "v1beta/corpora/{corporaId}/operations/{operationsId}",
+              "httpMethod": "GET",
+              "id": "generativelanguage.corpora.operations.get",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "The name of the operation resource.",
+                  "location": "path",
+                  "pattern": "^corpora/[^/]+/operations/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Operation"
+              }
+            }
+          }
+        },
         "permissions": {
           "methods": {
             "create": {
@@ -890,6 +1024,60 @@
                 "$ref": "Permission"
               }
             }
+          }
+        }
+      }
+    },
+    "dynamic": {
+      "methods": {
+        "generateContent": {
+          "description": "Generates a model response given an input `GenerateContentRequest`. Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information. Input capabilities differ between models, including tuned models. Refer to the [model guide](https://ai.google.dev/gemini-api/docs/models/gemini) and [tuning guide](https://ai.google.dev/gemini-api/docs/model-tuning) for details.",
+          "flatPath": "v1beta/dynamic/{dynamicId}:generateContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.dynamic.generateContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^dynamic/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:generateContent",
+          "request": {
+            "$ref": "GenerateContentRequest"
+          },
+          "response": {
+            "$ref": "GenerateContentResponse"
+          }
+        },
+        "streamGenerateContent": {
+          "description": "Generates a [streamed response](https://ai.google.dev/gemini-api/docs/text-generation?lang=python#generate-a-text-stream) from the model given an input `GenerateContentRequest`.",
+          "flatPath": "v1beta/dynamic/{dynamicId}:streamGenerateContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.dynamic.streamGenerateContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^dynamic/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:streamGenerateContent",
+          "request": {
+            "$ref": "GenerateContentRequest"
+          },
+          "response": {
+            "$ref": "GenerateContentResponse"
           }
         }
       }
@@ -1068,6 +1256,31 @@
     },
     "models": {
       "methods": {
+        "asyncBatchEmbedContent": {
+          "description": "Enqueues a batch of `EmbedContent` requests for batch processing. We have a `BatchEmbedContents` handler in `GenerativeService`, but it was synchronized. So we name this one to be `Async` to avoid confusion.",
+          "flatPath": "v1beta/models/{modelsId}:asyncBatchEmbedContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.models.asyncBatchEmbedContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^models/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:asyncBatchEmbedContent",
+          "request": {
+            "$ref": "AsyncBatchEmbedContentRequest"
+          },
+          "response": {
+            "$ref": "Operation"
+          }
+        },
         "batchEmbedContents": {
           "description": "Generates multiple embedding vectors from the input `Content` which consists of a batch of strings represented as `EmbedContentRequest` objects.",
           "flatPath": "v1beta/models/{modelsId}:batchEmbedContents",
@@ -1116,6 +1329,31 @@
           },
           "response": {
             "$ref": "BatchEmbedTextResponse"
+          }
+        },
+        "batchGenerateContent": {
+          "description": "Enqueues a batch of `GenerateContent` requests for batch processing.",
+          "flatPath": "v1beta/models/{modelsId}:batchGenerateContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.models.batchGenerateContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^models/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:batchGenerateContent",
+          "request": {
+            "$ref": "BatchGenerateContentRequest"
+          },
+          "response": {
+            "$ref": "Operation"
           }
         },
         "countMessageTokens": {
@@ -1536,6 +1774,56 @@
     },
     "tunedModels": {
       "methods": {
+        "asyncBatchEmbedContent": {
+          "description": "Enqueues a batch of `EmbedContent` requests for batch processing. We have a `BatchEmbedContents` handler in `GenerativeService`, but it was synchronized. So we name this one to be `Async` to avoid confusion.",
+          "flatPath": "v1beta/tunedModels/{tunedModelsId}:asyncBatchEmbedContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.tunedModels.asyncBatchEmbedContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^tunedModels/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:asyncBatchEmbedContent",
+          "request": {
+            "$ref": "AsyncBatchEmbedContentRequest"
+          },
+          "response": {
+            "$ref": "Operation"
+          }
+        },
+        "batchGenerateContent": {
+          "description": "Enqueues a batch of `GenerateContent` requests for batch processing.",
+          "flatPath": "v1beta/tunedModels/{tunedModelsId}:batchGenerateContent",
+          "httpMethod": "POST",
+          "id": "generativelanguage.tunedModels.batchGenerateContent",
+          "parameterOrder": [
+            "model"
+          ],
+          "parameters": {
+            "model": {
+              "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+              "location": "path",
+              "pattern": "^tunedModels/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+model}:batchGenerateContent",
+          "request": {
+            "$ref": "BatchGenerateContentRequest"
+          },
+          "response": {
+            "$ref": "Operation"
+          }
+        },
         "create": {
           "description": "Creates a tuned model. Check intermediate tuning progress (if any) through the [google.longrunning.Operations] service. Access status and results through the Operations service. Example: GET /v1/tunedModels/az2mb0bpw6i/operations/000-111-222",
           "flatPath": "v1beta/tunedModels",
@@ -1971,9 +2259,20 @@
       }
     }
   },
-  "revision": "20250307",
+  "revision": "20250814",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
+    "AsyncBatchEmbedContentRequest": {
+      "description": "Request for an `AsyncBatchEmbedContent` operation.",
+      "id": "AsyncBatchEmbedContentRequest",
+      "properties": {
+        "batch": {
+          "$ref": "EmbedContentBatch",
+          "description": "Required. The batch to create."
+        }
+      },
+      "type": "object"
+    },
     "AttributionSourceId": {
       "description": "Identifier for the source contributing to this attribution.",
       "id": "AttributionSourceId",
@@ -2096,6 +2395,48 @@
       },
       "type": "object"
     },
+    "BatchGenerateContentRequest": {
+      "description": "Request for a `BatchGenerateContent` operation.",
+      "id": "BatchGenerateContentRequest",
+      "properties": {
+        "batch": {
+          "$ref": "GenerateContentBatch",
+          "description": "Required. The batch to create."
+        }
+      },
+      "type": "object"
+    },
+    "BatchStats": {
+      "description": "Stats about the batch.",
+      "id": "BatchStats",
+      "properties": {
+        "failedRequestCount": {
+          "description": "Output only. The number of requests that failed to be processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "pendingRequestCount": {
+          "description": "Output only. The number of requests that are still pending processing.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "requestCount": {
+          "description": "Output only. The number of requests in the batch.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "successfulRequestCount": {
+          "description": "Output only. The number of requests that were successfully processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "BatchUpdateChunksRequest": {
       "description": "Request to batch update `Chunk`s.",
       "id": "BatchUpdateChunksRequest",
@@ -2171,7 +2512,8 @@
           "type": "string"
         },
         "name": {
-          "description": "Optional. Identifier. The resource name referring to the cached content. Format: `cachedContents/{id}`",
+          "description": "Output only. Identifier. The resource name referring to the cached content. Format: `cachedContents/{id}`",
+          "readOnly": true,
           "type": "string"
         },
         "systemInstruction": {
@@ -2254,7 +2596,9 @@
             "PROHIBITED_CONTENT",
             "SPII",
             "MALFORMED_FUNCTION_CALL",
-            "IMAGE_SAFETY"
+            "IMAGE_SAFETY",
+            "UNEXPECTED_TOOL_CALL",
+            "TOO_MANY_TOOL_CALLS"
           ],
           "enumDescriptions": [
             "Default value. This value is unused.",
@@ -2268,7 +2612,9 @@
             "Token generation stopped for potentially containing prohibited content.",
             "Token generation stopped because the content potentially contains Sensitive Personally Identifiable Information (SPII).",
             "The function call generated by the model is invalid.",
-            "Token generation stopped because generated images contain safety violations."
+            "Token generation stopped because generated images contain safety violations.",
+            "Model generated a tool call but no tools were enabled in the request.",
+            "Model called too many tools consecutively, thus the system exited execution."
           ],
           "readOnly": true,
           "type": "string"
@@ -2309,6 +2655,11 @@
           "format": "int32",
           "readOnly": true,
           "type": "integer"
+        },
+        "urlContextMetadata": {
+          "$ref": "UrlContextMetadata",
+          "description": "Output only. Metadata related to url context retrieval tool.",
+          "readOnly": true
         }
       },
       "type": "object"
@@ -2644,6 +2995,14 @@
       "description": "A response from `CountTokens`. It returns the model's `token_count` for the `prompt`.",
       "id": "CountTokensResponse",
       "properties": {
+        "cacheTokensDetails": {
+          "description": "Output only. List of modalities that were processed in the cached content.",
+          "items": {
+            "$ref": "ModalityTokenCount"
+          },
+          "readOnly": true,
+          "type": "array"
+        },
         "cachedContentTokenCount": {
           "description": "Number of tokens in the cached part of the prompt (the cached content).",
           "format": "int32",
@@ -2809,6 +3168,130 @@
             "Always trigger retrieval.",
             "Run retrieval only when system decides it is necessary."
           ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EmbedContentBatch": {
+      "description": "A resource representing a batch of `EmbedContent` requests.",
+      "id": "EmbedContentBatch",
+      "properties": {
+        "batchStats": {
+          "$ref": "EmbedContentBatchStats",
+          "description": "Output only. Stats about the batch.",
+          "readOnly": true
+        },
+        "createTime": {
+          "description": "Output only. The time at which the batch was created.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Required. The user-defined name of this batch.",
+          "type": "string"
+        },
+        "endTime": {
+          "description": "Output only. The time at which the batch processing completed.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "inputConfig": {
+          "$ref": "InputEmbedContentConfig",
+          "description": "Required. Input configuration of the instances on which batch processing are performed."
+        },
+        "name": {
+          "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "output": {
+          "$ref": "EmbedContentBatchOutput",
+          "description": "Output only. The output of the batch request.",
+          "readOnly": true
+        },
+        "priority": {
+          "description": "Optional. The priority of the batch. Batches with a higher priority value will be processed before batches with a lower priority value. Negative values are allowed. Default is 0.",
+          "format": "int64",
+          "type": "string"
+        },
+        "state": {
+          "description": "Output only. The state of the batch.",
+          "enum": [
+            "BATCH_STATE_UNSPECIFIED",
+            "BATCH_STATE_PENDING",
+            "BATCH_STATE_RUNNING",
+            "BATCH_STATE_SUCCEEDED",
+            "BATCH_STATE_FAILED",
+            "BATCH_STATE_CANCELLED",
+            "BATCH_STATE_EXPIRED"
+          ],
+          "enumDescriptions": [
+            "The batch state is unspecified.",
+            "The service is preparing to run the batch.",
+            "The batch is in progress.",
+            "The batch completed successfully.",
+            "The batch failed.",
+            "The batch has been cancelled.",
+            "The batch has expired."
+          ],
+          "readOnly": true,
+          "type": "string"
+        },
+        "updateTime": {
+          "description": "Output only. The time at which the batch was last updated.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EmbedContentBatchOutput": {
+      "description": "The output of a batch request. This is returned in the `AsyncBatchEmbedContentResponse` or the `EmbedContentBatch.output` field.",
+      "id": "EmbedContentBatchOutput",
+      "properties": {
+        "inlinedResponses": {
+          "$ref": "InlinedEmbedContentResponses",
+          "description": "Output only. The responses to the requests in the batch. Returned when the batch was built using inlined requests. The responses will be in the same order as the input requests.",
+          "readOnly": true
+        },
+        "responsesFile": {
+          "description": "Output only. The file ID of the file containing the responses. The file will be a JSONL file with a single response per line. The responses will be `EmbedContentResponse` messages formatted as JSON. The responses will be written in the same order as the input requests.",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EmbedContentBatchStats": {
+      "description": "Stats about the batch.",
+      "id": "EmbedContentBatchStats",
+      "properties": {
+        "failedRequestCount": {
+          "description": "Output only. The number of requests that failed to be processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "pendingRequestCount": {
+          "description": "Output only. The number of requests that are still pending processing.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "requestCount": {
+          "description": "Output only. The number of requests in the batch.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "successfulRequestCount": {
+          "description": "Output only. The number of requests that were successfully processed.",
+          "format": "int64",
+          "readOnly": true,
           "type": "string"
         }
       },
@@ -3056,7 +3539,7 @@
           "type": "string"
         },
         "videoMetadata": {
-          "$ref": "VideoMetadata",
+          "$ref": "VideoFileMetadata",
           "description": "Output only. Metadata for a video.",
           "readOnly": true
         }
@@ -3106,7 +3589,7 @@
       "id": "FunctionCallingConfig",
       "properties": {
         "allowedFunctionNames": {
-          "description": "Optional. A set of function names that, when provided, limits the functions the model will call. This should only be set when the Mode is ANY. Function names should match [FunctionDeclaration.name]. With mode set to ANY, model will predict a function call from the set of function names provided.",
+          "description": "Optional. A set of function names that, when provided, limits the functions the model will call. This should only be set when the Mode is ANY or VALIDATED. Function names should match [FunctionDeclaration.name]. When set, model will predict a function call from only allowed function names.",
           "items": {
             "type": "string"
           },
@@ -3118,13 +3601,15 @@
             "MODE_UNSPECIFIED",
             "AUTO",
             "ANY",
-            "NONE"
+            "NONE",
+            "VALIDATED"
           ],
           "enumDescriptions": [
             "Unspecified function calling mode. This value should not be used.",
             "Default model behavior, model decides to predict either a function call or a natural language response.",
             "Model is constrained to always predicting a function call only. If \"allowed_function_names\" are set, the predicted function call will be limited to any one of \"allowed_function_names\", else the predicted function call will be any one of the provided \"function_declarations\".",
-            "Model will not predict any function call. Model behavior is same as when not passing any function declarations."
+            "Model will not predict any function call. Model behavior is same as when not passing any function declarations.",
+            "Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding. If \"allowed_function_names\" are set, the predicted function call will be limited to any one of \"allowed_function_names\", else the predicted function call will be any one of the provided \"function_declarations\"."
           ],
           "type": "string"
         }
@@ -3135,6 +3620,20 @@
       "description": "Structured representation of a function declaration as defined by the [OpenAPI 3.03 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name and parameters. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client.",
       "id": "FunctionDeclaration",
       "properties": {
+        "behavior": {
+          "description": "Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.",
+          "enum": [
+            "UNSPECIFIED",
+            "BLOCKING",
+            "NON_BLOCKING"
+          ],
+          "enumDescriptions": [
+            "This value is unused.",
+            "If set, the system will wait to receive the function response before continuing the conversation.",
+            "If set, the system will not wait to receive the function response. Instead, it will attempt to handle function responses as they become available while maintaining the conversation between the user and the model."
+          ],
+          "type": "string"
+        },
         "description": {
           "description": "Required. A brief description of the function.",
           "type": "string"
@@ -3147,9 +3646,17 @@
           "$ref": "Schema",
           "description": "Optional. Describes the parameters to this function. Reflects the Open API 3.03 Parameter Object string Key: the name of the parameter. Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter."
         },
+        "parametersJsonSchema": {
+          "description": "Optional. Describes the parameters to the function in JSON Schema format. The schema must describe an object where the properties are the parameters to the function. For example: ``` { \"type\": \"object\", \"properties\": { \"name\": { \"type\": \"string\" }, \"age\": { \"type\": \"integer\" } }, \"additionalProperties\": false, \"required\": [\"name\", \"age\"], \"propertyOrdering\": [\"name\", \"age\"] } ``` This field is mutually exclusive with `parameters`.",
+          "type": "any"
+        },
         "response": {
           "$ref": "Schema",
           "description": "Optional. Describes the output from this function in JSON Schema format. Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function."
+        },
+        "responseJsonSchema": {
+          "description": "Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`.",
+          "type": "any"
         }
       },
       "type": "object"
@@ -3173,6 +3680,26 @@
           },
           "description": "Required. The function response in JSON object format.",
           "type": "object"
+        },
+        "scheduling": {
+          "description": "Optional. Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE.",
+          "enum": [
+            "SCHEDULING_UNSPECIFIED",
+            "SILENT",
+            "WHEN_IDLE",
+            "INTERRUPT"
+          ],
+          "enumDescriptions": [
+            "This value is unused.",
+            "Only add the result to the conversation context, do not interrupt or trigger generation.",
+            "Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.",
+            "Add the result to the conversation context, interrupt ongoing generation and prompt to generate output."
+          ],
+          "type": "string"
+        },
+        "willContinue": {
+          "description": "Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -3191,7 +3718,7 @@
           ],
           "enumDescriptions": [
             "Unspecified answer style.",
-            "Succint but abstract style.",
+            "Succinct but abstract style.",
             "Very brief and extractive style.",
             "Verbose style including extra details. The response may be formatted as a sentence, paragraph, multiple paragraphs, or bullet points, etc."
           ],
@@ -3245,6 +3772,99 @@
           "$ref": "InputFeedback",
           "description": "Output only. Feedback related to the input data used to answer the question, as opposed to the model-generated response to the question. The input data can be one or more of the following: - Question specified by the last entry in `GenerateAnswerRequest.content` - Conversation history specified by the other entries in `GenerateAnswerRequest.content` - Grounding sources (`GenerateAnswerRequest.semantic_retriever` or `GenerateAnswerRequest.inline_passages`)",
           "readOnly": true
+        }
+      },
+      "type": "object"
+    },
+    "GenerateContentBatch": {
+      "description": "A resource representing a batch of `GenerateContent` requests.",
+      "id": "GenerateContentBatch",
+      "properties": {
+        "batchStats": {
+          "$ref": "BatchStats",
+          "description": "Output only. Stats about the batch.",
+          "readOnly": true
+        },
+        "createTime": {
+          "description": "Output only. The time at which the batch was created.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Required. The user-defined name of this batch.",
+          "type": "string"
+        },
+        "endTime": {
+          "description": "Output only. The time at which the batch processing completed.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "inputConfig": {
+          "$ref": "InputConfig",
+          "description": "Required. Input configuration of the instances on which batch processing are performed."
+        },
+        "name": {
+          "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "output": {
+          "$ref": "GenerateContentBatchOutput",
+          "description": "Output only. The output of the batch request.",
+          "readOnly": true
+        },
+        "priority": {
+          "description": "Optional. The priority of the batch. Batches with a higher priority value will be processed before batches with a lower priority value. Negative values are allowed. Default is 0.",
+          "format": "int64",
+          "type": "string"
+        },
+        "state": {
+          "description": "Output only. The state of the batch.",
+          "enum": [
+            "BATCH_STATE_UNSPECIFIED",
+            "BATCH_STATE_PENDING",
+            "BATCH_STATE_RUNNING",
+            "BATCH_STATE_SUCCEEDED",
+            "BATCH_STATE_FAILED",
+            "BATCH_STATE_CANCELLED",
+            "BATCH_STATE_EXPIRED"
+          ],
+          "enumDescriptions": [
+            "The batch state is unspecified.",
+            "The service is preparing to run the batch.",
+            "The batch is in progress.",
+            "The batch completed successfully.",
+            "The batch failed.",
+            "The batch has been cancelled.",
+            "The batch has expired."
+          ],
+          "readOnly": true,
+          "type": "string"
+        },
+        "updateTime": {
+          "description": "Output only. The time at which the batch was last updated.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GenerateContentBatchOutput": {
+      "description": "The output of a batch request. This is returned in the `BatchGenerateContentResponse` or the `GenerateContentBatch.output` field.",
+      "id": "GenerateContentBatchOutput",
+      "properties": {
+        "inlinedResponses": {
+          "$ref": "InlinedResponses",
+          "description": "Output only. The responses to the requests in the batch. Returned when the batch was built using inlined requests. The responses will be in the same order as the input requests.",
+          "readOnly": true
+        },
+        "responsesFile": {
+          "description": "Output only. The file ID of the file containing the responses. The file will be a JSONL file with a single response per line. The responses will be `GenerateContentResponse` messages formatted as JSON. The responses will be written in the same order as the input requests.",
+          "readOnly": true,
+          "type": "string"
         }
       },
       "type": "object"
@@ -3316,6 +3936,11 @@
         "promptFeedback": {
           "$ref": "PromptFeedback",
           "description": "Returns the prompt's feedback related to the content filters."
+        },
+        "responseId": {
+          "description": "Output only. response_id is used to identify each response.",
+          "readOnly": true,
+          "type": "string"
         },
         "usageMetadata": {
           "$ref": "UsageMetadata",
@@ -3547,6 +4172,10 @@
           "format": "float",
           "type": "number"
         },
+        "responseJsonSchema": {
+          "description": "Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set.",
+          "type": "any"
+        },
         "responseLogprobs": {
           "description": "Optional. If true, export the logprobs results in response.",
           "type": "boolean"
@@ -3599,6 +4228,10 @@
           "format": "float",
           "type": "number"
         },
+        "thinkingConfig": {
+          "$ref": "ThinkingConfig",
+          "description": "Optional. Config for thinking features. An error will be returned if this field is set for models that don't support thinking."
+        },
         "topK": {
           "description": "Optional. The maximum number of tokens to consider when sampling. Gemini models use Top-p (nucleus) sampling or a combination of Top-k and nucleus sampling. Top-k sampling considers the set of `top_k` most probable tokens. Models running with nucleus sampling don't allow top_k setting. Note: The default value varies by `Model` and is specified by the`Model.top_p` attribute returned from the `getModel` function. An empty `top_k` attribute indicates that the model doesn't apply top-k sampling and doesn't allow setting `top_k` on requests.",
           "format": "int32",
@@ -3616,7 +4249,10 @@
       "description": "GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google.",
       "id": "GoogleSearch",
       "properties": {
-
+        "timeRangeFilter": {
+          "$ref": "Interval",
+          "description": "Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa)."
+        }
       },
       "type": "object"
     },
@@ -3795,6 +4431,184 @@
       },
       "type": "object"
     },
+    "InlinedEmbedContentRequest": {
+      "description": "The request to be processed in the batch.",
+      "id": "InlinedEmbedContentRequest",
+      "properties": {
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Optional. The metadata to be associated with the request.",
+          "type": "object"
+        },
+        "request": {
+          "$ref": "EmbedContentRequest",
+          "description": "Required. The request to be processed in the batch."
+        }
+      },
+      "type": "object"
+    },
+    "InlinedEmbedContentRequests": {
+      "description": "The requests to be processed in the batch if provided as part of the batch creation request.",
+      "id": "InlinedEmbedContentRequests",
+      "properties": {
+        "requests": {
+          "description": "Required. The requests to be processed in the batch.",
+          "items": {
+            "$ref": "InlinedEmbedContentRequest"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "InlinedEmbedContentResponse": {
+      "description": "The response to a single request in the batch.",
+      "id": "InlinedEmbedContentResponse",
+      "properties": {
+        "error": {
+          "$ref": "Status",
+          "description": "Output only. The error encountered while processing the request.",
+          "readOnly": true
+        },
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Output only. The metadata associated with the request.",
+          "readOnly": true,
+          "type": "object"
+        },
+        "response": {
+          "$ref": "EmbedContentResponse",
+          "description": "Output only. The response to the request.",
+          "readOnly": true
+        }
+      },
+      "type": "object"
+    },
+    "InlinedEmbedContentResponses": {
+      "description": "The responses to the requests in the batch.",
+      "id": "InlinedEmbedContentResponses",
+      "properties": {
+        "inlinedResponses": {
+          "description": "Output only. The responses to the requests in the batch.",
+          "items": {
+            "$ref": "InlinedEmbedContentResponse"
+          },
+          "readOnly": true,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "InlinedRequest": {
+      "description": "The request to be processed in the batch.",
+      "id": "InlinedRequest",
+      "properties": {
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Optional. The metadata to be associated with the request.",
+          "type": "object"
+        },
+        "request": {
+          "$ref": "GenerateContentRequest",
+          "description": "Required. The request to be processed in the batch."
+        }
+      },
+      "type": "object"
+    },
+    "InlinedRequests": {
+      "description": "The requests to be processed in the batch if provided as part of the batch creation request.",
+      "id": "InlinedRequests",
+      "properties": {
+        "requests": {
+          "description": "Required. The requests to be processed in the batch.",
+          "items": {
+            "$ref": "InlinedRequest"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "InlinedResponse": {
+      "description": "The response to a single request in the batch.",
+      "id": "InlinedResponse",
+      "properties": {
+        "error": {
+          "$ref": "Status",
+          "description": "Output only. The error encountered while processing the request.",
+          "readOnly": true
+        },
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Output only. The metadata associated with the request.",
+          "readOnly": true,
+          "type": "object"
+        },
+        "response": {
+          "$ref": "GenerateContentResponse",
+          "description": "Output only. The response to the request.",
+          "readOnly": true
+        }
+      },
+      "type": "object"
+    },
+    "InlinedResponses": {
+      "description": "The responses to the requests in the batch.",
+      "id": "InlinedResponses",
+      "properties": {
+        "inlinedResponses": {
+          "description": "Output only. The responses to the requests in the batch.",
+          "items": {
+            "$ref": "InlinedResponse"
+          },
+          "readOnly": true,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "InputConfig": {
+      "description": "Configures the input to the batch request.",
+      "id": "InputConfig",
+      "properties": {
+        "fileName": {
+          "description": "The name of the `File` containing the input requests.",
+          "type": "string"
+        },
+        "requests": {
+          "$ref": "InlinedRequests",
+          "description": "The requests to be processed in the batch."
+        }
+      },
+      "type": "object"
+    },
+    "InputEmbedContentConfig": {
+      "description": "Configures the input to the batch request.",
+      "id": "InputEmbedContentConfig",
+      "properties": {
+        "fileName": {
+          "description": "The name of the `File` containing the input requests.",
+          "type": "string"
+        },
+        "requests": {
+          "$ref": "InlinedEmbedContentRequests",
+          "description": "The requests to be processed in the batch."
+        }
+      },
+      "type": "object"
+    },
     "InputFeedback": {
       "description": "Feedback related to the input data used to answer the question, as opposed to the model-generated response to the question.",
       "id": "InputFeedback",
@@ -3819,6 +4633,23 @@
             "$ref": "SafetyRating"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "Interval": {
+      "description": "Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time.",
+      "id": "Interval",
+      "properties": {
+        "endTime": {
+          "description": "Optional. Exclusive end of the interval. If specified, a Timestamp matching this interval will have to be before the end.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "startTime": {
+          "description": "Optional. Inclusive start of the interval. If specified, a Timestamp matching this interval will have to be the same or after the start.",
+          "format": "google-datetime",
+          "type": "string"
         }
       },
       "type": "object"
@@ -4187,6 +5018,10 @@
           "format": "float",
           "type": "number"
         },
+        "thinking": {
+          "description": "Whether the model supports thinking.",
+          "type": "boolean"
+        },
         "topK": {
           "description": "For Top-k sampling. Top-k sampling considers the set of `top_k` most probable tokens. This value specifies default to be used by the backend while making the call to the model. If empty, indicates the model doesn't use top-k sampling, and `top_k` isn't allowed as a generation parameter.",
           "format": "int32",
@@ -4200,6 +5035,20 @@
         "version": {
           "description": "Required. The version number of the model. This represents the major version (`1.0` or `1.5`)",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MultiSpeakerVoiceConfig": {
+      "description": "The configuration for the multi-speaker setup.",
+      "id": "MultiSpeakerVoiceConfig",
+      "properties": {
+        "speakerVoiceConfigs": {
+          "description": "Required. All the enabled speaker voices.",
+          "items": {
+            "$ref": "SpeakerVoiceConfig"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -4270,6 +5119,19 @@
         "text": {
           "description": "Inline text.",
           "type": "string"
+        },
+        "thought": {
+          "description": "Optional. Indicates if the part is thought from the model.",
+          "type": "boolean"
+        },
+        "thoughtSignature": {
+          "description": "Optional. An opaque signature for the thought so it can be reused in subsequent requests.",
+          "format": "byte",
+          "type": "string"
+        },
+        "videoMetadata": {
+          "$ref": "VideoMetadata",
+          "description": "Optional. Video metadata. The metadata should only be specified while the video data is presented in inline_data or file_data."
         }
       },
       "type": "object"
@@ -4503,6 +5365,10 @@
           "description": "`Chunk` relevance to the query.",
           "format": "float",
           "type": "number"
+        },
+        "document": {
+          "$ref": "Document",
+          "description": "`Document` associated with the chunk."
         }
       },
       "type": "object"
@@ -4558,6 +5424,20 @@
             "HARM_CATEGORY_DANGEROUS_CONTENT",
             "HARM_CATEGORY_CIVIC_INTEGRITY"
           ],
+          "enumDeprecated": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
           "enumDescriptions": [
             "Category is unspecified.",
             "**PaLM** - Negative or harmful comments targeting identity and/or protected attribute.",
@@ -4570,7 +5450,7 @@
             "**Gemini** - Hate speech and content.",
             "**Gemini** - Sexually explicit content.",
             "**Gemini** - Dangerous content.",
-            "**Gemini** - Content that may be used to harm civic integrity."
+            "**Gemini** - Content that may be used to harm civic integrity. DEPRECATED: use enable_enhanced_civic_answers instead."
           ],
           "type": "string"
         },
@@ -4615,6 +5495,20 @@
             "HARM_CATEGORY_DANGEROUS_CONTENT",
             "HARM_CATEGORY_CIVIC_INTEGRITY"
           ],
+          "enumDeprecated": [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            true
+          ],
           "enumDescriptions": [
             "Category is unspecified.",
             "**PaLM** - Negative or harmful comments targeting identity and/or protected attribute.",
@@ -4627,7 +5521,7 @@
             "**Gemini** - Hate speech and content.",
             "**Gemini** - Sexually explicit content.",
             "**Gemini** - Dangerous content.",
-            "**Gemini** - Content that may be used to harm civic integrity."
+            "**Gemini** - Content that may be used to harm civic integrity. DEPRECATED: use enable_enhanced_civic_answers instead."
           ],
           "type": "string"
         },
@@ -4658,6 +5552,17 @@
       "description": "The `Schema` object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema).",
       "id": "Schema",
       "properties": {
+        "anyOf": {
+          "description": "Optional. The value should be validated against any (one or more) of the subschemas in the list.",
+          "items": {
+            "$ref": "Schema"
+          },
+          "type": "array"
+        },
+        "default": {
+          "description": "Optional. Default value of the field. Per JSON Schema, this field is intended for documentation generators and doesn't affect validation. Thus it's included here and ignored so that developers who send schemas with a `default` field don't get unknown-field errors.",
+          "type": "any"
+        },
         "description": {
           "description": "Optional. A brief description of the parameter. This could contain examples of use. Parameter description may be formatted as Markdown.",
           "type": "string"
@@ -4668,6 +5573,10 @@
             "type": "string"
           },
           "type": "array"
+        },
+        "example": {
+          "description": "Optional. Example of the object. Will only populated when the object is the root.",
+          "type": "any"
         },
         "format": {
           "description": "Optional. The format of the data. This is used only for primitive datatypes. Supported formats: for NUMBER type: float, double for INTEGER type: int32, int64 for STRING type: enum, date-time",
@@ -4682,14 +5591,48 @@
           "format": "int64",
           "type": "string"
         },
+        "maxLength": {
+          "description": "Optional. Maximum length of the Type.STRING",
+          "format": "int64",
+          "type": "string"
+        },
+        "maxProperties": {
+          "description": "Optional. Maximum number of the properties for Type.OBJECT.",
+          "format": "int64",
+          "type": "string"
+        },
+        "maximum": {
+          "description": "Optional. Maximum value of the Type.INTEGER and Type.NUMBER",
+          "format": "double",
+          "type": "number"
+        },
         "minItems": {
           "description": "Optional. Minimum number of the elements for Type.ARRAY.",
           "format": "int64",
           "type": "string"
         },
+        "minLength": {
+          "description": "Optional. SCHEMA FIELDS FOR TYPE STRING Minimum length of the Type.STRING",
+          "format": "int64",
+          "type": "string"
+        },
+        "minProperties": {
+          "description": "Optional. Minimum number of the properties for Type.OBJECT.",
+          "format": "int64",
+          "type": "string"
+        },
+        "minimum": {
+          "description": "Optional. SCHEMA FIELDS FOR TYPE INTEGER and NUMBER Minimum value of the Type.INTEGER and Type.NUMBER",
+          "format": "double",
+          "type": "number"
+        },
         "nullable": {
           "description": "Optional. Indicates if the value may be null.",
           "type": "boolean"
+        },
+        "pattern": {
+          "description": "Optional. Pattern of the Type.STRING to restrict a string to a regular expression.",
+          "type": "string"
         },
         "properties": {
           "additionalProperties": {
@@ -4712,6 +5655,10 @@
           },
           "type": "array"
         },
+        "title": {
+          "description": "Optional. The title of the schema.",
+          "type": "string"
+        },
         "type": {
           "description": "Required. Data type.",
           "enum": [
@@ -4721,7 +5668,8 @@
             "INTEGER",
             "BOOLEAN",
             "ARRAY",
-            "OBJECT"
+            "OBJECT",
+            "NULL"
           ],
           "enumDescriptions": [
             "Not specified, should not be used.",
@@ -4730,7 +5678,8 @@
             "Integer type.",
             "Boolean type.",
             "Array type.",
-            "Object type."
+            "Object type.",
+            "Null type."
           ],
           "type": "string"
         }
@@ -4832,13 +5781,36 @@
       },
       "type": "object"
     },
+    "SpeakerVoiceConfig": {
+      "description": "The configuration for a single speaker in a multi speaker setup.",
+      "id": "SpeakerVoiceConfig",
+      "properties": {
+        "speaker": {
+          "description": "Required. The name of the speaker to use. Should be the same as in the prompt.",
+          "type": "string"
+        },
+        "voiceConfig": {
+          "$ref": "VoiceConfig",
+          "description": "Required. The configuration for the voice to use."
+        }
+      },
+      "type": "object"
+    },
     "SpeechConfig": {
       "description": "The speech generation config.",
       "id": "SpeechConfig",
       "properties": {
+        "languageCode": {
+          "description": "Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, en-US, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.",
+          "type": "string"
+        },
+        "multiSpeakerVoiceConfig": {
+          "$ref": "MultiSpeakerVoiceConfig",
+          "description": "Optional. The configuration for the multi-speaker setup. It is mutually exclusive with the voice_config field."
+        },
         "voiceConfig": {
           "$ref": "VoiceConfig",
-          "description": "The configuration for the speaker to use."
+          "description": "The configuration in case of single-voice output."
         }
       },
       "type": "object"
@@ -4919,6 +5891,22 @@
       },
       "type": "object"
     },
+    "ThinkingConfig": {
+      "description": "Config for thinking features.",
+      "id": "ThinkingConfig",
+      "properties": {
+        "includeThoughts": {
+          "description": "Indicates whether to include thoughts in the response. If true, thoughts are returned only when available.",
+          "type": "boolean"
+        },
+        "thinkingBudget": {
+          "description": "The number of thoughts tokens that the model should generate.",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
     "Tool": {
       "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model.",
       "id": "Tool",
@@ -4941,6 +5929,10 @@
         "googleSearchRetrieval": {
           "$ref": "GoogleSearchRetrieval",
           "description": "Optional. Retrieval tool that is powered by Google search."
+        },
+        "urlContext": {
+          "$ref": "UrlContext",
+          "description": "Optional. Tool to support URL context retrieval."
         }
       },
       "type": "object"
@@ -5200,6 +6192,57 @@
       },
       "type": "object"
     },
+    "UrlContext": {
+      "description": "Tool to support URL context retrieval.",
+      "id": "UrlContext",
+      "properties": {
+
+      },
+      "type": "object"
+    },
+    "UrlContextMetadata": {
+      "description": "Metadata related to url context retrieval tool.",
+      "id": "UrlContextMetadata",
+      "properties": {
+        "urlMetadata": {
+          "description": "List of url context.",
+          "items": {
+            "$ref": "UrlMetadata"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "UrlMetadata": {
+      "description": "Context of the a single url retrieval.",
+      "id": "UrlMetadata",
+      "properties": {
+        "retrievedUrl": {
+          "description": "Retrieved url by the tool.",
+          "type": "string"
+        },
+        "urlRetrievalStatus": {
+          "description": "Status of the url retrieval.",
+          "enum": [
+            "URL_RETRIEVAL_STATUS_UNSPECIFIED",
+            "URL_RETRIEVAL_STATUS_SUCCESS",
+            "URL_RETRIEVAL_STATUS_ERROR",
+            "URL_RETRIEVAL_STATUS_PAYWALL",
+            "URL_RETRIEVAL_STATUS_UNSAFE"
+          ],
+          "enumDescriptions": [
+            "Default value. This value is unused.",
+            "Url retrieval is successful.",
+            "Url retrieval is failed due to error.",
+            "Url retrieval is failed because the content is behind paywall.",
+            "Url retrieval is failed because the content is unsafe."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "UsageMetadata": {
       "description": "Metadata on the generation request's token usage.",
       "id": "UsageMetadata",
@@ -5271,12 +6314,34 @@
       },
       "type": "object"
     },
-    "VideoMetadata": {
+    "VideoFileMetadata": {
       "description": "Metadata for a video `File`.",
-      "id": "VideoMetadata",
+      "id": "VideoFileMetadata",
       "properties": {
         "videoDuration": {
           "description": "Duration of the video.",
+          "format": "google-duration",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "VideoMetadata": {
+      "description": "Metadata describes the input video content.",
+      "id": "VideoMetadata",
+      "properties": {
+        "endOffset": {
+          "description": "Optional. The end offset of the video.",
+          "format": "google-duration",
+          "type": "string"
+        },
+        "fps": {
+          "description": "Optional. The frame rate of the video sent to the model. If not specified, the default value will be 1.0. The fps range is (0.0, 24.0].",
+          "format": "double",
+          "type": "number"
+        },
+        "startOffset": {
+          "description": "Optional. The start offset of the video.",
           "format": "google-duration",
           "type": "string"
         }

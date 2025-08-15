@@ -21,6 +21,7 @@ namespace Mscc.GenerativeAI
         private readonly string? _apiKey;
         private readonly string? _accessToken;
         private readonly string _version;
+        private readonly IHttpClientFactory? _httpClientFactory;
         private GenerativeModel? _generativeModel;
         private FilesModel? _filesModel;
         private MediaModel? _mediaModel;
@@ -31,6 +32,8 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <remarks>The following environment variables are used:
         /// <list type="table">
         /// <item><term>GOOGLE_API_KEY</term>
@@ -39,13 +42,14 @@ namespace Mscc.GenerativeAI
         /// <description>Optional. Access token provided by OAuth 2.0 or Application Default Credentials (ADC).</description></item>
         /// </list>
         /// </remarks>
-        private GoogleAI(ILogger? logger = null) : base(logger)
+        private GoogleAI(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
             _version = ApiVersion.V1Beta;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -55,8 +59,13 @@ namespace Mscc.GenerativeAI
         /// <param name="apiKey">API key for Google AI Studio.</param>
         /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="apiVersion">Version of the API.</param>
+        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GoogleAI(string? apiKey = null, string? accessToken = null, string? apiVersion = null, ILogger? logger = null) : this(logger)
+        public GoogleAI(string? apiKey = null,
+            string? accessToken = null,
+            string? apiVersion = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _apiKey = apiKey ?? _apiKey;
             _accessToken = accessToken ?? _accessToken;
@@ -71,6 +80,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when both "apiKey" and "accessToken" are <see langword="null"/>.</exception>
         public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
@@ -88,7 +98,8 @@ namespace Mscc.GenerativeAI
                 safetySettings,
                 tools,
                 systemInstruction,
-                logger: Logger)
+                httpClientFactory: _httpClientFactory,
+                logger: logger ?? Logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null, 
                 Version = _version
@@ -102,6 +113,7 @@ namespace Mscc.GenerativeAI
         /// <param name="cachedContent">Content that has been preprocessed.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
         public GenerativeModel GenerativeModel(CachedContent cachedContent,
@@ -115,7 +127,8 @@ namespace Mscc.GenerativeAI
             _generativeModel = new GenerativeModel(cachedContent,
                 generationConfig,
                 safetySettings,
-                logger: Logger)
+                httpClientFactory: _httpClientFactory,
+                logger: logger ?? Logger)
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -124,21 +137,21 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
-        public async Task<ModelResponse> GetModel(string model)
+        public async Task<ModelResponse> GetModel(string model, CancellationToken cancellationToken = default)
         {
-            return await _generativeModel?.GetModel(model)!;
+            return await _generativeModel?.GetModel(model, cancellationToken)!;
         }
 
         /// <summary>
-        /// Returns an instance of CachedContent to use with a model.
+        /// Returns an instance of <see cref="CachedContentModel"/> to use with a model.
         /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Cached content instance.</returns>
-        public CachedContentModel CachedContent(
-        ILogger? logger = null)
+        public CachedContentModel CachedContent(ILogger? logger = null)
         {
             Guard();
 
-            var cachedContent = new CachedContentModel(logger: logger) 
+            var cachedContent = new CachedContentModel(_httpClientFactory, logger: logger)
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -147,16 +160,34 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Returns an instance of <see cref="BatchesModel"/> to use with a model.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <returns>Batches instance.</returns>
+        public BatchesModel Batches(ILogger? logger = null)
+        {
+            Guard();
+
+            var batches = new BatchesModel(_httpClientFactory, logger: logger)
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return batches;
+        }
+
+        /// <summary>
         /// Returns an instance of <see cref="ImageGenerationModel"/> to use with a model.
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Imagen model</returns>
         public ImageGenerationModel ImageGenerationModel(string model = Model.Imagen3,
             ILogger? logger = null)
         {
             Guard();
 
-            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model, logger: logger)
+            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model, httpClientFactory: _httpClientFactory, logger: logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null
             };
@@ -183,7 +214,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new()
+            _mediaModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -212,7 +243,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new()
+            _mediaModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -228,19 +259,20 @@ namespace Mscc.GenerativeAI
         /// To retrieve the file content via REST, add alt=media as a query parameter.
         /// </remarks>
         /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<GeneratedFile> DownloadFile(string file)
+        public async Task<GeneratedFile> DownloadFile(string file, CancellationToken cancellationToken = default)
         {
             Guard();
 
-            _mediaModel ??= new()
+            _mediaModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _mediaModel.DownloadFile(file);
+            return await _mediaModel.DownloadFile(file, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -248,60 +280,63 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ListFilesResponse> ListFiles(int? pageSize = 100,
-            string? pageToken = null)
+            string? pageToken = null, CancellationToken cancellationToken = default)
         {
             Guard();
 
-            _filesModel ??= new()
+            _filesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _filesModel?.ListFiles(pageSize, pageToken)!;
+            return await _filesModel?.ListFiles(pageSize, pageToken, cancellationToken)!;
         }
 
         /// <summary>
         /// Gets the metadata for the given File.
         /// </summary>
         /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<FileResource> GetFile(string file)
+        public async Task<FileResource> GetFile(string file, CancellationToken cancellationToken = default)
         {
             Guard();
 
-            _filesModel ??= new()
+            _filesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _filesModel?.GetFile(file)!;
+            return await _filesModel?.GetFile(file, cancellationToken)!;
         }
 
         /// <summary>
         /// Deletes a file.
         /// </summary>
         /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<string> DeleteFile(string file)
+        public async Task<string> DeleteFile(string file, CancellationToken cancellationToken = default)
         {
             Guard();
 
-            _filesModel ??= new()
+            _filesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _filesModel?.DeleteFile(file)!;
+            return await _filesModel?.DeleteFile(file, cancellationToken)!;
         }
 
         /// <summary>
@@ -309,20 +344,21 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ListGeneratedFilesResponse> ListGeneratedFiles(int? pageSize = 100,
-            string? pageToken = null)
+            string? pageToken = null, CancellationToken cancellationToken = default)
         {
             Guard();
 
-            _generatedFilesModel ??= new()
+            _generatedFilesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _generatedFilesModel?.ListFiles(pageSize, pageToken)!;
+            return await _generatedFilesModel?.ListFiles(pageSize, pageToken, cancellationToken)!;
         }
 
         /// <summary>

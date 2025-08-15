@@ -35,6 +35,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Content that may be used to harm civic integrity.
         /// </summary>
+        [Obsolete("Use EnableEnhancedCivicAnswers instead.")]
         HarmCategoryCivicIntegrity = 5,
         
         #region "PaLM 2" safety settings

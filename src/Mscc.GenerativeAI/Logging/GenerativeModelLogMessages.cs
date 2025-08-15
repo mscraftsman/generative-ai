@@ -1,8 +1,9 @@
-using Microsoft.Extensions.Logging;
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Net.Http.Headers;
+#endif
+using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mscc.GenerativeAI
 {
@@ -64,6 +65,15 @@ namespace Mscc.GenerativeAI
         public static partial void LogGenerativeModelInvoking(
             this ILogger logger);
 
+
+        /// <summary>
+        /// Logs <see cref="DynamicModel"/>
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Dynamic model starting")]
+        public static partial void LogDynamiceModelInvoking(
+            this ILogger logger);
+        
         /// <summary>
         /// Logs <see cref="GenerativeModel"/>
         /// </summary>

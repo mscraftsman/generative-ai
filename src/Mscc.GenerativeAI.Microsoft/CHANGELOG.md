@@ -11,6 +11,164 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.10
+
+### Changed
+
+- bump version
+
+## 2.6.9
+
+### Changed
+
+- bump version
+
+## 2.6.8
+
+### Changed
+
+## 2.6.7
+
+### Changed
+
+- Structured output support for Mscc.GenerativeAI.Microsoft [#97](https://github.com/mscraftsman/generative-ai/pull/97) thanks to @bharathm03
+
+## 2.6.6
+
+### Changed
+
+- bump version
+
+## 2.6.5
+
+### Changed
+
+- bump version
+- update NuGet packages
+
+## 2.6.4
+
+### Changed
+
+- bump version
+
+## 2.6.3
+
+### Added
+
+- add fluent approach for `GeminiClient` with extension methods
+- add constructor for GenerativeModel instance
+
+## 2.6.2
+
+### Changed
+
+- bump version
+
+## 2.6.1
+
+### Changed
+
+- bump version
+
+## 2.6.0
+
+### Changed
+
+- Update to stable Microsoft.Extensions.AI and update some implementation [#87](https://github.com/mscraftsman/generative-ai/pull/87) thanks to @stephentoub
+
+## 2.5.6
+
+### Changed
+
+- Update Microsoft.Extensions.AI version to 9.5.0-preview.1.25262.9
+
+## 2.5.5
+
+### Changed
+
+- Update Microsoft.Extensions.AI version to 9.4.3-preview.1.25230.7 [85](https://github.com/mscraftsman/generative-ai/pull/85) thanks to @MackinnonBuck
+
+## 2.5.4
+
+### Changed
+
+- bump version
+
+## 2.5.3
+
+### Changed
+
+- bump version
+
+## 2.5.2
+
+### Changed
+
+- bump version
+
+## 2.5.1
+
+### Changed
+
+- bump version
+
+## 2.5.0
+
+### Changed
+
+- bump version
+
+## 2.4.1
+
+### Changed
+
+- bump version
+
+## 2.4.0
+
+### Changed
+
+- bump version
+
+## 2.3.6
+
+### Changed
+
+- bump version
+
+## 2.3.5
+
+### Changed
+
+- bump version
+
+## 2.3.4
+
+### Changed
+
+- Update to M.E.AI 9.3.0-preview.1.25161.3 [#72](https://github.com/mscraftsman/generative-ai/pull/72) thanks to @stephentoub
+- bump version
+
+## 2.3.3
+
+### Changed
+
+- bump version
+
+## 2.3.2
+
+### Changed
+
+- bump version
+
+## 2.3.1
+
+### Changed
+
+- use named parameter to initialize Vertex AI
+- bump version
+
 ## 2.3.0
 
 ### Changed

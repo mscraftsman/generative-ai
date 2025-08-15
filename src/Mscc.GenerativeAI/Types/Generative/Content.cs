@@ -15,7 +15,7 @@ namespace Mscc.GenerativeAI
     public sealed class Content
     {
         private List<Part>? _partTypes;
-        
+
         /// <summary>
         /// Ordered Parts that constitute a single message. Parts may have different MIME types.
         /// </summary>
@@ -32,8 +32,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         [DebuggerHidden]
         [JsonPropertyName("parts")]
-        public List<Part>? PartTypes 
-        { 
+        public List<Part>? PartTypes
+        {
             get
             {
                 SynchronizeParts();
@@ -58,19 +58,37 @@ namespace Mscc.GenerativeAI
         /// Initializes a new instance of the <see cref="Content"/> class.
         /// </summary>
         /// <param name="text">String to process.</param>
-        public Content(string text) : this()
+        /// <param name="role">Provide the <see cref="GenerativeAI.Role"/> of the text.</param>
+        public Content(string text, string role = GenerativeAI.Role.User) : this()
         {
+            Role = role;
             Parts?.Add(new TextData { Text = text });
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Content"/> class.
         /// </summary>
-        /// <param name="file">File to process.</param>
-        public Content(FileData file) : this()
+        /// <param name="part">The part to add.</param>
+        /// <param name="role">Provide the <see cref="GenerativeAI.Role"/> of the text.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="part"/> is null.</exception>
+        public Content(IPart part, string role = GenerativeAI.Role.User) : this()
         {
-            Role = GenerativeAI.Role.User;
-            Parts?.Add(new FileData { FileUri = file.FileUri, MimeType = file.MimeType });
+            if (part is null) throw new ArgumentNullException(nameof(part));
+            Role = role;
+            Parts?.Add(part);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        /// <param name="parts">The parts to add.</param>
+        /// <param name="role">Provide the <see cref="GenerativeAI.Role"/> of the text.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parts"/> is null.</exception>
+        public Content(IEnumerable<IPart> parts, string role = GenerativeAI.Role.User) : this()
+        {
+            if (parts is null) throw new ArgumentNullException(nameof(parts));
+            Role = role;
+            Parts?.AddRange(parts);
         }
 
         private void SynchronizeParts()

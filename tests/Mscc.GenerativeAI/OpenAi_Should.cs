@@ -3,13 +3,13 @@ using System;
 using System.Threading.Tasks;
 #endif
 #if NET9_0
+using System;
 using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
-using System;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,7 +26,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task List_Models()
         {
             // Arrange
-            var model = new OpenAIModel(Logger) { ApiKey = fixture.ApiKey, Model = _model };
+            var model = new OpenAIModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = _model };
 
             // Act
             var sut = await model.ListModels();
@@ -47,7 +47,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
-            var model = new OpenAIModel(Logger) { ApiKey = fixture.ApiKey, Model = modelName };
+            var model = new OpenAIModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = modelName };
 
             // Act
             var sut = await model.GetModel(modelsId: modelName);
@@ -61,7 +61,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task ChatCompletions_Using_OpenAiModel()
         {
             // Arrange
-            var model = new OpenAIModel(Logger) { ApiKey = fixture.ApiKey, Model = _model };
+            var model = new OpenAIModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = _model };
             var request = new ChatCompletionsRequest()
                 {
                     Model = _model, 
@@ -79,10 +79,43 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task ChatCompletions_with_FileAPI_Using_OpenAiModel()
+        {
+            // Arrange
+            var model = new OpenAIModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = _model };
+            var request = new ChatCompletionsRequest()
+            {
+                Model = _model, 
+                Messages = [
+                    new { Role = Role.System, Content = "You are a helpful assistant in the field of space travelling."},
+                    new { Role = Role.User, Content = (object[])[
+                        new
+                        {
+                            Type = "file",
+                            File = new
+                            {
+                                File_id = "https://generativelanguage.googleapis.com/v1beta/files/3c02j9p8oge0",
+                                // MimeType = "text/plain"
+                            }
+                        },
+                        new { Type = "text", Text = "Explain to me how the Apollo lunar module works"}
+                    ]}
+                ]
+            };
+            
+            // Act
+            var response = await model.Completions(request);
+            
+            // Assert
+            response.Should().NotBeNull();
+            output.WriteLine($"{response.Choices[0].Message.Content}");
+        }
+
+        [Fact]
         public async Task ChatCompletions_Using_ChatModel()
         {
             // Arrange
-            var model = new ChatModel(Logger) { ApiKey = fixture.ApiKey, Model = _model };
+            var model = new ChatModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = _model };
             var request = new ChatCompletionsRequest()
             {
                 Model = _model, 
@@ -103,7 +136,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Embed_Using_OpenAiModel()
         {
             // Arrange
-            var model = new OpenAIModel(Logger) { ApiKey = fixture.ApiKey, Model = Model.TextEmbedding };
+            var model = new OpenAIModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = Model.TextEmbedding };
             var request = new GenerateEmbeddingsRequest()
             {
                 Model = "text-embedding-004", 
@@ -163,7 +196,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt =
                 "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape";
-            var model = new OpenAIModel(Logger) { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
+            var model = new OpenAIModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
             var request = new ImagesGenerationsRequest(Model.Imagen3, prompt)
             {
                 ResponseFormat = responseFormat,
@@ -205,7 +238,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt =
                 "Photorealistic shot in the style of DSLR camera of the northern lights dancing across the Arctic sky, stars twinkling, snow-covered landscape";
-            var model = new ImagesModel(Logger) { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
+            var model = new ImagesModel(logger: Logger) { ApiKey = fixture.ApiKey, Model = Model.Imagen3 };
             var request = new ImagesGenerationsRequest(Model.Imagen3, prompt)
             {
                 ResponseFormat = ImageResponseFormat.B64Json

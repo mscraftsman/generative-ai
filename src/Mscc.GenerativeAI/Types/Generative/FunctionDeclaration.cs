@@ -55,6 +55,24 @@ namespace Mscc.GenerativeAI
 
         public Delegate? Callback { get; set; }
 
+        /// <summary>
+        /// Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.
+        /// </summary>
+        public BehaviorType? Behavior { get; set; }
+        /// <summary>
+        /// Optional. Describes the parameters to the function in JSON Schema format.
+        /// The schema must describe an object where the properties are the parameters to the function.
+        /// For example: ``` { "type": "object", "properties": { "name": { "type": "string" }, "age": { "type": "integer" } }, "additionalProperties": false, "required": ["name", "age"], "propertyOrdering": ["name", "age"] } ```
+        /// This field is mutually exclusive with `parameters`.
+        /// </summary>
+        public string? ParametersJsonSchema { get; set; }
+        /// <summary>
+        /// Optional. Describes the output from this function in JSON Schema format.
+        /// The value specified by the schema is the response value of the function.
+        /// This field is mutually exclusive with `response`.
+        /// </summary>
+        public string? ResponseJsonSchema { get; set; }
+
         public FunctionDeclaration() { }
 
         public FunctionDeclaration(string name, string? description)

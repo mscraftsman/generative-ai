@@ -181,6 +181,18 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        public static string SanitizeBatchesName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (!value.StartsWith("batch", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"batches/{value}";
+            }
+
+            return value;
+        }
+
         public static string SanitizeTuningJobsName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -262,10 +274,11 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
-        public static Part FromVideoMetadata(this Part part, Duration startOffset, Duration endOffset)
+        public static Part FromVideoMetadata(this Part part, string startOffset, string endOffset, double fps)
         {
             part.VideoMetadata.StartOffset = startOffset;
             part.VideoMetadata.EndOffset = endOffset;
+            part.VideoMetadata.Fps = fps;
             return part;
         }
         

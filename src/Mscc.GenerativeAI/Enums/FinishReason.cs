@@ -64,6 +64,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Token generation stopped because generated images contain safety violations.
         /// </summary>
-        ImageSafety
+        ImageSafety,
+        /// <summary>
+        /// Model generated a tool call but no tools were enabled in the request.
+        /// </summary>
+        UnexpectedToolCall,
+        /// <summary>
+        /// Model called too many tools consecutively, thus the system exited execution.
+        /// </summary>
+        TooManyToolCalls
     }
 }

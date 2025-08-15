@@ -23,7 +23,7 @@ var configuration = new ConfigurationBuilder()
 var apiKey = configuration["Gemini:Credentials:ApiKey"];  //
 
 ServiceCollection c = new();
-c.AddGoogleAIGeminiChatCompletion("gemini-1.5-flash", apiKey, GoogleAIVersion.V1_Beta);
+c.AddGoogleAIGeminiChatCompletion("gemini-2.0-flash", apiKey, GoogleAIVersion.V1_Beta);
 c.AddKernel();
 // c.AddLogging(b => b.AddConsole().SetMinimalLevel(LogLevel.Trace));
 c.AddSingleton<IFunctionInvocationFilter, PermissionFilter>();
@@ -54,7 +54,10 @@ while (true)
     Console.Write("Q: ");
     history.AddUserMessage(Console.ReadLine());
     
-    var assistant = await chatService.GetChatMessageContentAsync(history, settings, kernel);
+    var assistant = await chatService.GetChatMessageContentAsync(
+        history, 
+        settings, 
+        kernel);
     history.Add(assistant);
     Console.WriteLine(assistant);
 }

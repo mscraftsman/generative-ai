@@ -47,5 +47,9 @@ namespace Mscc.GenerativeAI
         /// Output only. List of modalities that were processed in the request input.
         /// </summary>
         public List<ModalityTokenCount>? PromptTokensDetails { get; set; }
+        /// <summary>
+        /// Output only. List of modalities that were processed in the cached content.
+        /// </summary>
+        public List<ModalityTokenCount>? CacheTokensDetails { get; set; }
     }
 }

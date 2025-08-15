@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -11,6 +13,10 @@ namespace Mscc.GenerativeAI
         /// Required. Data type.
         /// </summary>
         public ParameterType? Type { get; set; }
+        /// <summary>
+        /// Optional. The title of the schema.
+        /// </summary>
+        public string? Title { get; set; }
         /// <summary>
         /// Optional. The format of the data.
         /// This is used only for primitive datatypes.
@@ -59,5 +65,48 @@ namespace Mscc.GenerativeAI
         /// Optional. Required properties of Type.OBJECT.
         /// </summary>
         public List<string>? Required { get; set; }
+        /// <summary>
+        /// Optional. The value should be validated against any (one or more) of the subschemas in the list.
+        /// </summary>
+        public List<Schema>? AnyOf { get; set; }
+        /// <summary>
+        /// Optional. Maximum value of the Type.INTEGER and Type.NUMBER
+        /// </summary>
+        /// <remarks>SCHEMA FIELDS FOR TYPE INTEGER and NUMBER</remarks>
+        public long? Maximum { get; set; }
+        /// <summary>
+        /// Optional. Minimum value of the Type.INTEGER and Type.NUMBER
+        /// </summary>
+        /// <remarks>SCHEMA FIELDS FOR TYPE INTEGER and NUMBER</remarks>
+        public long? Minimum { get; set; }
+        /// <summary>
+        /// Optional. Default value of the field.
+        /// Per JSON Schema, this field is intended for documentation generators and doesn't affect validation. Thus it's included here and ignored so that developers who send schemas with a `default` field don't get unknown-field errors.
+        /// </summary>
+        public object? Default { get; set; }
+        /// <summary>
+        /// Optional. Example of the object. Will only populated when the object is the root.
+        /// </summary>
+        public object? Example { get; set; }
+        /// <summary>
+        /// Optional. Maximum length of the Type.STRING
+        /// </summary>
+        public string? MaxLength { get; set; }
+        /// <summary>
+        /// Optional. Minimum length of the Type.STRING
+        /// </summary>
+        public string? MinLength { get; set; }
+        /// <summary>
+        /// Optional. Maximum number of the properties for Type.OBJECT.
+        /// </summary>
+        public string? MaxProperties { get; set; }
+        /// <summary>
+        /// Optional. Minimum number of the properties for Type.OBJECT.
+        /// </summary>
+        public string? MinProperties { get; set; }
+        /// <summary>
+        /// Optional. Pattern of the Type.STRING to restrict a string to a regular expression.
+        /// </summary>
+        public string? Pattern { get; set; }
     }
 }

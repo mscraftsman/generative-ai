@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 #endif
 using mea = Microsoft.Extensions.AI;
 using System.Runtime.CompilerServices;
-using Mscc.GenerativeAI.Microsoft.MicrosoftAi;
 
 namespace Mscc.GenerativeAI.Microsoft;
 
@@ -20,6 +19,17 @@ public sealed class GeminiChatClient : mea.IChatClient
     private readonly GenerativeModel _client;
     private readonly mea.ChatClientMetadata _metadata;
 
+    /// <summary>
+    /// Creates a new instance of the <see cref="GeminiChatClient"/> class for the specified Gemini API client.
+    /// </summary>
+    /// <param name="client">The underlying client.</param>
+    /// <exception cref="ArgumentNullException">Thrown when the specified client is null.</exception>
+    public GeminiChatClient(GenerativeModel client)
+    {
+        _client = client ?? throw new ArgumentNullException(nameof(client));
+        _metadata = new(ProviderName, null, client.Model);
+    }
+    
     /// <summary>
     /// Creates an instance of the Gemini API client using Google AI.
     /// </summary>
@@ -40,43 +50,44 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// <param name="model">Model to use.</param>
     public GeminiChatClient(string projectId, string? region = null, string model = Model.Gemini15Pro)
     {
-        var genAi = new VertexAI(projectId, region);
+        var genAi = new VertexAI(projectId: projectId, region: region);
         _client = genAi.GenerativeModel(model);
         _metadata = new(ProviderName, null, model);
     }
     
     /// <inheritdoc/>
     public async Task<mea.ChatResponse> GetResponseAsync(
-        IList<mea.ChatMessage> chatMessages,
+        IEnumerable<mea.ChatMessage> messages, 
         mea.ChatOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        if (chatMessages == null) throw new ArgumentNullException(nameof(chatMessages));
+        if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-        var request = AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
-        var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
-        var response = await _client.GenerateContent(request, requestOptions, cancellationToken);
-        return AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
+        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
+        var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
+		var response = await _client.GenerateContent(request, requestOptions, cancellationToken);
+		return MicrosoftAi.AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<mea.ChatResponseUpdate> GetStreamingResponseAsync(
-        IList<mea.ChatMessage> chatMessages,
+        IEnumerable<mea.ChatMessage> messages, 
         mea.ChatOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        if (chatMessages == null) throw new ArgumentNullException(nameof(chatMessages));
+        if (messages == null) throw new ArgumentNullException(nameof(messages));
 
-        var request = AbstractionMapper.ToGeminiGenerateContentRequest(chatMessages, options);
-        var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
-        await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
-            yield return AbstractionMapper.ToChatResponseUpdate(response);
+        var request = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
+        var requestOptions = MicrosoftAi.AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
+		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
+			yield return MicrosoftAi.AbstractionMapper.ToChatResponseUpdate(response);
     }
 
     /// <inheritdoc/>
     object? mea.IChatClient.GetService(Type serviceType, object? serviceKey) =>
         serviceKey is not null ? null :
         serviceType == typeof(mea.ChatClientMetadata) ? _metadata :
+        serviceType == typeof(GenerativeModel) ? _client :
         serviceType?.IsInstanceOfType(this) is true ? this :
         null;
         

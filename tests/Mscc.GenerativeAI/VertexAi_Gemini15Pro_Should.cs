@@ -13,14 +13,13 @@ using FluentAssertions;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
     public class VertexAiGemini15ProShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini20FlashLitePreview0205;
+        private readonly string _model = Model.Gemini20FlashLite001;
 
         [Fact]
         public void Initialize_Vertex()
@@ -76,7 +75,7 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData(Model.Gemini15ProLatest)]
-        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         public async Task Get_Model_Information(string modelName)
@@ -425,7 +424,7 @@ Answer:";
             // Arrange
 
             // Act
-            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
 
             // Assert
             vertex.Should().NotBeNull();
@@ -435,7 +434,7 @@ Answer:";
         public void Initialize_Default_Model_ExpressMode()
         {
             // Arrange
-            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
 
             // Act
             var model = vertex.GenerativeModel();
@@ -449,7 +448,7 @@ Answer:";
         public void Initialize_Model_ExpressMode()
         {
             // Arrange
-            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
 
             // Act
             var model = vertex.GenerativeModel(model: _model);
@@ -464,7 +463,7 @@ Answer:";
         {
             // Arrange
             var prompt = "Explain bubble sort to me.";
-            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
             var model = vertex.GenerativeModel(model: _model);
 
             // Act
@@ -482,7 +481,7 @@ Answer:";
         {
             // Arrange
             var prompt = "How are you doing today?";
-            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
             var model = vertex.GenerativeModel(model: _model);
 
             // Act
@@ -510,7 +509,7 @@ Answer:";
         public async Task Count_Tokens_Request_ExpressMode(string prompt, int expected)
         {
             // Arrange
-            var vertex = new VertexAI(apiKey: fixture.ApiKey);
+            var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
             var model = vertex.GenerativeModel(model: _model);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content

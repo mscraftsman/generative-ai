@@ -10,13 +10,13 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi;
 
 public class Function
 {
-    private static readonly MethodInfo s_createMethod = typeof(Function).GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)!;
+    // private static readonly MethodInfo s_createMethod = typeof(Function).GetMethod(nameof(Create), BindingFlags.Static | BindingFlags.NonPublic)!;
     public static readonly JsonSerializerOptions SerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
     };
 
-    public static mea.AIFunction Create(Delegate function, string? name = null, string? description = null)
+/*    public static mea.AIFunction Create(Delegate function, string? name = null, string? description = null)
     {
         if (function is null)
         {
@@ -68,6 +68,7 @@ public class Function
 
         return new mea.AIFunction(functionName, description ?? "", new BinaryData(functionParameters.ToJsonString(SerializerOptions)));
     }
+*/
 
     private static string ToJsonSchemaType(Type type)
     {

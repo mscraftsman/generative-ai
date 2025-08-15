@@ -16,37 +16,6 @@ namespace Mscc.GenerativeAI
     public class GenerateContentResponse : BaseLogger
     {
         /// <summary>
-        /// A convenience property to get the responded text information of first candidate.
-        /// </summary>
-        [JsonIgnore]
-		public string? Text
-        {
-            get
-            {
-                if (Candidates is null) return string.Empty;
-                if (Candidates?.Count == 0) return string.Empty;
-                if (Candidates?.FirstOrDefault()?.FinishReason is
-                    FinishReason.MaxTokens or
-                    FinishReason.Safety or
-                    FinishReason.Recitation or
-                    FinishReason.Other)
-                    return string.Empty;
-                if (Candidates?.Count > 1) Logger.LogMultipleCandidates(Candidates!.Count);
-
-                return Candidates?.FirstOrDefault()?.Content?.Parts.FirstOrDefault()?.Text;
-            }
-        }
-
-        /// <summary>
-        /// A convenience property to get the function calls.
-        /// </summary>
-        [JsonIgnore]
-        public List<FunctionCall>? FunctionCalls => Candidates?.FirstOrDefault()?.Content?.Parts
-            .Where(p => p.FunctionCall is not null)
-            .Select(p => p.FunctionCall)
-            .ToList();
-
-        /// <summary>
         /// Output only. Generated Candidate responses from the model.
         /// </summary>
         public List<Candidate>? Candidates { get; set; }
@@ -64,6 +33,62 @@ namespace Mscc.GenerativeAI
         /// Output only. The model version used to generate the response.
         /// </summary>
         public string? ModelVersion { get; set; }
+        /// <summary>
+        /// Output only. response_id is used to identify each response.
+        /// </summary>
+        public string? ResponseId { get; set; }
+
+        /// <summary>
+        /// A convenience property to get the responded text information of first candidate.
+        /// </summary>
+        [JsonIgnore]
+        public string? Text
+        {
+            get
+            {
+                if (Candidates is null) return string.Empty;
+                if (Candidates?.Count == 0) return string.Empty;
+                if (Candidates?.FirstOrDefault()?.FinishReason is
+                    FinishReason.MaxTokens or
+                    FinishReason.Safety or
+                    FinishReason.Recitation or
+                    FinishReason.Other)
+                    return string.Empty;
+                if (Candidates?.Count > 1) Logger.LogMultipleCandidates(Candidates!.Count);
+
+                return string.Join(Environment.NewLine,
+                    Candidates?.FirstOrDefault()?.Content?.Parts
+                        .Where(p => p.Thought is null or false)
+                        .Select(x => x.Text)
+                        .ToArray()!);
+            }
+        }
+
+        /// <summary>
+        /// A convenience property to get the responded thinking information of first candidate.
+        /// </summary>
+        [JsonIgnore]
+        public string? Thinking
+        {
+            get
+            {
+                if (Candidates is null) return string.Empty;
+                if (Candidates?.Count == 0) return string.Empty;
+                if (Candidates?.FirstOrDefault()?.FinishReason is
+                    FinishReason.MaxTokens or
+                    FinishReason.Safety or
+                    FinishReason.Recitation or
+                    FinishReason.Other)
+                    return string.Empty;
+                if (Candidates?.Count > 1) Logger.LogMultipleCandidates(Candidates!.Count);
+
+                return string.Join(Environment.NewLine,
+                    Candidates?.FirstOrDefault()?.Content?.Parts
+                        .Where(p => p.Thought == true)
+                        .Select(x => x.Text)
+                        .ToArray()!);
+            }
+        }
 
         /// <summary>
         /// Default constructor.

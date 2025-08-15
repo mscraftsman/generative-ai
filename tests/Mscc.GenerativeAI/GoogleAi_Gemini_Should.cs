@@ -22,6 +22,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Runtime.Serialization;
+using System.Text.Json;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,7 +31,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GoogleAiGeminiShould : LoggingTestsBase
     {
-        private readonly string _model = Model.Gemini20FlashExperimental;
+        private readonly string _model = Model.Gemini25Pro;
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly GoogleAI _googleAi;
@@ -40,7 +41,7 @@ namespace Test.Mscc.GenerativeAI
         {
             _output = output;
             _fixture = fixture;
-            _googleAi = new(apiKey: _fixture.ApiKey, logger: Logger);
+            _googleAi = new(apiKey: fixture.ApiKey, logger: Logger);
         }
 
         [Fact]
@@ -54,7 +55,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini20FlashExperimental.SanitizeModelName());
+            model.Name.Should().Be(Model.Gemini25ProExperimental.SanitizeModelName());
         }
 
         [Fact]
@@ -190,10 +191,11 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.GeminiProVision)]
-        [InlineData(Model.BisonText)]
-        [InlineData(Model.BisonChat)]
-        [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
+        [InlineData(Model.Gemini25Pro)]
+        [InlineData(Model.Gemini25Flash)]
+        [InlineData(Model.Gemma3)]
+        [InlineData(Model.Imagen4)]
+        //[InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
@@ -223,7 +225,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.GeminiProVision)]
+        [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
         [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
@@ -288,7 +290,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.ApiKey = _fixture.ApiKey;
 
             // Act
@@ -307,7 +309,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "AIzaTESTkJmQDe5tghndp6UvqPX0HAA9XpBNGWY");
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
 
             // Act
@@ -327,7 +329,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
             // Act
@@ -346,7 +348,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.Gemini15Pro002);
+            var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig() { ResponseLogprobs = true };
 
             // Act
@@ -365,7 +367,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
             // Act
@@ -525,6 +527,65 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Generate_Content_with_Modalities()
+        {
+            // Arrange
+            var prompt =
+                "Hi, can you create a 3d rendered image of a pig with wings and a top hat flying over a happy futuristic scifi city with lots of greenery?";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var request = new GenerateContentRequest(prompt,
+                generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                _output.WriteLine($"{part.Text}");
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        part.InlineData.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                _output.WriteLine($"Wrote image to {fileName}");
+            });
+        }
+
+        [Fact]
+        public async Task Generate_Content_with_Modalities_multiple_Images()
+        {
+            // Arrange
+            var prompt = "Show me how to bake a macaron with images.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini20FlashImageGeneration);
+            var request = new GenerateContentRequest(prompt,
+                generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    _output.WriteLine($"{part.Text}");
+                if (part.InlineData is not null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+                }
+            });
+        }
+
+        [Fact]
         public async Task Generate_Content_Stream()
         {
             // Arrange
@@ -544,9 +605,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
-                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -575,9 +636,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
-                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -685,7 +746,7 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(prompt);
             _output.WriteLine(response?.Text);
-            //_output.WriteLine(response?.PromptFeedback);
+            //output.WriteLine(response?.PromptFeedback);
         }
 
         [Fact]
@@ -853,9 +914,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine($"{response.Text}");
                 // response.UsageMetadata.Should().NotBeNull();
-                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
 
             chat.History.Count.Should().Be(2);
@@ -875,7 +936,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "What is the sum of the first 50 prime numbers?";
             var googleAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(Model.Gemini15Flash,
+            var model = _googleAi.GenerativeModel(model: _model,
                 tools: [new Tool { CodeExecution = new() }]);
 
             // Act
@@ -892,11 +953,13 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
+        [InlineData(Model.Gemma3)]
         [InlineData(Model.Gemini15Flash)]
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini20FlashLite)]
         [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
+        [InlineData(Model.Gemini25Pro)]
         // Ref: https://ai.google.dev/api/generate-content#code-execution
         public async Task Generate_Content_Code_Execution_using_FileAPI(string modelName)
         {
@@ -939,9 +1002,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content_Grounding_Search()
         {
             // Arrange
-            var prompt = "What is the current Google stock price?";
+            var prompt = "What is the current Google (GOOG) stock price?";
             var genAi = new GoogleAI(_fixture.ApiKey, logger: Logger);
-            var model = _googleAi.GenerativeModel("gemini-1.5-pro-002");
+            var model = _googleAi.GenerativeModel(model: _model);
             model.UseGrounding = true;
 
             // Act
@@ -1041,15 +1104,28 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData(Model.Gemini15Pro002)]
+        [InlineData(Model.Gemini15Flash)]
+        [InlineData(Model.Gemini20Flash)]
+        [InlineData(Model.Gemini20Flash001)]
+        [InlineData(Model.Gemini20FlashLite)]
+        [InlineData(Model.Gemini20ProExperimental)]
+        [InlineData(Model.Gemini25Pro)]
         // Ref: https://ai.google.dev/gemini-api/docs/grounding
-        public async Task Generate_Content_Grounding_Search_Default()
+        public async Task Generate_Content_Grounding_Search_Default(string modelName)
         {
             // Arrange
-            var prompt = "Who won Wimbledon this year?";
+            var prompt = "When and where does F1 start this year?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel("gemini-1.5-pro-002",
-                tools: [new Tool { GoogleSearchRetrieval = new() }]);
+            var model = _googleAi.GenerativeModel(modelName,
+                tools:
+                [
+                    new Tool
+                    {
+                        GoogleSearchRetrieval = new() { DynamicRetrievalConfig = new() { DynamicThreshold = 0.6f } }
+                    }
+                ]);
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -1079,7 +1155,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "When is the next total solar eclipse in Mauritius?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(Model.Gemini20FlashExperimental);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.UseGoogleSearch = true;
 
             // Act
@@ -1113,7 +1189,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "When is the next total solar eclipse in Mauritius?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(Model.Gemini20FlashExperimental);
+            var model = _googleAi.GenerativeModel(model: _model);
             model.UseGoogleSearch = true;
 
             // Act
@@ -1139,6 +1215,82 @@ namespace Test.Mscc.GenerativeAI
                     .Select(w => w)
                     .ToArray()));
             _output.WriteLine(response.Candidates![0].GroundingMetadata!.SearchEntryPoint!.RenderedContent);
+        }
+
+        [Fact]
+        public async Task Generate_Content_with_Thinking()
+        {
+            // Arrange
+            var prompt = "Give me a tutorial to create a landing page";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ThinkingConfig = new ThinkingConfig()
+                {
+                    IncludeThoughts = true,
+                    ThinkingBudget = 8192
+                }
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt, generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine("Thinking part:");
+            _output.WriteLine(response.Thinking);
+            _output.WriteLine(string.Join(Environment.NewLine,"Response:"));
+            _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task Generate_Content_with_Thinking_Dynamic()
+        {
+            // Arrange
+            var prompt = "Which one is heavier, a pound of feathers or a kilogram of bricks";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ThinkingConfig = new ThinkingConfig()
+                {
+                    ThinkingBudget = -1     // turn on dynamic thinking
+                }
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt, generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine("Thinking part:");
+            _output.WriteLine(response.Thinking);
+            _output.WriteLine(string.Join(Environment.NewLine,"Response:"));
+            _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task Generate_Content_with_UrlContext()
+        {
+            // Arrange
+            var url = "https://conference.mscc.mu/";
+            var prompt = $"Summarize this document: {url}";
+            var model = _googleAi.GenerativeModel(model: _model,
+                tools: [new Tool { UrlContext = new() }]);
+            
+            // Act
+            var response = await model.GenerateContent(prompt);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            _output.WriteLine(response.Text);
+            response.Candidates![0].UrlContextMetadata!.UrlMetadata
+                .ForEach(m =>
+                    _output.WriteLine($"{m.RetrievedUrl} - {m.UrlRetrievalStatus}"));
         }
 
         [Fact]
@@ -1221,18 +1373,11 @@ namespace Test.Mscc.GenerativeAI
                                         Description =
                                             "The city and state, e.g. San Francisco, CA or a zip code e.g. 95616"
                                     },
-                                    Movie = new
-                                    {
-                                        Type = ParameterType.String, Description = "Any movie title"
-                                    },
-                                    Theater = new
-                                    {
-                                        Type = ParameterType.String, Description = "Name of the theater"
-                                    },
+                                    Movie = new { Type = ParameterType.String, Description = "Any movie title" },
+                                    Theater = new { Type = ParameterType.String, Description = "Name of the theater" },
                                     Date = new
                                     {
-                                        Type = ParameterType.String,
-                                        Description = "Date for requested showtime"
+                                        Type = ParameterType.String, Description = "Date for requested showtime"
                                     }
                                 },
                                 Required = ["location", "movie", "theater", "date"]
@@ -1251,6 +1396,66 @@ namespace Test.Mscc.GenerativeAI
             response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+        }
+
+        protected string SearchEvent(string name)
+        {
+            return name.ToLower() switch
+            {
+                "player move" => "on move",
+                _ => "not found"
+            };
+        }
+
+        [Fact]
+        public async Task Function_Calling_Issue74()
+        {
+            // Arrange
+            var prompt = "Is there an event when a player moves?";
+            var model = _googleAi.GenerativeModel(model: _model);
+            Tools tools =
+            [
+                new Tool()
+                {
+                    FunctionDeclarations =
+                    [
+                        new()
+                        {
+                            Name = "find_event",
+                            Description = "search for an event in the documentation",
+                            Parameters = new()
+                            {
+                                Type = ParameterType.Object,
+                                Properties = new
+                                {
+                                    Name = new
+                                    {
+                                        Type = ParameterType.String,
+                                        Description = "The name of the event to search for"
+                                    },
+                                },
+                                Required = ["name"]
+                            }
+                        },
+                    ]
+                }
+            ];
+            var chatSession = new ChatSession(model, tools: tools);
+            var response = await chatSession.SendMessage(prompt);
+            var functionArgs = response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args as JsonElement?;
+            string? name = functionArgs?.GetProperty("name").GetString();
+            string result = SearchEvent(name);
+            var functionResponsePart = new Part
+            {
+                FunctionResponse = new FunctionResponse { Name = "find_event", Response = new { content = result } }
+            };
+
+            // Act
+            var followUpResponse = await chatSession.SendMessage([functionResponsePart]);
+
+            // Assert
+            followUpResponse.Should().NotBeNull();
+            _output.WriteLine(followUpResponse.Text);
         }
 
         [Description("Toggles the current between dark and light.")]
@@ -1827,7 +2032,7 @@ namespace Test.Mscc.GenerativeAI
             //response1.Should().NotBeNull();
             //response.Candidates.Should().NotBeNull().And.HaveCount(1);
             //response.Text.Should().NotBeEmpty();
-            //_output.WriteLine(response?.Text);
+            //output.WriteLine(response?.Text);
             return Task.FromResult(Task.CompletedTask);
         }
 
@@ -1862,11 +2067,11 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             // response.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
             // response.FirstOrDefault().Should().NotBeNull();
-            // response.ForEach(x => _output.WriteLine(x.Text));
+            // response.ForEach(x => output.WriteLine(x.Text));
             // response.LastOrDefault().UsageMetadata.Should().NotBeNull();
-            // _output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
-            // _output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
-            // _output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
+            // output.WriteLine($"PromptTokenCount: {response.LastOrDefault().UsageMetadata.PromptTokenCount}");
+            // output.WriteLine($"CandidatesTokenCount: {response.LastOrDefault().UsageMetadata.CandidatesTokenCount}");
+            // output.WriteLine($"TotalTokenCount: {response.LastOrDefault().UsageMetadata.TotalTokenCount}");
             return Task.FromResult(Task.CompletedTask);
         }
 
@@ -1875,7 +2080,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = googleAI.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
             var request = new CreateTunedModelRequest()
             {
@@ -1923,7 +2128,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = _googleAi.GenerativeModel(model: Model.GeminiPro);
+            var model = googleAI.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
             var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
@@ -1963,7 +2168,7 @@ namespace Test.Mscc.GenerativeAI
             var modelName =
                 "tunedModels/number-generator-model-psx3d3gljyko"; // see List_Tuned_Models for available options.
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = _googleAi.GenerativeModel();
+            var model = googleAI.GenerativeModel();
             model.ProjectId = _fixture.ProjectId;
 
             // Act
@@ -1983,7 +2188,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = _googleAi.GenerativeModel(model: "tunedModels/autogenerated-test-model-48gob9c9v54p");
+            var model = googleAI.GenerativeModel(model: "tunedModels/autogenerated-test-model-48gob9c9v54p");
             model.ProjectId = _fixture.ProjectId;
 
             // Act
@@ -2160,6 +2365,43 @@ namespace Test.Mscc.GenerativeAI
             }
         }
 
+        [Theory]
+        [InlineData("https://storage.googleapis.com/generativeai-downloads/images/instrument.jpg")]
+        public async Task Generate_Content_Using_ResponseSchema_with_Enumeration_and_Image(string uri)
+        {
+            // Arrange
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+
+            var generationConfig = new GenerationConfig
+            {
+                ResponseMimeType = "text/x.enum", // Important for enum handling
+                ResponseSchema = typeof(Instrument) // Provide the enum type
+            };
+            var request = new GenerateContentRequest(prompt: "what category of instrument is this?",
+                generationConfig: generationConfig);
+            await request.AddMedia(uri);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine($"Response: {response.Text}");
+
+            // Parse the enum (more robust error handling)
+            if (Enum.TryParse(response.Text, out Instrument instrument))
+            {
+                _output.WriteLine($"Parsed Instrument: {instrument}");
+            }
+            else
+            {
+                _output.WriteLine($"Could not parse '{response.Text}' as a valid Instrument enum.");
+            }
+        }
+
         [Fact]
         public async Task Generate_Content_Using_ResponseSchema_with_Anonymous()
         {
@@ -2188,6 +2430,167 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_with_String()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var schema = """
+                         {
+                           "type": "object",
+                           "properties": {
+                             "menus": {
+                               "type": "array",
+                               "description": "A list of menus, each representing a specific day.",
+                               "items": {
+                                 "type": "object",
+                                 "properties": {
+                                   "date": {
+                                     "type": "string",
+                                     "description": "The date of the menu in YYYY-MM-DD format."
+                                   },
+                                   "meals": {
+                                     "type": "array",
+                                     "description": "A list of meals available on this day.",
+                                     "items": {
+                                       "type": "object",
+                                       "properties": {
+                                         "type": {
+                                           "type": "string",
+                                           "enum": ["regular", "diet"],
+                                           "description": "Indicates whether the meal is a regular option or a dietary option."
+                                         },
+                                         "name": {
+                                           "type": "string",
+                                           "description": "The name of the meal."
+                                         },
+                                         "weight": {
+                                           "type": "number",
+                                           "description": "The weight of the meal in grams."
+                                         },
+                                         "selected": {
+                                           "type": "boolean",
+                                           "description": "Indicates whether the meal was selected by the user."
+                                         }
+                                       },
+                                       "required": ["type", "name", "selected"]
+                                     }
+                                   }
+                                 },
+                                 "required": ["date", "meals"]
+                               }
+                             }
+                           },
+                           "required": ["menus"]
+                         }
+                         """;
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = schema
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+        public class AiWeaponModel
+        {
+            public string WeaponName { get; set; }
+            public string WeaponDescription { get; set; }
+        }
+        
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_Issue77()
+        {
+            // Arrange
+            var prompt = "List a few popular arny weapons with name and summary";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new List<AiWeaponModel>()
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+        
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_Issue80()
+        {
+            // Arrange
+            var prompt = "List a few popular arny weapons with name and summary";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseSchema = """{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}...""",
+                ResponseMimeType = "application/json"
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+#if NET9_0
+        public record Root([Description("A list of menus, each representing a specific day.")] List<Menu> Menus);
+        public record Menu(DateOnly Date, List<Meal> Meals);
+        public record Meal(string Type, string Name, double? Weight, bool Selected)
+        {
+            public string FullName => $"{Weight}g {Name}";
+        }
+        
+        // [Fact(Skip = "ReadOnly declaration not accepted.")]
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_with_Record()
+        {
+            // Arrange
+            var prompt = "List a few popular cookie recipes.";
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            var generationConfig = new GenerationConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = new Root([])
+            };
+
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: generationConfig);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+#endif
+        
         [Fact(Skip = "ReadOnly declaration not accepted.")]
         public async Task Generate_Content_Using_ResponseSchema_with_Dynamic()
         {
@@ -2585,10 +2988,10 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             sut.Should().NotBeNull();
-//            _output.WriteLine($"Retrieved file '{sut.DisplayName}'");
-//            _output.WriteLine(
+//            output.WriteLine($"Retrieved file '{sut.DisplayName}'");
+//            output.WriteLine(
 //                $"File: {sut.Name} (MimeType: {sut.MimeType}, Size: {sut.SizeBytes} bytes, Created: {sut.CreateTime} UTC, Updated: {sut.UpdateTime} UTC)");
-//            _output.WriteLine(($"Uri: {sut.Uri}"));
+//            output.WriteLine(($"Uri: {sut.Uri}"));
         }
 
         [Fact]
@@ -2693,6 +3096,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemini20FlashLite)]
         [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
+        [InlineData(Model.Gemini25Pro)]
         public async Task Describe_Audio_with_Timestamps(string modelName)
         {
             // Arrange
@@ -2833,9 +3237,9 @@ Use speaker A, speaker B, etc. to identify the speakers.
                 // response.Text.Should().NotBeEmpty();
                 _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -2882,6 +3286,28 @@ Use speaker A, speaker B, etc. to identify the speakers.
                 _output.WriteLine($"File: {file.Name}\tName: '{file.DisplayName}'");
                 request.AddMedia(file);
             }
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
+                .HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
+        public async Task Describe_Videos_From_Youtube()
+        {
+            // Arrange
+            var prompt = "Describe this video clip."; // Can you summarize this video?
+            IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(_model);
+            var request = new GenerateContentRequest(prompt);
+            await request.AddMedia("https://www.youtube.com/watch?v=1XALhtem2h0", useOnline: true);
 
             // Act
             var response = await model.GenerateContent(request);
@@ -3129,7 +3555,7 @@ Answer:";
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.GeminiProVision);
+            model.Name.Should().Be(Model.Gemini25ProExperimental);
         }
 
         [Fact]

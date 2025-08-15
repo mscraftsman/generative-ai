@@ -30,13 +30,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="ChatModel"/> class.
         /// </summary>
-        public ChatModel() : this(logger: null) { }
+        public ChatModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChatModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public ChatModel(ILogger? logger) : base(logger) { }
+        public ChatModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Generates a set of responses from the model given a chat history input.

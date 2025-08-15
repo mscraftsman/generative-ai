@@ -161,6 +161,10 @@ namespace Mscc.GenerativeAI
         /// "genieSource": {}
         /// </summary>
         public dynamic? BaseModelSource { get; set; }
+        /// <summary>
+        /// Whether the model supports thinking.
+        /// </summary>
+        public bool? Thinking { get; set; }
     }
     
     /// <summary>

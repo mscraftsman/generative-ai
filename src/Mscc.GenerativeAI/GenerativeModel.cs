@@ -67,7 +67,6 @@ namespace Mscc.GenerativeAI
                 {
                     return ApiVersion.V1;
                 }
-
                 return _apiVersion;
             }
             set
@@ -95,6 +94,8 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Method.EmbedText;
                     case GenerativeAI.Model.Embedding:
                         return GenerativeAI.Method.EmbedContent;
+                    case GenerativeAI.Model.GeminiEmbedding:
+                        return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.TextEmbedding:
                         return GenerativeAI.Method.EmbedContent;
                     case GenerativeAI.Model.Imagen3:
@@ -102,7 +103,7 @@ namespace Mscc.GenerativeAI
                     case GenerativeAI.Model.Imagen3Fast:
                         return GenerativeAI.Method.Predict;
                     case GenerativeAI.Model.Veo2:
-                        return GenerativeAI.Method.Predict;
+                        return GenerativeAI.Method.PredictLongRunning;
                     case GenerativeAI.Model.AttributedQuestionAnswering:
                         return GenerativeAI.Method.GenerateAnswer;
                     case GenerativeAI.Model.Gemini20Flash:
@@ -129,10 +130,11 @@ namespace Mscc.GenerativeAI
                     GenerativeAI.Model.BisonText => GenerativeAI.Method.GenerateText,
                     GenerativeAI.Model.GeckoEmbedding => GenerativeAI.Method.EmbedText,
                     GenerativeAI.Model.Embedding => GenerativeAI.Method.EmbedContent,
+                    GenerativeAI.Model.GeminiEmbedding => GenerativeAI.Method.EmbedContent,
                     GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
                     GenerativeAI.Model.Imagen3 => GenerativeAI.Method.Predict,
                     GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Predict,
-                    GenerativeAI.Model.Veo2 => GenerativeAI.Method.Predict,
+                    GenerativeAI.Model.Veo2 => GenerativeAI.Method.PredictLongRunning,
                     GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
                     GenerativeAI.Model.Gemini20Flash => UseRealtime
                         ? GenerativeAI.Method.BidirectionalGenerateContent
@@ -198,15 +200,16 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// </summary>
-        public GenerativeModel() : this(logger: null) { }
+        public GenerativeModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GenerativeModel(ILogger? logger = null) : base(logger)
+        public GenerativeModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             _apiVersion = ApiVersion.V1Beta;
             Logger.LogGenerativeModelInvoking();
@@ -232,7 +235,8 @@ namespace Mscc.GenerativeAI
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
             bool vertexAi = false,
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, 
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             Logger.LogGenerativeModelInvoking();
 
@@ -244,7 +248,8 @@ namespace Mscc.GenerativeAI
             _toolConfig ??= toolConfig;
             _systemInstruction ??= systemInstruction;
 
-            _useVertexAi = vertexAi;
+            var useVertexAi = Environment.GetEnvironmentVariable("GOOGLE_GENAI_USE_VERTEXAI") ?? bool.FalseString;
+            _useVertexAi = Convert.ToBoolean(useVertexAi) || vertexAi;
             _useVertexAiExpress = vertexAi;
         }
 
@@ -268,7 +273,7 @@ namespace Mscc.GenerativeAI
             Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
-            ILogger? logger = null) : base(projectId, region, model, logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
         {
             Logger.LogGenerativeModelInvoking();
 
@@ -292,7 +297,7 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(CachedContent cachedContent,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _cachedContent = cachedContent ?? throw new ArgumentNullException(nameof(cachedContent));
 
@@ -316,7 +321,7 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(TuningJob tuningJob,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _tuningJob = tuningJob ?? throw new ArgumentNullException(nameof(tuningJob));
 
@@ -394,7 +399,8 @@ namespace Mscc.GenerativeAI
             var url = _useVertexAi ? "{BaseUrlVertexAi}/models" : "{BaseUrlGoogleAi}/models";
             var queryStringParams = new Dictionary<string, string?>()
             {
-                [nameof(pageSize)] = Convert.ToString(pageSize), [nameof(pageToken)] = pageToken
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
@@ -557,9 +563,12 @@ namespace Mscc.GenerativeAI
                     "Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = $"{BaseUrlGoogleAi}/{model}"; // v1beta3
-            var queryStringParams = new Dictionary<string, string?>() { [nameof(updateMask)] = updateMask };
-
+            var url = $"{BaseUrlGoogleAi}/{model}";   // v1beta3
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(updateMask)] = updateMask
+            };
+            
             url = ParseUrl(url).AddQueryString(queryStringParams);
             var json = Serialize(tunedModel);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -634,8 +643,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        [Obsolete(
-            "This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             bool resumable = false,
@@ -650,7 +658,10 @@ namespace Mscc.GenerativeAI
             var totalBytes = new FileInfo(uri).Length;
             var request = new UploadMediaRequest()
             {
-                File = new FileRequest() { DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri), }
+                File = new FileRequest()
+                {
+                    DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                }
             };
 
             var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
@@ -659,10 +670,10 @@ namespace Mscc.GenerativeAI
             {
                 url = $"{baseUri}/resumable/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
             }
-
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
-                ["alt"] = "json", ["uploadType"] = "multipart"
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
             });
             var json = Serialize(request);
 
@@ -672,7 +683,10 @@ namespace Mscc.GenerativeAI
                 new StringContent(json, Encoding.UTF8, Constants.MediaType),
                 new StreamContent(fs, (int)Constants.ChunkSize)
                 {
-                    Headers = { ContentType = new MediaTypeHeaderValue(mimeType), ContentLength = totalBytes }
+                    Headers = {
+                    ContentType = new MediaTypeHeaderValue(mimeType),
+                    ContentLength = totalBytes
+                }
                 }
             };
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
@@ -697,8 +711,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
         /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        [Obsolete(
-            "This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
         public async Task<UploadMediaResponse> UploadFile(Stream stream,
             string displayName,
             string mimeType,
@@ -711,7 +724,13 @@ namespace Mscc.GenerativeAI
             if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
 
             var totalBytes = stream.Length;
-            var request = new UploadMediaRequest() { File = new FileRequest() { DisplayName = displayName } };
+            var request = new UploadMediaRequest()
+            {
+                File = new FileRequest()
+                {
+                    DisplayName = displayName
+                }
+            };
 
             var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
@@ -719,10 +738,10 @@ namespace Mscc.GenerativeAI
             {
                 url = $"{baseUri}/resumable/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
             }
-
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
-                ["alt"] = "json", ["uploadType"] = "multipart"
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
             });
             var json = Serialize(request);
 
@@ -731,7 +750,10 @@ namespace Mscc.GenerativeAI
                 new StringContent(json, Encoding.UTF8, Constants.MediaType),
                 new StreamContent(stream, (int)Constants.ChunkSize)
                 {
-                    Headers = { ContentType = new MediaTypeHeaderValue(mimeType), ContentLength = totalBytes }
+                    Headers = {
+                    ContentType = new MediaTypeHeaderValue(mimeType),
+                    ContentLength = totalBytes
+                }
                 }
             };
 
@@ -751,10 +773,9 @@ namespace Mscc.GenerativeAI
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        [Obsolete(
-            "This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
-        public async Task<ListFilesResponse> ListFiles(int? pageSize = 100,
-            string? pageToken = null,
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
+        public async Task<ListFilesResponse> ListFiles(int? pageSize = 100, 
+            string? pageToken = null, 
             CancellationToken cancellationToken = default)
         {
             this.GuardSupported();
@@ -762,7 +783,8 @@ namespace Mscc.GenerativeAI
             var url = "{BaseUrlGoogleAi}/files";
             var queryStringParams = new Dictionary<string, string?>()
             {
-                [nameof(pageSize)] = Convert.ToString(pageSize), [nameof(pageToken)] = pageToken
+                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageToken)] = pageToken
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
@@ -781,9 +803,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        [Obsolete(
-            "This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
-        public async Task<FileResource> GetFile(string file,
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
+        public async Task<FileResource> GetFile(string file, 
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
@@ -808,9 +829,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        [Obsolete(
-            "This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
-        public async Task<string> DeleteFile(string file,
+        [Obsolete("This method has been deprecated and will be removed soon. Use same method of class GoogleAI instead.")]
+        public async Task<string> DeleteFile(string file, 
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
@@ -1128,8 +1148,7 @@ namespace Mscc.GenerativeAI
             using var payload = new StreamContent(ms);
             httpRequest.Content = payload;
             payload.Headers.ContentType = new MediaTypeHeaderValue(Constants.MediaType);
-            using var response =
-                await SendAsync(httpRequest, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await SendAsync(httpRequest, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
             await response.EnsureSuccessAsync();
             if (response.Content is not null)
             {
@@ -1238,8 +1257,7 @@ namespace Mscc.GenerativeAI
             // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
             httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
 
-            using var response =
-                await SendAsync(httpRequest, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await SendAsync(httpRequest, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
             await response.EnsureSuccessAsync();
             if (response.Content is not null)
             {
@@ -1267,6 +1285,75 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Enqueues a batch of <see cref="EmbedContent"/> requests for batch processing.
+        /// </summary>
+        /// <remarks>
+        /// We have a `BatchEmbedContents` handler in `GenerativeService`, but it was synchronized.
+        /// So we name this one to be `Async` to avoid confusion.
+        /// </remarks>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
+        public async Task<Operation> BatchEmbedContent(AsyncBatchEmbedContentRequest request,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            ThrowIfUnsupportedRequest(request);
+            
+            var url = ParseUrl(Url, GenerativeAI.Method.AsyncBatchEmbedContent);
+            var json = Serialize(request);
+            
+            Logger.LogMethodInvokingRequest(nameof(BatchEmbedContent));
+            
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<Operation>(response);
+        }
+
+        /// <summary>
+        /// Enqueues a batch of <see cref="GenerateContent"/> requests for batch processing.
+        /// </summary>
+        /// <remarks>
+        /// Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information.
+        /// Input capabilities differ between models, including tuned models.
+        /// Refer to the [model guide](https://ai.google.dev/gemini-api/docs/models/gemini) and [tuning guide](https://ai.google.dev/gemini-api/docs/model-tuning) for details.
+        /// </remarks>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Response from the model for generated content.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
+        public async Task<Operation> BatchGenerateContent(BatchGenerateContentRequest request,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            ThrowIfUnsupportedRequest(request);
+            
+            var url = ParseUrl(Url, GenerativeAI.Method.BatchGenerateContent);
+            var json = Serialize(request);
+            
+            Logger.LogMethodInvokingRequest(nameof(BatchGenerateContent));
+            
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<Operation>(response);
+        }
+
         // ToDo: Implement methode
         // Ref: https://ai.google.dev/gemini-api/docs/models/gemini-v2#live-api
         // Ref: https://ai.google.dev/api/multimodal-live
@@ -1278,12 +1365,10 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotImplementedException"></exception>
         public async Task<GenerateContentResponse> BidiGenerateContent()
         {
-            if (!_model.Equals($"{GenerativeAI.Model.Gemini20FlashExperimental.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.Gemini20FlashExperimental.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
-
             throw new NotImplementedException();
         }
 
@@ -1383,7 +1468,7 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<GenerateVideosResponse> GenerateVideos(GenerateVideosRequest request,
             CancellationToken cancellationToken = default)
@@ -1406,7 +1491,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model"></param>
         /// <param name="prompt"></param>
         /// <param name="config"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<GenerateVideosResponse> GenerateVideos(string model,
@@ -1477,8 +1562,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.AttributedQuestionAnswering.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.AttributedQuestionAnswering.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -1558,7 +1642,8 @@ namespace Mscc.GenerativeAI
 
             string[] allowedModels =
             [
-                GenerativeAI.Model.Embedding.SanitizeModelName(),
+                GenerativeAI.Model.Embedding.SanitizeModelName(), 
+                GenerativeAI.Model.GeminiEmbedding.SanitizeModelName(), 
                 GenerativeAI.Model.TextEmbedding.SanitizeModelName()
             ];
             if (!allowedModels.Contains(request.Model.SanitizeModelName())) throw new NotSupportedException();
@@ -1597,6 +1682,7 @@ namespace Mscc.GenerativeAI
             string[] allowedModels =
             [
                 GenerativeAI.Model.Embedding.SanitizeModelName(),
+                GenerativeAI.Model.GeminiEmbedding.SanitizeModelName(), 
                 GenerativeAI.Model.TextEmbedding.SanitizeModelName()
             ];
             if (!allowedModels.Contains(_model.SanitizeModelName())) throw new NotSupportedException();
@@ -1633,7 +1719,12 @@ namespace Mscc.GenerativeAI
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            var request = new EmbedContentRequest(content) { Model = model, TaskType = taskType, Title = title };
+            var request = new EmbedContentRequest(content)
+            {
+                Model = model,
+                TaskType = taskType,
+                Title = title
+            };
             return await EmbedContent(request, cancellationToken: cancellationToken);
         }
 
@@ -1673,7 +1764,10 @@ namespace Mscc.GenerativeAI
             // return await EmbedContent(requests);
             var request = new EmbedContentRequest()
             {
-                Model = model?.SanitizeModelName(), Content = new(), TaskType = taskType, Title = title
+                Model = model?.SanitizeModelName(),
+                Content = new(),
+                TaskType = taskType,
+                Title = title
             };
             foreach (var prompt in content)
             {
@@ -1705,7 +1799,10 @@ namespace Mscc.GenerativeAI
 
             var request = new EmbedContentRequest()
             {
-                Model = model, Content = content, TaskType = taskType, Title = title
+                Model = model,
+                Content = content,
+                TaskType = taskType,
+                Title = title
             };
             return await EmbedContent(request, cancellationToken: cancellationToken);
         }
@@ -1903,8 +2000,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.BisonText.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.BisonText.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -1971,8 +2067,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.BisonChat.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.BisonChat.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2040,8 +2135,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2061,8 +2155,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2114,14 +2207,12 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}",
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new NotSupportedException();
             }
 
-            var method = GenerativeAI.Method.BatchEmbedText;
-            var url = ParseUrl(Url, method);
+            var url = ParseUrl(Url, GenerativeAI.Method.BatchEmbedText);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);

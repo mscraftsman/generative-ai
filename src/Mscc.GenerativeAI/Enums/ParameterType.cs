@@ -17,26 +17,30 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// String means openAPI string type
         /// </summary>
-        String = 1,
+        String,
         /// <summary>
         /// Number means openAPI number type
         /// </summary>
-        Number = 2,
+        Number,
         /// <summary>
         /// Integer means openAPI integer type
         /// </summary>
-        Integer = 3,
+        Integer,
         /// <summary>
         /// Boolean means openAPI boolean type
         /// </summary>
-        Boolean = 4,
+        Boolean,
         /// <summary>
         /// Array means openAPI array type
         /// </summary>
-        Array = 5,
+        Array,
         /// <summary>
         /// Object means openAPI object type
         /// </summary>
-        Object = 6
+        Object,
+        /// <summary>
+        /// Null type.
+        /// </summary>
+        Null
     }
 }

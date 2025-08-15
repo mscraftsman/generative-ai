@@ -30,13 +30,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenAIModel"/> class.
         /// </summary>
-        public OpenAIModel() : this(logger: null) { }
+        public OpenAIModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenAIModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public OpenAIModel(ILogger? logger) : base(logger) { }
+        public OpenAIModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Lists the currently available models.

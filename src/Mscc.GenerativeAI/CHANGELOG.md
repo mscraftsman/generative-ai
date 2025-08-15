@@ -13,6 +13,350 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.10
+
+### Added
+
+- add Gemini CLI instructions
+- add model `imagen-4.0-generate-001`
+- add model `imagen-4.0-fast-generate-001`
+- add model `imagen-4.0-ultra-generate-001`
+- add new URL retrieval statuse
+
+### Changed
+
+- improve handling of embeddings
+- use IHttpClientFactory to create HttpClient instances [#92](https://github.com/mscraftsman/generative-ai/issues/92)
+- use default model of test
+- upgrade NuGet packages
+- remove AI excludes because of Gemini agent mode and Gemini CLI
+- replace deprecated models in tests
+
+## 2.6.9
+
+### Added
+
+- add model `gemini-2.5-flash-lite`
+- add model `veo-3.0-fast-generate-preview`
+- add functionality of batched content generation
+- add more batch endpoints
+- add type `Document`
+- add enum `BatchState`
+- add finish reason `TooManyToolCalls`
+- add test with `Dynamic Thinking`
+
+### Changed
+
+- mark `HarmCategoryCivicIntegrity` obsolete
+- remove model `gemini-pro-vision`
+- remove model `gemini-1.0-pro-vision-latest`
+- replace model GeminiProVision with Gemini25Pro
+- upgrade NuGet packages
+
+## 2.6.8
+
+### Added
+
+- add model `veo-3.0-generate-preview`
+- add test for tool `UrlContext`
+- add convenience property `Thinking`
+
+### Changed
+
+- change convenience property `Text`
+- upgrade NuGet packages
+
+## 2.6.7
+
+### Changed
+
+- Structured output support for Mscc.GenerativeAI.Microsoft [#97](https://github.com/mscraftsman/generative-ai/pull/97) thanks to @bharathm03
+- upgrade NuGet packages
+- bump version
+
+## 2.6.6
+
+### Added
+
+- add model `gemini-embedding-001`
+- add handling for Gemini Embedding models
+
+### Changed
+
+- use parameter `logger`
+- update embedding tests
+- add IPart constructors to `Content` class and improve flexibility [#95](https://github.com/mscraftsman/generative-ai/pull/95) thanks to @dannyball710
+- upgrade NuGet packages
+
+## 2.6.5
+
+### Added
+
+- add model `gemini-2.0-flash-exp-image-generation`
+- add model `gemini-2.0-flash-preview-image-generation`
+- add model `gemma-3n-e2b-it`
+- add model `gemini-2.5-flash-live-preview`
+- add method `delete` for batches
+- add enum value `UnexpectedToolCall`
+- add property `Thinking`
+
+### Changed
+
+- remove model `gemini-2.5-pro-exp-03-25`
+- upgrade NuGet packages
+
+### Fixed
+
+- Update RagEngineModel.cs [#94](https://github.com/mscraftsman/generative-ai/pull/94) thanks to @rfrcarvalho
+
+## 2.6.4
+
+### Added
+
+- add model `gemini-2.5-pro`
+- add model `gemini-2.5-flash`
+- add model `gemini-2.5-flash-lite-preview-06-17`
+- add model `gemini-live-2.5-flash-preview`
+- add model `imagen-4.0-generate-preview-06-06`
+- add model `imagen-4.0-ultra-generate-preview-06-06`
+- add model `gemini-2.5-pro-preview-06-05`
+- add `DateTimeFormatJsonConverter`
+- add test for 3rd party libraries
+- add test to handle Thinking response
+
+### Changed
+
+- upgrade NuGet packages
+- change model to run tests with
+- change test to use Gemini 2.0 Flash
+- remove model `gemini-1.5-pro-001`
+- remove model `gemini-1.5-flash-001`
+- remove model `gemini-1.5-flash-001-tuning`
+- remove model `gemini-1.5-flash-8b-exp-0827`
+- remove model `gemini-1.5-flash-8b-exp-0924`
+
+## 2.6.3
+
+### Added 
+
+- add model `gemini-2.5-pro-preview-06-05`
+
+### Changed
+
+- upgrade NuGet packages
+
+## 2.6.2
+
+### Added
+
+- add model `gemini-2.5-flash-preview-native-audio-dialog-rai-v3`
+- add image manipulation config types
+- add reference image types
+- add types to edit and upscale images
+- add upscale factor enum
+- add batches `Cancel` method
+- add properties `ParametersJsonSchema`, `ResponseJsonSchema` and `ThoughtSignature`
+
+### Changes
+
+- add optional `role` to Content constructor
+
+## 2.6.1
+
+### Added
+
+- add `batches` client
+- add property `ResponseId`
+
+## 2.6.0
+
+### Added
+
+- add model `gemini-2.5-flash-preview-05-20`
+- add model `gemini-2.5-flash-preview-tts`
+- add model `gemini-2.5-pro-preview-tts`
+- add model `gemma-3n-e4b-it`
+- add model `gemini-2.5-flash-preview-native-audio-dialog`
+- add model `gemini-2.5-flash-exp-native-audio-thinking-dialog`
+- add model `imagen-4.0-generate-preview-05-20`
+- add model `imagen-4.0-ultra-generate-exp-05-20`
+- add model `lyria-002`
+- add multi-speaker configuration
+- add function behavior
+- add URL context and metadata
+
+### Changed
+
+- Update to stable Microsoft.Extensions.AI and update some implementation [#87](https://github.com/mscraftsman/generative-ai/pull/87) thanks to @stephentoub
+
+### Fixed
+
+- Add missing optional CancellationToken parameters [#89](https://github.com/mscraftsman/generative-ai/pull/89) thanks to @Ibuki-Suika
+
+## 2.5.6
+
+### Changed
+
+- Update Microsoft.Extensions.AI version to 9.5.0-preview.1.25262.9
+
+## 2.5.5
+
+### Changed
+
+- Update Microsoft.Extensions.AI version to 9.4.3-preview.1.25230.7 [85](https://github.com/mscraftsman/generative-ai/pull/85) thanks to @MackinnonBuck
+
+## 2.5.4
+
+### Added
+
+- add model 'gemini-2.5-flash-preview-04-17-thinking' 
+- add model 'gemini-2.5-pro-preview-05-06' 
+- add model 'gemini-2.0-flash-preview-image-generation'
+- add Schema properties
+- add property 'UrlRetrievalMetadata' to 'Candidate'
+
+### Changed
+
+- rename type 'VideoMetadata' to 'VideoFileMetadata'
+
+## 2.5.3
+
+### Added
+
+- add model `gemini-2.0-flash-exp-image-generation`
+
+### Changed
+
+- fix typo for Gemini 2.5 Flash constants #84 thanks to @Oskar-Przyborski
+- upgrade NuGet packages
+
+## 2.5.2
+
+### Added
+
+- add ThinkingBudget property #82
+- add Validated function calling mode
+
+## 2.5.1
+
+### Added
+
+- add model `gemini-2.5-flash-preview-04-17`
+- add `dynamic` API
+- add language code
+
+### Changed
+
+- upgrade NuGet packages
+
+## 2.5.0
+
+### Added
+
+- add model `lyria-base-001`
+- add model `gemini-2.5-pro-preview-03-25`
+- add model `gemini-2.0-flash-live-001`
+- add model `gemma-3-1b-it`
+- add model `gemma-3-4b-it`
+- add model `gemma-3-12b-it`
+
+### Changed
+
+- Update Microsoft.Extensions.AI version
+
+## 2.4.1
+
+### Added
+
+- add test case for #77
+
+### Changed
+
+- process `ResponseSchema` as string #53 #76
+- separate `record` type in `ResponseSchema` due to disallowed properties #76
+- refactor POST calls
+- update NuGet packages
+
+### Fixed
+
+- fix typo in model constant.
+
+## 2.4.0
+
+### Added
+
+- add model `gemini-2.5-pro-exp-03-25`
+- add model `gemini-2.0-flash-exp-image-generation`
+- add `CacheTokensDetails` attribute in response
+- add `title` attribute
+
+### Changed
+
+- read envVar `GOOGLE_GENAI_USE_VERTEXAI`
+- adjust endpoint method of Veo 2 model
+- update NuGet packages
+
+## 2.3.6
+
+### Added
+
+- add test for issue #74
+
+### Fixed
+
+- Problems with generating a response based on the function call #74 thanks to @NotroDev
+
+## 2.3.5
+
+### Added
+
+- add new Schema attributes
+- add tests for ResponseModality
+- add test to use Youtube video
+- add test to classify (remote) image using enum
+- add test for models using GoogleSearchRetrieval tool
+
+### Changed
+
+- update NuGet packages
+
+### Fixed
+
+- Problems with generating a response based on the function call #74 thanks to @NotroDev
+
+## 2.3.4
+
+### Changed
+
+- bump version
+
+## 2.3.3
+
+### Added
+
+- add model `gemma-3-27b-it`
+
+### Changed
+
+- update NuGet packages
+
+## 2.3.2
+
+### Added
+
+- add API key of Vertex AI in express mode
+- add sample using safety settings
+
+### Fixed
+
+- fix for Vertex AI in express mode
+
+## 2.3.1
+
+### Added
+
+- add model `gemini-embedding-exp`
+
 ## 2.3.0
 
 ### Added

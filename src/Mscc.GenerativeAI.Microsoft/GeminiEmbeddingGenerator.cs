@@ -8,17 +8,29 @@ using Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft
 {
-    public class GeminiEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<float>>
+    public sealed class GeminiEmbeddingGenerator : IEmbeddingGenerator<string, Embedding<float>>
     {
-        private const string providerName = "gemini";
+        private const string ProviderName = "gemini";
     
         /// <summary>
         /// Gets the Gemini model that is used to communicate with.
         /// </summary>
         private readonly GenerativeModel _client;
 
-        /// <inheritdoc/>
+        /// <summary/>
         public EmbeddingGeneratorMetadata Metadata { get; }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="GeminiEmbeddingGenerator"/> class for the specified Gemini API client.
+        /// </summary>
+        /// <param name="client">The underlying client.</param>
+        /// <param name="defaultModelDimensions"></param>
+        /// <exception cref="ArgumentNullException">Thrown when the specified client is null.</exception>
+        public GeminiEmbeddingGenerator(GenerativeModel client, int? defaultModelDimensions = null)
+        {
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+            Metadata = new(ProviderName, null, client.Model);
+        }
 
         /// <summary>
         /// Creates an instance of the Gemini API client using Google AI.
@@ -29,7 +41,7 @@ namespace Mscc.GenerativeAI.Microsoft
         {
             var genAi = new GoogleAI(apiKey);
             _client = genAi.GenerativeModel(model);
-            Metadata = new(providerName, null, model);
+            Metadata = new(ProviderName, null, model);
         }
 
         /// <summary>
@@ -40,9 +52,9 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <param name="model">Model to use.</param>
         public GeminiEmbeddingGenerator(string projectId, string? region = null, string model = Model.Embedding)
         {
-            var genAi = new VertexAI(projectId, region);
+            var genAi = new VertexAI(projectId: projectId, region: region);
             _client = genAi.GenerativeModel(model);
-            Metadata = new(providerName, null, model);
+            Metadata = new(ProviderName, null, model);
         }
 
         /// <inheritdoc/>
@@ -54,13 +66,13 @@ namespace Mscc.GenerativeAI.Microsoft
             if (values == null) throw new ArgumentNullException(nameof(values));
 
             var request = MicrosoftAi.AbstractionMapper.ToGeminiEmbedContentRequest(values, options);
-            var response = await _client.EmbedContent(request);
+            var response = await _client.EmbedContent(request, cancellationToken: cancellationToken);
             return MicrosoftAi.AbstractionMapper.ToGeneratedEmbeddings(request, response);
         }
 
         /// <inheritdoc/>
-        public object? GetService(Type serviceType, object? key)
-            => key is null && serviceType?.IsInstanceOfType(this) is true ? this : null;
+        public object? GetService(Type serviceType, object? serviceKey)
+            => serviceKey is null && serviceType?.IsInstanceOfType(this) is true ? this : null;
 
         /// <inheritdoc/>
         public void Dispose() { }

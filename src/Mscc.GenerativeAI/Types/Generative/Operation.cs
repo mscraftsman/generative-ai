@@ -1,5 +1,24 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
+using System.Collections.Generic;
+#endif
+
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The response message for Operations.ListOperations.
+    /// </summary>
+    public class ListOperationsResponse
+    {
+        /// <summary>
+        /// A list of operations that matches the specified filter in the request.
+        /// </summary>
+        public List<Operation> Operations { get; set; }
+        /// <summary>
+        /// The standard List next-page token.
+        /// </summary>
+        public string NextPageToken { get; set; }
+    }
+    
     /// <summary>
     /// This resource represents a long-running operation that is the result of a network API call.
     /// </summary>

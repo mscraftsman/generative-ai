@@ -11,6 +11,163 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.10
+
+### Changed
+
+- bump version
+
+## 2.6.9
+
+### Changed
+
+- bump version
+
+## 2.6.8
+
+### Changed
+
+- bump version
+
+## 2.6.7
+
+### Changed
+
+- bump version
+
+## 2.6.6
+
+### Changed
+
+- bump version
+
+## 2.6.5
+
+### Changed
+
+- bump version
+
+## 2.6.4
+
+### Changed
+
+- bump version
+
+## 2.6.3
+
+### Changed
+
+- bump version
+
+## 2.6.2
+
+### Changed
+
+- bump version
+
+## 2.6.1
+
+### Changed
+
+- bump version
+
+## 2.6.0
+
+### Changed
+
+- bump version
+
+## 2.5.6
+
+### Changed
+
+- bump version
+
+## 2.5.5
+
+### Changed
+
+- bump version
+
+## 2.5.4
+
+### Changed
+
+- bump version
+
+## 2.5.3
+
+### Changed
+
+- bump version
+
+## 2.5.2
+
+### Changed
+
+- bump version
+
+## 2.5.1
+
+### Changed
+
+- bump version
+
+## 2.5.0
+
+### Changed
+
+- bump version
+
+## 2.4.1
+
+### Changed
+
+- bump version
+
+## 2.4.0
+
+### Changed
+
+- bump version
+
+## 2.3.6
+
+### Changed
+
+- bump version
+
+## 2.3.5
+
+### Changed
+
+- bump version
+
+## 2.3.4
+
+### Changed
+
+- bump version
+
+## 2.3.3
+
+### Changed
+
+- use named parameters due to overloaded constructor
+- bump version
+
+## 2.3.2
+
+### Changed
+
+- bump version
+
+## 2.3.1
+
+### Changed
+
+- bump version
+
 ## 2.3.0
 
 ### Changed
