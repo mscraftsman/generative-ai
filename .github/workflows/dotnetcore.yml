@@ -15,26 +15,20 @@ on:
     branches:
       - main
 
-#permissions: {}
-
 jobs:
-  build:
-    name: Build, pack and push to GitHub Package Registry (GPR)
+  build_and_push_main:
+    name: Build and Push Main Package to GPR
     strategy:
       matrix:
         os: [ubuntu-latest]
         dotnet-version: ['9.x']
     runs-on: ${{ matrix.os }}
 
-#    permissions: 
-#      contents: read
-#      packages: write
-#      id-token: write
-
     steps:
     - name: enable windows longpaths
       run: |
         git config --global core.longpaths true
+
     - name: Check-out latest sources 
       uses: actions/checkout@v4
 
@@ -51,27 +45,56 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Build
-      run: |
-        dotnet build ./GenerativeAI.sln -c Release
-    # - name: Test Mscc.GenerativeAI
-    #   run: |
-    #     dotnet test ./tests/Mscc.GenerativeAI/Test.Mscc.GenerativeAI.csproj -c Release --logger "console;verbosity=detailed"
-    # - name: Test Mscc.GenerativeAI.Google
-    #   run: |
-    #     dotnet test ./tests/Mscc.GenerativeAI.Google/Test.Mscc.GenerativeAI.Google.csproj -c Release --logger "console;verbosity=detailed"
+    - name: Build main
+      run: dotnet build ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -c Release
+
     - name: Pack for .NET
-      run: |
-        dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -o output/
+      run: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -o output/ --no-build
+
+    - name: Push to GitHub Package Registry (GPR)
+      run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate
+
+  build_and_push_dependents:
+    name: Build and Push Dependent Packages to GPR
+    needs: build_and_push_main
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        dotnet-version: ['9.x']
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Check-out latest sources 
+      uses: actions/checkout@v4
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+        source-url: https://nuget.pkg.github.com/mscraftsman/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Wait for GPR package propagation
+      run: sleep 30
+
+    - name: Restore Dependencies
+      run: dotnet restore ./GenerativeAI.sln
+
+    - name: Build
+      run: dotnet build ./GenerativeAI.sln -c Release --no-restore
+
     - name: Pack for ASP.NET Core
-      run: |
-        dotnet pack -c Release ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj -o output/
+      run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj -o output/ --no-build
+
     - name: Pack for .NET using Google Cloud Client Library
-      run: |
-        dotnet pack -c Release ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj -o output/
+      run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj -o output/ --no-build
+
     - name: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
-      run: |
-        dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -o output/
+      run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -o output/ --no-build
+
     - name: Push to GitHub Package Registry (GPR)
       run: |
-        dotnet nuget push output/*.nupkg --skip-duplicate
+        dotnet nuget push output/Mscc.GenerativeAI.Web.*.nupkg --skip-duplicate
+        dotnet nuget push output/Mscc.GenerativeAI.Google.*.nupkg --skip-duplicate
+        dotnet nuget push output/Mscc.GenerativeAI.Microsoft.*.nupkg --skip-duplicate

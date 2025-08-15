@@ -1,5 +1,5 @@
 trigger:
-  - main
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -7,9 +7,11 @@ pool:
 variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-#  publishVstsFeed: ''
 
-steps:
+jobs:
+- job: BuildAndPublishMain
+  displayName: 'Build and Publish Main Package'
+  steps:
   - task: UseDotNet@2
     displayName: 'Install .NET SDK'
     inputs:
@@ -18,70 +20,57 @@ steps:
       includePreviewVersions: true # Required for preview versions
 
   - task: DotNetCoreCLI@2
-    displayName: Restore packages
+    displayName: 'Restore, Build, and Pack Main'
+    inputs:
+      command: 'pack'
+      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      configuration: '$(buildConfiguration)'
+      versioningScheme: 'off'
+  - task: NuGetCommand@2
+    displayName: 'Push Main Package to Feed'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: '$(publishVstsFeed)'
+      allowPackageConflicts: true
+
+- job: BuildAndPublishDependents
+  displayName: 'Build and Publish Dependent Packages'
+  dependsOn: BuildAndPublishMain
+  condition: succeeded()
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      version: 9.x
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore packages'
     inputs:
       command: 'restore'
       projects: './GenerativeAI.sln'
       feedsToUse: 'select'
-#      vstsFeed: '$(publishVstsFeed)' # A series of numbers and letters
-
   - task: DotNetCoreCLI@2
-    displayName: Build
+    displayName: 'Build Solution'
     inputs:
       command: 'build'
       projects: './GenerativeAI.sln'
       arguments: '-c $(buildConfiguration)'
-
   - task: DotNetCoreCLI@2
-    displayName: Pack for .NET
+    displayName: 'Pack Dependent Packages'
     inputs:
       command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      packagesToPack: |
+        ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj
+        ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj
+        ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj
       nobuild: true
       versioningScheme: 'off'
-#  - task: NuGetCommand@2
-#    displayName: Pack for .NET
-#    inputs:
-#      command: pack
-#      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
-#      packDestination: '$(Build.ArtifactStagingDirectory)'
-
-  - task: DotNetCoreCLI@2
-    displayName: Pack for ASP.NET Core
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj'
-      nobuild: true
-      versioningScheme: 'off'
-
-  - task: DotNetCoreCLI@2
-    displayName: Pack for .NET using Google Cloud Client Library
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj'
-      nobuild: true
-      versioningScheme: 'off'
-
-  - task: DotNetCoreCLI@2
-    displayName: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj'
-      nobuild: true
-      versioningScheme: 'off'
-
-#  - task: DotNetCoreCLI@2
-#    displayName: Push to Azure DevOps feed
-#    inputs:
-#      command: 'push'
-#      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-#      nuGetFeedType: 'internal'
-#      publishVstsFeed: '$(publishVstsFeed)'
   - task: NuGetCommand@2
-    displayName: Push to Azure DevOps feed
+    displayName: 'Push Dependent Packages to Feed'
     inputs:
       command: 'push'
-      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg;!$(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg'
       nuGetFeedType: 'internal'
       publishVstsFeed: '$(publishVstsFeed)'
       allowPackageConflicts: true

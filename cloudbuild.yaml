@@ -1,46 +1,47 @@
 # outline the steps to build a .NET project, pack it as Nuget package and push it to Nuget source feed
 steps:
-# Build the projects
+# Build, Pack, and Push the Main Package
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Build for .NET
+  id: Build Main
   entrypoint: 'dotnet'
   args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj']
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Build for ASP.NET Core
-  entrypoint: 'dotnet'
-  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj']
-- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Build for .NET using Google Cloud Client Library
-  entrypoint: 'dotnet'
-  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj']
-- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Build for Microsoft.Extension.AI and Microsoft Semantic Kernel
-  entrypoint: 'dotnet'
-  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj']
-
-# Pack the NuGet packages
-- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Pack for .NET
+  id: Pack Main
   entrypoint: 'dotnet'
   args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj', '-o', 'output/']
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Pack for ASP.NET Core
+  id: Push Main
   entrypoint: 'dotnet'
-  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', '-o', 'output/']
-- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Pack for .NET using Google Cloud Client Library
-  entrypoint: 'dotnet'
-  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', '-o', 'output/']
-- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
-  entrypoint: 'dotnet'
-  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj', '-o', 'output/']
+  args: ['nuget', 'push', 'output/Mscc.GenerativeAI.*.nupkg', '--skip-duplicate', '-s', 'https://api.nuget.org/v3/index.json', '-k', '${_NUGET_API_KEY}']
 
-# Push the packages to NuGet source feed
+# Wait for NuGet package to be available
+- name: 'ubuntu'
+  id: Wait for NuGet
+  entrypoint: 'sleep'
+  args: ['60']
+
+# Restore, Build, Pack, and Push Dependent Packages
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Push
+  id: Restore Dependents
   entrypoint: 'dotnet'
-  args: ['nuget', 'push', 'output/*.nupkg', '--skip-duplicate', '-s', 'https://api.nuget.org/v3/index.json', '-k', '${_NUGET_API_KEY}']
+  args: ['restore', 'GenerativeAI.sln']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Build Dependents
+  entrypoint: 'dotnet'
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Pack Dependents
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj', '-o', 'output/']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Push Dependents
+  entrypoint: 'bash'
+  args:
+  - -c
+  - |
+    dotnet nuget push 'output/Mscc.GenerativeAI.Web.*.nupkg' --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${_NUGET_API_KEY}
+    dotnet nuget push 'output/Mscc.GenerativeAI.Google.*.nupkg' --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${_NUGET_API_KEY}
+    dotnet nuget push 'output/Mscc.GenerativeAI.Microsoft.*.nupkg' --skip-duplicate -s https://api.nuget.org/v3/index.json -k ${_NUGET_API_KEY}
 
 options:
   substitutionOption: 'ALLOW_LOOSE'
