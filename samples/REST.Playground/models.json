@@ -794,7 +794,7 @@
     },
     {
       "description": "Vertex served Imagen 3.0 002 model",
-      "displayName": "Imagen 3.0 002 model",
+      "displayName": "Imagen 3.0",
       "inputTokenLimit": 480,
       "name": "models/imagen-3.0-generate-002",
       "outputTokenLimit": 8192,
@@ -824,6 +824,39 @@
         "predict"
       ],
       "version": "01"
+    },
+    {
+      "description": "Vertex served Imagen 4.0 model",
+      "displayName": "Imagen 4",
+      "inputTokenLimit": 480,
+      "name": "models/imagen-4.0-generate-001",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predict"
+      ],
+      "version": "001"
+    },
+    {
+      "description": "Vertex served Imagen 4.0 ultra model",
+      "displayName": "Imagen 4 Ultra",
+      "inputTokenLimit": 480,
+      "name": "models/imagen-4.0-ultra-generate-001",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predict"
+      ],
+      "version": "001"
+    },
+    {
+      "description": "Vertex served Imagen 4.0 Fast model",
+      "displayName": "Imagen 4 Fast",
+      "inputTokenLimit": 480,
+      "name": "models/imagen-4.0-fast-generate-001",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predict"
+      ],
+      "version": "001"
     },
     {
       "description": "Vertex served Veo 2 model. Access to this model requires billing to be enabled on the associated Google Cloud Platform account. Please visit https://console.cloud.google.com/billing to enable it.",

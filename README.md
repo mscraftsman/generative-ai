@@ -38,7 +38,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.6.9" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.6.10" />
   </ItemGroup>
 ```
 
@@ -317,7 +317,7 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Give me a tutorial to create a landing page";
 var googleAI = new GoogleAI(apiKey: apiKey);
-var model = googleAi.GenerativeModel(model: Model.Gemini25Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
 var generationConfig = new GenerationConfig()
 {
     ThinkingConfig = new ThinkingConfig()

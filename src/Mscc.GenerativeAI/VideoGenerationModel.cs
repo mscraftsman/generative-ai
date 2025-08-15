@@ -30,23 +30,26 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class.
         /// </summary>
-        public VideoGenerationModel() : this(logger: null) { }
+        public VideoGenerationModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public VideoGenerationModel(ILogger? logger) : base(logger) { }
+        public VideoGenerationModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VideoGenerationModel"/> class with access to Google AI Gemini API.
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
         /// <param name="model">Model to use</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         internal VideoGenerationModel(string? apiKey = null,
             string? model = null, 
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             ApiKey = apiKey ?? _apiKey;
             Model = model ?? _model;
@@ -58,15 +61,18 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public VideoGenerationModel(string? projectId = null, string? region = null,
-            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger)
+            string? model = null, 
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : base(projectId, region, model, httpClientFactory: httpClientFactory, logger: logger)
         {
             _useVertexAi = true;
         }
 
         /// <summary>
-        /// Generates videos from the specified <see cref="VideoGenerationRequest"/>.
+        /// Generates videos from the specified <see cref="GenerateVideosRequest"/>.
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>

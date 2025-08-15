@@ -1,12 +1,12 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
-using System.Net.Http;
 using System.Text;
-using System.Threading;
 
 namespace Mscc.GenerativeAI
 {
@@ -18,13 +18,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="SupervisedTuningJobModel"/> class.
         /// </summary>
-        public SupervisedTuningJobModel() : this(logger: null) { }
+        public SupervisedTuningJobModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupervisedTuningJobModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public SupervisedTuningJobModel(ILogger? logger = null) : base(logger) { }
+        public SupervisedTuningJobModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupervisedTuningJobModel"/> class with access to Vertex AI Gemini API.
@@ -32,9 +33,13 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public SupervisedTuningJobModel(string? projectId = null, string? region = null,
-            string? model = null, ILogger? logger = null) : base(projectId, region, model, logger) { }
+        public SupervisedTuningJobModel(string? projectId = null, 
+            string? region = null,
+            string? model = null, 
+            IHttpClientFactory? httpClientFactory = null, 
+            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger) { }
 
         /// <summary>
         /// 

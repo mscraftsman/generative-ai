@@ -196,15 +196,16 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// </summary>
-        public GenerativeModel() : this(logger: null) { }
+        public GenerativeModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GenerativeModel(ILogger? logger = null) : base(logger)
+        public GenerativeModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             _apiVersion = ApiVersion.V1Beta;
             Logger.LogGenerativeModelInvoking();
@@ -230,7 +231,8 @@ namespace Mscc.GenerativeAI
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null, 
             bool vertexAi = false,
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, 
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             Logger.LogGenerativeModelInvoking();
 
@@ -267,7 +269,7 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
-            ILogger? logger = null) : base(projectId, region, model, logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
         {
             Logger.LogGenerativeModelInvoking();
 
@@ -291,7 +293,7 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(CachedContent cachedContent, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _cachedContent = cachedContent ?? throw new ArgumentNullException(nameof(cachedContent));
             
@@ -315,7 +317,7 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(TuningJob tuningJob,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            ILogger? logger = null) : this(logger)
+            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _tuningJob = tuningJob ?? throw new ArgumentNullException(nameof(tuningJob));
 

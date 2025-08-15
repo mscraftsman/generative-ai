@@ -1,12 +1,12 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
-using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 using ArgumentNullException = System.ArgumentNullException;
@@ -20,21 +20,31 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="RagEngineModel"/> class.
         /// </summary>
-        public RagEngineModel() : this(logger: null) { }
+        public RagEngineModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RagEngineModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public RagEngineModel(ILogger logger) : base(logger)
+        public RagEngineModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             Version = ApiVersion.V1;
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RagEngineModel"/> class.
         /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="region"></param>
+        /// <param name="model"></param>
+        /// <param name="generationConfig"></param>
+        /// <param name="safetySettings"></param>
+        /// <param name="tools"></param>
+        /// <param name="systemInstruction"></param>
+        /// <param name="toolConfig"></param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         internal RagEngineModel(string? projectId = null, string? region = null,
             string? model = null,
             GenerationConfig? generationConfig = null,
@@ -42,13 +52,15 @@ namespace Mscc.GenerativeAI
             List<Tool>? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
-            ILogger? logger = null) : base(projectId, region, model, logger)
+            IHttpClientFactory? httpClientFactory = null, 
+            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
         {
         }
 
         /// <summary>
         /// Creates an empty `RAG Corpus`.
         /// </summary>
+        /// <param name="request"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagCorpus> Create(RagCorpus request,
@@ -67,6 +79,9 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Updates a `RAG Corpus`.
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="corpus"></param>
+        /// <param name="updateMask"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagCorpus> Update(string name,
@@ -121,6 +136,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Gets information about a specific `RAG Corpus`.
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagCorpus> Get(string name,
@@ -136,6 +152,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Deletes a `RAG Corpus`.
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="force"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>DeleteOperationMetadata</returns>
         public async Task<string> Delete(string name,

@@ -21,6 +21,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Url retrieval is failed due to error.
         /// </summary>
-        UrlRetrievalStatusError
+        UrlRetrievalStatusError,
+        /// <summary>
+        /// Url retrieval is failed because the content is behind paywall.
+        /// </summary>
+        UrlRetrievalStatusPaywall,
+        /// <summary>
+        /// Url retrieval is failed because the content is unsafe.
+        /// </summary>
+        UrlRetrievalStatusUnsafe
     }
 }

@@ -32,13 +32,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddingsModel"/> class.
         /// </summary>
-        public EmbeddingsModel() : this(logger: null) { }
+        public EmbeddingsModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddingsModel"/> class.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public EmbeddingsModel(ILogger? logger) : base(logger) { }
+        public EmbeddingsModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
         /// Generates embeddings from the model given an input.

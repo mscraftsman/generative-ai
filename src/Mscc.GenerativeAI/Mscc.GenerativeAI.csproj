@@ -78,12 +78,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="JsonSchema.Net.Generation" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Text.Json" Version="9.0.3" />
+		<PackageReference Include="System.Text.Json" Version="9.0.8" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -91,11 +92,11 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
+	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.8" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.3" />
+	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.8" />
 	</ItemGroup>
 
 	<Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">

@@ -1,6 +1,7 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
@@ -22,6 +23,7 @@ namespace Mscc.GenerativeAI
         private readonly string _version;
         private readonly string? _apiKey;
         private readonly bool _isExpressMode = false;
+        private readonly IHttpClientFactory? _httpClientFactory;
 
         private string _endpointId;
 
@@ -36,6 +38,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <remarks>The following environment variables are used:
         /// <list type="table">
@@ -45,7 +48,7 @@ namespace Mscc.GenerativeAI
         /// <description>Identifier of the Google Cloud region to use (default: "us-central1").</description></item>
         /// </list>
         /// </remarks>
-        private VertexAI(ILogger? logger = null) : base(logger)
+        private VertexAI(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
             _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
@@ -55,6 +58,7 @@ namespace Mscc.GenerativeAI
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             _version = ApiVersion.V1;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -64,10 +68,15 @@ namespace Mscc.GenerativeAI
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
         /// <param name="endpointId">Optional. Endpoint ID of the deployed model to use.</param>
         /// <param name="apiVersion">Version of the API.</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
-        public VertexAI(string? projectId, string? region = null, string? endpointId = null,
-            string? apiVersion = null, ILogger? logger = null) : this(logger)
+        public VertexAI(string? projectId,
+            string? region = null,
+            string? endpointId = null,
+            string? apiVersion = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _projectId = projectId ?? _projectId ?? throw new ArgumentNullException(nameof(projectId));
             _region = region ?? _region;
@@ -80,10 +89,13 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">API key for Vertex AI in express mode.</param>
         /// <param name="apiVersion">Version of the API.</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="apiKey"/> is <see langword="null"/>.</exception>
-        public VertexAI(string? apiKey, 
-            string? apiVersion = null, ILogger? logger = null) : this(logger)
+        public VertexAI(string? apiKey,
+            string? apiVersion = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _apiKey = apiKey ?? _apiKey ?? throw new ArgumentNullException(nameof(apiKey));
             _version = apiVersion ?? _version;
@@ -98,6 +110,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
@@ -119,6 +132,7 @@ namespace Mscc.GenerativeAI
                     tools,
                     systemInstruction,
                     vertexAi: true, 
+                    httpClientFactory: _httpClientFactory,
                     logger: logger);
             }
 
@@ -130,6 +144,7 @@ namespace Mscc.GenerativeAI
                 safetySettings,
                 tools,
                 systemInstruction,
+                httpClientFactory: _httpClientFactory,
                 logger: logger);
         }
 
@@ -154,6 +169,7 @@ namespace Mscc.GenerativeAI
             return new GenerativeModel(cachedContent,
                 generationConfig,
                 safetySettings,
+                httpClientFactory: _httpClientFactory,
                 logger: logger)
             {
                 ProjectId = _projectId,
@@ -182,6 +198,7 @@ namespace Mscc.GenerativeAI
             return new GenerativeModel(tuningJob,
                 generationConfig,
                 safetySettings,
+                httpClientFactory: _httpClientFactory,
                 logger: logger)
             {
                 ProjectId = _projectId, 
@@ -207,7 +224,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            return new SupervisedTuningJobModel(_projectId, _region, model, logger: logger);
+            return new SupervisedTuningJobModel(_projectId, _region, model, _httpClientFactory, logger: logger);
         }
 
         /// <summary>
@@ -222,7 +239,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            return new ImageGenerationModel(_projectId, _region, model, logger: logger);
+            return new ImageGenerationModel(_projectId, _region, model, _httpClientFactory, logger: logger);
         }
 
         /// <summary>
@@ -237,7 +254,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            return new ImageTextModel(_projectId, _region, model, logger: logger);
+            return new ImageTextModel(_projectId, _region, model, _httpClientFactory, logger: logger);
         }
 
         /// <summary>
@@ -250,7 +267,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            return new RagEngineModel(_projectId, _region, logger: logger)
+            return new RagEngineModel(_projectId, _region, httpClientFactory: _httpClientFactory, logger: logger)
             {
                 Version = _version
             };

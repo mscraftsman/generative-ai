@@ -21,6 +21,7 @@ namespace Mscc.GenerativeAI
         private readonly string? _apiKey;
         private readonly string? _accessToken;
         private readonly string _version;
+        private readonly IHttpClientFactory? _httpClientFactory;
         private GenerativeModel? _generativeModel;
         private FilesModel? _filesModel;
         private MediaModel? _mediaModel;
@@ -31,6 +32,7 @@ namespace Mscc.GenerativeAI
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <remarks>The following environment variables are used:
         /// <list type="table">
@@ -40,13 +42,14 @@ namespace Mscc.GenerativeAI
         /// <description>Optional. Access token provided by OAuth 2.0 or Application Default Credentials (ADC).</description></item>
         /// </list>
         /// </remarks>
-        private GoogleAI(ILogger? logger = null) : base(logger)
+        private GoogleAI(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
             _version = ApiVersion.V1Beta;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -56,8 +59,13 @@ namespace Mscc.GenerativeAI
         /// <param name="apiKey">API key for Google AI Studio.</param>
         /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="apiVersion">Version of the API.</param>
+        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GoogleAI(string? apiKey = null, string? accessToken = null, string? apiVersion = null, ILogger? logger = null) : this(logger)
+        public GoogleAI(string? apiKey = null,
+            string? accessToken = null,
+            string? apiVersion = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _apiKey = apiKey ?? _apiKey;
             _accessToken = accessToken ?? _accessToken;
@@ -89,6 +97,7 @@ namespace Mscc.GenerativeAI
                 safetySettings,
                 tools,
                 systemInstruction,
+                httpClientFactory: _httpClientFactory,
                 logger: logger ?? Logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null, 
@@ -117,6 +126,7 @@ namespace Mscc.GenerativeAI
             _generativeModel = new GenerativeModel(cachedContent,
                 generationConfig,
                 safetySettings,
+                httpClientFactory: _httpClientFactory,
                 logger: logger ?? Logger)
             {
                 ApiKey = _apiKey,
@@ -140,7 +150,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            var cachedContent = new CachedContentModel(logger: logger) 
+            var cachedContent = new CachedContentModel(_httpClientFactory, logger: logger)
             {
                 ApiKey = _apiKey,
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -157,7 +167,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            var batches = new BatchesModel(logger: logger)
+            var batches = new BatchesModel(_httpClientFactory, logger: logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -176,7 +186,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model, logger: logger)
+            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model, httpClientFactory: _httpClientFactory, logger: logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null
             };
@@ -203,7 +213,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new()
+            _mediaModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -232,7 +242,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new()
+            _mediaModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -256,7 +266,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new()
+            _mediaModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -278,7 +288,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _filesModel ??= new()
+            _filesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -299,7 +309,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _filesModel ??= new()
+            _filesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -320,7 +330,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _filesModel ??= new()
+            _filesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -342,7 +352,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _generatedFilesModel ??= new()
+            _generatedFilesModel ??= new(_httpClientFactory)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
