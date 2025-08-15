@@ -26,13 +26,29 @@ steps:
   entrypoint: 'dotnet'
   args: ['restore', 'GenerativeAI.sln']
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Build Dependents
+  id: Build for .NET using Google Cloud Client Library
   entrypoint: 'dotnet'
-  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj']
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj']
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
-  id: Pack Dependents
+  id: Pack for .NET using Google Cloud Client Library
   entrypoint: 'dotnet'
-  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj', '-o', 'output/']
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj', '-o', 'output/']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Build for Microsoft.Extension.AI and Microsoft Semantic Kernel
+  entrypoint: 'dotnet'
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj', '-o', 'output/']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Build for ASP.NET Core
+  entrypoint: 'dotnet'
+  args: ['build', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj']
+- name: 'mcr.microsoft.com/dotnet/sdk:9.0'
+  id: Pack for ASP.NET Core
+  entrypoint: 'dotnet'
+  args: ['pack', '-c', 'Release', 'src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj', '-o', 'output/']
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
   id: Push Dependents
   entrypoint: 'bash'
