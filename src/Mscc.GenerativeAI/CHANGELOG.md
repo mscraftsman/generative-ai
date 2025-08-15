@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.10
+
+### Added
+
+- add Gemini CLI instructions
+- add model `imagen-4.0-generate-001`
+- add model `imagen-4.0-fast-generate-001`
+- add model `imagen-4.0-ultra-generate-001`
+- add new URL retrieval statuse
+
+### Changed
+
+- improve handling of embeddings
+- use IHttpClientFactory to create HttpClient instances [#92](https://github.com/mscraftsman/generative-ai/issues/92)
+- use default model of test
+- upgrade NuGet packages
+- remove AI excludes because of Gemini agent mode and Gemini CLI
+
 ## 2.6.9
 
 ### Added
