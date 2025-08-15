@@ -191,10 +191,10 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData(Model.Gemini25Pro)]
-        [InlineData(Model.BisonText)]
-        [InlineData(Model.BisonChat)]
-        [InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
-        [InlineData(Model.Gemini25Pro)]
+        [InlineData(Model.Gemini25Flash)]
+        [InlineData(Model.Gemma3)]
+        [InlineData(Model.Imagen4)]
+        //[InlineData("tunedModels/number-generator-model-psx3d3gljyko")]
         public async Task Get_Model_Information(string modelName)
         {
             // Arrange
