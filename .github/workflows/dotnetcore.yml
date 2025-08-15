@@ -45,7 +45,7 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Build main
+    - name: Build for .NET
       run: dotnet build ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -c Release
 
     - name: Pack for .NET
@@ -76,7 +76,7 @@ jobs:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - name: Wait for GPR package propagation
-      run: sleep 30
+      run: sleep 300
 
     - name: Restore Dependencies
       run: dotnet restore ./GenerativeAI.sln
