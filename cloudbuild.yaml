@@ -18,7 +18,7 @@ steps:
 - name: 'ubuntu'
   id: Wait for NuGet
   entrypoint: 'sleep'
-  args: ['60']
+  args: ['300']
 
 # Restore, Build, Pack, and Push Dependent Packages
 - name: 'mcr.microsoft.com/dotnet/sdk:9.0'
