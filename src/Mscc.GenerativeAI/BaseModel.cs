@@ -35,17 +35,10 @@ namespace Mscc.GenerativeAI
         protected string _region = "us-central1";
         protected string? _endpointId;
 
-#if NET472_OR_GREATER || NETSTANDARD2_0
-        protected static readonly Version _httpVersion = HttpVersion.Version11;
-        protected static readonly HttpClient Client = new HttpClient(new HttpClientHandler
-        {
-            SslProtocols = SslProtocols.Tls12
-        });
-#else
-        protected static readonly Version _httpVersion = HttpVersion.Version11;
+        protected readonly Version _httpVersion = HttpVersion.Version11;
         private readonly IHttpClientFactory? _httpClientFactory;
         private HttpClient? _httpClient;
-        protected HttpClient Client => _httpClient ??= _httpClientFactory?.CreateClient(nameof(GenerativeModel)) ?? CreateDefaultHttpClient();
+        protected HttpClient Client => _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
 
         private HttpClient CreateDefaultHttpClient()
         {
@@ -67,7 +60,6 @@ namespace Mscc.GenerativeAI
 #endif
             return client;
         }
-#endif
 
         internal virtual string Version
         {
@@ -182,7 +174,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public BaseModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
         {

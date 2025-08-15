@@ -44,12 +44,12 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         private GoogleAI(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
         {
-            _httpClientFactory = httpClientFactory;
             GenerativeAIExtensions.ReadDotEnv();
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
             _version = ApiVersion.V1Beta;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -61,7 +61,11 @@ namespace Mscc.GenerativeAI
         /// <param name="apiVersion">Version of the API.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public GoogleAI(string? apiKey = null, string? accessToken = null, string? apiVersion = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
+        public GoogleAI(string? apiKey = null,
+            string? accessToken = null,
+            string? apiVersion = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _apiKey = apiKey ?? _apiKey;
             _accessToken = accessToken ?? _accessToken;

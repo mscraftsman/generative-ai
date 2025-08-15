@@ -24,13 +24,15 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageTextModel"/> class.
         /// </summary>
-        public ImageTextModel() : this(logger: null) { }
+        public ImageTextModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageTextModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageTextModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
@@ -39,9 +41,12 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageTextModel(string? projectId = null, string? region = null,
-            string? model = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger) { }
+            string? model = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger) { }
 
         /// <summary>
         /// Generates images from the specified <see cref="ImageTextRequest"/>.

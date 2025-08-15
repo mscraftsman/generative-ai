@@ -196,13 +196,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// </summary>
-        public GenerativeModel() : this(logger: null) { }
+        public GenerativeModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public GenerativeModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
@@ -230,7 +231,8 @@ namespace Mscc.GenerativeAI
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null, 
             bool vertexAi = false,
-            IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
+            IHttpClientFactory? httpClientFactory = null, 
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             Logger.LogGenerativeModelInvoking();
 

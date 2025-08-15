@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
 
 namespace Mscc.GenerativeAI
 {
@@ -13,15 +14,16 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicModel"/> class.
         /// </summary>
-        public DynamicModel() : this(logger: null) { }
+        public DynamicModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicModel"/> class.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
+        /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public DynamicModel(ILogger? logger = null) : base(logger)
+        public DynamicModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             _apiVersion = ApiVersion.V1Beta;
             Logger.LogDynamiceModelInvoking();

@@ -16,33 +16,30 @@ namespace Mscc.GenerativeAI.Web
     {
         private readonly IGenerativeAI _generativeAi;
         private readonly GenerativeModel _model;
-        private readonly IHttpClientFactory _httpClientFactory;
 
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory;
             var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini15Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
-                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: _httpClientFactory);
+                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);
             }
             else
             {
-                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: _httpClientFactory);
+                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: httpClientFactory);
             }
             _model = _generativeAi.GenerativeModel(model: model);
         }
 
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, string model, IHttpClientFactory httpClientFactory) : base()
         {
-            _httpClientFactory = httpClientFactory;
             if (!string.IsNullOrEmpty(options?.Value?.ProjectId))
             {
-                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: _httpClientFactory);
+                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);
             }
             else
             {
-                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: _httpClientFactory);
+                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: httpClientFactory);
             }
             _model = _generativeAi.GenerativeModel(model: model);
         }
