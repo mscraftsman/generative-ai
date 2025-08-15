@@ -13,7 +13,6 @@ using FluentAssertions;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Test.Mscc.GenerativeAI
 {

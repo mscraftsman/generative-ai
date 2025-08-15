@@ -1,16 +1,11 @@
-using FluentAssertions;
 using Json.Schema;
 using Json.Schema.Generation;
 using Json.Schema.Generation.DataAnnotations;
 using Microsoft.Extensions.Logging;
-using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
 using System;
-using System.ComponentModel;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;

@@ -1,8 +1,9 @@
-using Microsoft.Extensions.Logging;
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
-using System.Net.Http.Headers;
+#endif
+using Microsoft.Extensions.Logging;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mscc.GenerativeAI
 {
