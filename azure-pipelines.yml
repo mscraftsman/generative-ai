@@ -20,7 +20,19 @@ jobs:
       includePreviewVersions: true # Required for preview versions
 
   - task: DotNetCoreCLI@2
-    displayName: 'Restore, Build, and Pack Main'
+    displayName: 'Restore Main'
+    inputs:
+      command: 'restore'
+      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: 'Build Main'
+    inputs:
+      command: 'build'
+      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      configuration: '$(buildConfiguration)'
+      versioningScheme: 'off'
+  - task: DotNetCoreCLI@2
+    displayName: 'Pack Main'
     inputs:
       command: 'pack'
       packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
