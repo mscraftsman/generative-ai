@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - use default model of test
 - upgrade NuGet packages
 - remove AI excludes because of Gemini agent mode and Gemini CLI
+- replace deprecated models in tests
 
 ## 2.6.9
 
