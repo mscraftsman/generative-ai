@@ -22,11 +22,13 @@ namespace Mscc.GenerativeAI.Web
             var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini15Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
-                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);
+                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region);
+                //_generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);
             }
             else
             {
-                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: httpClientFactory);
+                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
+                //_generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: httpClientFactory);
             }
             _model = _generativeAi.GenerativeModel(model: model);
         }
@@ -35,11 +37,13 @@ namespace Mscc.GenerativeAI.Web
         {
             if (!string.IsNullOrEmpty(options?.Value?.ProjectId))
             {
-                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);
+                _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region);
+                //_generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);
             }
             else
             {
-                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: httpClientFactory);
+                _generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey);
+                //_generativeAi = new GoogleAI(apiKey: options?.Value.Credentials.ApiKey, httpClientFactory: httpClientFactory);
             }
             _model = _generativeAi.GenerativeModel(model: model);
         }
