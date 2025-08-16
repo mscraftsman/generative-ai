@@ -19,7 +19,7 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public abstract class BaseModel : BaseLogger
+    public abstract class BaseModel : BaseLogger, IDisposable
     {
         protected const string BaseUrlGoogleAi = "https://generativelanguage.googleapis.com/{version}";
         protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}";
@@ -506,6 +506,38 @@ namespace Mscc.GenerativeAI
             );
 
             return await Client.SendAsync(request, completionOption, linkedCts.Token);
+        }
+
+        private bool _disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                    Client?.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                _disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~BaseModel()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
