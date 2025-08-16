@@ -512,6 +512,49 @@ To run the tests, either enter the relevant information into the [appsettings.js
 
 The test cases should provide more insights and use cases on how to use the [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) package in your .NET projects.
 
+## Timeout Configuration ⏱
+
+You have two ways to configure timeouts for API requests:
+
+### Instance Default Timeout
+You can set a default timeout for all operations on a `GenerativeModel` instance by setting its `Timeout` property (inherited from `BaseModel`). This should ideally be done after creating the model instance and before its first use:
+```csharp
+var model = new GenerativeModel(...); 
+model.Timeout = TimeSpan.FromSeconds(60);
+```
+
+### Per-Request Timeout
+For finer-grained control, you can specify a timeout for individual API calls using the `RequestOptions` parameter available on methods like `GenerateContent`, `CountTokens`, etc. This timeout works via cancellation:
+```csharp
+var options = new RequestOptions { Timeout = TimeSpan.FromMilliseconds(500) }; 
+await model.GenerateContent(prompt, requestOptions: options);
+```
+
+## Resource Management (IDisposable) 🗑
+
+`GenerativeModel` (via `BaseModel`) now implements `IDisposable` to manage the lifecycle of the underlying resources. It is recommended to dispose of `GenerativeModel` instances when they are no longer needed. This can be done using a `using` statement or by manually calling `Dispose()`.
+
+Example:
+```csharp
+using (var model = new GenerativeModel(...))
+{
+    // use model
+}
+// model is automatically disposed here
+```
+Or manually:
+```csharp
+var model = new GenerativeModel(...);
+try
+{
+    // use model
+}
+finally
+{
+    model.Dispose();
+}
+```
+    
 ## Try it out 🤩
 
 The following link opens an instance of the code repository in Google Project IDX.
