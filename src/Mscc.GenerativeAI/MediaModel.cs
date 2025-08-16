@@ -34,6 +34,7 @@ namespace Mscc.GenerativeAI
         /// <param name="uri">URI or path to the file to upload.</param>
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
@@ -45,6 +46,7 @@ namespace Mscc.GenerativeAI
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             bool resumable = false,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
@@ -89,7 +91,7 @@ namespace Mscc.GenerativeAI
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<UploadMediaResponse>(response);
         }
@@ -101,6 +103,7 @@ namespace Mscc.GenerativeAI
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="mimeType">The MIME type of the stream content.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
@@ -112,6 +115,7 @@ namespace Mscc.GenerativeAI
             string displayName,
             string mimeType,
             bool resumable = false,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -153,7 +157,7 @@ namespace Mscc.GenerativeAI
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<UploadMediaResponse>(response);
         }
@@ -167,12 +171,14 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
         /// <param name="media">Optional. Flag indicating whether to retrieve the file content.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GeneratedFile> DownloadFile(string file,
             bool media = false,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
@@ -189,7 +195,7 @@ namespace Mscc.GenerativeAI
                 });
             }
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GeneratedFile>(response);
         }

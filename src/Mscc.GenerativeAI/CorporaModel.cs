@@ -29,21 +29,31 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Creates an empty `Corpus`.
         /// </summary>
+        /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<Corpus> Create(Corpus request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = "{BaseUrlGoogleAi}/corpora";
-            return await PostAsync<Corpus, Corpus>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<Corpus, Corpus>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
         /// Updates a `Corpus`.
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="corpus"></param>
+        /// <param name="updateMask"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<Corpus> Update(string name,
             Corpus corpus,
             string? updateMask = null,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlGoogleAi}/corpora/{name}"; // v1beta3
@@ -61,7 +71,7 @@ namespace Mscc.GenerativeAI
             httpRequest.RequestUri = new Uri(url);
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<Corpus>(response);
         }
@@ -69,9 +79,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Lists all `Corpora` owned by the user.
         /// </summary>
+        /// <param name="pageSize">The maximum number of Corpora to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous List call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<List<Corpus>> List(int? pageSize = 50,
             string? pageToken = null,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = "{BaseUrlGoogleAi}/corpora";
@@ -82,23 +97,27 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             var corpora = await Deserialize<ListCorporaResponse>(response);
-            return corpora?.Corpora!;
+            return corpora.Corpora!;
         }
 
         /// <summary>
         /// Gets information about a specific `Corpus`.
         /// </summary>
+        /// <param name="name">Name od the corpus.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<Corpus> Get(string name,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlGoogleAi}/corpora/{name}";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<Corpus>(response);
         }
@@ -106,9 +125,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Deletes a `Corpus`.
         /// </summary>
+        /// <param name="name"></param>
+        /// <param name="force"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<string> Delete(string name,
             bool force,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlGoogleAi}/corpora/{name}";
@@ -116,7 +140,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
@@ -128,13 +152,17 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Performs semantic search over a `Corpus`.
         /// </summary>
+        /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<CorpusQueryResponse> Query(CorpusQueryRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var method = Method.Query;
             var url = "{BaseUrlGoogleAi}/corpora/{name}:{method}";
-            return await PostAsync<CorpusQueryRequest, CorpusQueryResponse>(request, url, method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<CorpusQueryRequest, CorpusQueryResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

@@ -199,6 +199,7 @@ namespace Mscc.GenerativeAI
         /// <param name="uri">URI or path to the file to upload.</param>
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
@@ -209,6 +210,7 @@ namespace Mscc.GenerativeAI
         public async Task<UploadMediaResponse> UploadFile(string uri,
             string? displayName = null,
             bool resumable = false,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             Guard();
@@ -218,7 +220,7 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _mediaModel?.UploadFile(uri, displayName, resumable, cancellationToken)!;
+            return await _mediaModel?.UploadFile(uri, displayName, resumable, requestOptions, cancellationToken)!;
         }
 
         /// <summary>
@@ -228,6 +230,7 @@ namespace Mscc.GenerativeAI
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="mimeType">The MIME type of the stream content.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token to cancel the upload.</param>
         /// <returns>A URI of the uploaded file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
@@ -238,6 +241,7 @@ namespace Mscc.GenerativeAI
             string displayName,
             string mimeType,
             bool resumable = false,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             Guard();
@@ -247,7 +251,7 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _mediaModel?.UploadFile(stream, displayName, mimeType, resumable, cancellationToken)!;
+            return await _mediaModel?.UploadFile(stream, displayName, mimeType, resumable, requestOptions, cancellationToken)!;
         }
 
         /// <summary>
@@ -258,11 +262,14 @@ namespace Mscc.GenerativeAI
         /// To retrieve the file content via REST, add alt=media as a query parameter.
         /// </remarks>
         /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<GeneratedFile> DownloadFile(string file, CancellationToken cancellationToken = default)
+        public async Task<GeneratedFile> DownloadFile(string file, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             Guard();
 
@@ -271,7 +278,7 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _mediaModel.DownloadFile(file, cancellationToken: cancellationToken);
+            return await _mediaModel.DownloadFile(file, requestOptions: requestOptions, cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -279,12 +286,15 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ListFilesResponse> ListFiles(int? pageSize = 100,
-            string? pageToken = null, CancellationToken cancellationToken = default)
+            string? pageToken = null, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             Guard();
 
@@ -293,19 +303,22 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _filesModel?.ListFiles(pageSize, pageToken, cancellationToken)!;
+            return await _filesModel?.ListFiles(pageSize, pageToken, requestOptions, cancellationToken)!;
         }
 
         /// <summary>
         /// Gets the metadata for the given File.
         /// </summary>
         /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Metadata for the given file.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<FileResource> GetFile(string file, CancellationToken cancellationToken = default)
+        public async Task<FileResource> GetFile(string file, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             Guard();
 
@@ -314,19 +327,22 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _filesModel?.GetFile(file, cancellationToken)!;
+            return await _filesModel?.GetFile(file, requestOptions, cancellationToken)!;
         }
 
         /// <summary>
         /// Deletes a file.
         /// </summary>
         /// <param name="file">Required. The resource name of the file to get. This name should match a file name returned by the files.list method. Format: files/file-id.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<string> DeleteFile(string file, CancellationToken cancellationToken = default)
+        public async Task<string> DeleteFile(string file, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             Guard();
 
@@ -335,7 +351,7 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _filesModel?.DeleteFile(file, cancellationToken)!;
+            return await _filesModel?.DeleteFile(file, requestOptions, cancellationToken)!;
         }
 
         /// <summary>
@@ -343,12 +359,15 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous files.list call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of files in File API.</returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ListGeneratedFilesResponse> ListGeneratedFiles(int? pageSize = 100,
-            string? pageToken = null, CancellationToken cancellationToken = default)
+            string? pageToken = null, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             Guard();
 
@@ -357,7 +376,7 @@ namespace Mscc.GenerativeAI
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return await _generatedFilesModel?.ListFiles(pageSize, pageToken, cancellationToken)!;
+            return await _generatedFilesModel?.ListFiles(pageSize, pageToken, requestOptions, cancellationToken)!;
         }
 
         /// <summary>

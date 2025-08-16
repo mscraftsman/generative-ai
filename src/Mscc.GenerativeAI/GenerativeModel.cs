@@ -343,11 +343,13 @@ namespace Mscc.GenerativeAI
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="NotSupportedException"></exception>
         private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
             string? pageToken = null, 
             string? filter = null, 
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (_useVertexAi)
@@ -370,7 +372,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             var models = await Deserialize<ListTunedModelResponse>(response);
             return models?.TunedModels!;

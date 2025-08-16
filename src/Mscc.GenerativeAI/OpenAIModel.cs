@@ -42,15 +42,16 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Lists the currently available models.
         /// </summary>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of available models.</returns>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<SdkListModelsResponse> ListModels(CancellationToken cancellationToken = default)
+        public async Task<SdkListModelsResponse> ListModels(RequestOptions? requestOptions = null, CancellationToken cancellationToken = default)
         {
             var url = $"{BaseUrlGoogleAi}/openai/models";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             var models = await Deserialize<SdkListModelsResponse>(response);
             return models;
@@ -61,11 +62,13 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="modelsId">Required. The resource name of the model. This name should match a model name returned by the ListModels method.</param>
         /// <param name="model">Required. The name of the model to get.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<SdkModel> GetModel(string? modelsId = null,
             string? model = null,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             modelsId ??= _model;
@@ -81,7 +84,7 @@ namespace Mscc.GenerativeAI
                 });
             }
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<SdkModel>(response);
         }
@@ -90,46 +93,52 @@ namespace Mscc.GenerativeAI
         /// Generates a set of responses from the model given a chat history input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<ChatCompletionsResponse> Completions(ChatCompletionsRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/openai/chat/completions";
-            return await PostAsync<ChatCompletionsRequest, ChatCompletionsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<ChatCompletionsRequest, ChatCompletionsResponse>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
         /// Generates embeddings from the model given an input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<GenerateEmbeddingsResponse> Embeddings(GenerateEmbeddingsRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/openai/embeddings";
-            return await PostAsync<GenerateEmbeddingsRequest, GenerateEmbeddingsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<GenerateEmbeddingsRequest, GenerateEmbeddingsResponse>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<ImagesGenerationsResponse> Images(ImagesGenerationsRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/openai/images/generations";
-            return await PostAsync<ImagesGenerationsRequest, ImagesGenerationsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<ImagesGenerationsRequest, ImagesGenerationsResponse>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

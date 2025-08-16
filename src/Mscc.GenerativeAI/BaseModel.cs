@@ -451,7 +451,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request"></param>
         /// <param name="url"></param>
         /// <param name="method"></param>
-        /// <param name="requestOptions"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="completionOption"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TRequest"></typeparam>

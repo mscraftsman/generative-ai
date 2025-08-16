@@ -61,13 +61,15 @@ namespace Mscc.GenerativeAI
         /// Creates an empty `RAG Corpus`.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagCorpus> Create(RagCorpus request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = ParseUrl(Url);
-            return await PostAsync<RagCorpus, RagCorpus>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<RagCorpus, RagCorpus>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -76,11 +78,13 @@ namespace Mscc.GenerativeAI
         /// <param name="name"></param>
         /// <param name="corpus"></param>
         /// <param name="updateMask"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagCorpus> Update(string name,
             RagCorpus corpus,
             string? updateMask = null,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = $"{Url}/{name}"; // v1beta1
@@ -98,7 +102,7 @@ namespace Mscc.GenerativeAI
             httpRequest.RequestUri = new Uri(url);
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagCorpus>(response);
         }
@@ -108,10 +112,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<List<RagCorpus>> List(int? pageSize = 50,
             string? pageToken = null,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var queryStringParams = new Dictionary<string, string?>()
@@ -121,7 +127,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl(Url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             var corpora = await Deserialize<ListRagCorporaResponse>(response);
             return corpora?.Corpora!;
@@ -131,14 +137,16 @@ namespace Mscc.GenerativeAI
         /// Gets information about a specific `RAG Corpus`.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagCorpus> Get(string name,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = ParseUrl($"{Url}/{name}");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagCorpus>(response);
         }
@@ -148,10 +156,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="name"></param>
         /// <param name="force"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>DeleteOperationMetadata</returns>
         public async Task<string> Delete(string name,
             bool force,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = $"{Url}/{name}";
@@ -159,7 +169,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
@@ -175,12 +185,14 @@ namespace Mscc.GenerativeAI
         /// <param name="uri">URI or path to the file to upload.</param>
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="description"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagFile> UploadFile(string name,
             string uri,
             string displayName,
             string description,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
@@ -190,7 +202,7 @@ namespace Mscc.GenerativeAI
 
             var mimeType = GenerativeAIExtensions.GetMimeType(uri);
             using var fs = new FileStream(uri, FileMode.Open);
-            return await UploadFile(name, fs, mimeType, displayName, description, cancellationToken);
+            return await UploadFile(name, fs, mimeType, displayName, description, requestOptions, cancellationToken);
         }
         
         /// <summary>
@@ -201,6 +213,7 @@ namespace Mscc.GenerativeAI
         /// <param name="mimeType">The MIME type of the stream content.</param>
         /// <param name="displayName">A name displayed for the uploaded file.</param>
         /// <param name="description"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
@@ -210,6 +223,7 @@ namespace Mscc.GenerativeAI
             string mimeType,
             string displayName,
             string description,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
@@ -249,7 +263,7 @@ namespace Mscc.GenerativeAI
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagFile>(response);
         }
@@ -280,11 +294,13 @@ namespace Mscc.GenerativeAI
         /// <param name="name"></param>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<List<RagFile>> ListFiles(string name,
             int? pageSize = 50,
             string? pageToken = null,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var queryStringParams = new Dictionary<string, string?>()
@@ -294,7 +310,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl($"{Url}/{name}/ragFiles").AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             var corpora = await Deserialize<ListRagFilesResponse>(response);
             return corpora?.Files!;
@@ -305,15 +321,17 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="name"></param>
         /// <param name="fileName"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagFile> GetFile(string name,
             string fileName,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var url = ParseUrl($"{Url}/{name}/ragFiles/{fileName}");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagFile>(response);
         }
@@ -323,11 +341,13 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="name"></param>
         /// <param name="fileName"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<string> DeleteFile(string name,
             string fileName,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
@@ -336,7 +356,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl($"{Url}/{name}/ragFiles/{fileName}");
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
@@ -345,12 +365,20 @@ namespace Mscc.GenerativeAI
 #endif
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
         public async Task<RagQueryResponse> RetrievalQuery(RagRetrievalQueryRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             var method = GenerativeAI.Method.RetrieveContexts;
             var url = "{BaseUrlVertexAi}:{method}";
-            return await PostAsync<RagRetrievalQueryRequest, RagQueryResponse>(request, url, method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<RagRetrievalQueryRequest, RagQueryResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -361,14 +389,16 @@ namespace Mscc.GenerativeAI
         /// <param name="ragRetrievalConfig"></param>
         /// <param name="vectorDistanceThreshold"></param>
         /// <param name="similarityTopK"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<RagQueryResponse> RetrievalQuery(RagResource[] ragResources,
             string text,
             RagRetrievalConfig? ragRetrievalConfig,
             float? vectorDistanceThreshold,
             float? similarityTopK,
-            CancellationToken cancellationToken)
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
         {
             var request = new RagRetrievalQueryRequest()
             {
@@ -386,7 +416,7 @@ namespace Mscc.GenerativeAI
                 }
             };
 
-            return await RetrievalQuery(request, cancellationToken);
+            return await RetrievalQuery(request, requestOptions, cancellationToken);
         }
     }
 
