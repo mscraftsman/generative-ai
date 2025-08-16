@@ -527,7 +527,7 @@ namespace Mscc.GenerativeAI
             }
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
         // ~BaseModel()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
