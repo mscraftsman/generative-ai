@@ -532,7 +532,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt =
                 "Hi, can you create a 3d rendered image of a pig with wings and a top hat flying over a happy futuristic scifi city with lots of greenery?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini20FlashImageGeneration);
             var request = new GenerateContentRequest(prompt,
                 generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
 
@@ -545,11 +545,14 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates![0].Content!.Parts.ForEach(part =>
             {
                 _output.WriteLine($"{part.Text}");
-                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
-                    Path.ChangeExtension($"{Guid.NewGuid():D}",
-                        part.InlineData.MimeType.Replace("image/", "")));
-                File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
-                _output.WriteLine($"Wrote image to {fileName}");
+                if (part.InlineData != null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+                }
             });
         }
 
@@ -955,7 +958,7 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemma3)]
         [InlineData(Model.Gemini15Flash)]
         [InlineData(Model.Gemini20Flash)]
-        [InlineData(Model.Gemini20FlashLite)]
+        [InlineData(Model.Gemini25Flash)]
         [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
         [InlineData(Model.Gemini25Pro)]
@@ -2480,12 +2483,19 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25FlashLite);
             var request = new GenerateContentRequest(prompt)
             {
                 GenerationConfig = new GenerationConfig()
                 {
-                    Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024
+                    Temperature = 0.4f,
+                    TopP = 1,
+                    TopK = 32,
+                    MaxOutputTokens = 1024,
+                    ThinkingConfig = new()
+                    {
+                        IncludeThoughts = false
+                    }
                 }
             };
             await request.AddMedia(uri: Path.Combine(Environment.CurrentDirectory, "payload", filename));
