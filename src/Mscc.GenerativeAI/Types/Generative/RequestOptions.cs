@@ -9,7 +9,10 @@ namespace Mscc.GenerativeAI
         public Retry Retry;
         public TimeSpan Timeout;
 
-        private RequestOptions()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestOptions"/> class
+        /// </summary>
+        public RequestOptions()
         {
             Retry = new Retry();
             Timeout = new TimeSpan().Add(TimeSpan.FromSeconds(90));
