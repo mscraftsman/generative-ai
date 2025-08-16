@@ -13,6 +13,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.6.13
+
+### Added
+
+- add `Timeout` handling per request #57 #79
+- add `IDisposable` interface
+- add tests for timeout
+- add `RequestOptions` to the interface signature
+- pass `RequestOptions` through
+- add documentation about Timeout and IDisposable
+
+### Changed
+
+- refactoring to reduce duplicated lines of code
+- `Content.Parts` are optional
+
+### Fixed
+
+- fix InvalidOperationException when setting Timeout #57
+
 ## 2.6.12
 
 ### Changed
