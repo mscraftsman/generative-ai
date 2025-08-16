@@ -386,6 +386,7 @@ namespace Mscc.GenerativeAI
         /// <param name="pageSize">The maximum number of `Models` to return (per page). If unspecified, 50 models will be returned per page. This method returns at most 1000 models per page, even if you pass a larger page_size.</param>
         /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
@@ -393,11 +394,12 @@ namespace Mscc.GenerativeAI
             int? pageSize = 50, 
             string? pageToken = null, 
             string? filter = null, 
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (tuned)
             {
-                return await ListTunedModels(pageSize, pageToken, filter);
+                return await ListTunedModels(pageSize, pageToken, filter, requestOptions, cancellationToken);
             }
 
             var url = _useVertexAi ? "{BaseUrlVertexAi}/models" : "{BaseUrlGoogleAi}/models";
@@ -409,7 +411,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             var models = await Deserialize<ListModelsResponse>(response);
             return models?.Models!;
@@ -419,11 +421,13 @@ namespace Mscc.GenerativeAI
         /// Gets information about a specific `Model` such as its version number, token limits, [parameters](https://ai.google.dev/gemini-api/docs/models/generative-models#model-parameters) and other metadata. Refer to the [Gemini models guide](https://ai.google.dev/gemini-api/docs/models/gemini) for detailed model information.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. This name should match a model name returned by the ListModels method. Format: models/model-id or tunedModels/my-model-id</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ModelResponse> GetModel(string? model = null, 
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             this.GuardSupported();
@@ -438,7 +442,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/{model}";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<ModelResponse>(response);
         }
@@ -449,26 +453,30 @@ namespace Mscc.GenerativeAI
         /// Copies a model in Vertex AI Model Registry.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<CopyModelResponse> CopyModel(CopyModelRequest request, 
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             ThrowIfUnsupportedRequest(request);
             
             var url = "{BaseUrlVertexAi}/models:{method}";
-            return await PostAsync<CopyModelRequest, CopyModelResponse>(request, url, GenerativeAI.Method.Copy, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<CopyModelRequest, CopyModelResponse>(request, url, GenerativeAI.Method.Copy, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
         /// Creates a tuned model.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request, 
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
@@ -486,18 +494,20 @@ namespace Mscc.GenerativeAI
             // if (_model is (string)Model.BisonText001)
             //     method = "createTunedTextModel";
             var url = "{BaseUrlGoogleAi}/{method}";   // v1beta3
-            return await PostAsync<CreateTunedModelRequest, CreateTunedModelResponse>(request, url, method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<CreateTunedModelRequest, CreateTunedModelResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
         /// Deletes a tuned model.
         /// </summary>
         /// <param name="model">Required. The resource name of the model. Format: tunedModels/my-model-id</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         public async Task<string> DeleteTunedModel(string model, 
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
@@ -512,7 +522,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/{model}";   // v1beta3
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, null, cancellationToken);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
