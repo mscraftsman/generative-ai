@@ -77,7 +77,8 @@ public abstract class GeminiConsole(GenerativeModel client)
 		var modelsWithBackChoice = models.Where(m => 
                 m.SupportedGenerationMethods!.Contains("generateContent"))
             .OrderBy(m => m.DisplayName)
-            .Select(m => m.Name)
+            .Where(m => m.Name != null)
+            .Select(m => m.Name!)
             .ToList();
 		if (modelsWithBackChoice.Count == 1)
 		{
@@ -96,7 +97,7 @@ public abstract class GeminiConsole(GenerativeModel client)
 						.Title(prompt)
 						.AddChoices(modelsWithBackChoice));
 
-			return answer == BACK ? "" : answer;
+			return answer == BACK ? string.Empty : answer;
 		}
 	}
 }

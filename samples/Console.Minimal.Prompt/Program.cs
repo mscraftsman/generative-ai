@@ -31,7 +31,7 @@ while (true)
 {
     // Prompt the user for a prompt
     Console.Write($"Enter a prompt{hint}: ");
-    string request = Console.ReadLine();
+    string request = Console.ReadLine() ?? string.Empty;
 
     // check input for Escape key and exit if found
     if (request == "\x1b")

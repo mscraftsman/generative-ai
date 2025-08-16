@@ -96,10 +96,16 @@ async Task ProcessResponse(GenerateContentResponse response, ChatSession chatSes
 
                 // Correct the wrongly logged model response!
                 var received = chatSession.Last;
-                received.Parts = candidate.Content.Parts;
-                var history = chatSession.History;
-                history.RemoveAt(history.Count - 1);
-                history.Add(received);
+                if (received != null) // Check if received is not null
+                {
+                    if (candidate.Content?.Parts != null)
+                    {
+                        received.Parts = candidate.Content.Parts;
+                    }
+                    var history = chatSession.History;
+                    history.RemoveAt(history.Count - 1);
+                    history.Add(received);
+                }
 
                 var followUpResponse = await chatSession.SendMessage([functionResponsePart]);
                 // var request = new GenerateContentRequest([functionResponsePart]);
