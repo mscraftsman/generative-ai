@@ -136,9 +136,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
-        public async Task<ModelResponse> GetModel(string model, CancellationToken cancellationToken = default)
+        public async Task<ModelResponse> GetModel(string model, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _generativeModel?.GetModel(model, cancellationToken)!;
+            return await _generativeModel?.GetModel(model, null, cancellationToken)!;
         }
 
         /// <summary>

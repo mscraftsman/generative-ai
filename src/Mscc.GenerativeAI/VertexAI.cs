@@ -207,7 +207,9 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
-        public Task<ModelResponse> GetModel(string model, CancellationToken cancellationToken = default)
+        public Task<ModelResponse> GetModel(string model, 
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
         }
