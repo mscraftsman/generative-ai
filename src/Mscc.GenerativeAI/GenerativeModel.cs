@@ -310,7 +310,6 @@ namespace Mscc.GenerativeAI
             _safetySettings = safetySettings;
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class given cached content.
         /// </summary>
@@ -332,6 +331,17 @@ namespace Mscc.GenerativeAI
             _endpointId = _tuningJob.TunedModel!.Endpoint.SanitizeEndpointName();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
+        }
+       
+        /// <summary>
+        /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
+        /// </summary>
+        internal GenerativeModel(HttpMessageHandler handler, ILogger? logger = null) : base(handler, logger)
+        {
+            _apiVersion = ApiVersion.V1Beta;
+            Logger.LogGenerativeModelInvoking();
+            // Default model for tests, can be overridden by test setup
+            Model = GenerativeAI.Model.Gemini25Pro;
         }
 
         #region Undecided location of methods.Maybe IGenerativeAI might be better...

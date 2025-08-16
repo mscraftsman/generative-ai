@@ -2633,7 +2633,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = _googleAi.GenerativeModel(_model);
-            //model.Timeout = TimeSpan.FromMinutes(5);
+            model.Timeout = TimeSpan.FromMinutes(5);
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "resume.jpg");
             var displayName = "Resumable File";
             if (!File.Exists(filePath))

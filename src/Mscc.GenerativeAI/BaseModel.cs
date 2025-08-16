@@ -38,26 +38,37 @@ namespace Mscc.GenerativeAI
         protected readonly Version _httpVersion = HttpVersion.Version11;
         private readonly IHttpClientFactory? _httpClientFactory;
         private HttpClient? _httpClient;
-        protected HttpClient Client => _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
+        private TimeSpan? _httpTimeout;
+
+        protected HttpClient Client =>
+            _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
 
         private HttpClient CreateDefaultHttpClient()
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
-            var client = new HttpClient(new HttpClientHandler
+            var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
             {
-                SslProtocols = SslProtocols.Tls12
+                InnerHandler = new HttpClientHandler
+                {
+                    SslProtocols = SslProtocols.Tls12
+                }
             });
 #else
-            var client = new HttpClient(new SocketsHttpHandler
+            var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
             {
-                PooledConnectionLifetime = TimeSpan.FromMinutes(30),
-                EnableMultipleHttp2Connections = true
+                InnerHandler = new SocketsHttpHandler
+                {
+                    PooledConnectionLifetime = TimeSpan.FromMinutes(30), 
+                    EnableMultipleHttp2Connections = true
+                }
             })
             {
-                DefaultRequestVersion = _httpVersion,
+                DefaultRequestVersion = _httpVersion, 
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
             };
 #endif
+            client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+            
             return client;
         }
 
@@ -97,32 +108,13 @@ namespace Mscc.GenerativeAI
         /// <param name="request"><see cref="HttpRequestMessage"/> to send to the API.</param>
         protected virtual void AddApiKeyHeader(HttpRequestMessage request)
         {
-            if (!string.IsNullOrEmpty(_apiKey))
-            {
-                if (request.Headers.Contains("x-goog-api-key"))
-                {
-                    request.Headers.Remove("x-goog-api-key");
-                }
-                request.Headers.Add("x-goog-api-key", _apiKey);
-            }
+            request.AddApiKeyHeader(_apiKey);
         }
-
+        
         /// <summary>
         /// Sets the access token to use for the request.
         /// </summary>
         public string? AccessToken { set => _accessToken = value; }
-
-        protected virtual void AddAccessTokenHeader(HttpRequestMessage request)
-        {
-            if (!string.IsNullOrEmpty(_accessToken))
-            {
-                if (request.Headers.Contains("Authorization"))
-                {
-                    request.Headers.Remove("Authorization");
-                }
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
-            }
-        }
 
         /// <summary>
         /// Sets the project ID to use for the request.
@@ -131,18 +123,6 @@ namespace Mscc.GenerativeAI
         /// The value can only be set or modified before the first request is made.
         /// </remarks>
         public string? ProjectId { set => _projectId = value; }
-
-        protected virtual void AddProjectIdHeader(HttpRequestMessage request)
-        {
-            if (!string.IsNullOrEmpty(_projectId))
-            {
-                if (request.Headers.Contains("x-goog-user-project"))
-                {
-                    request.Headers.Remove("x-goog-user-project");
-                }
-                request.Headers.Add("x-goog-user-project", _projectId);
-            }
-        }
 
         /// <summary>
         /// Returns the region to use for the request.
@@ -158,8 +138,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public TimeSpan Timeout
         {
-            get => Client.Timeout;
-            //set => Client.Timeout = value;
+            get => _httpTimeout ?? Client.Timeout;
+            set => _httpTimeout = value;
         }
 
         /// <summary>
@@ -170,6 +150,8 @@ namespace Mscc.GenerativeAI
         // Instance fields for default headers
         private readonly ProductInfoHeaderValue _defaultUserAgent;
         private readonly KeyValuePair<string, string> _defaultApiClientHeader;
+        
+        private bool _disposedValue;
 
         /// <summary>
         /// 
@@ -209,8 +191,11 @@ namespace Mscc.GenerativeAI
         /// <param name="model"></param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseModel(string? projectId = null, string? region = null,
-            string? model = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : this(httpClientFactory, logger)
+        public BaseModel(string? projectId = null,
+            string? region = null,
+            string? model = null,
+            IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : this(httpClientFactory, logger)
         {
             var credentialsFile =
                 Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ??
@@ -225,6 +210,29 @@ namespace Mscc.GenerativeAI
                         _projectId;
             _region = region ?? _region;
             Model = model ?? _model;
+        }
+
+        /// <summary>
+        /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
+        /// </summary>
+        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null) : base(logger)
+        {
+            _httpClient = new HttpClient(handler);
+            // Initialize the default headers in constructor
+            var productHeaderValue = new ProductHeaderValue(
+                name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
+                version: Assembly.GetExecutingAssembly().GetName().Version?.ToString());
+            _defaultUserAgent = new ProductInfoHeaderValue(productHeaderValue);
+            _defaultApiClientHeader = new KeyValuePair<string, string>(
+                "x-goog-api-client",
+                _defaultUserAgent.ToString());
+            _options = DefaultJsonSerializerOptions();
+
+            // Basic initialization, specific API key/model/project details would be set by subclass or test
+            GenerativeAIExtensions.ReadDotEnv();
+            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? GenerativeAI.Model.Gemini15Pro;
+            ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
+                     Environment.GetEnvironmentVariable("GEMINI_API_KEY");
         }
 
         /// <summary>
@@ -481,18 +489,13 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default,
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
-            var timeoutCts = new CancellationTokenSource();
-            if (requestOptions?.Timeout != null)
-            {
-                timeoutCts.CancelAfter(requestOptions.Timeout);
-            }
-
-            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
-
+            var timeout = requestOptions?.Timeout ?? Timeout;
+            request.SetTimeout(timeout);
+            
             // Add auth headers specific to this request
-            AddApiKeyHeader(request);
-            AddAccessTokenHeader(request);
-            AddProjectIdHeader(request);
+            request.AddApiKeyHeader(_apiKey);
+            request.AddAccessTokenHeader(_accessToken);
+            request.AddProjectIdHeader(_projectId);
 
             // Add instance default headers
             request.Headers.UserAgent.Add(_defaultUserAgent);
@@ -505,11 +508,9 @@ namespace Mscc.GenerativeAI
                 request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync()
             );
 
-            return await Client.SendAsync(request, completionOption, linkedCts.Token);
+            return await Client.SendAsync(request, completionOption, cancellationToken);
         }
-
-        private bool _disposedValue;
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

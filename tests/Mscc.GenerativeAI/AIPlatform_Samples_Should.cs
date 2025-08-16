@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 #endif
 using FluentAssertions;
 using Mscc.GenerativeAI;
+using System;
 using System.Text;
 using Xunit;
 using Xunit.Abstractions;
@@ -62,7 +63,7 @@ namespace Test.Mscc.GenerativeAI
             output.WriteLine(fullText.ToString());
         }
 
-        [Fact(Skip = "Skipped due to the configured HttpClient.Timeout of 100 seconds elapsing.")]
+        [Fact]
         public async Task Multimodal_Multi_Image()
         {
             // Arrange
@@ -92,9 +93,11 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content { Role = Role.User, Parts = parts });
             var fullText = new StringBuilder();
+            var options = new RequestOptions(TimeSpan.FromMinutes(5));
+            //var options = new RequestOptions(TimeSpan.FromSeconds(2));
 
             // Act
-            var responseStream = model.GenerateContentStream(request);
+            var responseStream = model.GenerateContentStream(request, options);
             
             // Assert
             responseStream.Should().NotBeNull();
