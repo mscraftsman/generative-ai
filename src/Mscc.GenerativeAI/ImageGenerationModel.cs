@@ -80,16 +80,18 @@ namespace Mscc.GenerativeAI
         /// Generates images from the specified <see cref="ImageGenerationRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated images.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<ImageGenerationResponse> GenerateImages(ImageGenerationRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = ParseUrl(Url, Method);
-            return await PostAsync<ImageGenerationRequest, ImageGenerationResponse>(request, url, Method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<ImageGenerationRequest, ImageGenerationResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -105,6 +107,7 @@ namespace Mscc.GenerativeAI
         /// <param name="personGeneration">Allow generation of people by the model.</param>
         /// <param name="enhancePrompt">Option to enhance your provided prompt.</param>
         /// <param name="addWatermark">Explicitly set the watermark</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
@@ -115,6 +118,7 @@ namespace Mscc.GenerativeAI
             ImagePromptLanguage? language = null, string? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
@@ -142,21 +146,23 @@ namespace Mscc.GenerativeAI
             request.Parameters.EnhancePrompt = enhancePrompt;
             request.Parameters.AddWatermark = addWatermark;
             
-            return await GenerateImages(request, cancellationToken);
+            return await GenerateImages(request, requestOptions, cancellationToken);
         }
 
         /// <summary>
         /// Generates a response from the model given an input prompt and other parameters.
         /// </summary>
         /// <param name="prompt">Required. String to process.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ImageGenerationResponse> GenerateContent(string prompt,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            return await GenerateImages(prompt, cancellationToken: cancellationToken);
+            return await GenerateImages(prompt, requestOptions: requestOptions, cancellationToken: cancellationToken);
         }
     }
 }

@@ -43,15 +43,17 @@ namespace Mscc.GenerativeAI
         /// Generates a set of responses from the model given a chat history input.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<ChatCompletionsResponse> Completions(ChatCompletionsRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/chat/completions";
-            return await PostAsync<ChatCompletionsRequest, ChatCompletionsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<ChatCompletionsRequest, ChatCompletionsResponse>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

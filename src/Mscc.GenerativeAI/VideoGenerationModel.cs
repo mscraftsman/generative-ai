@@ -75,16 +75,18 @@ namespace Mscc.GenerativeAI
         /// Generates videos from the specified <see cref="GenerateVideosRequest"/>.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<GenerateVideosResponse> GenerateVideos(GenerateVideosRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = ParseUrl(Url, Method);
-            return await PostAsync<GenerateVideosRequest, GenerateVideosResponse>(request, url, Method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<GenerateVideosRequest, GenerateVideosResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -97,6 +99,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetyFilterLevel">Adds a filter level to Safety filtering.</param>
         /// <param name="personGeneration">Allow generation of people by the model.</param>
         /// <param name="enhancePrompt">Option to enhance your provided prompt.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
@@ -105,6 +108,7 @@ namespace Mscc.GenerativeAI
             int numberOfVideos = 1, string? negativePrompt = null, 
             string? aspectRatio = null, string? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
@@ -129,21 +133,23 @@ namespace Mscc.GenerativeAI
             }
             request.Parameters.EnhancePrompt = enhancePrompt;
             
-            return await GenerateVideos(request, cancellationToken);
+            return await GenerateVideos(request, requestOptions, cancellationToken);
         }
 
         /// <summary>
         /// Generates a response from the model given an input prompt and other parameters.
         /// </summary>
         /// <param name="prompt">Required. String to process.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateVideosResponse> GenerateContent(string prompt,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            return await GenerateVideos(prompt, cancellationToken: cancellationToken);
+            return await GenerateVideos(prompt, requestOptions: requestOptions, cancellationToken: cancellationToken);
         }
     }
 }

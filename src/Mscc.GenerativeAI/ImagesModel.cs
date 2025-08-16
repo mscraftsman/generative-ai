@@ -34,16 +34,18 @@ namespace Mscc.GenerativeAI
         /// 
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task<ImagesGenerationsResponse> Images(ImagesGenerationsRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/images/generations";
-            return await PostAsync<ImagesGenerationsRequest, ImagesGenerationsResponse>(request, url, Method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<ImagesGenerationsRequest, ImagesGenerationsResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

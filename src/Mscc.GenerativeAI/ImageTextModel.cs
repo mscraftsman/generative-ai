@@ -52,15 +52,17 @@ namespace Mscc.GenerativeAI
         /// Generates images from the specified <see cref="ImageTextRequest"/>.
         /// </summary>
         /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated images.</returns>
         public async Task<ImageTextResponse> GetCaptions(ImageTextRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = ParseUrl(Url, Method);
-            return await PostAsync<ImageTextRequest, ImageTextResponse>(request, url, Method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<ImageTextRequest, ImageTextResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -70,6 +72,7 @@ namespace Mscc.GenerativeAI
         /// <param name="numberOfResults">Optional. Number of results to return. Default is 1.</param>
         /// <param name="language">Optional. Language to use. Default is en.</param>
         /// <param name="storageUri">Optional. Cloud Storage uri where to store the generated predictions.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
@@ -79,12 +82,13 @@ namespace Mscc.GenerativeAI
             int? numberOfResults = null,
             string? language = null,
             string? storageUri = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
 
             var request = new ImageTextRequest(base64Image, null, numberOfResults, language, storageUri);
-            return await GetCaptions(request, cancellationToken);
+            return await GetCaptions(request, requestOptions, cancellationToken);
         }
 
         /// <summary>
@@ -94,6 +98,7 @@ namespace Mscc.GenerativeAI
         /// <param name="question">Required. The question to ask about the image.</param>
         /// <param name="numberOfResults">Optional. Number of results to return. Default is 1.</param>
         /// <param name="language">Optional. Language to use. Default is en.</param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
@@ -103,13 +108,14 @@ namespace Mscc.GenerativeAI
             string question,
             int? numberOfResults = null,
             string? language = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (base64Image == null) throw new ArgumentNullException(nameof(base64Image));
             if (question == null) throw new ArgumentNullException(nameof(question));
 
             var request = new ImageTextRequest(base64Image, question, numberOfResults, language);
-            return await GetCaptions(request, cancellationToken);
+            return await GetCaptions(request, requestOptions, cancellationToken);
         }
     }
 }

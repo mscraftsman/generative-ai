@@ -34,12 +34,14 @@ namespace Mscc.GenerativeAI
         /// Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information. Input capabilities differ between models, including tuned models. Refer to the [model guide](https://ai.google.dev/gemini-api/docs/models/gemini) and [tuning guide](https://ai.google.dev/gemini-api/docs/model-tuning) for details.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
-            return await PostAsync<GenerateContentRequest, GenerateContentResponse>(request, Url, "generateContent",
+            return await PostAsync<GenerateContentRequest, GenerateContentResponse>(request, Url, "generateContent", requestOptions,
                 cancellationToken: cancellationToken);
         }
 
@@ -47,12 +49,14 @@ namespace Mscc.GenerativeAI
         /// Generates a [streamed response](https://ai.google.dev/gemini-api/docs/text-generation?lang=python#generate-a-text-stream) from the model given an input `GenerateContentRequest`.
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<GenerateContentResponse> GenerateContentStream(GenerateContentRequest request,
+            RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
-            return await PostAsync<GenerateContentRequest, GenerateContentResponse>(request, Url, "streamGenerateContent",
+            return await PostAsync<GenerateContentRequest, GenerateContentResponse>(request, Url, "streamGenerateContent", requestOptions,
                 cancellationToken: cancellationToken);
         }
     }
