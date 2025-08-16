@@ -50,7 +50,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/openai/models";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             var models = await Deserialize<SdkListModelsResponse>(response);
             return models;
@@ -81,7 +81,7 @@ namespace Mscc.GenerativeAI
                 });
             }
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<SdkModel>(response);
         }
@@ -98,14 +98,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/openai/chat/completions";
-            url = ParseUrl(url);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<ChatCompletionsResponse>(response);
+            return await PostAsync<ChatCompletionsRequest, ChatCompletionsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -120,14 +113,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/openai/embeddings";
-            url = ParseUrl(url);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<GenerateEmbeddingsResponse>(response);
+            return await PostAsync<GenerateEmbeddingsRequest, GenerateEmbeddingsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -143,14 +129,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/openai/images/generations";
-            url = ParseUrl(url);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<ImagesGenerationsResponse>(response);
+            return await PostAsync<ImagesGenerationsRequest, ImagesGenerationsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

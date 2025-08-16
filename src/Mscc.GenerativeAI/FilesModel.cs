@@ -49,7 +49,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<ListFilesResponse>(response);
         }
@@ -74,7 +74,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/{file}";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<FileResource>(response);
         }
@@ -99,7 +99,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/{file}";   // v1beta3
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();

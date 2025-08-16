@@ -56,7 +56,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             var operations = await Deserialize<ListOperationsResponse>(response);
             return operations.Operations;
@@ -80,7 +80,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/{batchesName}";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<Operation>(response);
         }
@@ -111,7 +111,7 @@ namespace Mscc.GenerativeAI
             // var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             // httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
@@ -138,7 +138,7 @@ namespace Mscc.GenerativeAI
             var url = $"{BaseUrlGoogleAi}/{batchesName}";
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();

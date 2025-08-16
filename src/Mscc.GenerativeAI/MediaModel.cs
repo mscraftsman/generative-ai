@@ -89,7 +89,7 @@ namespace Mscc.GenerativeAI
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<UploadMediaResponse>(response);
         }
@@ -153,7 +153,7 @@ namespace Mscc.GenerativeAI
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<UploadMediaResponse>(response);
         }
@@ -189,7 +189,7 @@ namespace Mscc.GenerativeAI
                 });
             }
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<GeneratedFile>(response);
         }

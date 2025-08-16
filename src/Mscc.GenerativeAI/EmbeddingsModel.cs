@@ -53,14 +53,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/embeddings:generate";
-            url = ParseUrl(url);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<GenerateEmbeddingsResponse>(response);
+            return await PostAsync<GenerateEmbeddingsRequest, GenerateEmbeddingsResponse>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

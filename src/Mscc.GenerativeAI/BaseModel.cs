@@ -159,7 +159,7 @@ namespace Mscc.GenerativeAI
         public TimeSpan Timeout
         {
             get => Client.Timeout;
-            set => Client.Timeout = value;
+            //set => Client.Timeout = value;
         }
 
         /// <summary>
@@ -451,6 +451,7 @@ namespace Mscc.GenerativeAI
         /// <param name="request"></param>
         /// <param name="url"></param>
         /// <param name="method"></param>
+        /// <param name="requestOptions"></param>
         /// <param name="completionOption"></param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <typeparam name="TRequest"></typeparam>
@@ -459,6 +460,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException"></exception>
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request,
             string url, string method,
+            RequestOptions? requestOptions = null,
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead,
             CancellationToken cancellationToken = default)
         {
@@ -469,15 +471,24 @@ namespace Mscc.GenerativeAI
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri);
             httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken, completionOption);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken, completionOption);
             await response.EnsureSuccessAsync();
             return await Deserialize<TResponse>(response);
         }
 
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default,
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
+            var timeoutCts = new CancellationTokenSource();
+            if (requestOptions?.Timeout != null)
+            {
+                timeoutCts.CancelAfter(requestOptions.Timeout);
+            }
+
+            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+
             // Add auth headers specific to this request
             AddApiKeyHeader(request);
             AddAccessTokenHeader(request);
@@ -494,7 +505,7 @@ namespace Mscc.GenerativeAI
                 request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync()
             );
 
-            return await Client.SendAsync(request, completionOption, cancellationToken);
+            return await Client.SendAsync(request, completionOption, linkedCts.Token);
         }
     }
 }

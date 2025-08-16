@@ -67,13 +67,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             var url = ParseUrl(Url);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<RagCorpus>(response);
+            return await PostAsync<RagCorpus, RagCorpus>(request, url, string.Empty, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -104,7 +98,7 @@ namespace Mscc.GenerativeAI
             httpRequest.RequestUri = new Uri(url);
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagCorpus>(response);
         }
@@ -127,7 +121,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl(Url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             var corpora = await Deserialize<ListRagCorporaResponse>(response);
             return corpora?.Corpora!;
@@ -144,7 +138,7 @@ namespace Mscc.GenerativeAI
         {
             var url = ParseUrl($"{Url}/{name}");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagCorpus>(response);
         }
@@ -165,7 +159,7 @@ namespace Mscc.GenerativeAI
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
@@ -255,7 +249,7 @@ namespace Mscc.GenerativeAI
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagFile>(response);
         }
@@ -300,7 +294,7 @@ namespace Mscc.GenerativeAI
 
             var url = ParseUrl($"{Url}/{name}/ragFiles").AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             var corpora = await Deserialize<ListRagFilesResponse>(response);
             return corpora?.Files!;
@@ -319,7 +313,7 @@ namespace Mscc.GenerativeAI
         {
             var url = ParseUrl($"{Url}/{name}/ragFiles/{fileName}");
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<RagFile>(response);
         }
@@ -342,7 +336,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl($"{Url}/{name}/ragFiles/{fileName}");
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
-            var response = await SendAsync(httpRequest, cancellationToken);
+            var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
@@ -356,14 +350,7 @@ namespace Mscc.GenerativeAI
         {
             var method = GenerativeAI.Method.RetrieveContexts;
             var url = "{BaseUrlVertexAi}:{method}";
-            url = ParseUrl(url, method);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<RagQueryResponse>(response);
+            return await PostAsync<RagRetrievalQueryRequest, RagQueryResponse>(request, url, method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>

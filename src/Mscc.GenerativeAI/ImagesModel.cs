@@ -43,14 +43,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = $"{BaseUrlGoogleAi}/images/generations";
-            url = ParseUrl(url, Method);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            await response.EnsureSuccessAsync();
-            return await Deserialize<ImagesGenerationsResponse>(response);
+            return await PostAsync<ImagesGenerationsRequest, ImagesGenerationsResponse>(request, url, Method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
     }
 }

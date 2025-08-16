@@ -89,13 +89,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var url = ParseUrl(Url, Method);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, cancellationToken);
-            response.EnsureSuccessStatusCode();
-            return await Deserialize<ImageGenerationResponse>(response);
+            return await PostAsync<ImageGenerationRequest, ImageGenerationResponse>(request, url, Method, null, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
