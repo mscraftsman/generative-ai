@@ -23,6 +23,7 @@ namespace Mscc.GenerativeAI
     {
         protected const string BaseUrlGoogleAi = "https://generativelanguage.googleapis.com/{version}";
         protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}";
+        protected const string BaseUrlVertexAiGlobal = "https://aiplatform.googleapis.com/{version}/projects/{projectId}/locations/global";
 
         protected readonly string _publisher = "google";
         protected readonly JsonSerializerOptions _options;
@@ -247,6 +248,10 @@ namespace Mscc.GenerativeAI
         {
             var replacements = GetReplacements();
             replacements.Add("method", method);
+            if (string.Equals(_region, "global", StringComparison.InvariantCultureIgnoreCase))
+            {
+                replacements["BaseUrlVertexAi"] = BaseUrlVertexAiGlobal;
+            }
 
             do
             {
