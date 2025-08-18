@@ -272,6 +272,24 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Generate_Content_Disposable()
+        {
+            // Arrange
+            var prompt = "Write a story about a magic backpack.";
+            using (var model = _googleAi.GenerativeModel(model: _model))
+            {
+                // Act
+                var response = await model.GenerateContent(prompt);
+
+                // Assert
+                response.Should().NotBeNull();
+                response.Candidates.Should().NotBeNull().And.HaveCount(1);
+                response.Text.Should().NotBeEmpty();
+                _output.WriteLine(response?.Text);
+            }
+        }
+
+        [Fact]
         public async Task Generate_Content_WithEmptyPrompt_ThrowsArgumentNullException()
         {
             // Arrange
