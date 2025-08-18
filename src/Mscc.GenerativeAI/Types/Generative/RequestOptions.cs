@@ -25,7 +25,7 @@ namespace Mscc.GenerativeAI
         public RequestOptions()
         {
             Retry = new Retry();
-            Timeout = TimeSpan.FromSeconds(90);
+            Timeout = TimeSpan.FromSeconds(100);    // default value of HttpClient
         }
 
         /// <summary>
