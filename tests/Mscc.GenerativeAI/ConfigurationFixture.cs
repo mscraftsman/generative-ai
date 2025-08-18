@@ -47,14 +47,16 @@ namespace Test.Mscc.GenerativeAI
             if (string.IsNullOrEmpty(ApiKey))
                 ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
             ApiKeyVertex = Configuration["vertex_api_key"];
-            if (string.IsNullOrEmpty(ApiKey))
+            if (string.IsNullOrEmpty(ApiKeyVertex))
                 ApiKeyVertex = Environment.GetEnvironmentVariable("VERTEX_API_KEY");
             ProjectId = Configuration["project_id"];
             if (string.IsNullOrEmpty(ProjectId))
-                ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID");
+                ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                            Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
             Region = Configuration["region"];
             if (string.IsNullOrEmpty(Region))
-                Region = Environment.GetEnvironmentVariable("GOOGLE_REGION");
+                Region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
+                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
             if (string.IsNullOrEmpty(ApiKey))
             {
                 AccessToken = Configuration["access_token"];
