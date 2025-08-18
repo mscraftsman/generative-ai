@@ -25,7 +25,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public ApiAuth ApiAuth { get; set; }
+        public AuthConfig ApiAuth { get; set; }
         /// <summary>
         /// The embedding model to use for the RAG corpus.
         /// </summary>
