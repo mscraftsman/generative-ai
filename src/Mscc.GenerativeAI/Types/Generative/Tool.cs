@@ -23,7 +23,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Enables the model to execute code as part of generation.
         /// </summary>
-        public CodeExecution? CodeExecution { get; set; }
+        public ToolCodeExecution? CodeExecution { get; set; }
         /// <summary>
         /// Optional. Retrieval tool type. System will always execute the provided retrieval tool(s)
         /// to get external knowledge to answer the prompt. Retrieval results are presented
@@ -42,5 +42,20 @@ namespace Mscc.GenerativeAI
         /// Optional. Tool to support URL context retrieval.
         /// </summary>
         public UrlContext? UrlContext { get; set; }
+        /// <summary>
+        /// Optional. Google Maps tool type.
+        /// Specialized retrieval tool that is powered by Google Maps.
+        /// </summary>
+        public GoogleMaps? GoogleMaps { get; set; }
+        /// <summary>
+        /// Optional. Enterprise web search tool type.
+        /// Specialized retrieval tool that is powered by Vertex AI Search and Sec4 compliance.
+        /// </summary>
+        public EnterpriseWebSearch? EnterpriseWebSearch { get; set; }
+        /// <summary>
+        /// Optional. Tool to support the model interacting directly with the computer.
+        /// If enabled, it automatically populates computer-use specific Function Declarations.
+        /// </summary>
+        public ToolComputerUse? ComputerUse { get; set; }
     }
 }
