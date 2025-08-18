@@ -37,8 +37,9 @@ namespace Test.Mscc.GenerativeAI
             Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddJsonFile("appsettings.user.json", optional: true)
-                .AddJsonFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
-                        "application_default_credentials.json"), optional: true)
+                .AddJsonFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "gcloud",
+                    "application_default_credentials.json"), optional: true)
                 .AddEnvironmentVariables()
                 .AddUserSecrets<ConfigurationFixture>()
                 .Build();
@@ -46,19 +47,21 @@ namespace Test.Mscc.GenerativeAI
             ApiKey = Configuration["api_key"];
             if (string.IsNullOrEmpty(ApiKey))
                 ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-            ApiKeyVertex = Configuration["vertex_api_key"];
-            if (string.IsNullOrEmpty(ApiKeyVertex))
-                ApiKeyVertex = Environment.GetEnvironmentVariable("VERTEX_API_KEY");
-            ProjectId = Configuration["project_id"];
-            if (string.IsNullOrEmpty(ProjectId))
-                ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                            Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
-            Region = Configuration["region"];
-            if (string.IsNullOrEmpty(Region))
-                Region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
-                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
+            if (string.IsNullOrEmpty(ApiKey))
+                ApiKey = Configuration["vertex_api_key"];
+            if (string.IsNullOrEmpty(ApiKey))
+                ApiKey = Environment.GetEnvironmentVariable("VERTEX_API_KEY");
+
             if (string.IsNullOrEmpty(ApiKey))
             {
+                ProjectId = Configuration["project_id"];
+                if (string.IsNullOrEmpty(ProjectId))
+                    ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                                Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+                Region = Configuration["region"];
+                if (string.IsNullOrEmpty(Region))
+                    Region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
+                             Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
                 AccessToken = Configuration["access_token"];
                 if (string.IsNullOrEmpty(AccessToken))
                     AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
@@ -78,7 +81,7 @@ namespace Test.Mscc.GenerativeAI
             }
 
             ServiceAccount = Configuration["service_account"];
-            
+
             // Create a logger (or use dependency injection)
             using var loggerFactory = LoggerFactory.Create(builder =>
             {
@@ -108,7 +111,10 @@ namespace Test.Mscc.GenerativeAI
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardOutput = true;
             var stdOutput = new StringBuilder();
-            process.OutputDataReceived += (sender, args) => stdOutput.AppendLine(args.Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+            process.OutputDataReceived +=
+                (sender, args) =>
+                    stdOutput.AppendLine(args
+                        .Data); // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
 
             string stdError = null;
             try
@@ -120,7 +126,7 @@ namespace Test.Mscc.GenerativeAI
             }
             catch (Exception e)
             {
-                throw new Exception("OS error while executing " + Format(filename, arguments)+ ": " + e.Message, e);
+                throw new Exception("OS error while executing " + Format(filename, arguments) + ": " + e.Message, e);
             }
 
             if (process.ExitCode == 0)
@@ -142,15 +148,16 @@ namespace Test.Mscc.GenerativeAI
                     message.AppendLine(stdOutput.ToString());
                 }
 
-                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode + ": " + message);
+                throw new Exception(Format(filename, arguments) + " finished with exit code = " + process.ExitCode +
+                                    ": " + message);
             }
         }
 
         private string Format(string filename, string arguments)
         {
-            return "'" + filename + 
-                ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
-                "'";
+            return "'" + filename +
+                   ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
+                   "'";
         }
 
         private void ReadDotEnv(string dotEnvFile = ".env")
@@ -165,6 +172,6 @@ namespace Test.Mscc.GenerativeAI
 
                 Environment.SetEnvironmentVariable(parts[0], parts[1]);
             }
-        }    
+        }
     }
 }
