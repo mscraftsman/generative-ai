@@ -96,7 +96,7 @@ namespace Mscc.GenerativeAI.Google
         /// <returns>The model.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public GenerativeModel CreateModel(string model = Model.Gemini15Pro)
+        public GenerativeModel CreateModel(string model = Model.Gemini25Pro)
         {
             if (ProjectId == null) throw new ArgumentNullException(nameof(ProjectId));
             if (Region == null) throw new ArgumentNullException(nameof(Region));

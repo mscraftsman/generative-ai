@@ -87,7 +87,7 @@ In the cloud most settings are configured via environment variables (EnvVars). T
 
 | Variable Name                  | Description                                                   |
 |--------------------------------|---------------------------------------------------------------|
-| GOOGLE_AI_MODEL                | The name of the model to use (default is *Model.Gemini15Pro*) |
+| GOOGLE_AI_MODEL                | The name of the model to use (default is *Model.Gemini25Pro*) |
 | GOOGLE_API_KEY                 | The API key generated in Google AI Studio                     |
 | GOOGLE_PROJECT_ID              | Project ID in Google Cloud to access the APIs                 |
 | GOOGLE_REGION                  | Region in Google Cloud (default is *us-central1*)             |
@@ -110,7 +110,7 @@ Google AI with an API key
 using Mscc.GenerativeAI;
 // Google AI with an API key
 var googleAI = new GoogleAI(apiKey: "your API key");
-var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
 ```
 
 Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -120,7 +120,7 @@ using Mscc.GenerativeAI;
 // Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var accessToken = "your access token";
 var googleAI = new GoogleAI(accessToken: accessToken);
-var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
 ```
 
 Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -129,7 +129,7 @@ Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` t
 using Mscc.GenerativeAI;
 // Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
+var model = vertex.GenerativeModel(model: Model.Gemini25Pro);
 model.AccessToken = accessToken;
 ```
 
@@ -155,7 +155,7 @@ var apiKey = "your_api_key";
 var prompt = "Write a story about a magic backpack.";
 
 var googleAI = new GoogleAI(apiKey: apiKey);
-var model = googleAI.GenerativeModel(model: Model.Gemini15Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
 
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
@@ -174,7 +174,7 @@ var accessToken = "your_access_token";      // use `gcloud auth application-defa
 var prompt = "Write a story about a magic backpack.";
 
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.Gemini15Pro);
+var model = vertex.GenerativeModel(model: Model.Gemini25Pro);
 model.AccessToken = accessToken;
 
 var response = await model.GenerateContent(prompt);
@@ -388,7 +388,7 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Make a short story from the media resources. The media resources are:";
 IGenerativeAI genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel(Model.Gemini15Pro);
+var model = genAi.GenerativeModel(Model.Gemini25Pro);
 
 // Upload your large image(s).
 // Instead of discarding you could also use the response and access `response.Text`.

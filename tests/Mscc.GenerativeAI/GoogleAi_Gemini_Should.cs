@@ -73,7 +73,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Using_GoogleAI()
         {
             // Arrange
-            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini25Pro;
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
 
             // Act
@@ -89,7 +89,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             Environment.SetEnvironmentVariable("GOOGLE_API_KEY", _fixture.ApiKey);
-            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini25Pro;
             var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
 
             // Act
@@ -104,7 +104,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini15Pro;
+            var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.Gemini25Pro;
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
 
             // Act

@@ -19,7 +19,7 @@
         public string? Region { get; set; } // = string.Empty;
         public string? Model
         {
-            get => !string.IsNullOrEmpty(model) ? model : GenerativeAI.Model.Gemini15Pro;
+            get => !string.IsNullOrEmpty(model) ? model : GenerativeAI.Model.Gemini25Pro;
             set => model = value;
         }
     }

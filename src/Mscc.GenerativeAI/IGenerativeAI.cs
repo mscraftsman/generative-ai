@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI
         /// <param name="systemInstruction">Optional. </param>
         /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
         /// <returns>Generative model instance.</returns>
-        public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
+        public GenerativeModel GenerativeModel(string model = Model.Gemini25Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,

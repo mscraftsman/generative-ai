@@ -7,7 +7,7 @@ string apiKey = config["GOOGLE_API_KEY"];
 
 // Create a new Google AI model client.
 var genai = new GoogleAI(apiKey);
-var model = genai.GenerativeModel(model: Model.Gemini15Pro);
+var model = genai.GenerativeModel(model: Model.Gemini25Pro);
 
 // Read the text to be summarized from a Markdown file.
 var markdown = System.IO.File.ReadAllText("benefits.md");

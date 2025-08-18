@@ -21,7 +21,7 @@ You will also share an interesting fact about the local nature on the hikes when
 
 // Create a new Google AI model client.
 var genai = new GoogleAI(apiKey);
-var model = genai.GenerativeModel(model: Model.Gemini15Pro, systemInstruction: systemPrompt);
+var model = genai.GenerativeModel(model: Model.Gemini25Pro, systemInstruction: systemPrompt);
 
 // == Starting the conversation ==========
 string userGreeting = """

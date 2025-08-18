@@ -35,7 +35,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// </summary>
     /// <param name="apiKey">API key provided by Google AI Studio</param>
     /// <param name="model">Model to use.</param>
-    public GeminiChatClient(string apiKey, string model = Model.Gemini15Pro)
+    public GeminiChatClient(string apiKey, string model = Model.Gemini25Pro)
     {
         var genAi = new GoogleAI(apiKey);
         _client = genAi.GenerativeModel(model);
@@ -48,7 +48,7 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// <param name="projectId">Identifier of the Google Cloud project.</param>
     /// <param name="region">Optional. Region to use (default: "us-central1").</param>
     /// <param name="model">Model to use.</param>
-    public GeminiChatClient(string projectId, string? region = null, string model = Model.Gemini15Pro)
+    public GeminiChatClient(string projectId, string? region = null, string model = Model.Gemini25Pro)
     {
         var genAi = new VertexAI(projectId: projectId, region: region);
         _client = genAi.GenerativeModel(model);

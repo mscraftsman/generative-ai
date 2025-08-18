@@ -176,7 +176,7 @@ namespace Mscc.GenerativeAI
                      Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN"); // ?? GetAccessTokenFromAdc();
             Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ??
-                    GenerativeAI.Model.Gemini15Pro;
+                    GenerativeAI.Model.Gemini25Pro;
             _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
                          Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
@@ -230,7 +230,7 @@ namespace Mscc.GenerativeAI
 
             // Basic initialization, specific API key/model/project details would be set by subclass or test
             GenerativeAIExtensions.ReadDotEnv();
-            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? GenerativeAI.Model.Gemini15Pro;
+            Model = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? GenerativeAI.Model.Gemini25Pro;
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                      Environment.GetEnvironmentVariable("GEMINI_API_KEY");
         }

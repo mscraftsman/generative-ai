@@ -41,7 +41,7 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.Gemini15Pro)]
+        [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.Gemini15Flash)]
         [InlineData(Model.Gemini20Flash)]
         public async Task Get_Model_Information(string modelName)

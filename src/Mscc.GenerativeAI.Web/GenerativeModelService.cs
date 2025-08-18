@@ -19,7 +19,7 @@ namespace Mscc.GenerativeAI.Web
 
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, IHttpClientFactory httpClientFactory)
         {
-            var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini15Pro;
+            var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini25Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
                 _generativeAi = new VertexAI(projectId: options?.Value.ProjectId, region: options?.Value.Region, httpClientFactory: httpClientFactory);

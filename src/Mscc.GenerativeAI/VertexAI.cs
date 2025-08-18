@@ -114,7 +114,7 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns>Generative model instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public GenerativeModel GenerativeModel(string model = Model.Gemini15Pro,
+        public GenerativeModel GenerativeModel(string model = Model.Gemini25Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             List<Tool>? tools = null,
