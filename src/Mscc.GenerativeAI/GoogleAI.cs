@@ -188,7 +188,10 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey, model: model, httpClientFactory: _httpClientFactory, logger: logger)
+            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey,
+                model: model,
+                httpClientFactory: _httpClientFactory,
+                logger: logger ?? Logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null
             };

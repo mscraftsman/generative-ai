@@ -133,7 +133,7 @@ namespace Mscc.GenerativeAI
                     systemInstruction,
                     vertexAi: true, 
                     httpClientFactory: _httpClientFactory,
-                    logger: logger);
+                    logger: logger ?? Logger);
             }
 
             return new GenerativeModel(_projectId,
@@ -145,7 +145,7 @@ namespace Mscc.GenerativeAI
                 tools,
                 systemInstruction,
                 httpClientFactory: _httpClientFactory,
-                logger: logger);
+                logger: logger ?? Logger);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Mscc.GenerativeAI
                 generationConfig,
                 safetySettings,
                 httpClientFactory: _httpClientFactory,
-                logger: logger)
+                logger: logger ?? Logger)
             {
                 ProjectId = _projectId,
                 Region = _region,
@@ -199,7 +199,7 @@ namespace Mscc.GenerativeAI
                 generationConfig,
                 safetySettings,
                 httpClientFactory: _httpClientFactory,
-                logger: logger)
+                logger: logger ?? Logger)
             {
                 ProjectId = _projectId, 
                 Region = _region,
