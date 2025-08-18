@@ -167,7 +167,13 @@ namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
                 TryAddOption<TimeSpan?>(options, "Timeout", v => timeout = v);
 
                 if (retry.Initial > 0 || timeout is not null)
+                {
                     return new RequestOptions(retry, timeout);
+                }
+                else if (timeout is not null)
+                {
+                    return new RequestOptions(timeout);
+                }
 
                 return null;
             }
