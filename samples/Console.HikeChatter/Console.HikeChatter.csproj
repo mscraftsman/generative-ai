@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.8" />
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.6.13" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.7.0" />
   </ItemGroup>
 
 </Project>
