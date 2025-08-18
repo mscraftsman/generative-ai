@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.7.0
+
+### Added
+
+- Add `global` region/location in Vertex AI (d61e254)
+- Add tool `GoogleMaps` (1ab471c)
+- Add sample for Grounding with Google Maps (4d63234)
+- Add tool `EnterpriseWebSearch` (51c7b00)
+- Add tool `ComputerUse` (bfa378d)
+
+### Changed
+
+- Change default model to `Gemini 2.5 Pro` (b0da72a)
+- Pass `Timeout` through #79 (15ad46a)
+- Pass `ILogger` interface through (3f23255)
+- Extend tool `CodeExecution` (d6a55bf)
+- Refactor more methods to add `RequestOptions` parameter (b1835dd)
+- Upgrade NuGet packages (d2520e2)
+
+### Fixed
+
+- Make Content() constructor public to resolve CS1729 in dependent projects. (ebd9383)
+
 ## 2.6.13
 
 ### Added
