@@ -89,8 +89,11 @@ In the cloud most settings are configured via environment variables (EnvVars). T
 |--------------------------------|---------------------------------------------------------------|
 | GOOGLE_AI_MODEL                | The name of the model to use (default is *Model.Gemini25Pro*) |
 | GOOGLE_API_KEY                 | The API key generated in Google AI Studio                     |
+| GEMINI_API_KEY                 | -"-                                                           |
 | GOOGLE_PROJECT_ID              | Project ID in Google Cloud to access the APIs                 |
+| GOOGLE_CLOUD_PROJECT           | -"-                                                           |
 | GOOGLE_REGION                  | Region in Google Cloud (default is *us-central1*)             |
+| GOOGLE_CLOUD_LOCATION          | -"-                                                           |
 | GOOGLE_ACCESS_TOKEN            | The access token required to use models running in Vertex AI  |
 | GOOGLE_APPLICATION_CREDENTIALS | Path to the application credentials file.                     |
 | GOOGLE_WEB_CREDENTIALS         | Path to a Web credentials file.                               |
