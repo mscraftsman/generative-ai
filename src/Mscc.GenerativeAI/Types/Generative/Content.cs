@@ -49,7 +49,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Initializes a new instance of the <see cref="Content"/> class.
         /// </summary>
-        internal Content()
+        public Content()
         {
             Parts = new List<IPart>();
         }
