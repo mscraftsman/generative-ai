@@ -81,7 +81,7 @@ namespace Mscc.GenerativeAI.Web
                 {
                     o.Credentials = options.Credentials;
                     o.ProjectId = options.ProjectId;
-                    o.Region = options.Region;
+                    o.Region = options.Region ?? options.Location;
                 });
             services.AddGenerativeAI();
 
