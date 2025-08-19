@@ -34,7 +34,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI.Web" Version="1.6.3" />
+    <PackageReference Include="Mscc.GenerativeAI.Web" Version="2.7.0" />
   </ItemGroup>
 ```
 
@@ -81,7 +81,8 @@ var app = builder.Build();
 
 app.MapGet("/", async (IGenerativeModelService service) =>
 {
-    var result = await service.GenerateContent("Write about the history of Mauritius.");
+    var model = service.CreateInstance();
+    var result = await model.GenerateContent("Write about the history of Mauritius.");
     return result.Text;
 });
 
@@ -117,7 +118,8 @@ var app = builder.Build();
 
 app.MapGet("/", async (IGenerativeModelService service) =>
 {
-    var result = await service.GenerateContent("Write about the history of Mauritius.");
+    var model = service.CreateInstance();
+    var result = await model.GenerateContent("Write about the history of Mauritius.");
     return result.Text;
 });
 
