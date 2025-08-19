@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftExtensions.Gemini"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenAI.Gemini", "OpenAI.Gemini\OpenAI.Gemini.csproj", "{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.OpenTelemetry", "Console.OpenTelemetry\Console.OpenTelemetry.csproj", "{2676CFBA-DD55-4E93-B183-ABB4435788BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4B8D682-E0A7-4BA7-A5A9-AC7EAB9284D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2676CFBA-DD55-4E93-B183-ABB4435788BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2676CFBA-DD55-4E93-B183-ABB4435788BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2676CFBA-DD55-4E93-B183-ABB4435788BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2676CFBA-DD55-4E93-B183-ABB4435788BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
