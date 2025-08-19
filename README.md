@@ -1,4 +1,4 @@
-# Gemini AI Client for .NET and ASP.NET Core
+# Gemini API Client for .NET and ASP.NET Core
 [![GitHub](https://img.shields.io/github/license/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/blob/main/LICENSE)
 ![GitHub last commit](https://img.shields.io/github/last-commit/mscraftsman/generative-ai)
 [![MsccGenerativeAI](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml/badge.svg?branch=main)](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml)
