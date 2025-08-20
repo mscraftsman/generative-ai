@@ -122,9 +122,17 @@ namespace Mscc.GenerativeAI
                     safetySettings ?? _safetySettings,
                     _tools);
             }
+
+            if (response.Candidates![0].Content?.Parts?.Any() ?? false)
+            {
+                _lastReceived = new() { Role = Role.Model, Parts = response.Candidates![0].Content!.Parts };
+                History.Add(_lastReceived);
+            }
+            else
+            {
+                History.Remove(_lastSent);
+            }
             
-            _lastReceived = new() { Role = Role.Model, Parts = response.Candidates[0].Content.Parts };
-            History.Add(_lastReceived);
             return response;
         }
 
