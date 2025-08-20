@@ -7,5 +7,6 @@ namespace Mscc.GenerativeAI
         internal const string MediaType = "application/json";
         internal const string RequestFailed = "Request failed";
         internal const string RequestFailedWithStatusCode = "Request failed with Status Code: ";
+        internal static readonly int[] RetryStatusCodes = [429, 500, 503, 504];
     }
 }

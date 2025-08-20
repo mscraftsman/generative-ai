@@ -11,6 +11,7 @@ using System.Threading;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -535,7 +536,33 @@ namespace Mscc.GenerativeAI
                 request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync()
             );
 
-            return await Client.SendAsync(request, completionOption, cancellationToken);
+            var retry = requestOptions?.Retry ?? new Retry();
+            var statusCodes = retry.StatusCodes ?? Constants.RetryStatusCodes;
+            var delay = retry.Initial;
+            for (var i = 0; i < retry.Maximum; i++)
+            {
+                try
+                {
+                    var response = await Client.SendAsync(request, completionOption, cancellationToken);
+                    if (!statusCodes.Contains((int)response.StatusCode))
+                    {
+                        return response;
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    if (i == retry.Maximum - 1) throw;
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
+                delay *= retry.Multiplies;
+                if (delay > retry.Maximum)
+                {
+                    delay = retry.Maximum;
+                }
+            }
+            
+            throw new HttpRequestException("Request failed after multiple retries.");
         }
         
         protected virtual void Dispose(bool disposing)
