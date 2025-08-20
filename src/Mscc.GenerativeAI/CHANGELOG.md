@@ -8,10 +8,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
 - implement Automatic Function Call (AFC)
+
 ### Changed
+
 ### Fixed
+
+## 2.7.1
+
+### Added
+
+- add new FinishReason (0e7a823)
+- add sample project for issue 100 (52615bd)
+- add example for tool combination (a9791d8)
+- add Docfx generation (28cbd8b)
+- add git attributes (1c98969)
+- add sample using OpenTelemetry (4178096)
+- add additional env vars recognised (53f804c)
+- add test for IDisposable (fb806a0)
+
+### Changed
+
+- update README based on sample code #29 (da835ee)
+- update editor and git settings (35275e3)
+- upgrade GitHub Actions for Gemini CLI (45faf47)
+
+### Fixed
+
+- Merge pull request #101 from mscraftsman/issue/100/fix-empty-response (aff2936)
 
 ## 2.7.0
 
@@ -127,7 +153,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Structured output support for Mscc.GenerativeAI.Microsoft [#97](https://github.com/mscraftsman/generative-ai/pull/97) thanks to @bharathm03
+- Structured output support for Mscc.GenerativeAI.Microsoft [#97](https://github.com/mscraftsman/generative-ai/pull/97)
+  thanks to @bharathm03
 - upgrade NuGet packages
 - bump version
 
@@ -142,7 +169,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - use parameter `logger`
 - update embedding tests
-- add IPart constructors to `Content` class and improve flexibility [#95](https://github.com/mscraftsman/generative-ai/pull/95) thanks to @dannyball710
+- add IPart constructors to `Content` class and improve
+  flexibility [#95](https://github.com/mscraftsman/generative-ai/pull/95) thanks to @dannyball710
 - upgrade NuGet packages
 
 ## 2.6.5
@@ -194,7 +222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.6.3
 
-### Added 
+### Added
 
 - add model `gemini-2.5-pro-preview-06-05`
 
@@ -244,11 +272,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update to stable Microsoft.Extensions.AI and update some implementation [#87](https://github.com/mscraftsman/generative-ai/pull/87) thanks to @stephentoub
+- Update to stable Microsoft.Extensions.AI and update some
+  implementation [#87](https://github.com/mscraftsman/generative-ai/pull/87) thanks to @stephentoub
 
 ### Fixed
 
-- Add missing optional CancellationToken parameters [#89](https://github.com/mscraftsman/generative-ai/pull/89) thanks to @Ibuki-Suika
+- Add missing optional CancellationToken parameters [#89](https://github.com/mscraftsman/generative-ai/pull/89) thanks
+  to @Ibuki-Suika
 
 ## 2.5.6
 
@@ -260,14 +290,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update Microsoft.Extensions.AI version to 9.4.3-preview.1.25230.7 [85](https://github.com/mscraftsman/generative-ai/pull/85) thanks to @MackinnonBuck
+- Update Microsoft.Extensions.AI version to
+  9.4.3-preview.1.25230.7 [85](https://github.com/mscraftsman/generative-ai/pull/85) thanks to @MackinnonBuck
 
 ## 2.5.4
 
 ### Added
 
-- add model 'gemini-2.5-flash-preview-04-17-thinking' 
-- add model 'gemini-2.5-pro-preview-05-06' 
+- add model 'gemini-2.5-flash-preview-04-17-thinking'
+- add model 'gemini-2.5-pro-preview-05-06'
 - add model 'gemini-2.0-flash-preview-image-generation'
 - add Schema properties
 - add property 'UrlRetrievalMetadata' to 'Candidate'
@@ -473,7 +504,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add `ThoughtsTokenCount` property
 
-### Changed 
+### Changed
 
 - remove Gemini 1.0 references
 - update NuGet packages
@@ -606,7 +637,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- add parameter `EnhancePrompt` 
+- add parameter `EnhancePrompt`
 - add parameter `AddWatermark`
 - add handling for `JsonElement` and `JsonNode`
 
@@ -661,13 +692,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- "System.Net.Http.HttpRequestException: The HTTP request headers length exceeded the server limit of 65536 bytes" in Mscc.GenerativeAI.GoogleAI.UploadFile [#56](https://github.com/mscraftsman/generative-ai/issues/56)
+- "System.Net.Http.HttpRequestException: The HTTP request headers length exceeded the server limit of 65536 bytes" in
+  Mscc.GenerativeAI.GoogleAI.UploadFile [#56](https://github.com/mscraftsman/generative-ai/issues/56)
 
 ## 2.1.1
 
-### Changed 
+### Changed
 
-- Integrate JsonSchema.net to generate OpenApi schemas [#55](https://github.com/mscraftsman/generative-ai/issues/55) thanks to @rawb300
+- Integrate JsonSchema.net to generate OpenApi schemas [#55](https://github.com/mscraftsman/generative-ai/issues/55)
+  thanks to @rawb300
 
 ## 2.1.0
 
@@ -677,13 +710,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add enum `MediaResolution`
 - add `AudioOptions` property
   add `DownloadFile` method and `Source` property
-- add optional parameter `CancellationToken` to all requests [#54](https://github.com/mscraftsman/generative-ai/issues/54) thanks to @Ar4ics
+- add optional parameter `CancellationToken` to all
+  requests [#54](https://github.com/mscraftsman/generative-ai/issues/54) thanks to @Ar4ics
 
 ### Changed
 
 - update NuGet packages
 - drop .NET 6.0 targeting
-- InvalidOperationException when setting Timeout [#57](https://github.com/mscraftsman/generative-ai/issues/57) thanks to @Ar4ics
+- InvalidOperationException when setting Timeout [#57](https://github.com/mscraftsman/generative-ai/issues/57) thanks to
+  @Ar4ics
 - extend `OpenAI.GetModel` method
 - change JSON default settings
 
@@ -700,12 +735,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Extend `SendMessage` - Chat conversations - How [#52](https://github.com/mscraftsman/generative-ai/issues/52) thanks to @Francks11
+- Extend `SendMessage` - Chat conversations - How [#52](https://github.com/mscraftsman/generative-ai/issues/52) thanks
+  to @Francks11
 - update NuGet packages
 
 ### Fixed
 
-- ResponseSchema property must be an object [#53](https://github.com/mscraftsman/generative-ai/issues/53) thanks to @Ar4ics
+- ResponseSchema property must be an object [#53](https://github.com/mscraftsman/generative-ai/issues/53) thanks to
+  @Ar4ics
 - fix typos
 
 ## 2.0.1
@@ -775,7 +812,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - guard initialisation of models/services (Google AI)
- 
+
 ## 1.9.3
 
 ### Changed
@@ -786,7 +823,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.9.2
 
-### Added 
+### Added
 
 - add model `gemini-exp-1114` - [#45](https://github.com/mscraftsman/generative-ai/issues/45) thanks to @shankarvashist
 - add models `gemini-1.5-flash-8b` and `gemini-1.5-flash-8b-latest`
@@ -816,7 +853,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.8.3
 
-### Added 
+### Added
 
 - add Grounding with Google Search
 - add `ModelVersion` property
@@ -825,7 +862,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- new NuGet package `Mscc.GenerativeAI.Microsoft` leveraging Microsoft.Extensions.AI abstractions to build a unified AI client
+- new NuGet package `Mscc.GenerativeAI.Microsoft` leveraging Microsoft.Extensions.AI abstractions to build a unified AI
+  client
 
 ### Changed
 
@@ -839,7 +877,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- add logs with LogLevel using the Standard logging in .NET ([#6](https://github.com/mscraftsman/generative-ai/issues/6)) - thanks @doggy8088 
+- add logs with LogLevel using the Standard logging in
+  .NET ([#6](https://github.com/mscraftsman/generative-ai/issues/6)) - thanks @doggy8088
 
 ### Changed
 
@@ -847,7 +886,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- fix Application Default Credentials (ADC) has been loaded automatically even I use API Key auth. [#9](https://github.com/mscraftsman/generative-ai/issues/9)
+- fix Application Default Credentials (ADC) has been loaded automatically even I use API Key
+  auth. [#9](https://github.com/mscraftsman/generative-ai/issues/9)
 - fix Exception thrown in Google App Engine [#26](https://github.com/mscraftsman/generative-ai/issues/26)
 
 ## 1.8.0
@@ -890,12 +930,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- add properties `State`, `Error`, and `VideoMetadata` to type `FileResource`. [#33](https://github.com/mscraftsman/generative-ai/issues/33)
-- overload method of `UploadMedia` to support stream types ([#38](https://github.com/mscraftsman/generative-ai/issues/38))
+- add properties `State`, `Error`, and `VideoMetadata` to type
+  `FileResource`. [#33](https://github.com/mscraftsman/generative-ai/issues/33)
+- overload method of `UploadMedia` to support stream
+  types ([#38](https://github.com/mscraftsman/generative-ai/issues/38))
 
 ### Changed
 
-- use of using expression to dispose `FileStream` after upload [#35](https://github.com/mscraftsman/generative-ai/pull/37) - thanks @rsmithsa
+- use of using expression to dispose `FileStream` after
+  upload [#35](https://github.com/mscraftsman/generative-ai/pull/37) - thanks @rsmithsa
 - enhance returned error information [#33](https://github.com/mscraftsman/generative-ai/issues/33)
 - update enums according to $discovery
 - sync target frameworks among projects
@@ -924,7 +967,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- change default model to Gemini 1.5 
+- change default model to Gemini 1.5
 - [.NET] use HTTP/1.1 or higher protocol
 
 ## 1.6.1
@@ -1132,9 +1175,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix a bug in Initialize_Model() test by Will @doggy8088 ([#13](https://github.com/mscraftsman/generative-ai/issues/13))
+- Fix a bug in Initialize_Model() test by Will
+  @doggy8088 ([#13](https://github.com/mscraftsman/generative-ai/issues/13))
 - Fixes ContentResponse class issue by Will @doggy8088 ([#16](https://github.com/mscraftsman/generative-ai/issues/16))
-- ignore Text member in ContentResponse by Will @doggy8088 ([#14](https://github.com/mscraftsman/generative-ai/issues/14))
+- ignore Text member in ContentResponse by Will
+  @doggy8088 ([#14](https://github.com/mscraftsman/generative-ai/issues/14))
 
 ## 0.9.2
 
@@ -1166,6 +1211,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - compatibility methods for PaLM models
 
 ### Changed
+
 ### Fixed
 
 ## 0.8.4
@@ -1189,7 +1235,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.8.2
 
 ### Added
- 
+
 - ability to rewind chat history
 - access text of content response easier
 
@@ -1220,7 +1266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - text prompts have `user` role assigned
 - improve Embeddings
-- refactor types according to API reference 
+- refactor types according to API reference
 - extend type documentation
 - improve .NET targetting of source code
 
@@ -1239,10 +1285,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - implement model tuning (works with stable models only)
-  - `text-bison-001`
-  - `gemini-1.0-pro-001`
+    - `text-bison-001`
+    - `gemini-1.0-pro-001`
 - tests for model tuning
- 
+
 ### Changed
 
 - improved authentication regarding API key or OAuth/ADC
