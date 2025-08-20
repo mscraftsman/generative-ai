@@ -539,8 +539,15 @@ namespace Mscc.GenerativeAI
             var retry = requestOptions?.Retry ?? new Retry();
             var statusCodes = retry.StatusCodes ?? Constants.RetryStatusCodes;
             var delay = retry.Initial;
+            var stopwatch = Stopwatch.StartNew();
+
             for (var i = 0; i < retry.Maximum; i++)
             {
+                if (retry.Timeout.HasValue && stopwatch.Elapsed > retry.Timeout.Value)
+                {
+                    throw new TimeoutException("The request timed out.");
+                }
+
                 try
                 {
                     var response = await Client.SendAsync(request, completionOption, cancellationToken);

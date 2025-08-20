@@ -57,7 +57,7 @@ namespace Mscc.GenerativeAI
         public int Initial { get; set; }
         public int Multiplies { get; set; }
         public int Maximum { get; set; }
-        public int Timeout { get; set; }
+        public TimeSpan? Timeout { get; set; }
         public int[]? StatusCodes { get; set; }
 
         public Retry()
@@ -65,8 +65,8 @@ namespace Mscc.GenerativeAI
             Initial = 1;
             Multiplies = 2;
             Maximum = 60;
-            Timeout = 120;
-            StatusCodes = Constants.RetryStatusCodes;
+            Timeout = TimeSpan.FromSeconds(301);
+            StatusCodes = null;
         }
     }
 }
