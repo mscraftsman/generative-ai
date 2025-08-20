@@ -550,10 +550,13 @@ namespace Mscc.GenerativeAI
 
                 try
                 {
-                    var response = await Client.SendAsync(request, completionOption, cancellationToken);
-                    if (!statusCodes.Contains((int)response.StatusCode))
+                    using (var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken))
                     {
-                        return response;
+                        var response = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
+                        if (!statusCodes.Contains((int)response.StatusCode))
+                        {
+                            return response;
+                        }
                     }
                 }
                 catch (HttpRequestException e)
@@ -570,6 +573,57 @@ namespace Mscc.GenerativeAI
             }
             
             throw new HttpRequestException("Request failed after multiple retries.");
+        }
+
+        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req,
+            CancellationToken cancellationToken)
+        {
+            var clone = new HttpRequestMessage(req.Method, req.RequestUri)
+            {
+                Version = req.Version,
+#if (!(NET472_OR_GREATER || NETSTANDARD2_0))
+                VersionPolicy = req.VersionPolicy
+#endif
+            };
+
+            if (req.Content != null)
+            {
+                var ms = new MemoryStream();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                await req.Content.CopyToAsync(ms).ConfigureAwait(false);
+#else
+                await req.Content.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
+#endif
+                ms.Position = 0;
+                clone.Content = new StreamContent(ms);
+
+                if (req.Content.Headers != null)
+                {
+                    foreach (var h in req.Content.Headers)
+                    {
+                        clone.Content.Headers.Add(h.Key, h.Value);
+                    }
+                }
+            }
+
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            foreach (var prop in req.Properties)
+            {
+                clone.Properties[prop.Key] = prop.Value;
+            }
+#else
+            foreach (var prop in req.Options)
+            {
+                clone.Options.Set(new HttpRequestOptionsKey<object?>(prop.Key), prop.Value);
+            }
+#endif
+            
+            foreach (var header in req.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
         }
         
         protected virtual void Dispose(bool disposing)
