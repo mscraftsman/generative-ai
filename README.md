@@ -456,7 +456,7 @@ Console.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Meta
 
 Tuned models appear in your Google AI Studio library.
 
-[![Tuned models are listed below My Library in Google AI Studio](./docs/GeminiTunedModels.png)](https://aistudio.google.com/app/library)
+[![Tuned models are listed below My Library in Google AI Studio](./docs/images/GeminiTunedModels.png)](https://aistudio.google.com/app/library)
 
 Read more about [Tune Gemini Pro in Google AI Studio or with the Gemini API](https://developers.googleblog.com/2024/03/tune-gemini-pro-in-google-ai-studio-or-gemini-api.html).
 
