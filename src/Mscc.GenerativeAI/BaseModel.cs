@@ -540,22 +540,23 @@ namespace Mscc.GenerativeAI
             var statusCodes = retry.StatusCodes ?? Constants.RetryStatusCodes;
             var delay = retry.Initial;
             var stopwatch = Stopwatch.StartNew();
+            HttpResponseMessage? lastResponse = null;
 
             for (var i = 0; i < retry.Maximum; i++)
             {
                 if (retry.Timeout.HasValue && stopwatch.Elapsed > retry.Timeout.Value)
                 {
-                    throw new TimeoutException("The request timed out.");
+                    throw new TimeoutException("The request retry logic has timed out.");
                 }
 
                 try
                 {
                     using (var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken))
                     {
-                        var response = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
-                        if (!statusCodes.Contains((int)response.StatusCode))
+                        lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
+                        if (!statusCodes.Contains((int)lastResponse.StatusCode))
                         {
-                            return response;
+                            return lastResponse;
                         }
                     }
                 }
@@ -572,18 +573,14 @@ namespace Mscc.GenerativeAI
                 }
             }
             
-            throw new HttpRequestException("Request failed after multiple retries.");
+            return await lastResponse!.EnsureSuccessAsync();
         }
 
-        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req,
-            CancellationToken cancellationToken)
+        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req, CancellationToken cancellationToken)
         {
             var clone = new HttpRequestMessage(req.Method, req.RequestUri)
             {
                 Version = req.Version,
-#if (!(NET472_OR_GREATER || NETSTANDARD2_0))
-                VersionPolicy = req.VersionPolicy
-#endif
             };
 
             if (req.Content != null)
@@ -612,6 +609,7 @@ namespace Mscc.GenerativeAI
                 clone.Properties[prop.Key] = prop.Value;
             }
 #else
+            clone.VersionPolicy = req.VersionPolicy;
             foreach (var prop in req.Options)
             {
                 clone.Options.Set(new HttpRequestOptionsKey<object?>(prop.Key), prop.Value);

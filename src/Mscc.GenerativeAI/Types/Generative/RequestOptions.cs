@@ -66,7 +66,7 @@ namespace Mscc.GenerativeAI
             Multiplies = 2;
             Maximum = 60;
             Timeout = TimeSpan.FromSeconds(301);
-            StatusCodes = null;
+            StatusCodes = Constants.RetryStatusCodes;
         }
     }
 }
