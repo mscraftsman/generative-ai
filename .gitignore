@@ -379,6 +379,24 @@ FodyWeavers.xsd
 # Local History for Visual Studio Code
 .history/
 
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
 # Windows Installer files from build outputs
 *.cab
 *.msi
@@ -388,6 +406,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 .idea/
+.idea_modules/
 *.sln.iml
 
 # Own exclusions
@@ -399,3 +418,8 @@ FodyWeavers.xsd
 *.p12
 *.DotSettings
 **/.venv/
+
+# Auto-generated documentation
+docs/_site
+docs/api
+docs/changelog.md
