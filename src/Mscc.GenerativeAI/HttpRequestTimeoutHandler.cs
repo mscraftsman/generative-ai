@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// A delegating handler that provides a timeout for HTTP requests.
     /// </summary>
     public class HttpRequestTimeoutHandler : DelegatingHandler
     {

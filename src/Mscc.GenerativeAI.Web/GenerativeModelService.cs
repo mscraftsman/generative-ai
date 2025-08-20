@@ -3,20 +3,43 @@ using Microsoft.Extensions.Options;
 
 namespace Mscc.GenerativeAI.Web
 {
+    /// <summary>
+    /// Defines the contract for a service that provides access to generative models.
+    /// </summary>
     public interface IGenerativeModelService
     {
+        /// <summary>
+        /// Gets the default generative model instance.
+        /// </summary>
         GenerativeModel Model { get; }
         
+        /// <summary>
+        /// Creates a new instance of the default generative model.
+        /// </summary>
+        /// <returns>A new instance of the default generative model.</returns>
         GenerativeModel CreateInstance();
         
+        /// <summary>
+        /// Creates a new instance of the specified generative model.
+        /// </summary>
+        /// <param name="model">The name of the model to create.</param>
+        /// <returns>A new instance of the specified generative model.</returns>
         GenerativeModel CreateInstance(string model);
     }
 
+    /// <summary>
+    /// Provides access to generative models.
+    /// </summary>
     public sealed class GenerativeModelService : IGenerativeModelService
     {
         private readonly IGenerativeAI _generativeAi;
         private readonly GenerativeModel _model;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerativeModelService"/> class.
+        /// </summary>
+        /// <param name="options">The options for configuring the Generative AI service.</param>
+        /// <param name="httpClientFactory">The factory for creating HTTP clients.</param>
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, IHttpClientFactory httpClientFactory)
         {
             var model = options?.Value?.Model ?? GenerativeAI.Model.Gemini25Pro;
@@ -33,6 +56,12 @@ namespace Mscc.GenerativeAI.Web
             _model = _generativeAi.GenerativeModel(model: model);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenerativeModelService"/> class.
+        /// </summary>
+        /// <param name="options">The options for configuring the Generative AI service.</param>
+        /// <param name="model">The name of the model to use.</param>
+        /// <param name="httpClientFactory">The factory for creating HTTP clients.</param>
         public GenerativeModelService(IOptions<GenerativeAIOptions> options, string model, IHttpClientFactory httpClientFactory) : base()
         {
             if (!string.IsNullOrEmpty(options?.Value?.ProjectId))

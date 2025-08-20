@@ -10,6 +10,9 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The `ChatModel` class provides methods for interacting with a chat-based generative model.
+    /// </summary>
     public class ChatModel : BaseModel
     {
         internal override string Version => ApiVersion.V1Beta;

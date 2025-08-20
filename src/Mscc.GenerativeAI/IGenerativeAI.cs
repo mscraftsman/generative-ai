@@ -60,6 +60,7 @@ namespace Mscc.GenerativeAI
         /// Returns an instance of an image generation model.
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageGenerationModel ImageGenerationModel(string model,
             ILogger? logger = null);
     }

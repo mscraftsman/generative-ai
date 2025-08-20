@@ -10,6 +10,9 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The `CorporaModel` class provides methods for interacting with a corpus of documents.
+    /// </summary>
     public class CorporaModel : BaseModel
     {
         internal override string Version => ApiVersion.V1Beta;

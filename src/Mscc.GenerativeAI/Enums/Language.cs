@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// Defines the programming language for executable code.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<Language>))]
     public enum Language

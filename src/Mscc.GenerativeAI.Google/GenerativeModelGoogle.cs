@@ -34,7 +34,13 @@ namespace Mscc.GenerativeAI.Google
         // private string ClientId;
         // private string ClientSecret;
 
+        /// <summary>
+        /// Gets or sets the project ID for the service.
+        /// </summary>
         public string ProjectId { get; set; }
+        /// <summary>
+        /// Gets or sets the region for the service.
+        /// </summary>
         public string Region { get; set; }
         private List<SafetySetting> SafetySettings { get; set; }
         private GenerationConfig GenerationConfig { get; set; }
