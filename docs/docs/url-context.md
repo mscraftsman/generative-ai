@@ -41,7 +41,25 @@ You can combine the URL context tool with other tools to create more powerful wo
 When both URL context and Grounding with Google Search are enabled, the model can use its search capabilities to find relevant information online and then use the URL context tool to get a more in-depth understanding of the pages it finds. This approach is powerful for prompts that require both broad searching and deep analysis of specific pages.
 
 ```csharp
+using Mscc.GenerativeAI;
 
+var url = "https://conference.mscc.mu/";
+var prompt = $"Summarize this document: {url}";
+var googleAi = new GoogleAI();
+var model = googleAi.GenerativeModel(model: _model,
+    tools: [new Tool 
+    {
+        UrlContext = new(),
+        GoogleSearch = new()
+    }]);
+// model.UseGoogleSearch = true;    // alternatively set the flag
+
+var response = await model.GenerateContent(prompt);
+
+Console.WriteLine(response.Text);
+response.Candidates![0].UrlContextMetadata!.UrlMetadata
+    .ForEach(m =>
+        Console.WriteLine($"{m.RetrievedUrl} - {m.UrlRetrievalStatus}"));
 ```
 
 ## Understanding the response
