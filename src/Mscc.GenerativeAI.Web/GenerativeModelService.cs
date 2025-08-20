@@ -12,7 +12,7 @@ namespace Mscc.GenerativeAI.Web
         GenerativeModel CreateInstance(string model);
     }
 
-    public class GenerativeModelService : IGenerativeModelService
+    public sealed class GenerativeModelService : IGenerativeModelService
     {
         private readonly IGenerativeAI _generativeAi;
         private readonly GenerativeModel _model;

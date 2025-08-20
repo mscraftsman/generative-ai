@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using mea = Microsoft.Extensions.AI;
 
-namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi
+namespace Mscc.GenerativeAI.Microsoft
 {
     /// <summary>
     /// Provides mapping functionality between Mscc.GenerativeAI and Microsoft.Extensions.AI models.
     /// </summary>
-    public static class AbstractionMapper
+    internal static class AbstractionMapper
     {
         /// <summary>
         /// Converts a Microsoft.Extensions.AI messages and options to a <see cref="GenerateContentRequest"/>.

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI.Web
 {
-    public class OperationCanceledMiddleware
+    public sealed class OperationCanceledMiddleware
     {
         private readonly RequestDelegate _next;
 
@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI.Web
             }
         }
     }
-    
+
     public static class OperationCanceledMiddlewareExtensions
     {
         public static IApplicationBuilder UseOperationCanceled(this IApplicationBuilder app)
