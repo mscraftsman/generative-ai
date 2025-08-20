@@ -52,11 +52,34 @@ namespace Mscc.GenerativeAI
         }
     }
 
+    /// <summary>
+    /// Defines the retry strategy for a request.
+    /// </summary>
     public class Retry
     {
-        public int Initial { get; set; }
-        public int Multiplies { get; set; }
-        public int Maximum { get; set; }
-        public int Timeout { get; set; }
+        /// <summary>
+        /// The initial delay before the first retry, in seconds.
+        /// </summary>
+        public int Initial { get; set; } = 1;
+
+        /// <summary>
+        /// The multiplier for the delay between retries.
+        /// </summary>
+        public int Multiplies { get; set; } = 2;
+
+        /// <summary>
+        /// The maximum number of retries.
+        /// </summary>
+        public int Maximum { get; set; } = 60;
+
+        /// <summary>
+        /// The overall timeout for the retry logic.
+        /// </summary>
+        public TimeSpan? Timeout { get; set; } = TimeSpan.FromSeconds(301);
+
+        /// <summary>
+        /// The HTTP status codes that should trigger a retry.
+        /// </summary>
+        public int[]? StatusCodes { get; set; } = Constants.RetryStatusCodes;
     }
 }
