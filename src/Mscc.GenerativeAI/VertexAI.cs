@@ -34,7 +34,7 @@ namespace Mscc.GenerativeAI
             get => _endpointId;
             set => _endpointId = value.SanitizeEndpointName();
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexAI"/> class with access to Vertex AI Gemini API.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
@@ -51,7 +51,7 @@ namespace Mscc.GenerativeAI
         /// <description>Identifier of the Google Cloud region to use (default: "us-central1").</description></item>
         /// </list>
         /// </remarks>
-        private VertexAI(IHttpClientFactory? httpClientFactory = null, 
+        private VertexAI(IHttpClientFactory? httpClientFactory = null,
             IWebProxy? proxy = null,
             ILogger? logger = null) : base(logger)
         {
@@ -105,7 +105,7 @@ namespace Mscc.GenerativeAI
             string? apiVersion = null,
             IHttpClientFactory? httpClientFactory = null,
             IWebProxy? proxy = null,
-            ILogger? logger = null) : this(httpClientFactory, proxy , logger)
+            ILogger? logger = null) : this(httpClientFactory, proxy, logger)
         {
             _apiKey = apiKey ?? _apiKey ?? throw new ArgumentNullException(nameof(apiKey));
             _version = apiVersion ?? _version;
@@ -140,7 +140,7 @@ namespace Mscc.GenerativeAI
                     safetySettings,
                     tools,
                     systemInstruction,
-                    vertexAi: true, 
+                    vertexAi: true,
                     httpClientFactory: _httpClientFactory,
                     logger: logger ?? Logger);
             }
@@ -219,7 +219,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
-        public Task<ModelResponse> GetModel(string model, 
+        public Task<ModelResponse> GetModel(string model,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
