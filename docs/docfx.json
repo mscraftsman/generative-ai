@@ -10,7 +10,8 @@
           ]
         }
       ],
-      "output": "api"
+      "output": "api",
+      "outputFormat": "apiPage"
     }
   ],
   "build": {

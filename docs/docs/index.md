@@ -1,4 +1,4 @@
-# Gemini Developer API
+# Gemini SDK for .NET
 
 Get a Gemini API key and make your first API request in minutes.
 
