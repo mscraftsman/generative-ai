@@ -40,6 +40,7 @@ namespace Mscc.GenerativeAI
         private readonly IHttpClientFactory? _httpClientFactory;
         private HttpClient? _httpClient;
         private TimeSpan? _httpTimeout;
+        private IWebProxy? _proxy;
 
         protected HttpClient Client =>
             _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
@@ -47,21 +48,33 @@ namespace Mscc.GenerativeAI
         private HttpClient CreateDefaultHttpClient()
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
+            var handler = new HttpClientHandler
+            {
+                SslProtocols = SslProtocols.Tls12
+            };
+            if (_proxy != null)
+            {
+                handler.Proxy = _proxy;
+                handler.UseProxy = true;
+            }
             var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
             {
-                InnerHandler = new HttpClientHandler
-                {
-                    SslProtocols = SslProtocols.Tls12
-                }
+                InnerHandler = handler
             });
 #else
+            var handler = new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(30),
+                EnableMultipleHttp2Connections = true
+            };
+            if (_proxy != null)
+            {
+                handler.Proxy = _proxy;
+                handler.UseProxy = true;
+            }
             var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
             {
-                InnerHandler = new SocketsHttpHandler
-                {
-                    PooledConnectionLifetime = TimeSpan.FromMinutes(30), 
-                    EnableMultipleHttp2Connections = true
-                }
+                InnerHandler = handler
             })
             {
                 DefaultRequestVersion = _httpVersion, 
@@ -141,6 +154,15 @@ namespace Mscc.GenerativeAI
         {
             get => _httpTimeout ?? Client.Timeout;
             set => _httpTimeout = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the proxy to use for the request.
+        /// </summary>
+        public IWebProxy? Proxy
+        {
+            get => _proxy;
+            set => _proxy = value;
         }
 
         /// <summary>
