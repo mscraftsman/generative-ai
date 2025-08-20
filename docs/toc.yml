@@ -1,0 +1,6 @@
+- name: Documentation
+  href: docs/
+- name: API Reference
+  href: api/Mscc.GenerativeAI.yml
+- name: Changelog
+  href: changelog.md

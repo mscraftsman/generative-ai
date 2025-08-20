@@ -1,0 +1,15 @@
+- name: Get started
+- name: Overview
+  href: index.md
+- name: Quickstart
+  href: ../index.md
+
+- name: Core Capabilities
+
+- name: Tools
+
+- name: Guides
+
+- name: Resources
+- name: Changelog
+  href: ../changelog.md
