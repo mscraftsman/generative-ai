@@ -114,17 +114,25 @@ namespace Mscc.GenerativeAI
             
             response.CheckResponse();
 
-            if (_enableAutomaticFunctionCalling)
+            if (response.Candidates != null && response.Candidates.Any() && response.Candidates[0].Content?.Parts != null && response.Candidates[0].Content.Parts.Any())
             {
-                var result = HandleAutomaticFunctionCalling(response,
-                    History,
-                    generationConfig ?? _generationConfig,
-                    safetySettings ?? _safetySettings,
-                    _tools);
+                if (_enableAutomaticFunctionCalling)
+                {
+                    var result = HandleAutomaticFunctionCalling(response,
+                        History,
+                        generationConfig ?? _generationConfig,
+                        safetySettings ?? _safetySettings,
+                        _tools);
+                }
+
+                _lastReceived = new() { Role = Role.Model, Parts = response.Candidates[0].Content.Parts };
+                History.Add(_lastReceived);
             }
-            
-            _lastReceived = new() { Role = Role.Model, Parts = response.Candidates[0].Content.Parts };
-            History.Add(_lastReceived);
+            else
+            {
+                // Remove the user's last message from the history if the response is empty.
+                History.Remove(_lastSent);
+            }
             return response;
         }
 
