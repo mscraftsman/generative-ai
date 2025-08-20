@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - update README based on sample code #29 (da835ee)
 - update editor and git settings (35275e3)
 - upgrade GitHub Actions for Gemini CLI (45faf47)
+- upgrade NuGet packages
 
 ### Fixed
 
