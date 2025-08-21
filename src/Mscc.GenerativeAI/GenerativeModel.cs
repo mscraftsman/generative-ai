@@ -25,11 +25,6 @@ namespace Mscc.GenerativeAI
         private readonly bool _useVertexAiExpress;
         private readonly CachedContent? _cachedContent;
         private readonly TuningJob? _tuningJob;
-        private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
-        private readonly List<Tool> defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
-        private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
-        private static readonly string[] SafetyFilterLevel =
-            ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
         private readonly Tools defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
         private readonly Tools defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
         private readonly Tools defaultCodeExecution = [new Tool { CodeExecution = new() }];
@@ -933,8 +928,16 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearchRetrieval;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
                 {
-                    request.Tools = defaultGoogleSearchRetrieval;
                     request.Tools.AddRange(defaultGoogleSearchRetrieval);
+                }
+            }
+
+            if (UseCodeExecution)
+            {
+                request.Tools ??= defaultCodeExecution;
+                if (request.Tools != null && !request.Tools.Any(t => t.CodeExecution is not null))
+                {
+                    request.Tools.AddRange(defaultCodeExecution);
                 }
             }
             
@@ -1116,8 +1119,16 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearchRetrieval;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
                 {
-                    request.Tools = defaultGoogleSearchRetrieval;
                     request.Tools.AddRange(defaultGoogleSearchRetrieval);
+                }
+            }
+
+            if (UseCodeExecution)
+            {
+                request.Tools ??= defaultCodeExecution;
+                if (request.Tools != null && !request.Tools.Any(t => t.CodeExecution is not null))
+                {
+                    request.Tools.AddRange(defaultCodeExecution);
                 }
             }
 
