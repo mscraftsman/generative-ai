@@ -27,7 +27,7 @@ namespace Mscc.GenerativeAI
         public GenerativeModel GenerativeModel(string model = Model.Gemini25Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ILogger? logger = null);
 
@@ -60,6 +60,7 @@ namespace Mscc.GenerativeAI
         /// Returns an instance of an image generation model.
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         public ImageGenerationModel ImageGenerationModel(string model,
             ILogger? logger = null);
     }

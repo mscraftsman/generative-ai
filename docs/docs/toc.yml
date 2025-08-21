@@ -1,0 +1,30 @@
+- name: Get started
+- name: Overview
+  href: index.md
+- name: Quickstart
+  href: ../index.md
+- href: authentication.md
+
+- name: Core Capabilities
+
+- href: text-generation.md
+- href: structured-output.md
+- href: embeddings.md
+
+- name: Tools
+
+- name: Google Search
+  href: google-search.md
+- href: code-execution.md
+- href: url-context.md
+
+- name: Guides
+
+- href: files-api.md
+
+- name: Resources
+
+- name: Changelog
+  href: ../changelog.md
+- name: API troubleshooting
+  href: troubleshooting.md

@@ -11,6 +11,7 @@ using System.Threading;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -40,6 +41,7 @@ namespace Mscc.GenerativeAI
         private readonly IHttpClientFactory? _httpClientFactory;
         private HttpClient? _httpClient;
         private TimeSpan? _httpTimeout;
+        private IWebProxy? _proxy;
 
         protected HttpClient Client =>
             _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
@@ -47,21 +49,33 @@ namespace Mscc.GenerativeAI
         private HttpClient CreateDefaultHttpClient()
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
+            var handler = new HttpClientHandler
+            {
+                SslProtocols = SslProtocols.Tls12
+            };
+            if (_proxy != null)
+            {
+                handler.Proxy = _proxy;
+                handler.UseProxy = true;
+            }
             var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
             {
-                InnerHandler = new HttpClientHandler
-                {
-                    SslProtocols = SslProtocols.Tls12
-                }
+                InnerHandler = handler
             });
 #else
+            var handler = new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(30),
+                EnableMultipleHttp2Connections = true
+            };
+            if (_proxy != null)
+            {
+                handler.Proxy = _proxy;
+                handler.UseProxy = true;
+            }
             var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
             {
-                InnerHandler = new SocketsHttpHandler
-                {
-                    PooledConnectionLifetime = TimeSpan.FromMinutes(30), 
-                    EnableMultipleHttp2Connections = true
-                }
+                InnerHandler = handler
             })
             {
                 DefaultRequestVersion = _httpVersion, 
@@ -141,6 +155,15 @@ namespace Mscc.GenerativeAI
         {
             get => _httpTimeout ?? Client.Timeout;
             set => _httpTimeout = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the proxy to use for the request.
+        /// </summary>
+        public IWebProxy? Proxy
+        {
+            get => _proxy;
+            set => _proxy = value;
         }
 
         /// <summary>
@@ -513,7 +536,93 @@ namespace Mscc.GenerativeAI
                 request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync()
             );
 
-            return await Client.SendAsync(request, completionOption, cancellationToken);
+            var retry = requestOptions?.Retry ?? new Retry();
+            var statusCodes = retry.StatusCodes ?? Constants.RetryStatusCodes;
+            var delay = retry.Initial;
+            var stopwatch = Stopwatch.StartNew();
+            HttpResponseMessage? lastResponse = null;
+
+            for (var i = 0; i < retry.Maximum; i++)
+            {
+                if (retry.Timeout.HasValue && stopwatch.Elapsed > retry.Timeout.Value)
+                {
+                    throw new TimeoutException("The request retry logic has timed out.");
+                }
+
+                try
+                {
+                    using (var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken))
+                    {
+                        lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
+                        if (!statusCodes.Contains((int)lastResponse.StatusCode))
+                        {
+                            return lastResponse;
+                        }
+                    }
+                }
+                catch (HttpRequestException e)
+                {
+                    Logger.LogWarning(e, "Request failed, attempting retry #{i + 1}.");
+                    if (i == retry.Maximum - 1) throw;
+                }
+
+                await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
+                delay *= retry.Multiplies;
+                if (delay > retry.Maximum)
+                {
+                    delay = retry.Maximum;
+                }
+            }
+            
+            return await lastResponse!.EnsureSuccessAsync();
+        }
+
+        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req, CancellationToken cancellationToken)
+        {
+            var clone = new HttpRequestMessage(req.Method, req.RequestUri)
+            {
+                Version = req.Version,
+            };
+
+            if (req.Content != null)
+            {
+                var ms = new MemoryStream();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                await req.Content.CopyToAsync(ms).ConfigureAwait(false);
+#else
+                await req.Content.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
+#endif
+                ms.Position = 0;
+                clone.Content = new StreamContent(ms);
+
+                if (req.Content.Headers != null)
+                {
+                    foreach (var h in req.Content.Headers)
+                    {
+                        clone.Content.Headers.Add(h.Key, h.Value);
+                    }
+                }
+            }
+
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            foreach (var prop in req.Properties)
+            {
+                clone.Properties[prop.Key] = prop.Value;
+            }
+#else
+            clone.VersionPolicy = req.VersionPolicy;
+            foreach (var prop in req.Options)
+            {
+                clone.Options.Set(new HttpRequestOptionsKey<object?>(prop.Key), prop.Value);
+            }
+#endif
+            
+            foreach (var header in req.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
         }
         
         protected virtual void Dispose(bool disposing)

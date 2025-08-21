@@ -1,9 +1,16 @@
-﻿namespace Mscc.GenerativeAI
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
+using System.Text.Json.Serialization;
+#endif
+using System.Diagnostics;
+
+namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// Structured representation of a function declaration as defined by the OpenAPI 3.03 specification. Included in this declaration are the function name and parameters. This FunctionDeclaration is a representation of a block of code that can be used as a Tool by the model and executed by the client.
     /// </summary>
-    public class FunctionDeclaration
+    [DebuggerDisplay("{Name,nq} ({Description,nq})")]
+    public sealed class FunctionDeclaration
     {
         /// <summary>
         /// Required. The name of the function to call.
@@ -16,13 +23,13 @@
         /// Description and purpose of the function.
         /// Model uses it to decide how and whether to call the function.
         /// </summary>
-        public string? Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
         /// <summary>
         /// Optional. Describes the parameters to this function.
         /// </summary>
         /// <remarks>
         /// Reflects the Open API 3.03 Parameter Object string Key: the name of the parameter.
-        /// Parameter names are case sensitive. Schema Value: the Schema defining the type used for the parameter.
+        /// Parameter names are case-sensitive. Schema Value: the Schema defining the type used for the parameter.
         /// For function with no parameters, this can be left unset. Example with 1 required and 1 optional parameter:
         /// type: OBJECT
         /// properties:
@@ -40,7 +47,11 @@
         /// <remarks>
         /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
         /// </remarks>
-        public Schema? Response { get; set; }
+        [JsonConverter(typeof(ResponseSchemaJsonConverter))]
+        public object? Response { get; set; }
+
+        public Delegate? Callback { get; set; }
+        
         /// <summary>
         /// Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.
         /// </summary>
@@ -58,5 +69,33 @@
         /// This field is mutually exclusive with `response`.
         /// </summary>
         public string? ResponseJsonSchema { get; set; }
+
+        public FunctionDeclaration() { }
+
+        public FunctionDeclaration(string name, string? description)
+        {
+            Name = name;
+            Description = description;
+            Parameters = null;
+        }
+
+        public FunctionDeclaration(Delegate callback)
+        {
+            Name = callback.GetNormalizedName();
+            Callback = callback;
+        }
+
+        public FunctionDeclaration(string name, Delegate callback)
+        {
+            Name = name;
+            Callback = callback;
+        }
+
+        public FunctionDeclaration(string name, string? description, Delegate callback)
+        {
+            Name = name;
+            Description = description;
+            Callback = callback;
+        }
     }
 }

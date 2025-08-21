@@ -38,7 +38,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.7.0" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.7.1" />
   </ItemGroup>
 ```
 
@@ -57,7 +57,7 @@ The provided code defines a C# library for interacting with Google's Generative 
 - **Count tokens**: This allows users to estimate the cost of using a model by counting the number of tokens in a prompt or response. 
 - **Start a chat session**: This allows users to have a back-and-forth conversation with a model.
 - **Create tuned models**: This allows users to provide samples for tuning an existing model. Currently, only the `text-bison-001` and `gemini-1.0-pro-001` models are supported for tuning
-- **File API**: This allows users to upload large files and use them with Gemini 1.5.
+- **File API**: This allows users to upload large files and use them with Gemini 1.5 and later.
 
 The package also defines various helper classes and enums to represent different aspects of the Gemini API, such as model names, request parameters, and response data.
 
@@ -113,7 +113,7 @@ Google AI with an API key
 using Mscc.GenerativeAI;
 // Google AI with an API key
 var googleAI = new GoogleAI(apiKey: "your API key");
-var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Flash);
 ```
 
 Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -123,7 +123,7 @@ using Mscc.GenerativeAI;
 // Google AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var accessToken = "your access token";
 var googleAI = new GoogleAI(accessToken: accessToken);
-var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Flash);
 ```
 
 Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
@@ -132,7 +132,7 @@ Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` t
 using Mscc.GenerativeAI;
 // Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.Gemini25Pro);
+var model = vertex.GenerativeModel(model: Model.Gemini25Flash);
 model.AccessToken = accessToken;
 ```
 
@@ -142,7 +142,7 @@ Vertex AI in express mode using an API key.
 using Mscc.GenerativeAI;
 // Vertex AI in express mode with an API key.
 var vertex = new VertexAI(apiKey: "your API key");
-var model = vertex.GenerativeModel(model: Model.Gemini20FlashExperimental);
+var model = vertex.GenerativeModel(model: Model.Gemini25Flash);
 ```
 
 The `ConfigurationFixture` type in the test project implements multiple options to retrieve sensitive information, i.e. API key or access token.
@@ -158,7 +158,7 @@ var apiKey = "your_api_key";
 var prompt = "Write a story about a magic backpack.";
 
 var googleAI = new GoogleAI(apiKey: apiKey);
-var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Flash);
 
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
@@ -177,7 +177,7 @@ var accessToken = "your_access_token";      // use `gcloud auth application-defa
 var prompt = "Write a story about a magic backpack.";
 
 var vertex = new VertexAI(projectId: projectId, region: region);
-var model = vertex.GenerativeModel(model: Model.Gemini25Pro);
+var model = vertex.GenerativeModel(model: Model.Gemini25Flash);
 model.AccessToken = accessToken;
 
 var response = await model.GenerateContent(prompt);
@@ -193,7 +193,7 @@ using Mscc.GenerativeAI;
 
 var prompt = "Explain bubble sort to me.";
 var vertex = new VertexAI(apiKey: "your API key");
-var model = vertex.GenerativeModel(model: Model.Gemini20FlashExperimental);
+var model = vertex.GenerativeModel(model: Model.Gemini25Flash);
 
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
@@ -213,7 +213,8 @@ var apiKey = "your_api_key";
 var systemInstruction = new Content("You are a friendly pirate. Speak like one.");
 var prompt = "Good morning! How are you?";
 IGenerativeAI genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel(Model.Gemini15ProLatest, systemInstruction: systemInstruction);
+var model = genAi.GenerativeModel(Model.Gemini25Flash, 
+    systemInstruction: systemInstruction);
 var request = new GenerateContentRequest(prompt);
 
 var response = await model.GenerateContent(request);
@@ -231,7 +232,7 @@ What brings ye to these here waters?
 
 Gemini generates unstructured text by default, but some applications require structured text. For these use cases, you can constrain Gemini to respond with JSON, a structured data format suitable for automated processing.
 
-You can control the structure of the JSON response by suppling a schema. There are two ways to supply a schema to the model:
+You can control the structure of the JSON response by supplying a schema. There are two ways to supply a schema to the model:
 
 - As text in the prompt
 - As a structured schema supplied through model configuration
@@ -239,13 +240,14 @@ You can control the structure of the JSON response by suppling a schema. There a
 ```csharp
 class Recipe {
     public string RecipeName { get; set; }
+    public List<string> Ingredients { get; set; }
 }
 
 // generate structure JSON output
 var apiKey = "your_api_key";
-var prompt = "List a few popular cookie recipes.";
+var prompt = "List a few popular cookie recipes, and include the amounts of ingredients.";
 var googleAi = new GoogleAI(apiKey);
-var model = googleAi.GenerativeModel(model: Model.Gemini15ProLatest);
+var model = googleAi.GenerativeModel(model: Model.Gemini25Flash);
 var generationConfig = new GenerationConfig()
 {
     ResponseMimeType = "application/json",
@@ -255,12 +257,14 @@ var generationConfig = new GenerationConfig()
 var response = await model.GenerateContent(prompt, 
     generationConfig: generationConfig);
 Console.WriteLine(response?.Text);
-}
 ```
+
 The output might look like this:
+
 ```json
 [{"recipeName": "Chocolate Chip Cookies"}, {"recipeName": "Peanut Butter Cookies"}, {"recipeName": "Snickerdoodles"}, {"recipeName": "Oatmeal Raisin Cookies"}, {"recipeName": "Sugar Cookies"}]
 ```
+
 ### Use Google Search
 
 To activate Google Search as a tool, set the boolean property `UseGoogleSearch` to true, like the following example.
@@ -269,7 +273,7 @@ To activate Google Search as a tool, set the boolean property `UseGoogleSearch` 
 var apiKey = "your_api_key";
 var prompt = "When is the next total solar eclipse in Mauritius?";
 var genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel(Model.Gemini20FlashExperimental);
+var model = genAi.GenerativeModel(Model.Gemini25Flash);
 model.UseGoogleSearch = true;
 
 var response = await model.GenerateContent(prompt);
@@ -289,7 +293,7 @@ The simplest version is to toggle the boolean property `UseGrounding`, like so.
 var apiKey = "your_api_key";
 var prompt = "What is the current Google stock price?";
 var genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel(Model.Gemini15Pro002);
+var model = genAi.GenerativeModel(Model.Gemini25Flash);
 model.UseGrounding = true;
 
 var response = await model.GenerateContent(prompt);
@@ -302,7 +306,7 @@ In case that you would like to have more control over the Google Search retrieva
 var apiKey = "your_api_key";
 var prompt = "Who won Wimbledon this year?";
 IGenerativeAI genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel(Model.Gemini15Pro002,
+var model = genAi.GenerativeModel(Model.Gemini25Flash,
     tools: [new Tool { GoogleSearchRetrieval = 
         new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f) }]);
 
@@ -320,7 +324,7 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Give me a tutorial to create a landing page";
 var googleAI = new GoogleAI(apiKey: apiKey);
-var model = googleAI.GenerativeModel(model: Model.Gemini25Pro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Flash);
 var generationConfig = new GenerationConfig()
 {
     ThinkingConfig = new ThinkingConfig()
@@ -343,7 +347,7 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
 var googleAI = new GoogleAI(apiKey: apiKey);
-var model = googleAI.GenerativeModel(model: Model.GeminiVisionPro);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Flash);
 var request = new GenerateContentRequest(prompt);
 await request.AddMedia("https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
 
@@ -362,7 +366,7 @@ using Mscc.GenerativeAI;
 
 var apiKey = "your_api_key";
 var googleAI = new GoogleAI(apiKey);
-var model = googleAI.GenerativeModel();    // using default model: gemini-1.5-pro
+var model = googleAI.GenerativeModel();    // using default model: gemini-2.5-pro
 var chat = model.StartChat();   // optionally pass a previous history in the constructor.
 
 // Instead of discarding you could also use the response and access `response.Text`.
@@ -391,7 +395,7 @@ using Mscc.GenerativeAI;
 var apiKey = "your_api_key";
 var prompt = "Make a short story from the media resources. The media resources are:";
 IGenerativeAI genAi = new GoogleAI(apiKey);
-var model = genAi.GenerativeModel(Model.Gemini25Pro);
+var model = genAi.GenerativeModel(Model.Gemini25Flash);
 
 // Upload your large image(s).
 // Instead of discarding you could also use the response and access `response.Text`.
@@ -425,7 +429,7 @@ using Mscc.GenerativeAI;
 var projectId = "your_google_project_id"; // the ID of a project, not its name.
 var accessToken = "your_access_token";      // use `gcloud auth application-default print-access-token` to get it.
 var googleAI = new GoogleAI(accessToken: accessToken);
-var model = googleAI.GenerativeModel(model: Model.Gemini10Pro001);
+var model = googleAI.GenerativeModel(model: Model.Gemini25Flash);
 model.ProjectId = projectId;
 
 var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
@@ -443,7 +447,7 @@ var dataset = new List<TuningExample>
     new() { TextInput = "thirteen", Output = "fourteen" },
     new() { TextInput = "seven", Output = "eight" },
 };
-var request = new CreateTunedModelRequest(Model.Gemini10Pro001, 
+var request = new CreateTunedModelRequest(Model.Gemini25Flash, 
     "Simply autogenerated Test model",
     dataset,
     parameters);
@@ -456,7 +460,7 @@ Console.WriteLine($"Model: {response.Metadata.TunedModel} (Steps: {response.Meta
 
 Tuned models appear in your Google AI Studio library.
 
-[![Tuned models are listed below My Library in Google AI Studio](./docs/GeminiTunedModels.png)](https://aistudio.google.com/app/library)
+[![Tuned models are listed below My Library in Google AI Studio](./docs/images/GeminiTunedModels.png)](https://aistudio.google.com/app/library)
 
 Read more about [Tune Gemini Pro in Google AI Studio or with the Gemini API](https://developers.googleblog.com/2024/03/tune-gemini-pro-in-google-ai-studio-or-gemini-api.html).
 
@@ -579,9 +583,17 @@ The following link opens an instance of the code repository in Google Project ID
 
 This lets you work instantly with the code base without having to install anything.
 
-## Feedback ✨
+## Feedback and Contributions 🤝
 
 For support and feedback kindly create issues at the <https://github.com/mscraftsman/generative-ai> repository.
+We encourage the community to contribute to this project! If there are additional features, interfaces, or improvements you would like to see, feel free to submit a pull request. Contributions of any kind are highly appreciated.
+
+### How to Contribute 📝
+
+- Clone or fork the repository. 
+- Create a new branch for your feature or bugfix. 
+- Commit your changes and push the branch to GitHub.  
+- Submit a pull request, and we will review it as soon as possible. 
 
 ## License 📜
 

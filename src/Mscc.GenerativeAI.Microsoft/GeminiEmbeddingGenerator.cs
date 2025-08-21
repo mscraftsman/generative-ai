@@ -65,9 +65,9 @@ namespace Mscc.GenerativeAI.Microsoft
         {
             if (values == null) throw new ArgumentNullException(nameof(values));
 
-            var request = MicrosoftAi.AbstractionMapper.ToGeminiEmbedContentRequest(values, options);
+            var request = AbstractionMapper.ToGeminiEmbedContentRequest(values, options);
             var response = await _client.EmbedContent(request, cancellationToken: cancellationToken);
-            return MicrosoftAi.AbstractionMapper.ToGeneratedEmbeddings(request, response);
+            return AbstractionMapper.ToGeneratedEmbeddings(request, response);
         }
 
         /// <inheritdoc/>

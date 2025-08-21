@@ -1,12 +1,15 @@
+using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI;
+using Neovolve.Logging.Xunit;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Mscc.GenerativeAI;
+using Xunit.Abstractions;
 
-namespace Mscc.GenerativeAI.Tests
+namespace Test.Mscc.GenerativeAI
 {
     public class DelayingHandler : HttpMessageHandler
     {
@@ -41,9 +44,20 @@ namespace Mscc.GenerativeAI.Tests
         }
     }
 
-    public class Timeout_Tests : IDisposable
+    public class Timeout_Tests : LoggingTestsBase, IDisposable
     {
         private GenerativeModel? _model;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
+        private readonly GoogleAI _googleAi;
+
+        public Timeout_Tests(ITestOutputHelper output, ConfigurationFixture fixture)
+            : base(output, LogLevel.Trace)
+        {
+            _output = output;
+            _fixture = fixture;
+            _googleAi = new(apiKey: fixture.ApiKey, logger: Logger);
+        }
 
         public void Dispose()
         {

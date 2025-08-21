@@ -13,6 +13,9 @@ using ArgumentNullException = System.ArgumentNullException;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The `RagEngineModel` class provides methods for interacting with a RAG engine.
+    /// </summary>
     public sealed class RagEngineModel : BaseModel
     {
         private string Url => "{BaseUrlVertexAi}/ragCorpora";

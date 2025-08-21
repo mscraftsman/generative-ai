@@ -1,6 +1,6 @@
 ﻿namespace Mscc.GenerativeAI.Web
 {
-    public class GenerativeAICredentials
+     public sealed class GenerativeAICredentials
     {
         public string? ApiKey { get; set; }
     }

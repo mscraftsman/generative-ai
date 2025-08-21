@@ -2,7 +2,7 @@ using mea = Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft
 {
-    public static class GeminiClientExtensions
+    internal static class GeminiClientExtensions
     {
         /// <summary>Gets an <see cref="mea.IChatClient"/> for use with this <see cref="GenerativeModel"/>.</summary>
         /// <param name="chatClient">The client.</param>

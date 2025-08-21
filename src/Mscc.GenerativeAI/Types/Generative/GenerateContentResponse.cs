@@ -65,6 +65,15 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// A convenience property to get the function calls.
+        /// </summary>
+        [JsonIgnore]
+        public List<FunctionCall>? FunctionCalls => Candidates?.FirstOrDefault()?.Content?.Parts
+            .Where(p => p.FunctionCall is not null)
+            .Select(p => p.FunctionCall)
+            .ToList();
+
+        /// <summary>
         /// A convenience property to get the responded thinking information of first candidate.
         /// </summary>
         [JsonIgnore]
