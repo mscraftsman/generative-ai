@@ -103,7 +103,16 @@ namespace Mscc.GenerativeAI.Microsoft
                         switch (tool)
                         {
                             case mea.AIFunction aif:
-                                // TODO: Handle AIFunction
+                                (request.Tools ??= []).Add(new Tool
+                                {
+                                    FunctionDeclarations = [new FunctionDeclaration
+                                    {
+                                        Name = aif.Name,
+                                        Description = aif.Description,
+                                        // Parameters = ToGeminiSchema(aif.Parameters)
+                                        
+                                    }]
+                                });
                                 break;
 
                             case mea.HostedWebSearchTool wst:
