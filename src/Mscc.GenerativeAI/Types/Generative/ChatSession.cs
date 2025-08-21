@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI
         private readonly GenerativeModel _model;
         private readonly GenerationConfig? _generationConfig;
         private readonly List<SafetySetting>? _safetySettings;
-        private readonly List<Tool>? _tools;
+        private readonly Tools? _tools;
         private readonly bool _enableAutomaticFunctionCalling;
         private List<ContentResponse> _history;
         private ContentResponse? _lastSent;
@@ -59,7 +59,7 @@ namespace Mscc.GenerativeAI
             List<ContentResponse>? history = null,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             bool enableAutomaticFunctionCalling = false)
         {
             _model = model;
@@ -88,7 +88,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> SendMessage(GenerateContentRequest request,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             CancellationToken cancellationToken = default)
         {
@@ -151,7 +151,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> SendMessage(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             CancellationToken cancellationToken = default)
         {
@@ -180,7 +180,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> SendMessage(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             CancellationToken cancellationToken = default)
         {
@@ -198,7 +198,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> SendMessage(object content,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             CancellationToken cancellationToken = default)
         {
@@ -270,7 +270,7 @@ namespace Mscc.GenerativeAI
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(GenerateContentRequest request,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -323,7 +323,7 @@ namespace Mscc.GenerativeAI
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(string prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -355,7 +355,7 @@ namespace Mscc.GenerativeAI
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -376,7 +376,7 @@ namespace Mscc.GenerativeAI
         public async IAsyncEnumerable<GenerateContentResponse> SendMessageStream(object content,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null, 
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -459,7 +459,7 @@ namespace Mscc.GenerativeAI
             List<ContentResponse> history, 
             GenerationConfig? generationConfig, 
             List<SafetySetting>? safetySettings, 
-            List<Tool>? tools)
+            Tools? tools)
         {
             throw new NotImplementedException();
             // var functionResponseParts = new List<Part>();

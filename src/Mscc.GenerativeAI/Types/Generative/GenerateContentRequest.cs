@@ -200,7 +200,7 @@ namespace Mscc.GenerativeAI
         public GenerateContentRequest(List<Part> parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null) : this()
         {
