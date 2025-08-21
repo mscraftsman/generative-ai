@@ -431,14 +431,9 @@ namespace Mscc.GenerativeAI
 
         internal static async Task<byte[]> ReadImageFileAsync(string url)
         {
-            using (var client = new HttpClient())
-            {
-                using (var response = await client.GetAsync(url))
-                {
-                    byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
-                    return imageBytes;
-                }
-            }
+            using var response = await Client.GetAsync(url);
+            await response.EnsureSuccessAsync($"Download of '{url}' failed");
+            return await response.Content.ReadAsByteArrayAsync();
         }
 
         internal static string GetMimeType(string uri)
