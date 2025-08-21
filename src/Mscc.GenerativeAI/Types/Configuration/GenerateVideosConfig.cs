@@ -29,7 +29,7 @@ namespace Mscc.GenerativeAI
         /// Optional. The aspect ratio for the generated video. 16:9 (landscape) and 9:16 (portrait) are supported.
         /// </summary>
         /// <remarks>Value: 9:16, or 16:9</remarks>
-        public string? AspectRatio { get; set; }
+        public ImageAspectRatio? AspectRatio { get; set; }
 
         /// <summary>
         /// Duration of the clip for video generation in seconds.

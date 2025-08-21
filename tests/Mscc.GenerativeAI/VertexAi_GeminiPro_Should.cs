@@ -506,7 +506,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
@@ -532,7 +533,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
