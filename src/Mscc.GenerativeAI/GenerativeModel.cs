@@ -176,6 +176,11 @@ namespace Mscc.GenerativeAI
         public bool UseGoogleSearch { get; set; } = false;
 
         /// <summary>
+        /// Activate automatic code execution (default = no)
+        /// </summary>
+        public bool UseCodeExecution { get; set; } = false;
+
+        /// <summary>
         /// Enable realtime stream using Multimodal Live API
         /// </summary>
         public bool UseRealtime { get; set; } = false;
