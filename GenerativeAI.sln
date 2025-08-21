@@ -29,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CA866D95
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Mscc.GenerativeAI.Google", "tests\Mscc.GenerativeAI.Google\Test.Mscc.GenerativeAI.Google.csproj", "{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mscc.GenerativeAI.Microsoft", "src\Mscc.GenerativeAI.Microsoft\Mscc.GenerativeAI.Microsoft.csproj", "{D6AE6521-C588-49B0-8A96-1F940C92526A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,10 +55,6 @@ Global
 		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ABE44BF-E56F-44E2-BF9B-A884F1D55627}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6AE6521-C588-49B0-8A96-1F940C92526A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6AE6521-C588-49B0-8A96-1F940C92526A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6AE6521-C588-49B0-8A96-1F940C92526A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6AE6521-C588-49B0-8A96-1F940C92526A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
