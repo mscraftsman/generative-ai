@@ -429,6 +429,13 @@ namespace Mscc.GenerativeAI
             return Convert.ToBase64String(imageBytes);
         }
 
+        internal static async Task<byte[]> ReadImageFileAsync(string url)
+        {
+            using var response = await Client.GetAsync(url);
+            await response.EnsureSuccessAsync($"Download of '{url}' failed");
+            return await response.Content.ReadAsByteArrayAsync();
+        }
+
         internal static string GetMimeType(string uri)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
@@ -813,7 +820,7 @@ namespace Mscc.GenerativeAI
                 case "roff": return "application/x-troff";
                 case "rpm": return "audio/x-pn-realaudio-plugin";
                 case "rqy": return "text/x-ms-rqy";
-                case "rtf": return "text/rtf"; // "application/rtf" // although correct, it is not accepted by Gemini API;
+                case "rtf": return "application/rtf";
                 case "rtx": return "text/richtext";
                 case "ruleset": return "application/xml";
                 case "s": return "text/plain";
@@ -1039,6 +1046,11 @@ namespace Mscc.GenerativeAI
             }
 
             return value;
+        }
+
+        internal static string GetNormalizedName(this Delegate callback)
+        {
+            return callback.Method.Name.ToSnakeCase();
         }
         
         public static string ToFormattedString(this HttpHeaders headers)

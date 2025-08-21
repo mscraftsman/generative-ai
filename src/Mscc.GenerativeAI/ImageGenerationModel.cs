@@ -19,10 +19,6 @@ namespace Mscc.GenerativeAI
         private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
         private const string UrlVertexAi = "{BaseUrlVertexAi}/publishers/{publisher}/{model}:{method}";
 
-        private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
-        private static readonly string[] SafetyFilterLevel =
-            ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
-
         private readonly bool _useVertexAi;
 
         internal override string Version => _useVertexAi ? ApiVersion.V1 : ApiVersion.V1Beta;
@@ -114,8 +110,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<ImageGenerationResponse> GenerateImages(string prompt,
             int numberOfImages = 1, string? negativePrompt = null, 
-            string? aspectRatio = null, int? guidanceScale = null,
-            ImagePromptLanguage? language = null, string? safetyFilterLevel = null,
+            ImageAspectRatio? aspectRatio = null, int? guidanceScale = null,
+            ImagePromptLanguage? language = null, SafetyFilterLevel? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
             RequestOptions? requestOptions = null,
@@ -124,27 +120,14 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
             var request = new ImageGenerationRequest(prompt, numberOfImages);
-            if (!string.IsNullOrEmpty(aspectRatio))
-            {
-                if (!AspectRatio.Contains(aspectRatio)) 
-                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
-                request.Parameters.AspectRatio = aspectRatio;
-            }
-            request.Parameters.NegativePrompt ??= negativePrompt;
-            request.Parameters.GuidanceScale ??= guidanceScale;
-            request.Parameters.Language ??= language;
-            if (!string.IsNullOrEmpty(safetyFilterLevel))
-            {
-                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
-                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
-                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
-            }
-            if (personGeneration is not null)
-            {
-                request.Parameters.PersonGeneration = personGeneration;
-            }
-            request.Parameters.EnhancePrompt = enhancePrompt;
-            request.Parameters.AddWatermark = addWatermark;
+            request.Parameters.AspectRatio = aspectRatio ?? request.Parameters.AspectRatio;
+            request.Parameters.NegativePrompt = negativePrompt ?? request.Parameters.NegativePrompt;
+            request.Parameters.GuidanceScale = guidanceScale ?? request.Parameters.GuidanceScale;
+            request.Parameters.Language = language ?? request.Parameters.Language;
+            request.Parameters.SafetyFilterLevel = safetyFilterLevel ?? request.Parameters.SafetyFilterLevel;
+            request.Parameters.PersonGeneration = personGeneration ?? request.Parameters.PersonGeneration;
+            request.Parameters.EnhancePrompt = enhancePrompt ?? request.Parameters.EnhancePrompt;
+            request.Parameters.AddWatermark = addWatermark ?? request.Parameters.AddWatermark;
             
             return await GenerateImages(request, requestOptions, cancellationToken);
         }

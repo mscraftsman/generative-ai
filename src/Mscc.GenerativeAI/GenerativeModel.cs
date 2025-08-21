@@ -25,15 +25,13 @@ namespace Mscc.GenerativeAI
         private readonly bool _useVertexAiExpress;
         private readonly CachedContent? _cachedContent;
         private readonly TuningJob? _tuningJob;
-        private readonly List<Tool> defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
-        private readonly List<Tool> defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
-        private static readonly string[] AspectRatio = ["1:1", "9:16", "16:9", "4:3", "3:4"];
-        private static readonly string[] SafetyFilterLevel =
-            ["BLOCK_LOW_AND_ABOVE", "BLOCK_MEDIUM_AND_ABOVE", "BLOCK_ONLY_HIGH", "BLOCK_NONE"];
+        private readonly Tools defaultGoogleSearchRetrieval = [new Tool { GoogleSearchRetrieval = new() }];
+        private readonly Tools defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
+        private readonly Tools defaultCodeExecution = [new Tool { CodeExecution = new() }];
 
         private List<SafetySetting>? _safetySettings;
         private GenerationConfig? _generationConfig;
-        private List<Tool>? _tools;
+        private Tools? _tools;
         private ToolConfig? _toolConfig;
         private Content? _systemInstruction;
 
@@ -178,6 +176,11 @@ namespace Mscc.GenerativeAI
         public bool UseGoogleSearch { get; set; } = false;
 
         /// <summary>
+        /// Activate automatic code execution (default = no)
+        /// </summary>
+        public bool UseCodeExecution { get; set; } = false;
+
+        /// <summary>
         /// Enable realtime stream using Multimodal Live API
         /// </summary>
         public bool UseRealtime { get; set; } = false;
@@ -228,7 +231,7 @@ namespace Mscc.GenerativeAI
             string? model = null, 
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null, 
             bool vertexAi = false,
@@ -268,7 +271,7 @@ namespace Mscc.GenerativeAI
             string? model = null, string? endpoint = null,
             GenerationConfig? generationConfig = null, 
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
             IHttpClientFactory? httpClientFactory = null, 
@@ -921,7 +924,7 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearch;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
                 {
-                    request.Tools = defaultGoogleSearch;
+                    request.Tools.AddRange(defaultGoogleSearch);
                 }
             }
 
@@ -930,7 +933,16 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearchRetrieval;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
                 {
-                    request.Tools = defaultGoogleSearchRetrieval;
+                    request.Tools.AddRange(defaultGoogleSearchRetrieval);
+                }
+            }
+
+            if (UseCodeExecution)
+            {
+                request.Tools ??= defaultCodeExecution;
+                if (request.Tools != null && !request.Tools.Any(t => t.CodeExecution is not null))
+                {
+                    request.Tools.AddRange(defaultCodeExecution);
                 }
             }
             
@@ -1005,7 +1017,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> GenerateContent(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1024,7 +1036,7 @@ namespace Mscc.GenerativeAI
         public async Task<GenerateContentResponse> GenerateContent(List<IPart>? parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1103,7 +1115,7 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearch;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
                 {
-                    request.Tools = defaultGoogleSearch;
+                    request.Tools.AddRange(defaultGoogleSearch);
                 }
             }
 
@@ -1112,7 +1124,16 @@ namespace Mscc.GenerativeAI
                 request.Tools ??= defaultGoogleSearchRetrieval;
                 if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
                 {
-                    request.Tools = defaultGoogleSearchRetrieval;
+                    request.Tools.AddRange(defaultGoogleSearchRetrieval);
+                }
+            }
+
+            if (UseCodeExecution)
+            {
+                request.Tools ??= defaultCodeExecution;
+                if (request.Tools != null && !request.Tools.Any(t => t.CodeExecution is not null))
+                {
+                    request.Tools.AddRange(defaultCodeExecution);
                 }
             }
 
@@ -1159,7 +1180,7 @@ namespace Mscc.GenerativeAI
         public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(string? prompt,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1178,7 +1199,7 @@ namespace Mscc.GenerativeAI
         public IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(List<IPart>? parts,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             ToolConfig? toolConfig = null,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -1402,8 +1423,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateImagesResponse> GenerateImages(string prompt,
             int numberOfImages = 1, string? negativePrompt = null, 
-            string? aspectRatio = null, int? guidanceScale = null,
-            ImagePromptLanguage? language = null, string? safetyFilterLevel = null,
+            ImageAspectRatio? aspectRatio = null, int? guidanceScale = null,
+            ImagePromptLanguage? language = null, SafetyFilterLevel? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
             RequestOptions? requestOptions = null,
@@ -1412,27 +1433,14 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
             var request = new GenerateImagesRequest(prompt, numberOfImages);
-            if (!string.IsNullOrEmpty(aspectRatio))
-            {
-                if (!AspectRatio.Contains(aspectRatio)) 
-                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
-                request.Parameters.AspectRatio = aspectRatio;
-            }
-            request.Parameters.NegativePrompt ??= negativePrompt;
-            request.Parameters.GuidanceScale ??= guidanceScale;
-            request.Parameters.Language ??= language;
-            if (!string.IsNullOrEmpty(safetyFilterLevel))
-            {
-                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
-                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
-                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
-            }
-            if (personGeneration is not null)
-            {
-                request.Parameters.PersonGeneration = personGeneration;
-            }
-            request.Parameters.EnhancePrompt = enhancePrompt;
-            request.Parameters.AddWatermark = addWatermark;
+            request.Parameters.AspectRatio = aspectRatio ?? request.Parameters.AspectRatio;
+            request.Parameters.NegativePrompt = negativePrompt ?? request.Parameters.NegativePrompt;
+            request.Parameters.GuidanceScale = guidanceScale ?? request.Parameters.GuidanceScale;
+            request.Parameters.Language = language ?? request.Parameters.Language;
+            request.Parameters.SafetyFilterLevel = safetyFilterLevel ?? request.Parameters.SafetyFilterLevel;
+            request.Parameters.PersonGeneration = personGeneration ?? request.Parameters.PersonGeneration;
+            request.Parameters.EnhancePrompt = enhancePrompt ?? request.Parameters.EnhancePrompt;
+            request.Parameters.AddWatermark = addWatermark ?? request.Parameters.AddWatermark;
             
             return await GenerateImages(request, requestOptions, cancellationToken);
         }
@@ -1504,8 +1512,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateVideosResponse> GenerateVideos(string prompt,
             int numberOfImages = 1, string? negativePrompt = null, 
-            string? aspectRatio = null, int? guidanceScale = null,
-            string? language = null, string? safetyFilterLevel = null,
+            ImageAspectRatio? aspectRatio = null, int? guidanceScale = null,
+            ImagePromptLanguage? language = null, SafetyFilterLevel? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
             bool? addWatermark = null,
             RequestOptions? requestOptions = null,
@@ -1514,21 +1522,12 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
             var request = new GenerateVideosRequest(prompt, numberOfImages);
-            if (!string.IsNullOrEmpty(aspectRatio))
-            {
-                if (!AspectRatio.Contains(aspectRatio)) 
-                    throw new ArgumentException("Not a valid aspect ratio", nameof(aspectRatio));
-//                request.Parameters.AspectRatio = aspectRatio;
-            }
+            request.Parameters.AspectRatio = aspectRatio;
 //            request.Parameters.NegativePrompt ??= negativePrompt;
 //            request.Parameters.GuidanceScale ??= guidanceScale;
 //            request.Parameters.Language ??= language;
-            if (!string.IsNullOrEmpty(safetyFilterLevel))
-            {
-                if (!SafetyFilterLevel.Contains(safetyFilterLevel.ToUpperInvariant()))
-                    throw new ArgumentException("Not a valid safety filter level", nameof(safetyFilterLevel));
-//                request.Parameters.SafetyFilterLevel = safetyFilterLevel.ToUpperInvariant();
-            }
+            //request.Parameters.SafetyFilterLevel = safetyFilterLevel ?? request.Parameters.SafetyFilterLevel;
+
             if (personGeneration is not null)
             {
                 request.Parameters.PersonGeneration = personGeneration;
@@ -1872,7 +1871,7 @@ namespace Mscc.GenerativeAI
         public ChatSession StartChat(List<ContentResponse>? history = null, 
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null, 
-            List<Tool>? tools = null,
+            Tools? tools = null,
             bool enableAutomaticFunctionCalling = false)
         {
             var config = generationConfig ?? _generationConfig;

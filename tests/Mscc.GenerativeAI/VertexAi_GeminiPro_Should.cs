@@ -272,9 +272,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -345,9 +345,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -371,8 +371,8 @@ namespace Test.Mscc.GenerativeAI
             var googleSearchRetrievalTool = new Tool() { GoogleSearchRetrieval = new() { DisableAttribution = false } };
 
             // Act
-            var response = await model.GenerateContent(prompt,
-                tools: new List<Tool>() { googleSearchRetrievalTool });
+            var response = await model.GenerateContent(prompt, 
+                tools: new Tools() { googleSearchRetrievalTool });
 
             // Assert
             response.Should().NotBeNull();
@@ -426,7 +426,7 @@ namespace Test.Mscc.GenerativeAI
             // Act
             var response = await model.GenerateContent(prompt,
                 generationConfig: new GenerationConfig(),
-                tools: new List<Tool>() { googleMaps },
+                tools: new Tools() { googleMaps },
                 toolConfig: new()
                 {
                     RetrievalConfig = new() { LatLng = new() { Latitude = -20.2646547f, Longitude = 57.4793535f } }
@@ -453,7 +453,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Why is the sky blue?";
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
-            var model = _vertexAi.GenerativeModel(model: _model,
+            var model = vertexAi.GenerativeModel(model: _model,
                 safetySettings: new List<SafetySetting>()
                 {
                     new()
@@ -468,15 +468,14 @@ namespace Test.Mscc.GenerativeAI
             {
                 Retrieval = new()
                 {
-                    VertexAiSearch =
-                        new() { Datastore = "projects/.../locations/.../collections/.../dataStores/..." },
+                    VertexAiSearch = new() { Datastore = "projects/.../locations/.../collections/.../dataStores/..." },
                     DisableAttribution = false
                 }
             };
 
             // Act
-            var response = await model.GenerateContent(prompt,
-                tools: new List<Tool>() { vertexAiRetrievalTool });
+            var response = await model.GenerateContent(prompt, 
+                tools: new Tools() { vertexAiRetrievalTool });
 
             // Assert
             response.Should().NotBeNull();
@@ -507,7 +506,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
@@ -533,7 +533,8 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
-                Role = Role.User, Parts = new List<IPart> { new TextData { Text = prompt } }
+                Role = Role.User,
+                Parts = new List<IPart> { new TextData { Text = prompt } }
             });
 
             // Act
@@ -618,9 +619,9 @@ namespace Test.Mscc.GenerativeAI
                 response.Text.Should().NotBeEmpty();
                 _output.WriteLine(response?.Text);
                 // response.UsageMetadata.Should().NotBeNull();
-                // output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
-                // output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
-                // output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
+                // _output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
+                // _output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
+                // _output.WriteLine($"TotalTokenCount: {response?.UsageMetadata?.TotalTokenCount}");
             }
         }
 
@@ -629,47 +630,38 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "What is the weather in Boston?";
-            var functionDeclarations = new List<FunctionDeclaration>()
-            {
-                new()
-                {
-                    Name = "get_current_weather",
-                    Description = "get weather in a given location",
-                    Parameters = new()
-                    {
-                        Type = ParameterType.Object,
-                        Properties =
-                            new
-                            {
-                                Location = new { Type = ParameterType.String },
-                                Unit = new
-                                {
-                                    Type = ParameterType.String,
-                                    Enum = (string[])["celsius", "fahrenheit"]
-                                }
-                            },
-                        Required = ["location"]
-                    }
+            var functionDeclarations = new List<FunctionDeclaration>() 
+            { new() {
+                Name = "get_current_weather",
+                Description = "get weather in a given location",
+                Parameters = new() {
+                    Type = ParameterType.Object,
+                    Properties = new {
+                        Location = new { Type = ParameterType.String }, 
+                        Unit = new {
+                            Type = ParameterType.String, 
+                            Enum = (string[])["celsius", "fahrenheit"]
+                        }
+                    },
+                    Required = ["location"]
                 }
-            };
+            }};
             var functionResponses = new List<Part>()
             {
-                new()
+                new() {
+                FunctionResponse = new()
                 {
-                    FunctionResponse = new()
-                    {
-                        Name = "get_current_weather",
-                        Response = new
-                        {
-                            Name = "get_current_weather", Content = new { Weather = "super nice" }
-                        }
-                    }
+                    Name = "get_current_weather",
+                    Response = new { Name = "get_current_weather", Content = new { Weather = "super nice" }}
                 }
-            };
+            }};
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
             var model = _vertexAi.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
-            var chat = model.StartChat(tools: new() { new Tool() { FunctionDeclarations = functionDeclarations } });
+            var chat = model.StartChat(tools: new()
+            {
+                new Tool() { FunctionDeclarations = functionDeclarations }
+            });
 
             // Act & Assert
             _output.WriteLine(prompt);
@@ -707,7 +699,11 @@ namespace Test.Mscc.GenerativeAI
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
             var model = _vertexAi.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
-            var request = new GenerateContentRequest { Contents = new List<Content>(), Tools = new List<Tool> { } };
+            var request = new GenerateContentRequest
+            {
+                Contents = new List<Content>(),
+                Tools = new Tools { }
+            };
             request.Contents.Add(new Content
             {
                 Role = Role.User,
