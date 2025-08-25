@@ -562,7 +562,7 @@ namespace Mscc.GenerativeAI
                 }
                 catch (HttpRequestException e)
                 {
-                    Logger.LogWarning(e, "Request failed, attempting retry #{i + 1}.");
+                    Logger.LogWarning(0, e, "Request failed, attempting retry #{i + 1}.");
                     if (i == retry.Maximum - 1) throw;
                 }
 
