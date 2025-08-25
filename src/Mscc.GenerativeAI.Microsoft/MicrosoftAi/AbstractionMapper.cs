@@ -163,7 +163,8 @@ namespace Mscc.GenerativeAI.Microsoft
                 TryAddOption<int?>(options, "RetryInitial", v => retry.Initial = v ?? 0);
                 TryAddOption<int?>(options, "RetryMultiplies", v => retry.Multiplies = v ?? 0);
                 TryAddOption<int?>(options, "RetryMaximum", v => retry.Maximum = v ?? 0);
-                TryAddOption<int?>(options, "RetryTimeout", v => retry.Timeout = v ?? 0);
+                TryAddOption<int?>(options, "RetryTimeout", v => 
+                    retry.Timeout = v.HasValue ? TimeSpan.FromSeconds((double)v.Value) : null);
                 TryAddOption<TimeSpan?>(options, "Timeout", v => timeout = v);
 
                 if (retry.Initial > 0 || timeout is not null)
