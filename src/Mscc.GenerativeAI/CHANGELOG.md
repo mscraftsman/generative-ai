@@ -16,6 +16,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## 2.8.0
+
+### Added
+
+- add retry logic #2 (0ededf6)
+- add overall timeout for retry logic (0c1d714)
+- add support for proxy #40 (11d7d3b)
+- add `UseCodeExecution` property (5d1ba84)
+- add enum `ImageAspectRatio` (315a8b4)
+- add settings for Gemini CLI (4525ac7)
+- add converter for `FunctionDeclaration`
+- add extension methods (cb16668)
+- add XMLdoc for Retry type (7d48044)
+- add sample for Function Calling
+- add sample for Structured Output (fadec1f)
+- add sample/playground projects (a22b77e)
+- Create publish-docs.yml (39488a8)
+- use NuGet Central Package Management (9823c99)
+
+### Changed
+
+- use enum `SafetyFilterLevel` 
+- use enum `ImagePromptLanguage` (315a8b4)
+- sync with API discovery (846d877)
+- improve ReadMe (a47e46e)
+- refactor `Tools` handling (4d8a6a9)
+- log intermediate exceptions in retry loop (43d7cbf)
+- chore: add missing XMLdoc (fe37e4f)
+- upgrade NuGet packages (207daf0)
+
 ## 2.7.1
 
 ### Added
