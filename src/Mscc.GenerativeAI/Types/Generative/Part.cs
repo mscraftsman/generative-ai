@@ -43,7 +43,7 @@ namespace Mscc.GenerativeAI
                 if (string.IsNullOrEmpty(value)) { value = CodeExecutionResult?.Output;}
                 return value!;
             }
-            set { TextData = new TextData { Text = value }; }
+            set => TextData = new TextData { Text = value };
         }
 
         /// <remarks/>

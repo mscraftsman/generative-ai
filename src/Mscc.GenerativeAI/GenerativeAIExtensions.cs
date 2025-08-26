@@ -338,7 +338,7 @@ namespace Mscc.GenerativeAI
 
             if (!stream)
             {
-                if (response.Candidates![0].FinishReason is
+                if (response.Candidates!.FirstOrDefault()!.FinishReason is
                     FinishReason.MaxTokens or
                     FinishReason.Safety or
                     FinishReason.Recitation or

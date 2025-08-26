@@ -114,6 +114,7 @@ namespace Mscc.GenerativeAI
             
             response.CheckResponse();
 
+            // ToDo: Handle AFC and extend History correctly.
             if (_enableAutomaticFunctionCalling)
             {
                 var result = HandleAutomaticFunctionCalling(response,
@@ -121,17 +122,16 @@ namespace Mscc.GenerativeAI
                     generationConfig ?? _generationConfig,
                     safetySettings ?? _safetySettings,
                     _tools);
+                response = result.response;
             }
 
-            if (response.Candidates![0].Content?.Parts?.Any() ?? false)
-            {
-                _lastReceived = new() { Role = Role.Model, Parts = response.Candidates![0].Content!.Parts };
-                History.Add(_lastReceived);
-            }
-            else
-            {
-                History.Remove(_lastSent);
-            }
+            var parts = response.Candidates?.FirstOrDefault()?.Content?.Parts
+                .Where(p => p.Thought is null or false)
+                .Select(x => x)
+                .ToList() ?? [new() { Text = String.Empty }];
+
+            _lastReceived = new() { Role = Role.Model, Parts = parts };
+            History.Add(_lastReceived);
             
             return response;
         }
@@ -246,10 +246,17 @@ namespace Mscc.GenerativeAI
                     generationConfig ?? _generationConfig,
                     safetySettings ?? _safetySettings,
                     _tools);
+                response = result.response;
             }
-            
-            _lastReceived = new() { Role = Role.Model, Text = response.Text ?? string.Empty };
+
+            parts = response.Candidates?.FirstOrDefault()?.Content?.Parts
+                .Where(p => p.Thought is null or false)
+                .Select(x => x)
+                .ToList() ?? [new() { Text = String.Empty }];
+
+            _lastReceived = new() { Role = Role.Model, Parts = parts };
             History.Add(_lastReceived);
+
             return response;
         }
 
