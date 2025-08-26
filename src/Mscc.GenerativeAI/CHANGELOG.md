@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## 2.8.2
+
+### Added
+
+- add model `gemini-2.5-flash-image-preview`
+
 ## 2.8.1
 
 ### Added
