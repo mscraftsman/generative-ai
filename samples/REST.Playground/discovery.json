@@ -2259,7 +2259,7 @@
       }
     }
   },
-  "revision": "20250817",
+  "revision": "20250825",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -4144,7 +4144,7 @@
           "type": "number"
         },
         "logprobs": {
-          "description": "Optional. Only valid if response_logprobs=True. This sets the number of top logprobs to return at each decoding step in the Candidate.logprobs_result.",
+          "description": "Optional. Only valid if response_logprobs=True. This sets the number of top logprobs to return at each decoding step in the Candidate.logprobs_result. The number must be in the range of [0, 20].",
           "format": "int32",
           "type": "integer"
         },
