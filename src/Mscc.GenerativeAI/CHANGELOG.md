@@ -16,6 +16,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## 2.8.1
+
+### Added
+
+- attempt handling of `AIFunction` (fca68fb)
+
+### Changes
+
+- upgrade NuGet packages (db140e3)
+- change handling of chat response #100 (6357034)
+- change to central package management
+
+### Fixed
+
+- chore: fix references (5d45076)
+- chore: remove obsolete project (9512e6c)
+- chore: fix conversion (f537f07)
+
 ## 2.8.0
 
 ### Added
