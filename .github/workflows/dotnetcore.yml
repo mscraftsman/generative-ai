@@ -75,6 +75,9 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+    - name: Set NuGet source
+      run: mv ./nuget.github ./nuget.config
+
     - name: Wait for GPR package propagation
       run: sleep 300
 
