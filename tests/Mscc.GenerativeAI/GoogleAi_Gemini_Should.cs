@@ -605,6 +605,78 @@ namespace Test.Mscc.GenerativeAI
             });
         }
 
+        [Theory]
+        [InlineData(
+            "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation.",
+            "cat.jpg")]
+        public async Task Generate_Content_with_Text_and_Image(string prompt, string filename)
+        {
+            // Arrange
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25FlashImage);
+            var request = new GenerateContentRequest(prompt);
+            await request.AddMedia(uri: Path.Combine(Environment.CurrentDirectory, "payload", filename));
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    _output.WriteLine($"{part.Text}");
+                if (part.InlineData is not null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+                }
+            });
+        }
+
+        [Theory]
+        [InlineData(
+            "A photorealistic close-up portrait of an elderly Japanese ceramicist with deep, sun-etched wrinkles and a warm, knowing smile. He is carefully inspecting a freshly glazed tea bowl. The setting is his rustic, sun-drenched workshop. The scene is illuminated by soft, golden hour light streaming through a window, highlighting the fine texture of the clay.Captured with an 85mm portrait lens, resulting in a soft, blurred background(bokeh). The overall mood is serene and masterful. Vertical portrait orientation.")]
+        [InlineData(
+            "A kawaii-style sticker of a happy red panda wearing a tiny bamboo hat. It's munching on a green bamboo leaf. The design features bold, clean outlines, simple cel-shading, and a vibrant color palette. The background must be white.")]
+        [InlineData(
+            "Create a modern, minimalist logo for a coffee shop called 'The Daily Grind'. The text should be in a clean, bold, sans-serif font. The design should feature a simple, stylized icon of a a coffee bean seamlessly integrated with the text. The color scheme is black and white.")]
+        [InlineData(
+            "A high-resolution, studio-lit product photograph of a minimalist ceramic coffee mug in matte black, presented on a polished concrete surface. The lighting is a three-point softbox setup designed to create soft, diffused highlights and eliminate harsh shadows. The camera angle is a slightly elevated 45-degree shot to showcase its clean lines. Ultra-realistic, with sharp focus on the steam rising from the coffee. Square image.")]
+        [InlineData(
+            "A minimalist composition featuring a single, delicate red maple leaf positioned in the bottom-right of the frame. The background is a vast, empty off-white canvas, creating significant negative space for text. Soft, diffused lighting from the top left. Square image.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. In the foreground, a detective in a trench coat stands under a flickering streetlamp, rain soaking his shoulders. In the background, the neon sign of a desolate bar reflects in a puddle. A caption box at the top reads \"The city was a tough place to keep secrets.\" The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        public async Task Generate_Content_Image_Prompting_Guide(string prompt)
+        {
+            // Arrange
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25FlashImage);
+            var request = new GenerateContentRequest(prompt);
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    _output.WriteLine($"{part.Text}");
+                if (part.InlineData is not null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+                }
+            });
+        }
+
         [Fact]
         public async Task Generate_Content_Stream()
         {
@@ -1246,11 +1318,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ThinkingConfig = new ThinkingConfig()
-                {
-                    IncludeThoughts = true,
-                    ThinkingBudget = 8192
-                }
+                ThinkingConfig = new ThinkingConfig() { IncludeThoughts = true, ThinkingBudget = 8192 }
             };
 
             // Act
@@ -1261,7 +1329,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             _output.WriteLine("Thinking part:");
             _output.WriteLine(response.Thinking);
-            _output.WriteLine(string.Join(Environment.NewLine,"Response:"));
+            _output.WriteLine(string.Join(Environment.NewLine, "Response:"));
             _output.WriteLine(response.Text);
         }
 
@@ -1276,7 +1344,7 @@ namespace Test.Mscc.GenerativeAI
             {
                 ThinkingConfig = new ThinkingConfig()
                 {
-                    ThinkingBudget = -1     // turn on dynamic thinking
+                    ThinkingBudget = -1 // turn on dynamic thinking
                 }
             };
 
@@ -1288,7 +1356,7 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             _output.WriteLine("Thinking part:");
             _output.WriteLine(response.Thinking);
-            _output.WriteLine(string.Join(Environment.NewLine,"Response:"));
+            _output.WriteLine(string.Join(Environment.NewLine, "Response:"));
             _output.WriteLine(response.Text);
         }
 
@@ -1300,10 +1368,10 @@ namespace Test.Mscc.GenerativeAI
             var prompt = $"Summarize this document: {url}";
             var model = _googleAi.GenerativeModel(model: _model,
                 tools: [new Tool { UrlContext = new() }]);
-            
+
             // Act
             var response = await model.GenerateContent(prompt);
-            
+
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
@@ -2047,8 +2115,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", 
-                ResponseSchema = new List<Recipe>()
+                ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
             };
 
             // Act
@@ -2269,8 +2336,7 @@ namespace Test.Mscc.GenerativeAI
                          """;
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", 
-                ResponseSchema = schema
+                ResponseMimeType = "application/json", ResponseSchema = schema
             };
 
             // Act
@@ -2289,7 +2355,7 @@ namespace Test.Mscc.GenerativeAI
             public string WeaponName { get; set; }
             public string WeaponDescription { get; set; }
         }
-        
+
         [Fact]
         public async Task Generate_Content_Using_ResponseSchema_Issue77()
         {
@@ -2300,8 +2366,7 @@ namespace Test.Mscc.GenerativeAI
             var options = new RequestOptions() { Timeout = TimeSpan.FromMinutes(3) };
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", 
-                ResponseSchema = new List<AiWeaponModel>()
+                ResponseMimeType = "application/json", ResponseSchema = new List<AiWeaponModel>()
             };
 
             // Act
@@ -2315,7 +2380,7 @@ namespace Test.Mscc.GenerativeAI
             response.Text.Should().NotBeEmpty();
             _output.WriteLine(response?.Text);
         }
-        
+
         [Fact]
         public async Task Generate_Content_Using_ResponseSchema_Issue80()
         {
@@ -2325,7 +2390,8 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseSchema = """{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}...""",
+                ResponseSchema =
+                    """{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}...""",
                 ResponseMimeType = "application/json"
             };
 
@@ -2341,13 +2407,17 @@ namespace Test.Mscc.GenerativeAI
         }
 
 #if NET9_0
-        public record Root([Description("A list of menus, each representing a specific day.")] List<Menu> Menus);
+        public record Root(
+            [Description("A list of menus, each representing a specific day.")]
+            List<Menu> Menus);
+
         public record Menu(DateOnly Date, List<Meal> Meals);
+
         public record Meal(string Type, string Name, double? Weight, bool Selected)
         {
             public string FullName => $"{Weight}g {Name}";
         }
-        
+
         // [Fact(Skip = "ReadOnly declaration not accepted.")]
         [Fact]
         public async Task Generate_Content_Using_ResponseSchema_with_Record()
@@ -2358,8 +2428,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", 
-                ResponseSchema = new Root([])
+                ResponseMimeType = "application/json", ResponseSchema = new Root([])
             };
 
             // Act
@@ -2373,7 +2442,7 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 #endif
-        
+
         [Fact(Skip = "ReadOnly declaration not accepted.")]
         public async Task Generate_Content_Using_ResponseSchema_with_Dynamic()
         {
@@ -2510,10 +2579,7 @@ namespace Test.Mscc.GenerativeAI
                     TopP = 1,
                     TopK = 32,
                     MaxOutputTokens = 1024,
-                    ThinkingConfig = new()
-                    {
-                        IncludeThoughts = false
-                    }
+                    ThinkingConfig = new() { IncludeThoughts = false }
                 }
             };
             await request.AddMedia(uri: Path.Combine(Environment.CurrentDirectory, "payload", filename));
