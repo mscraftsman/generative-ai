@@ -16,6 +16,6 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.7.0" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.8.3" />
   </ItemGroup>
 </Project>
