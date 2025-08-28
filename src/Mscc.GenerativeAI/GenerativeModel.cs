@@ -280,7 +280,7 @@ namespace Mscc.GenerativeAI
             Logger.LogGenerativeModelInvoking();
 
             _useVertexAi = true;
-            _endpointId = endpoint.SanitizeEndpointName();
+            _endpointId = endpoint?.SanitizeEndpointName();
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
             _tools = tools;
