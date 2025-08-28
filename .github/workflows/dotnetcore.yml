@@ -51,6 +51,9 @@ jobs:
     - name: Pack for .NET
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -o output/ --no-build
 
+    - name: Setup access to GitHub Package Registry (GPR)
+      run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
+
     - name: Push to GitHub Package Registry (GPR)
       run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate
 
@@ -95,6 +98,9 @@ jobs:
 
     - name: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -o output/ --no-build
+
+    - name: Setup access to GitHub Package Registry (GPR)
+      run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
 
     - name: Push to GitHub Package Registry (GPR)
       run: |
