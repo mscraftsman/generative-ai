@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿#if NET472_OR_GREATER || NETSTANDARD2_0
+using System;
+#endif
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
@@ -34,14 +37,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// A text part of a conversation with the model.
         /// </summary>
-        public string Text
+        public string? Text
         {
             get
             {
                 var value = TextData?.Text;
                 if (string.IsNullOrEmpty(value)) { value = ExecutableCode?.Code;}
                 if (string.IsNullOrEmpty(value)) { value = CodeExecutionResult?.Output;}
-                return value!;
+                return value;
             }
             set => TextData = new TextData { Text = value };
         }
@@ -144,6 +147,12 @@ namespace Mscc.GenerativeAI
         public static FileData FromUri(string uri, string mimetype)
         {
             return new FileData { FileUri = uri, MimeType = mimetype };
+        }
+
+        public static FileData FromUri(Uri uri, string mimetype)
+        {
+            if (uri is null) throw new ArgumentNullException(nameof(uri));
+            return new FileData { FileUri = uri.AbsoluteUri, MimeType = mimetype };
         }
 
         public static VideoMetadata FromVideoMetadata(string startOffset, string endOffset, double fps = 1.0f)
