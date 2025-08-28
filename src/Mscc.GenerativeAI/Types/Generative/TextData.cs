@@ -11,7 +11,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Required. The prompt text.
         /// </summary>
-        public string Text { get; set; }
+        public string? Text { get; set; }
     }
     
     /// <summary>
