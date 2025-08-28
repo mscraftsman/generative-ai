@@ -434,7 +434,7 @@
           ],
           "parameters": {
             "name": {
-              "description": "Immutable. Identifier. The `Corpus` resource name. The ID (name excluding the \"corpora/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/my-awesome-corpora-123a456b789c`",
+              "description": "Output only. Immutable. Identifier. The `Corpus` resource name. The ID (name excluding the \"corpora/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/my-awesome-corpora-123a456b789c`",
               "location": "path",
               "pattern": "^corpora/[^/]+$",
               "required": true,
@@ -2259,7 +2259,7 @@
       }
     }
   },
-  "revision": "20250825",
+  "revision": "20250827",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2915,7 +2915,8 @@
           "type": "string"
         },
         "name": {
-          "description": "Immutable. Identifier. The `Corpus` resource name. The ID (name excluding the \"corpora/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/my-awesome-corpora-123a456b789c`",
+          "description": "Output only. Immutable. Identifier. The `Corpus` resource name. The ID (name excluding the \"corpora/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/my-awesome-corpora-123a456b789c`",
+          "readOnly": true,
           "type": "string"
         },
         "updateTime": {
@@ -3872,7 +3873,7 @@
       "type": "object"
     },
     "GenerateContentRequest": {
-      "description": "Request to generate a completion from the model.",
+      "description": "Request to generate a completion from the model. NEXT ID: 16",
       "id": "GenerateContentRequest",
       "properties": {
         "cachedContent": {
