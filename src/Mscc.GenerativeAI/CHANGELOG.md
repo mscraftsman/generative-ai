@@ -8,13 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
-- Feature suggestion: Retry mechanism ([#2](https://github.com/mscraftsman/generative-ai/issues/2))
 - implement Automatic Function Call (AFC)
+### Changed
+### Fixed
+
+## 2.8.3
+
+### Added
+
+- add method to enable tool `EnterpriseWebSearch` (caec4c2)
+- add method to enable tool `ToolComputerUse` (caec4c2)
+- add `GoogleMaps` tool with optional API key add XMLdoc comments (d6ec2e8)
+- add tests for Gemini 2.5 Flash Image model generating images (eb946ca)
 
 ### Changed
 
-### Fixed
+- enable package source mapping (1652a30)
+- upgrade NuGet packages
 
 ## 2.8.2
 
