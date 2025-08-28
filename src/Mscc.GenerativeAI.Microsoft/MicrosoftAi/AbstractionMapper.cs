@@ -1,9 +1,11 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 #endif
 using System.Text;
+using System.Text.Json;
 using mea = Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft
@@ -20,9 +22,11 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <param name="messages">A list of chat messages.</param>
         /// <param name="options">Optional. Chat options to configure the request.</param>
         /// <returns></returns>
-        public static GenerateContentRequest? ToGeminiGenerateContentRequest(mea.IChatClient client, IEnumerable<mea.ChatMessage> messages, mea.ChatOptions? options)
+        public static GenerateContentRequest? ToGeminiGenerateContentRequest(mea.IChatClient client,
+            IEnumerable<mea.ChatMessage> messages, mea.ChatOptions? options)
         {
-            GenerateContentRequest request = options?.RawRepresentationFactory?.Invoke(client) as GenerateContentRequest ?? new();
+            GenerateContentRequest request =
+                options?.RawRepresentationFactory?.Invoke(client) as GenerateContentRequest ?? new();
 
             StringBuilder? systemMessage = null;
 
@@ -41,6 +45,8 @@ namespace Mscc.GenerativeAI.Microsoft
 
                 c.Role = message.Role == mea.ChatRole.Assistant ? "model" : "user";
 
+                Dictionary<string, string> functionNames = new();
+
                 foreach (var content in message.Contents)
                 {
                     switch (content)
@@ -54,11 +60,27 @@ namespace Mscc.GenerativeAI.Microsoft
                             break;
 
                         case mea.FunctionCallContent fcc:
+                            functionNames[fcc.CallId] = fcc.Name;
                             c.Parts.Add(new FunctionCall() { Id = fcc.CallId, Name = fcc.Name, Args = fcc.Arguments });
                             break;
 
                         case mea.FunctionResultContent frc:
-                            c.Parts.Add(new FunctionResponse() { Id = frc.CallId, Response = frc.Result });
+                            var functionName = frc.CallId;
+                            if (functionNames.TryGetValue(frc.CallId, out var name))
+                            {
+                                functionName = name;
+                            }
+
+                            if (frc.Result is JsonElement je
+                                && je.ValueKind != JsonValueKind.Object)
+                            {
+                                frc.Result = WrapInObject(je);
+                            }
+
+                            c.Parts.Add(new FunctionResponse()
+                            {
+                                Id = frc.CallId, Name = functionName, Response = frc.Result
+                            });
                             break;
                     }
                 }
@@ -96,22 +118,55 @@ namespace Mscc.GenerativeAI.Microsoft
                         request.GenerationConfig.ResponseSchema = jsonFormat.Schema;
                 }
 
+                if (options.AdditionalProperties?.Any() is true)
+                {
+                    if (options.AdditionalProperties.TryGetValue("ThinkingConfig", out var thinkingConfig) &&
+                        thinkingConfig is IReadOnlyDictionary<string, object> thinkingConfigDict)
+                    {
+                        request.GenerationConfig.ThinkingConfig ??= new ThinkingConfig();
+                        if (thinkingConfigDict.TryGetValue("IncludeThoughts", out var includeThoughts))
+                        {
+                            if (includeThoughts is bool b)
+                            {
+                                request.GenerationConfig.ThinkingConfig.IncludeThoughts = b;
+                            }
+                            else if (bool.TryParse(includeThoughts.ToString(), out var b2))
+                            {
+                                request.GenerationConfig.ThinkingConfig.IncludeThoughts = b2;
+                            }
+                        }
+
+                        if (thinkingConfigDict.TryGetValue("ThinkingBudget", out var thinkingBudget))
+                        {
+                            if (thinkingBudget is int i)
+                            {
+                                request.GenerationConfig.ThinkingConfig.ThinkingBudget = i;
+                            }
+                            else if (int.TryParse(thinkingBudget.ToString(), out var i2))
+                            {
+                                request.GenerationConfig.ThinkingConfig.ThinkingBudget = i2;
+                            }
+                        }
+                    }
+                }
+
                 if (options.Tools is { } aiTools)
                 {
+                    var functionDeclarations = new List<FunctionDeclaration>();
+                    
                     foreach (var tool in aiTools)
                     {
                         switch (tool)
                         {
                             case mea.AIFunction aif:
-                                (request.Tools ??= []).Add(new Tool
+                                functionDeclarations.Add(new FunctionDeclaration
                                 {
-                                    FunctionDeclarations = [new FunctionDeclaration
-                                    {
-                                        Name = aif.Name,
-                                        Description = aif.Description,
-                                        // Parameters = ToGeminiSchema(aif.Parameters)
-                                        
-                                    }]
+                                    Name = aif.Name,
+                                    Description = aif.Description,
+                                    Parameters = ToGeminiSchema(aif.JsonSchema),
+                                    Response = aif.ReturnJsonSchema is { } rjs
+                                        ? ToGeminiSchema(rjs)
+                                        : null,
                                 });
                                 break;
 
@@ -123,6 +178,11 @@ namespace Mscc.GenerativeAI.Microsoft
                                 (request.Tools ??= []).Add(new Tool() { CodeExecution = new() });
                                 break;
                         }
+                    }
+
+                    if (functionDeclarations.Count > 0)
+                    {
+                        (request.Tools ??= []).Add(new Tool() { FunctionDeclarations = functionDeclarations });
                     }
 
                     switch (options.ToolMode)
@@ -144,16 +204,37 @@ namespace Mscc.GenerativeAI.Microsoft
                             request.ToolConfig ??= new();
                             request.ToolConfig.FunctionCallingConfig ??= new();
                             request.ToolConfig.FunctionCallingConfig.Mode = FunctionCallingConfigMode.Any;
-                            if (rctm.RequiredFunctionName is string name)
+                            if (rctm.RequiredFunctionName is { } name)
                             {
                                 (request.ToolConfig.FunctionCallingConfig.AllowedFunctionNames ??= []).Add(name);
                             }
+
                             break;
                     }
                 }
             }
 
             return request;
+        }
+
+        /// <summary>
+        /// Wraps a <see cref="JsonElement"/> into a new <see cref="JsonElement"/> and the specified <see cref="key"/>.
+        /// </summary>
+        /// <param name="jsonElement">JsonElement to wrap.</param>
+        /// <param name="key">Property to use as wrapper.</param>
+        /// <returns></returns>
+        private static JsonElement WrapInObject(JsonElement jsonElement, string key = "result")
+        {
+            using MemoryStream ms = new();
+            using Utf8JsonWriter writer = new(ms);
+            
+            writer.WriteStartObject();
+            writer.WritePropertyName(key);
+            jsonElement.WriteTo(writer);
+            writer.WriteEndObject();
+            writer.Flush();
+
+            return JsonDocument.Parse(ms.ToArray()).RootElement.Clone();
         }
 
         /// <summary>
@@ -172,7 +253,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 TryAddOption<int?>(options, "RetryInitial", v => retry.Initial = v ?? 0);
                 TryAddOption<int?>(options, "RetryMultiplies", v => retry.Multiplies = v ?? 0);
                 TryAddOption<int?>(options, "RetryMaximum", v => retry.Maximum = v ?? 0);
-                TryAddOption<int?>(options, "RetryTimeout", v => 
+                TryAddOption<int?>(options, "RetryTimeout", v =>
                     retry.Timeout = v.HasValue ? TimeSpan.FromSeconds((double)v.Value) : null);
                 TryAddOption<TimeSpan?>(options, "Timeout", v => timeout = v);
 
@@ -196,14 +277,25 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="values">The values to get embeddings for</param>
         /// <param name="options">The options for the embeddings</param>
-        public static EmbedContentRequest ToGeminiEmbedContentRequest(IEnumerable<string> values, mea.EmbeddingGenerationOptions? options)
+        public static EmbedContentRequest ToGeminiEmbedContentRequest(IEnumerable<string> values,
+            mea.EmbeddingGenerationOptions? options)
         {
             return new EmbedContentRequest(string.Join(" ", values))
             {
-                Model = options?.ModelId ?? null    // will be set GeminiApiClient.SelectedModel, if not set
+                Model = options?.ModelId ?? null // will be set GeminiApiClient.SelectedModel, if not set
             };
         }
-        
+
+        /// <summary>
+        /// Converts a <see cref="JsonElement"/> to a <see cref="Schema"/>.
+        /// </summary>
+        /// <param name="jsonElement">The schema definition as a <see cref="JsonElement"/>.</param>
+        /// <returns></returns>
+        private static Schema ToGeminiSchema(JsonElement jsonElement)
+        {
+            return Schema.FromJsonElement(jsonElement);
+        }
+
         /// <summary>
         /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatResponse"/>.
         /// </summary>
@@ -233,17 +325,22 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <param name="response">The response stream to convert.</param>
         public static mea.ChatResponseUpdate ToChatResponseUpdate(GenerateContentResponse? response)
         {
-            return new mea.ChatResponseUpdate(ToAbstractionRole(response?.Candidates?.FirstOrDefault()?.Content?.Role), response?.Text)
+            return new mea.ChatResponseUpdate(ToAbstractionRole(response?.Candidates?.FirstOrDefault()?.Content?.Role),
+                response?.Text)
             {
                 // no need to set "Contents" as we set the text
                 CreatedAt = null,
                 AdditionalProperties = null,
-                FinishReason = response?.Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Other ? mea.ChatFinishReason.Stop : null,
+                FinishReason =
+                    response?.Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Other
+                        ? mea.ChatFinishReason.Stop
+                        : null,
                 RawRepresentation = response,
             };
         }
 
-        public static mea.GeneratedEmbeddings<mea.Embedding<float>> ToGeneratedEmbeddings(EmbedContentRequest request, EmbedContentResponse response)
+        public static mea.GeneratedEmbeddings<mea.Embedding<float>> ToGeneratedEmbeddings(EmbedContentRequest request,
+            EmbedContentResponse response)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (response == null) throw new ArgumentNullException(nameof(response));
@@ -254,13 +351,9 @@ namespace Mscc.GenerativeAI.Microsoft
             return new mea.GeneratedEmbeddings<mea.Embedding<float>>([
                 new mea.Embedding<float>(response.Embedding?.Values.ToArray() ?? [])
                 {
-                    CreatedAt = DateTimeOffset.Now,
-                    ModelId = request.Model
-                }])
-            {
-                AdditionalProperties = responseProps, 
-                Usage = usage
-            };
+                    CreatedAt = DateTimeOffset.Now, ModelId = request.Model
+                }
+            ]) { AdditionalProperties = responseProps, Usage = usage };
         }
 
         /// <summary>
@@ -270,13 +363,77 @@ namespace Mscc.GenerativeAI.Microsoft
         private static mea.ChatMessage ToChatMessage(GenerateContentResponse response)
         {
             var contents = new List<mea.AIContent>();
-            if (response.Text?.Length > 0)
-                contents.Add(new mea.TextContent(response.Text));
-
-            return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role), contents)
+            Candidate? candidate = response.Candidates?.FirstOrDefault();
+            if (candidate?.Content is not null)
             {
-                RawRepresentation = response
-            };
+                foreach (var part in candidate.Content.Parts)
+                {
+                    if (!string.IsNullOrEmpty(part.Text))
+                        contents.Add(new mea.TextContent(part.Text));
+                    else if (!string.IsNullOrEmpty(part.InlineData?.Data))
+                        contents.Add(new mea.DataContent(
+                            Encoding.UTF8.GetBytes(part.InlineData.Data),
+                            part.InlineData.MimeType));
+                    else if (!string.IsNullOrEmpty(part.FileData?.FileUri))
+                        contents.Add(new mea.DataContent(part.FileData.FileUri,
+                            part.FileData.MimeType));
+                    else if (part.FunctionCall is not null)
+                        contents.Add(ToFunctionCallContent(part.FunctionCall));
+                    else if (part.FunctionResponse is not null)
+                        contents.Add(ToFunctionResultContent(part.FunctionResponse));
+                    else if (part.CodeExecutionResult is not null)
+                        contents.Add(new mea.TextContent(part.CodeExecutionResult.Output));
+                    else if (part.ExecutableCode is not null)
+                        contents.Add(new mea.TextContent(part.ExecutableCode.Code));
+                    else if (part.VideoMetadata is not null)
+                        Console.WriteLine($"Video meta data returned.");
+                    else Console.WriteLine($"Part is not a string, inline data, or function call: {part.GetType()}");
+                }
+            }
+
+            return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
+                contents) { RawRepresentation = response };
+        }
+
+        /// <summary>
+        /// Maps a <see cref="FunctionCall"/> to a <see cref="mea.FunctionCallContent"/>.
+        /// </summary>
+        /// <param name="functionCall"></param>
+        /// <returns></returns>
+        private static mea.FunctionCallContent ToFunctionCallContent(FunctionCall functionCall)
+        {
+            IDictionary<string, object?>? arguments = null;
+            if (functionCall.Args is IReadOnlyDictionary<string, object?> args1)
+                arguments = args1.ToDictionary(x => x.Key, x => x.Value);
+            else if (functionCall.Args is IReadOnlyDictionary<string, object> args2)
+                arguments = args2.ToDictionary(x => x.Key, x => x.Value);
+            else if (functionCall.Args is JsonElement je)
+            {
+                try
+                {
+                    arguments = je.Deserialize<IDictionary<string, object?>>();
+                }
+                catch (JsonException ex)
+                {
+                    Console.WriteLine($"Failed to deserialize function call arguments: {ex.Message}");
+                }
+            }
+            else Console.WriteLine($"FunctionCall.Args is not a dictionary: {functionCall.Args?.GetType()}");
+
+            return new mea.FunctionCallContent(
+                functionCall.Id ?? Guid.NewGuid().ToString(),
+                functionCall.Name,
+                arguments);
+        }
+
+        /// <summary>
+        /// Maps a <see cref="FunctionResponse"/> to a <see cref="mea.FunctionResultContent"/>.
+        /// </summary>
+        /// <param name="functionResponse"></param>
+        /// <returns></returns>
+        private static mea.FunctionResultContent ToFunctionResultContent(FunctionResponse functionResponse)
+        {
+            return new mea.FunctionResultContent(functionResponse.Id!, functionResponse.Response);
         }
 
         /// <summary>
