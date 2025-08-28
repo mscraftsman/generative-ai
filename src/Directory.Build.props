@@ -39,6 +39,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <NoWarn>$(NoWarn);
+            CA1510; <!-- ArgumentNullException.ThrowIfNull -->
             CA1724; <!-- Type names should not match namespaces -->
             CA2007; <!-- Do not directly await a Task -->
             CS1591; <!-- Missing XML comment for publicly visible type or member -->
