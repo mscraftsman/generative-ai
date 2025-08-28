@@ -55,7 +55,7 @@ jobs:
       run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
 
     - name: Push to GitHub Package Registry (GPR)
-      run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate
+      run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
 
   build_and_push_dependents:
     name: Build and Push Dependent Packages to GPR
@@ -104,6 +104,6 @@ jobs:
 
     - name: Push to GitHub Package Registry (GPR)
       run: |
-        dotnet nuget push output/Mscc.GenerativeAI.Web.*.nupkg --skip-duplicate
-        dotnet nuget push output/Mscc.GenerativeAI.Google.*.nupkg --skip-duplicate
-        dotnet nuget push output/Mscc.GenerativeAI.Microsoft.*.nupkg --skip-duplicate
+        dotnet nuget push output/Mscc.GenerativeAI.Web.*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+        dotnet nuget push output/Mscc.GenerativeAI.Google.*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+        dotnet nuget push output/Mscc.GenerativeAI.Microsoft.*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
