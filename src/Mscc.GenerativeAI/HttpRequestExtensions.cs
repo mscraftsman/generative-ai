@@ -69,8 +69,13 @@ namespace Mscc.GenerativeAI
                 {
                     request.Headers.Remove("x-goog-api-key");
                 }
-
                 request.Headers.Add("x-goog-api-key", apiKey);
+                
+                if (request.Headers.Contains("x-api-key"))
+                {
+                    request.Headers.Remove("x-api-key");
+                }
+                request.Headers.Add("x-api-key", apiKey);
             }
         }
         
