@@ -967,36 +967,8 @@ namespace Mscc.GenerativeAI
 
             if (_useVertexAi && !_useVertexAiExpress)
             {
-                var fullText = new StringBuilder();
-                GroundingMetadata? groundingMetadata = null;
                 var contents = await Deserialize<List<GenerateContentResponse>>(response);
-                foreach (var content in contents)
-                {
-                    if (!(content.Candidates?[0].GroundingMetadata is null))
-                    {
-                        groundingMetadata = content.Candidates[0].GroundingMetadata;
-                        continue;
-                    }
-                    
-                    switch (content.Candidates?[0].FinishReason)
-                    {
-                        case FinishReason.Safety:
-                            return content;
-                        //     break;
-                        // case FinishReason.FinishReasonUnspecified:
-                        default:
-                            fullText.Append(content.Text);
-                            break;
-                    }
-                }
-                var result = contents.LastOrDefault();
-                result.Candidates ??=
-                [
-                    new() { Content = new() { Parts = [new()] } }
-                ];
-                result.Candidates[0].GroundingMetadata = groundingMetadata;
-                result.Candidates[0].Content.Parts[0].Text = fullText.ToString();
-                return result;
+                return contents.Merge();
             }
             return await Deserialize<GenerateContentResponse>(response);
         }
