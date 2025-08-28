@@ -104,6 +104,42 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Adds the Enterprise Web Search tool to the list of tools.
+        /// </summary>
+        /// <param name="excludeDomains">List of domains to be excluded from the search results.</param>
+        public void AddEnterpriseWebSearch(IEnumerable<string>? excludeDomains = null)
+        {
+            if (!this.Any(t => t.EnterpriseWebSearch is not null))
+            {
+                this.Add(new Tool() { 
+                    EnterpriseWebSearch = new()
+                    {
+                        ExcludeDomains = excludeDomains?.ToList()
+                    } 
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds the Computer Use tool to the list of tools.
+        /// </summary>
+        /// <param name="environment">The environment being operated.</param>
+        public void AddComputerUse(ComputerUseEnvironment? environment = ComputerUseEnvironment.EnvironmentBrowser)
+        {
+            if (!this.Any(t => t.ComputerUse is not null))
+            {
+                this.Add(new Tool()
+                {
+                    ComputerUse = new()
+                    {
+                        Environment = environment ??
+                                      ComputerUseEnvironment.EnvironmentBrowser
+                    }
+                });
+            }
+        }
+
+        /// <summary>
         /// Adds a function to the list of function declarations.
         /// </summary>
         /// <param name="name">The name of the function.</param>
@@ -158,7 +194,7 @@ namespace Mscc.GenerativeAI
                 var function = item.FunctionDeclarations!.FirstOrDefault(f => f.Name == name);
                 if (function is not null)
                 {
-                    return item.FunctionDeclarations.Remove(function);
+                    return item.FunctionDeclarations!.Remove(function);
                 }
             }
 
@@ -180,7 +216,7 @@ namespace Mscc.GenerativeAI
                 var function = item.FunctionDeclarations!.FirstOrDefault(f => f.Callback == callback);
                 if (function is not null)
                 {
-                    return item.FunctionDeclarations.Remove(function);
+                    return item.FunctionDeclarations!.Remove(function);
                 }
             }
 
