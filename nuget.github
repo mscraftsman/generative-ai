@@ -3,9 +3,13 @@
   <packageSources>
     <clear />
     <add key="github" value="https://nuget.pkg.github.com/mscraftsman/index.json" />
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>
     <packageSource key="github">
+      <package pattern="Mscc.*" />
+    </packageSource>
+    <packageSource key="nuget.org">
       <package pattern="*" />
     </packageSource>
   </packageSourceMapping>
