@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net472;net8.0;net9.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<NoWarn>$(NoWarn);CS0618;NU1701</NoWarn>
 		<IsPackable>false</IsPackable>
@@ -13,7 +13,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
+	<PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
 		<Nullable>annotations</Nullable>
 	</PropertyGroup>
 
@@ -22,7 +22,7 @@
 										Value="false" />
 	</ItemGroup>
 
-	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0' or $(TargetFramework) == 'net472'">
+	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
 		<Reference Include="System" />
 		<Reference Include="System.Net.Http" />
 		<Reference Include="System.Threading.Tasks" />
@@ -137,10 +137,6 @@
 		<None Include="token.json" Condition="Exists('token.json')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
