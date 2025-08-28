@@ -27,7 +27,8 @@ namespace Mscc.GenerativeAI
         protected const string BaseUrlVertexAiGlobal = "https://aiplatform.googleapis.com/{version}/projects/{projectId}/locations/global";
 
         protected readonly string _publisher = "google";
-        protected readonly JsonSerializerOptions _options;
+        protected static readonly JsonSerializerOptions ReadOptions = ReadJsonSerializerOptions();
+        protected static readonly JsonSerializerOptions WriteOptions = WriteJsonSerializerOptions();
 
         protected string _model;
         protected string? _apiKey;
@@ -193,7 +194,6 @@ namespace Mscc.GenerativeAI
             _defaultApiClientHeader = new KeyValuePair<string, string>(
                 "x-goog-api-client",
                 _defaultUserAgent.ToString());
-            _options = DefaultJsonSerializerOptions();
 
             GenerativeAIExtensions.ReadDotEnv();
             ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
@@ -250,7 +250,6 @@ namespace Mscc.GenerativeAI
             _defaultApiClientHeader = new KeyValuePair<string, string>(
                 "x-goog-api-client",
                 _defaultUserAgent.ToString());
-            _options = DefaultJsonSerializerOptions();
 
             // Basic initialization, specific API key/model/project details would be set by subclass or test
             GenerativeAIExtensions.ReadDotEnv();
@@ -310,7 +309,7 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         protected string Serialize<T>(T request)
         {
-            var json = JsonSerializer.Serialize(request, _options);
+            var json = JsonSerializer.Serialize(request, WriteOptions);
 
             Logger.LogJsonRequest(json);
 
@@ -330,17 +329,17 @@ namespace Mscc.GenerativeAI
             Logger.LogJsonResponse(json);
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
-            return JsonSerializer.Deserialize<T>(json, _options);
+            return JsonSerializer.Deserialize<T>(json, ReadOptions);
 #else
-            return await response.Content.ReadFromJsonAsync<T>(_options);
+            return await response.Content.ReadFromJsonAsync<T>(ReadOptions);
 #endif
         }
 
         /// <summary>
-        /// Get default options for JSON serialization.
+        /// Get default read options for JSON deserialization.
         /// </summary>
-        /// <returns>default options for JSON serialization.</returns>
-        private JsonSerializerOptions DefaultJsonSerializerOptions()
+        /// <returns>default options for JSON deserialization.</returns>
+        private static JsonSerializerOptions ReadJsonSerializerOptions()
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -354,6 +353,36 @@ namespace Mscc.GenerativeAI
                 PropertyNameCaseInsensitive = true,
                 ReadCommentHandling = JsonCommentHandling.Skip,
                 AllowTrailingCommas = true,
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
+#if NET9_0_OR_GREATER
+                RespectNullableAnnotations = true
+#endif
+            };
+            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+            options.Converters.Add(new DateTimeFormatJsonConverter());
+
+            return options;
+        }
+
+        /// <summary>
+        /// Get default write options for JSON serialization.
+        /// </summary>
+        /// <returns>default options for JSON serialization.</returns>
+        private static JsonSerializerOptions WriteJsonSerializerOptions()
+        {
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+#if DEBUG
+                WriteIndented = true,
+#endif
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                PropertyNameCaseInsensitive = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                AllowTrailingCommas = true,
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip,
 #if NET9_0_OR_GREATER
                 RespectNullableAnnotations = true
 #endif
@@ -375,7 +404,7 @@ namespace Mscc.GenerativeAI
             Credentials? credentials = null;
             if (File.Exists(credentialsFile))
             {
-                var options = DefaultJsonSerializerOptions();
+                var options = WriteJsonSerializerOptions();
                 options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
                 using var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read);
                 credentials = JsonSerializer.Deserialize<Credentials>(stream, options);

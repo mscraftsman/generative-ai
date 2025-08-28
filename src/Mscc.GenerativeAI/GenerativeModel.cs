@@ -1145,7 +1145,7 @@ namespace Mscc.GenerativeAI
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
             var ms = new MemoryStream();
-            await JsonSerializer.SerializeAsync(ms, request, _options, cancellationToken);
+            await JsonSerializer.SerializeAsync(ms, request, WriteOptions, cancellationToken);
             ms.Seek(0, SeekOrigin.Begin);
             
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
@@ -1167,7 +1167,7 @@ namespace Mscc.GenerativeAI
                 // Ref: https://github.com/dotnet/runtime/issues/97128 - HttpIOException
                 // https://github.com/grpc/grpc-dotnet/issues/2361#issuecomment-1895805167 
                 await foreach (var item in JsonSerializer.DeserializeAsyncEnumerable<GenerateContentResponse>(
-                                   stream, _options, cancellationToken))
+                                   stream, ReadOptions, cancellationToken))
                 {
                     if (cancellationToken.IsCancellationRequested)
                         yield break;
@@ -1282,7 +1282,7 @@ namespace Mscc.GenerativeAI
                         continue;
                             
                     var item = JsonSerializer.Deserialize<GenerateContentResponse>(
-                        data.Substring("data:".Length).Trim(), _options);
+                        data.Substring("data:".Length).Trim(), ReadOptions);
                     if (cancellationToken.IsCancellationRequested)
                         yield break;
                     yield return item;
