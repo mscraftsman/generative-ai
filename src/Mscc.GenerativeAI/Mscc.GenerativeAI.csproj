@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
 		<ProjectType>Library</ProjectType>
-		<LangVersion>latest</LangVersion>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-		<NoWarn>$(NoWarn);CS1591;IL3050;IL2026</NoWarn>
 		<PackageId>Mscc.GenerativeAI</PackageId>
 		<Title>MSCC GenerativeAI</Title>
 		<Product>MSCC GenerativeAI</Product>
@@ -26,32 +23,17 @@
 		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes>(Package release notes are in CHANGELOG.md)</PackageReleaseNotes>
 		<Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Deterministic>true</Deterministic>
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-		<IsTrimmable>false</IsTrimmable>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
-		<EnableAotAnalyzer>true</EnableAotAnalyzer>
-		<IsAotCompatible>true</IsAotCompatible>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
-		<Nullable>annotations</Nullable>
-	</PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
+        <IsTrimmable>false</IsTrimmable>
+    </PropertyGroup>
+
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 	  <DocumentationFile>bin\Release\Mscc.GenerativeAI.xml</DocumentationFile>
 	</PropertyGroup>
 
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0'))">
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
 		<RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support"
 										Value="false" />
 	</ItemGroup>

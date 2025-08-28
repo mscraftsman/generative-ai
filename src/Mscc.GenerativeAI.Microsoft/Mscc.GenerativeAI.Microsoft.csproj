@@ -3,10 +3,8 @@
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-        <LangVersion>latest</LangVersion>
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-        <NoWarn>$(NoWarn);CS1591</NoWarn>
         <NoWarn>$(NoWarn);MEAI001</NoWarn>
         <PackageId>Mscc.GenerativeAI.Microsoft</PackageId>
         <Title>MSCC GenerativeAI for .NET integrating with Microsoft.Extensions.AI and Semantic Kernel.</Title>
@@ -26,23 +24,13 @@
         <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
         <PackageReleaseNotes>(Package release notes are in CHANGELOG.md)</PackageReleaseNotes>
         <Version>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../../VERSION"))</Version>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <Deterministic>true</Deterministic>
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
     </PropertyGroup>
 
-    <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
         <IsTrimmable>true</IsTrimmable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
-        <Nullable>annotations</Nullable>
     </PropertyGroup>
 
-    <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net8.0'))">
+    <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0'))">
         <RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support"
                                         Value="false" />
     </ItemGroup>
