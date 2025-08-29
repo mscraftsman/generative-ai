@@ -44,7 +44,7 @@ namespace Mscc.GenerativeAI.Google
         public string Region { get; set; }
         private List<SafetySetting> SafetySettings { get; set; }
         private GenerationConfig GenerationConfig { get; set; }
-        private List<Tool> Tools { get; set; }
+        private Tools Tools { get; set; }
 
         /// <summary>
         /// Constructor via user credentials using client ID and secret.

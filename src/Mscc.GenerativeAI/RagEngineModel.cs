@@ -52,7 +52,7 @@ namespace Mscc.GenerativeAI
             string? model = null,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            List<Tool>? tools = null,
+            Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
             IHttpClientFactory? httpClientFactory = null, 

@@ -42,6 +42,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Code that enables the system to interact with external systems to perform an action outside of the knowledge and scope of the model.
         /// </summary>
-        public List<Tool>? Tools { get; set; }
+        public Tools? Tools { get; set; }
     }
 }
