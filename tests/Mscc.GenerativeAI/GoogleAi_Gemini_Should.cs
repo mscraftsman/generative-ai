@@ -3236,7 +3236,7 @@ Do not make up any information that is not part of the audio and do not be verbo
         {
             // Arrange
             var prompt =
-                @"Your are a very professional document summarization specialist. Please summarize the given document.";
+                @"You are a very professional document summarization specialist. Please summarize the given document.";
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = _googleAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
@@ -3264,7 +3264,7 @@ Do not make up any information that is not part of the audio and do not be verbo
         {
             // Arrange
             var prompt =
-                @"Your are a very professional document summarization specialist. Please summarize the given document.";
+                @"You are a very professional document summarization specialist. Please summarize the given document.";
             IGenerativeAI genAi = new GoogleAI(_fixture.ApiKey);
             var model = _googleAi.GenerativeModel(_model);
             var request = new GenerateContentRequest(prompt);
