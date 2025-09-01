@@ -14,6 +14,9 @@ namespace Mscc.GenerativeAI
         /// The number of thoughts tokens that the model should generate.
         /// Value range: 0 to 24576
         /// </summary>
+        /// <remarks>
+        /// Gemini 2.5 Pro: The thinking budget 1 is invalid. Please choose a value between 128 and 32768.
+        /// </remarks>
         public int? ThinkingBudget { get; set; }
     }
 }

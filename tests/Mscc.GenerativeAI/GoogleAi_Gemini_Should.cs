@@ -375,7 +375,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().BeEmpty();
+            response.Candidates![0].LogprobsResult.Should().NotBeNull();
             _output.WriteLine(response?.Text);
         }
 
@@ -398,7 +398,7 @@ namespace Test.Mscc.GenerativeAI
                 response.Should().NotBeNull();
                 response.Candidates.Should().NotBeNull().And.HaveCount(1);
                 response.Text.Should().NotBeEmpty();
-                if (response.Candidates[0].FinishReason is FinishReason.MaxTokens)
+                if (response.Candidates![0].FinishReason is FinishReason.MaxTokens)
                     _output.WriteLine("...");
                 else
                     _output.WriteLine(response?.Text);
@@ -2763,7 +2763,12 @@ namespace Test.Mscc.GenerativeAI
             };
             var generationConfig = new GenerationConfig()
             {
-                Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024
+                Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024,
+                ThinkingConfig = new()
+                {
+                    ThinkingBudget = 128,
+                    IncludeThoughts = false
+                }
             };
 
             // Act
