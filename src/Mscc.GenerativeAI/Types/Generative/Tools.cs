@@ -30,7 +30,9 @@ namespace Mscc.GenerativeAI
             var functions = GetFunctions();
             foreach (Delegate function in delegates)
             {
-                functions.Add(new(function));
+                FunctionDeclaration fd = new (function);
+                if (!functions.Contains<FunctionDeclaration>(fd))
+                    functions.Add(fd);
             }
         }
 
@@ -111,12 +113,7 @@ namespace Mscc.GenerativeAI
         {
             if (!this.Any(t => t.EnterpriseWebSearch is not null))
             {
-                this.Add(new Tool() { 
-                    EnterpriseWebSearch = new()
-                    {
-                        ExcludeDomains = excludeDomains?.ToList()
-                    } 
-                });
+                this.Add(new Tool() { EnterpriseWebSearch = new() { ExcludeDomains = excludeDomains?.ToList() } });
             }
         }
 
