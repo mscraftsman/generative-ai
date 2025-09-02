@@ -719,9 +719,9 @@
     },
     {
       "description": "Gemini 2.5 Flash Preview Image",
-      "displayName": "Gemini 2.5 Flash Image Preview",
+      "displayName": "Nano Banana",
       "inputTokenLimit": 32768,
-      "maxTemperature": 2,
+      "maxTemperature": 1,
       "name": "models/gemini-2.5-flash-image-preview",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
