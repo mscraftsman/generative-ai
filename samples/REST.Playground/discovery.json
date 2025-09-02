@@ -2259,7 +2259,7 @@
       }
     }
   },
-  "revision": "20250827",
+  "revision": "20250829",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -5911,7 +5911,7 @@
       "type": "object"
     },
     "Tool": {
-      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model.",
+      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 11",
       "id": "Tool",
       "properties": {
         "codeExecution": {
