@@ -47,11 +47,12 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
         /// </remarks>
-        [JsonConverter(typeof(ResponseSchemaJsonConverter))]
-        public object? Response { get; set; }
+        // [JsonConverter(typeof(ResponseSchemaJsonConverter))]
+        public Schema? Response { get; set; }
 
+        [JsonIgnore]
         public Delegate? Callback { get; set; }
-        
+
         /// <summary>
         /// Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.
         /// </summary>
