@@ -15,11 +15,12 @@ namespace Mscc.GenerativeAI
         /// If the string is a JSON string containing a nested JSON object, it will be parsed recursively.
         /// </summary>
         /// <param name="value">JSON schema text or a simple type name</param>
-        /// <exception cref="ArgumentNullException">Thrown when value is null or whitespace</exception>
-        /// <exception cref="ArgumentException">Thrown when the provided string cannot be parsed into a Schema</exception>
+        /// <exception cref="ArgumentNullException">Thrown when value is null</exception>
+        /// <exception cref="ArgumentException">Thrown when value is whitespace-only or cannot be parsed into a Schema</exception>
         public static Schema FromString(string value)
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
+            if (value is null) throw new ArgumentNullException(nameof(value));
+            if (string.IsNullOrWhiteSpace(value)) throw new ArgumentException("Value cannot be whitespace-only.", nameof(value));
 
             // Try to parse as JSON (object or string-encoded JSON)
             if (!TryParseJson(value, out JsonElement element))
