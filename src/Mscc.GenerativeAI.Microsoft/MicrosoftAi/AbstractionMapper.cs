@@ -409,19 +409,12 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <returns></returns>
         private static mea.FunctionCallContent ToFunctionCallContent(FunctionCall functionCall)
         {
-            IDictionary<string, object?>? arguments = null;
-            if (functionCall.Args is IReadOnlyDictionary<string, object?> a1)
+            IDictionary<string, object?>? arguments = functionCall.Args switch
             {
-                arguments = a1.ToDictionary(x => x.Key, x => x.Value);
-            }
-            else if (functionCall.Args is IReadOnlyDictionary<string, object> a2)
-            {
-                arguments = a2.ToDictionary(x => x.Key, x => (object?)x.Value);
-            }
-            else if (functionCall.Args is JsonElement je)
-            {
-                arguments = je.Deserialize<IDictionary<string, object?>>();
-            }
+                IReadOnlyDictionary<string, object?> dictionary => dictionary.ToDictionary(x => x.Key, x => x.Value),
+                JsonElement jsonElement => jsonElement.Deserialize<IDictionary<string, object?>>(),
+                _ => null,
+            };
 
             return new mea.FunctionCallContent(
                 functionCall.Id ?? Guid.NewGuid().ToString(),
