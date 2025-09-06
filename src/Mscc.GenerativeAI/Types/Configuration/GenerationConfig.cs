@@ -56,8 +56,7 @@ namespace Mscc.GenerativeAI
         /// Schema can be objects, primitives or arrays and is a subset of [OpenAPI schema](https://spec.openapis.org/oas/v3.0.3#schema).
         /// If set, a compatible response_mime_type must also be set. Compatible mimetypes: `application/json`: Schema for JSON response.
         /// </remarks>
-        [JsonConverter(typeof(ResponseSchemaJsonConverter))]
-        public object? ResponseSchema { get; set; }
+        public Schema? ResponseSchema { get; set; }
         /// <summary>
         /// Optional. Presence penalty applied to the next token's logprobs if the token has already been seen in the response.
         /// </summary>

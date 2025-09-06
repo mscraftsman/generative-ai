@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI
         /// If "output" and "error" keys are not specified, then whole "response" is treated as function output.
         /// </remarks>
         //Response map[string] any
-        public dynamic? Response { get; set; }
+        public object? Response { get; set; }
 
         //public virtual IDictionary<string, object> Response { get; set; }
         /// <summary>

@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// The Schema object allows the definition of input and output data types. These types can be objects, but also primitives and arrays. Represents a select subset of an OpenAPI 3.0 schema object.
     /// </summary>
-    public class Schema
+    public partial class Schema
     {
         /// <summary>
         /// Required. Data type.
@@ -56,7 +56,7 @@ namespace Mscc.GenerativeAI
         /// Optional. Properties of Type.OBJECT.
         /// An object containing a list of "key": value pairs. Example: { "name": "wrench", "mass": "1.3kg", "count": "3" }.
         /// </summary>
-        public dynamic? Properties { get; set; }
+        public object? Properties { get; set; }
         /// <summary>
         /// Optional. The order of the properties. Not a standard field in open api spec. Used to determine the order of the properties in the response.
         /// </summary>
