@@ -1553,8 +1553,14 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             var tools = new Tools();
-            tools.AddFunction((bool isOn) => $"Dark mode is set to: {isOn}");
-            
+            tools.AddFunction("ToggleDarkMode", (bool isOn) => $"Dark mode is set to: {isOn}");
+            tools.AddFunction("GetCurrentWeather", (string location) => $"The weather in {location} is 72 degrees and sunny.");
+            tools.AddFunction("SendEmailAsync", async (string recipient, string subject, string body) =>
+            {
+                await Task.Delay(3000);
+                return new { Success = true, Property1 = "ABC", Property2 = 123 };
+            });
+
             // Act
             var response = await model.GenerateContent(prompt, tools: tools);
 
@@ -1593,7 +1599,9 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             var tools = new Tools();
-            tools.AddFunction(async (string recipient, string subject, string body) =>
+            tools.AddFunction("ToggleDarkMode", (bool isOn) => $"Dark mode is set to: {isOn}");
+            tools.AddFunction("GetCurrentWeather", (string location) => $"The weather in {location} is 72 degrees and sunny.");
+            tools.AddFunction("SendEmailAsync", async (string recipient, string subject, string body) =>
             {
                 await Task.Delay(3000);
                 return new { Success = true, Property1 = "ABC", Property2 = 123 };
@@ -1619,14 +1627,16 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var tools = new Tools();
             Action<bool> toggleDarkMode = (isOn) => Console.WriteLine($"Dark mode is set to: {isOn}");
+            Func<string, string> getCurrentWeather = (location) => $"The weather in {location} is 72 degrees and sunny.";
             Func<string, string, string, object> sendEmailAsync = (recipient, subject, body) =>
             {
                 Task.Delay(3000);
                 return new { Success = true, Property1 = "ABC", Property2 = 123 };
             };
-            tools.AddFunction(toggleDarkMode);
-            tools.AddFunction(sendEmailAsync);
-            
+            tools.AddFunction("ToggleDarkMode", toggleDarkMode);
+            tools.AddFunction("GetCurrentWeather", getCurrentWeather);
+            tools.AddFunction("SendEmailAsync", sendEmailAsync);
+
             // Act
             var response = await model.GenerateContent(prompt, tools: tools);
 
@@ -2334,7 +2344,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new List<Recipe>()
+                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<Recipe>>()
             };
 
             // Act
@@ -2370,7 +2380,7 @@ namespace Test.Mscc.GenerativeAI
             );
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new List<FlightSchedule>()
+                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<FlightSchedule>>()
             };
 
             // Act
@@ -2409,7 +2419,7 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerationConfig
             {
                 ResponseMimeType = "text/x.enum", // Important for enum handling
-                ResponseSchema = typeof(Instrument) // Provide the enum type
+                ResponseSchema = Schema.FromType<Instrument>() // Provide the enum type
             };
 
             // Act
@@ -2443,7 +2453,7 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerationConfig
             {
                 ResponseMimeType = "text/x.enum", // Important for enum handling
-                ResponseSchema = typeof(Instrument) // Provide the enum type
+                ResponseSchema = Schema.FromType<Instrument>() // Provide the enum type
             };
             var request = new GenerateContentRequest(prompt: "what category of instrument is this?",
                 generationConfig: generationConfig);
@@ -2479,11 +2489,11 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerationConfig()
             {
                 ResponseMimeType = "application/json",
-                ResponseSchema = new
+                ResponseSchema = Schema.FromObject(new
                 {
                     type = "array",
                     items = new { type = "object", properties = new { name = new { type = "string" } } }
-                }
+                })
             };
 
             // Act
@@ -2555,7 +2565,7 @@ namespace Test.Mscc.GenerativeAI
                          """;
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = schema
+                ResponseMimeType = "application/json", ResponseSchema = Schema.FromString(schema)
             };
 
             // Act
@@ -2585,7 +2595,7 @@ namespace Test.Mscc.GenerativeAI
             var options = new RequestOptions() { Timeout = TimeSpan.FromMinutes(3) };
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new List<AiWeaponModel>()
+                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<AiWeaponModel>>()
             };
 
             // Act
@@ -2610,7 +2620,7 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerationConfig()
             {
                 ResponseSchema =
-                    """{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}...""",
+                    Schema.FromString("""{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}..."""),
                 ResponseMimeType = "application/json"
             };
 
@@ -2647,7 +2657,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerationConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = new Root([])
+                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<Root>()
             };
 
             // Act
