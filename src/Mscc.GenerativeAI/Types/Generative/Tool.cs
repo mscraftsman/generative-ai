@@ -20,7 +20,6 @@ namespace Mscc.GenerativeAI
         /// final response back to the user. Maximum 64 function declarations can be
         /// provided.
         /// </summary>
-        // [JsonConverter(typeof(FunctionDeclarationsJsonConverter))]
         public List<FunctionDeclaration>? FunctionDeclarations { get; set; }
         /// <summary>
         /// Optional. Enables the model to execute code as part of generation.
