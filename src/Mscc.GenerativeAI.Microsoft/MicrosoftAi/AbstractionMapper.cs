@@ -1,9 +1,9 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 #endif
-using System.IO;
 using System.Text.Json;
 using System.Text;
 using mea = Microsoft.Extensions.AI;
@@ -179,8 +179,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 }
                 else
                 {
-                    // Maybe not the best way to do this
-                    writer.WriteStringValue(value.ToString());
+                    JsonSerializer.Serialize(writer, value);
                 }
 
                 writer.WriteEndObject();

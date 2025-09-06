@@ -17,7 +17,7 @@ namespace Mscc.GenerativeAI
         /// <returns>A Schema object representing the JSON Schema</returns>
         public static Schema FromJsonElement(JsonElement jsonElement)
         {
-            Schema? schema = new();
+            Schema schema = new();
 
             if (jsonElement.ValueKind != JsonValueKind.Object)
             {
@@ -163,7 +163,7 @@ namespace Mscc.GenerativeAI
             else if (typeElement.ValueKind == JsonValueKind.Array)
             {
                 // Array of types
-                List<string>? types = new();
+                List<string> types = new();
                 foreach (JsonElement item in typeElement.EnumerateArray())
                 {
                     if (item.ValueKind == JsonValueKind.String)
@@ -228,7 +228,7 @@ namespace Mscc.GenerativeAI
 
         private static List<object> ParseArray(JsonElement arrayElement)
         {
-            List<object>? result = new();
+            List<object> result = new();
             foreach (JsonElement item in arrayElement.EnumerateArray())
             {
                 object? value = ParseValue(item);
@@ -243,7 +243,7 @@ namespace Mscc.GenerativeAI
 
         private static Dictionary<string, object> ParseObject(JsonElement objectElement)
         {
-            Dictionary<string, object>? result = new();
+            Dictionary<string, object> result = new();
             foreach (JsonProperty property in objectElement.EnumerateObject())
             {
                 object? value = ParseValue(property.Value);
@@ -263,7 +263,7 @@ namespace Mscc.GenerativeAI
                 return null;
             }
 
-            List<string>? result = new();
+            List<string> result = new();
             foreach (JsonElement item in arrayElement.EnumerateArray())
             {
                 string? value = item.GetString();
@@ -283,7 +283,7 @@ namespace Mscc.GenerativeAI
                 return null;
             }
 
-            List<Schema>? result = new();
+            List<Schema> result = new();
             foreach (JsonElement item in arrayElement.EnumerateArray())
             {
                 result.Add(FromJsonElement(item));
@@ -305,7 +305,7 @@ namespace Mscc.GenerativeAI
                 return null;
             }
 
-            Dictionary<string, Schema>? properties = new();
+            Dictionary<string, Schema> properties = new();
             foreach (JsonProperty property in propertiesElement.EnumerateObject())
             {
                 properties[property.Name] = FromJsonElement(property.Value);

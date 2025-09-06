@@ -1,6 +1,7 @@
 ﻿#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Text.Json.Serialization;
+using System.Threading;
 #endif
 using System.Diagnostics;
 using System.Reflection;
@@ -124,12 +125,12 @@ namespace Mscc.GenerativeAI
 
             // Try to derive a friendly base name
             string baseName = "lambda";
-            string? methodName = method.Name;
+            string methodName = method.Name;
             int start = methodName.IndexOf('<');
             int end = methodName.IndexOf('>');
             if (start >= 0 && end > start)
             {
-                string? inner = methodName.Substring(start + 1, end - start - 1);
+                string inner = methodName.Substring(start + 1, end - start - 1);
                 if (!string.IsNullOrWhiteSpace(inner))
                 {
                     baseName = inner;
@@ -137,17 +138,17 @@ namespace Mscc.GenerativeAI
             }
 
             // Add a short param summary
-            StringBuilder? parts = new();
+            StringBuilder parts = new();
             foreach (ParameterInfo p in method.GetParameters())
             {
                 // Skip framework-only params if present
-                if (p.ParameterType.FullName == "System.Threading.CancellationToken")
+                if (p.ParameterType == typeof(CancellationToken))
                     continue;
                 if (parts.Length > 0) parts.Append('_');
                 parts.Append(p.Name ?? "arg");
             }
 
-            string? candidate = parts.Length > 0 ? $"{baseName}_{parts}" : baseName;
+            string candidate = parts.Length > 0 ? $"{baseName}_{parts}" : baseName;
 
             // Add a small stable suffix to reduce collisions across different lambdas
             try
