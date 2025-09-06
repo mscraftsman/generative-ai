@@ -3,6 +3,9 @@ using System;
 using System.Text.Json.Serialization;
 #endif
 using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -18,12 +21,14 @@ namespace Mscc.GenerativeAI
         /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 63.
         /// </summary>
         public string Name { get; set; } = string.Empty;
+
         /// <summary>
         /// Required. A brief description of the function.
         /// Description and purpose of the function.
         /// Model uses it to decide how and whether to call the function.
         /// </summary>
         public string? Description { get; set; }
+
         /// <summary>
         /// Optional. Describes the parameters to this function.
         /// </summary>
@@ -40,6 +45,7 @@ namespace Mscc.GenerativeAI
         ///   required: - 
         /// </remarks>
         public Schema? Parameters { get; set; }
+
         //public Dictionary<string, object> ParametersPython { get; set; }
         /// <summary>
         /// Optional. Describes the output from this function in JSON Schema format.
@@ -47,7 +53,6 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// Reflects the Open API 3.03 Response Object. The Schema defines the type used for the response value of the function.
         /// </remarks>
-        // [JsonConverter(typeof(ResponseSchemaJsonConverter))]
         public Schema? Response { get; set; }
 
         [JsonIgnore]
@@ -57,6 +62,7 @@ namespace Mscc.GenerativeAI
         /// Optional. Specifies the function Behavior. Currently only supported by the BidiGenerateContent method.
         /// </summary>
         public BehaviorType? Behavior { get; set; }
+
         /// <summary>
         /// Optional. Describes the parameters to the function in JSON Schema format.
         /// The schema must describe an object where the properties are the parameters to the function.
@@ -64,6 +70,7 @@ namespace Mscc.GenerativeAI
         /// This field is mutually exclusive with `parameters`.
         /// </summary>
         public string? ParametersJsonSchema { get; set; }
+
         /// <summary>
         /// Optional. Describes the output from this function in JSON Schema format.
         /// The value specified by the schema is the response value of the function.
@@ -75,28 +82,137 @@ namespace Mscc.GenerativeAI
 
         public FunctionDeclaration(string name, string? description)
         {
-            Name = name;
+            Name = SanitizeFunctionName(name);
             Description = description;
             Parameters = null;
         }
 
         public FunctionDeclaration(Delegate callback)
         {
-            Name = callback.GetNormalizedName();
+            Name = GenerateNameForCallback(callback);
             Callback = callback;
+            Parameters = Schema.BuildParametersSchemaFromDelegate(callback);
+            Response = Schema.BuildResponseSchemaFromDelegate(callback);
         }
 
         public FunctionDeclaration(string name, Delegate callback)
         {
-            Name = name;
+            Name = SanitizeFunctionName(name);
             Callback = callback;
+            Parameters = Schema.BuildParametersSchemaFromDelegate(callback);
+            Response = Schema.BuildResponseSchemaFromDelegate(callback);
         }
 
         public FunctionDeclaration(string name, string? description, Delegate callback)
         {
-            Name = name;
+            Name = SanitizeFunctionName(name);
             Description = description;
             Callback = callback;
+            Parameters = Schema.BuildParametersSchemaFromDelegate(callback);
+            Response = Schema.BuildResponseSchemaFromDelegate(callback);
+        }
+
+        private static string GenerateNameForCallback(Delegate callback)
+        {
+            MethodInfo? method = callback.Method;
+
+            if (!IsLambda(method))
+            {
+                // Keep prior behavior for normal methods
+                return SanitizeFunctionName(callback.Method.Name);
+            }
+
+            // Try to derive a friendly base name
+            string baseName = "lambda";
+            string? methodName = method.Name;
+            int start = methodName.IndexOf('<');
+            int end = methodName.IndexOf('>');
+            if (start >= 0 && end > start)
+            {
+                string? inner = methodName.Substring(start + 1, end - start - 1);
+                if (!string.IsNullOrWhiteSpace(inner))
+                {
+                    baseName = inner;
+                }
+            }
+
+            // Add a short param summary
+            StringBuilder? parts = new();
+            foreach (ParameterInfo p in method.GetParameters())
+            {
+                // Skip framework-only params if present
+                if (p.ParameterType.FullName == "System.Threading.CancellationToken")
+                    continue;
+                if (parts.Length > 0) parts.Append('_');
+                parts.Append(p.Name ?? "arg");
+            }
+
+            string? candidate = parts.Length > 0 ? $"{baseName}_{parts}" : baseName;
+
+            // Add a small stable suffix to reduce collisions across different lambdas
+            try
+            {
+                int token = method.MetadataToken;
+                candidate = $"{candidate}_{(token & 0xFFF):x}"; // 3-hex suffix
+            }
+            catch
+            {
+                // ignore
+            }
+
+            return SanitizeFunctionName(candidate);
+        }
+
+        private static bool IsLambda(MethodInfo method)
+        {
+            // Lambdas/anonymous/closures are typically compiler-generated and/or have angle-bracket names
+            if (method.IsDefined(typeof(CompilerGeneratedAttribute), inherit: true))
+                return true;
+            if (method.Name.StartsWith("<") && method.Name.Contains(">"))
+                return true;
+            Type? declaringType = method.DeclaringType;
+            if (declaringType != null && declaringType.IsDefined(typeof(CompilerGeneratedAttribute), inherit: true))
+                return true;
+            return false;
+        }
+
+        private static string SanitizeFunctionName(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return "_function";
+            }
+
+            // Allowed: letters, digits, underscore, dash. Must start with letter or underscore. Max 63.
+            StringBuilder sb = new(name.Length);
+            foreach (char ch in name)
+            {
+                if (char.IsLetterOrDigit(ch) || ch == '_' || ch == '-')
+                {
+                    sb.Append(ch);
+                }
+                else
+                {
+                    sb.Append('_');
+                }
+            }
+
+            string sanitized = sb.ToString();
+
+            if (sanitized.Length == 0)
+                sanitized = "_function";
+
+            if (!char.IsLetter(sanitized[0]) && sanitized[0] != '_')
+            {
+                sanitized = "_" + sanitized;
+            }
+
+            if (sanitized.Length > 63)
+            {
+                sanitized = sanitized.Substring(0, 63);
+            }
+
+            return sanitized;
         }
     }
 }

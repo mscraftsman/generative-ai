@@ -115,7 +115,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 {
                     request.GenerationConfig.ResponseMimeType = "application/json";
                     if (jsonFormat.Schema is not null)
-                        request.GenerationConfig.ResponseSchema = jsonFormat.Schema;
+                        request.GenerationConfig.ResponseSchema = jsonFormat.Schema is {} schema ? Schema.FromJsonElement(schema) : null;
                 }
 
                 if (options.AdditionalProperties?.Any() is true)
