@@ -235,8 +235,7 @@ namespace Mscc.GenerativeAI.Microsoft
             }
             else
             {
-                // Maybe not the best way to do this
-                writer.WriteStringValue(value.ToString());
+                JsonSerializer.Serialize(writer, value);
             }
 
             writer.WriteEndObject();
@@ -244,6 +243,7 @@ namespace Mscc.GenerativeAI.Microsoft
 
             return JsonDocument.Parse(stream.ToArray()).RootElement.Clone();
         }
+
         /// <summary>
         /// Converts a <see cref="mea.ChatOptions"/> to a <see cref="RequestOptions"/>.
         /// </summary>
