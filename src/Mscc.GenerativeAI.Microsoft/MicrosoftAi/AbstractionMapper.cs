@@ -71,10 +71,10 @@ namespace Mscc.GenerativeAI.Microsoft
                                 functionName = name;
                             }
 
-                            if (frc.Result is JsonElement je
-                                && je.ValueKind != JsonValueKind.Object)
+                            // If we receive anything other than a JsonElement that is an object, wrap it in an object { "result": jsonElement }
+                            if (frc.Result is not JsonElement { ValueKind: JsonValueKind.Object })
                             {
-                                frc.Result = WrapInObject(je);
+                                frc.Result = WrapInObject(frc.Result);
                             }
 
                             c.Parts.Add(new FunctionResponse()
@@ -152,8 +152,7 @@ namespace Mscc.GenerativeAI.Microsoft
 
                 if (options.Tools is { } aiTools)
                 {
-                    var functionDeclarations = new List<FunctionDeclaration>();
-                    
+                    List<FunctionDeclaration> functionDeclarations = [];
                     foreach (var tool in aiTools)
                     {
                         switch (tool)
@@ -218,25 +217,33 @@ namespace Mscc.GenerativeAI.Microsoft
         }
 
         /// <summary>
-        /// Wraps a <see cref="JsonElement"/> into a new <see cref="JsonElement"/> and the specified <see cref="key"/>.
+        /// Wraps a value into a new <see cref="JsonElement"/> and the specified <see cref="key"/>.
         /// </summary>
-        /// <param name="jsonElement">JsonElement to wrap.</param>
+        /// <param name="value">The value to wrap.</param>
         /// <param name="key">Property to use as wrapper.</param>
         /// <returns></returns>
-        private static JsonElement WrapInObject(JsonElement jsonElement, string key = "result")
+        private static JsonElement WrapInObject(object value, string key = "result")
         {
-            using MemoryStream ms = new();
-            using Utf8JsonWriter writer = new(ms);
-            
+            using MemoryStream stream = new();
+            using Utf8JsonWriter writer = new(stream);
+
             writer.WriteStartObject();
             writer.WritePropertyName(key);
-            jsonElement.WriteTo(writer);
+            if (value is JsonElement jsonElement)
+            {
+                jsonElement.WriteTo(writer);
+            }
+            else
+            {
+                // Maybe not the best way to do this
+                writer.WriteStringValue(value.ToString());
+            }
+
             writer.WriteEndObject();
             writer.Flush();
 
-            return JsonDocument.Parse(ms.ToArray()).RootElement.Clone();
+            return JsonDocument.Parse(stream.ToArray()).RootElement.Clone();
         }
-
         /// <summary>
         /// Converts a <see cref="mea.ChatOptions"/> to a <see cref="RequestOptions"/>.
         /// </summary>
@@ -403,22 +410,18 @@ namespace Mscc.GenerativeAI.Microsoft
         private static mea.FunctionCallContent ToFunctionCallContent(FunctionCall functionCall)
         {
             IDictionary<string, object?>? arguments = null;
-            if (functionCall.Args is IReadOnlyDictionary<string, object?> args1)
-                arguments = args1.ToDictionary(x => x.Key, x => x.Value);
-            else if (functionCall.Args is IReadOnlyDictionary<string, object> args2)
-                arguments = args2.ToDictionary(x => x.Key, x => x.Value);
+            if (functionCall.Args is IReadOnlyDictionary<string, object?> a1)
+            {
+                arguments = a1.ToDictionary(x => x.Key, x => x.Value);
+            }
+            else if (functionCall.Args is IReadOnlyDictionary<string, object> a2)
+            {
+                arguments = a2.ToDictionary(x => x.Key, x => (object?)x.Value);
+            }
             else if (functionCall.Args is JsonElement je)
             {
-                try
-                {
-                    arguments = je.Deserialize<IDictionary<string, object?>>();
-                }
-                catch (JsonException ex)
-                {
-                    Console.WriteLine($"Failed to deserialize function call arguments: {ex.Message}");
-                }
+                arguments = je.Deserialize<IDictionary<string, object?>>();
             }
-            else Console.WriteLine($"FunctionCall.Args is not a dictionary: {functionCall.Args?.GetType()}");
 
             return new mea.FunctionCallContent(
                 functionCall.Id ?? Guid.NewGuid().ToString(),
