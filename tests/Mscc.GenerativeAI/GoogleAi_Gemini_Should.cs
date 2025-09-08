@@ -651,6 +651,46 @@ namespace Test.Mscc.GenerativeAI
             "A minimalist composition featuring a single, delicate red maple leaf positioned in the bottom-right of the frame. The background is a vast, empty off-white canvas, creating significant negative space for text. Soft, diffused lighting from the top left. Square image.")]
         [InlineData(
             "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. In the foreground, a detective in a trench coat stands under a flickering streetlamp, rain soaking his shoulders. In the background, the neon sign of a desolate bar reflects in a puddle. A caption box at the top reads \"The city was a tough place to keep secrets.\" The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene at the dentist. In the foreground, the patient lying in the chair and a female doctor leaning over the patient inspecting the teeth. In the background, a certificate hanging on the wall that reads \"Chirurgien Dentiste.\" " +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Close up medical prescription by the dentist. The medication is for 'Amoxyl-500' (use exact writing) with a dosage of '1 tablet, 3x a day, For 4 days' (use exact writing)." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene inside the pharmacy. In the foreground, a female pharmacist handing over a small paper envelope titled 'Amaryl M 500' (use exact writing) to the patient. In the background, the window pane has an inverted top banner reading 'Pharmacy' (use exact writing) and cars passing by on the street." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene in the dining area at home. In the foreground, male protagonist sitting at the table finishing dinner with a glass of soda drink, several empty cans standing on the table. In the background, his wife taking another can of soda from the fridge in the kitchen." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene in the kitchen at night. male protagonist in his pyjama gulping down a large glass bottle of soda, some soda spilling and dripping down on the pyjama." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene in the car, view through the front window screen. In the foreground, wife with scared and concerned face expression at the steering wheel while male protagonist sits with a distant glare of eyesight in the passenger seat. Outside on both sides, building. Give the scene a touch urgency." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene in the ER of a hospital. In the foreground, a female nurse checking blood sugar levels using the index finger of the male protagonist who's sitting in a chair. In the background, closed doors with top window pane has an inverted top banner reading 'ER' (use exact writing) on all window panes." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene in a hospital room. Comatose male protagonist lying asleep in bed. An IV drip injected into his arm, the fluid bag reading 'Glucose' (use exact writing)." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+            "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+            "Scene in same hospital room. Male protagonist sitting upright in bed. His wife anxiously sitting behind the bed while two doctors discuss the diagnosis of 'Severe Hypoglycemia'." +
+            "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
+        [InlineData(
+             "A single comic book panel in a gritty, noir art style with high-contrast black and white inks. " +
+             "In the foreground, healthy male protagonist holding a smartphone showing the splash screen of an app called 'MedBuddy' (use exact writing). In the background, the court yard building with stairs and columns. Some people going in and out. " +
+             "The lighting is harsh, creating a dramatic, somber mood. Landscape.")]
         public async Task Generate_Content_Image_Prompting_Guide(string prompt)
         {
             // Arrange
