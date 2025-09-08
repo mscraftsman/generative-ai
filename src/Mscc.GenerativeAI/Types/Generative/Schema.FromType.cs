@@ -112,9 +112,14 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Builds a parameters Schema (object with named properties) from a delegate's signature.
-        /// Skips framework parameters like CancellationToken. Returns null if there are no user-exposed parameters.
+        /// Builds a parameters <see cref="Schema"/> from a delegate's signature.
+        /// Skips framework parameters such as <see cref="CancellationToken"/> that should not be exposed to the model.
         /// </summary>
+        /// <param name="callback">The delegate whose parameters will be used to construct the schema.</param>
+        /// <returns>
+        /// A <see cref="Schema"/> representing the parameters of the delegate as an object with named properties,
+        /// or <c>null</c> if there are no user-exposed parameters.
+        /// </returns>
         internal static Schema? BuildParametersSchemaFromDelegate(Delegate callback)
         {
             MethodInfo method = callback.Method;
@@ -154,8 +159,14 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Builds a response Schema from a delegate's return type. Returns null for void/Task/ValueTask without result.
+        /// Builds a response <see cref="Schema"/> from a delegate's return type.
+        /// Returns <c>null</c> for <c>void</c>, <c>Task</c>, or <c>ValueTask</c> without a result.
         /// </summary>
+        /// <param name="callback">The delegate whose return type will be used to generate the schema.</param>
+        /// <returns>
+        /// A <see cref="Schema"/> representing the return type of the delegate,
+        /// or <c>null</c> if the return type is <c>void</c>, <c>Task</c>, or <c>ValueTask</c> without a result.
+        /// </returns>
         internal static Schema? BuildResponseSchemaFromDelegate(Delegate callback)
         {
             MethodInfo method = callback.Method;

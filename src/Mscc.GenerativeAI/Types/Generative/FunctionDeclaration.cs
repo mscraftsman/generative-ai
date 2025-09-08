@@ -192,7 +192,7 @@ namespace Mscc.GenerativeAI
                 {
                     sb.Append(ch);
                 }
-                else
+                else if (sb.Length == 0 || sb[sb.Length - 1] != '_')
                 {
                     sb.Append('_');
                 }

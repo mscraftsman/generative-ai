@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
 {
     public partial class Schema
     {
-         /// <summary>
+        /// <summary>
         /// Converts a JsonElement representing a JSON Schema to a Schema object.
         /// </summary>
         /// <param name="jsonElement">The JsonElement containing the JSON Schema</param>
