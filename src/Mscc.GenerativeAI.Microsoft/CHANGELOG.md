@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.4
+
+### Added
+
+- implement function calling properly @TeodorVecerdi (7d441bf)
+- add tests for function calling (bad4bfd)
+
+### Changed
+
+- bump version
+
 ## 2.8.3
 
 ### Changed

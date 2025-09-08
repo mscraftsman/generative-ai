@@ -12,6 +12,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.4
+
+### Added
+
+- implement function calling properly @TeodorVecerdi (7d441bf)
+- add tests for function calling (bad4bfd)
+- add extension method to merge sequence of responses @TeodorVecerdi (Vertex AI) (793944b)
+- add conversion of JSON Schema @TeodorVecerdi (7a612e0)
+- add handling for `Uri` (81b0f90)
+- add centralized MSBuild properties (7bddcbc)
+- add support for `x-api-key` header @TeodorVecerdi (6c23a2e)
+- add sample project (842f622)
+
+### Changed
+
+- substitute `Tools` type (43966f4)
+- split JSON serialization options (read vs write) (a2732f5)
+- change property type (f6e68da)
+- change property to optional (32db433)
+- extended test of Gemini 2.5 Flash Image Preview (3730d16)
+- model supports batch generation (ee46d9b)
+- use `Nano Banana` as model name. ;-) (11e758a)
+- specify .NET SDK for samples (bcbc30e)
+- remove targetting of .NET Framework 4.7.2 (net472) (fc06bab)
+
+### Fixed
+
+- avoid duplicated delegates (3b5642a)
+- fix access to GitHub Package Registry (9c0f73c)
+
 ## 2.8.3
 
 ### Added
