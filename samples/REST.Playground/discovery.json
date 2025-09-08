@@ -2259,7 +2259,7 @@
       }
     }
   },
-  "revision": "20250829",
+  "revision": "20250902",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
