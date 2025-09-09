@@ -52,10 +52,10 @@ jobs:
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -o output/ --no-build
 
     - name: Setup access to GitHub Package Registry (GPR)
-      run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
+      run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name ghmain "https://nuget.pkg.github.com/mscraftsman/index.json"
 
     - name: Push to GitHub Package Registry (GPR)
-      run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "github"
+      run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "ghmain"
 
   build_and_push_dependents:
     name: Build and Push Dependent Packages to GPR
@@ -83,6 +83,9 @@ jobs:
 
     - name: Set NuGet source
       run: mv ./nuget.github ./nuget.config
+
+    - name: Setup access to GitHub Package Registry (GPR)
+      run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
 
     - name: Restore Dependencies
       run: dotnet restore ./GenerativeAI.sln
