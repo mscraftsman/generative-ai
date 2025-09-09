@@ -627,7 +627,7 @@ namespace Test.Mscc.GenerativeAI
             {
                 if (!string.IsNullOrEmpty(part.Text))
                     _output.WriteLine($"{part.Text}");
-                if (part.InlineData is not null)
+                if (part.InlineData?.Data != null)
                 {
                     var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
                         Path.ChangeExtension($"{Guid.NewGuid():D}",
