@@ -719,6 +719,27 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Generate_Content_with_Default_RequestOptions()
+        {
+            // Arrange
+            var prompt = "Why is the moon red during a lunar eclipse?";
+            var options = new RequestOptions();
+            options.Headers.TryAddWithoutValidation("x-api-key", _fixture.ApiKey);
+            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey, requestOptions: options, logger: Logger);
+            var model = googleAi.GenerativeModel(model: _model);
+            var request = new GenerateContentRequest(prompt);
+            
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Text.Should().NotBeEmpty();
+            _output.WriteLine(response?.Text);
+        }
+
+        [Fact]
         public async Task Generate_Content_Stream()
         {
             // Arrange

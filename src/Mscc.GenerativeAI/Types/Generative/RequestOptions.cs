@@ -1,6 +1,9 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
+using System.Net.Http;
 #endif
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace Mscc.GenerativeAI
 {
@@ -9,11 +12,13 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public class RequestOptions
     {
+        private HttpRequestHeaders _headers;
+
         /// <summary>
         /// Gets or sets the <see cref="Retry"/> options for this request.
         /// </summary>
         public Retry Retry { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the timeout for this specific request. 
         /// If set to a positive value, the request will be cancelled if it exceeds this duration.
@@ -29,25 +34,49 @@ namespace Mscc.GenerativeAI
         public string? BaseUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the version of the API.
+        /// </summary>
+        public string? ApiVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the proxy to use for the request.
+        /// </summary>
+        public IWebProxy? Proxy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the headers to use for the request.
+        /// </summary>
+        public HttpRequestHeaders Headers => _headers ?? (_headers = new HttpRequestMessage().Headers);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RequestOptions"/> class
         /// </summary>
         public RequestOptions()
         {
             Retry = new Retry();
-            Timeout = TimeSpan.FromSeconds(100);    // default value of HttpClient
+            Timeout = TimeSpan.FromSeconds(100); // default value of HttpClient
+            // ApiVersion = Mscc.GenerativeAI.ApiVersion.V1;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestOptions"/> class
         /// </summary>
         /// <param name="retry">Optional. Refer to [retry docs](https://googleapis.dev/python/google-api-core/latest/retry.html) for details.</param>
         /// <param name="timeout">Optional. In seconds (or provide a [TimeToDeadlineTimeout](https://googleapis.dev/python/google-api-core/latest/timeout.html) object).</param>
         /// <param name="baseUrl">Optional. The base URL to use for the request.</param>
-        public RequestOptions(Retry? retry = null, TimeSpan? timeout = null, string? baseUrl = null) : this()
+        /// <param name="apiVersion">Optional. The version of the API.</param>
+        /// <param name="proxy">Optional. Proxy settings to use for the request.</param>
+        public RequestOptions(Retry? retry = null,
+            TimeSpan? timeout = null,
+            string? baseUrl = null,
+            string? apiVersion = null,
+            IWebProxy? proxy = null) : this()
         {
             Retry = retry ?? Retry;
             Timeout = timeout ?? Timeout;
             BaseUrl = baseUrl;
+            ApiVersion = apiVersion;
+            Proxy = proxy;
         }
     }
 

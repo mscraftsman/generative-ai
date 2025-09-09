@@ -54,6 +54,11 @@ namespace Mscc.GenerativeAI
                     }
                 }
 
+                if (!string.IsNullOrEmpty(RequestOptions?.BaseUrl))
+                {
+                    url = RequestOptions.BaseUrl;
+                }
+
                 return url;
             }
         }
@@ -67,6 +72,7 @@ namespace Mscc.GenerativeAI
                 {
                     return ApiVersion.V1;
                 }
+
                 return _apiVersion;
             }
             set
@@ -190,9 +196,9 @@ namespace Mscc.GenerativeAI
         {
             if (request is CopyModelRequest && !_useVertexAi)
                 throw new NotSupportedException("Copying a model is not supported with Google AI");
-            if (_cachedContent is not null && (UseGrounding || UseGoogleSearch)) 
+            if (_cachedContent is not null && (UseGrounding || UseGoogleSearch))
                 throw new NotSupportedException("Google Search or Grounding is not supported with CachedContent.");
-            if (UseJsonMode && (UseGrounding || UseGoogleSearch)) 
+            if (UseJsonMode && (UseGrounding || UseGoogleSearch))
                 throw new NotSupportedException("Google Search or Grounding is not supported with JSON mode.");
         }
 
@@ -227,13 +233,13 @@ namespace Mscc.GenerativeAI
         /// <param name="vertexAi">Optional. Flag to indicate use of Vertex AI in express mode.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        internal GenerativeModel(string? apiKey = null, 
-            string? model = null, 
-            GenerationConfig? generationConfig = null, 
+        internal GenerativeModel(string? apiKey = null,
+            string? model = null,
+            GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             Content? systemInstruction = null,
-            ToolConfig? toolConfig = null, 
+            ToolConfig? toolConfig = null,
             bool vertexAi = false,
             IHttpClientFactory? httpClientFactory = null, 
             ILogger? logger = null) : this(httpClientFactory, logger)
@@ -267,9 +273,9 @@ namespace Mscc.GenerativeAI
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        internal GenerativeModel(string? projectId = null, string? region = null, 
+        internal GenerativeModel(string? projectId = null, string? region = null,
             string? model = null, string? endpoint = null,
-            GenerationConfig? generationConfig = null, 
+            GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             Content? systemInstruction = null,
@@ -297,14 +303,14 @@ namespace Mscc.GenerativeAI
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cachedContent"/> is null.</exception>
-        internal GenerativeModel(CachedContent cachedContent, 
-            GenerationConfig? generationConfig = null, 
+        internal GenerativeModel(CachedContent cachedContent,
+            GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             IHttpClientFactory? httpClientFactory = null, 
             ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _cachedContent = cachedContent ?? throw new ArgumentNullException(nameof(cachedContent));
-            
+
             Model = cachedContent.Model;
             _tools = cachedContent.Tools;
             _toolConfig = cachedContent.ToolConfig;
@@ -325,7 +331,7 @@ namespace Mscc.GenerativeAI
         internal GenerativeModel(TuningJob tuningJob,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
-            IHttpClientFactory? httpClientFactory = null, 
+            IHttpClientFactory? httpClientFactory = null,
             ILogger? logger = null) : this(httpClientFactory, logger)
         {
             _tuningJob = tuningJob ?? throw new ArgumentNullException(nameof(tuningJob));
@@ -335,7 +341,7 @@ namespace Mscc.GenerativeAI
             _generationConfig = generationConfig;
             _safetySettings = safetySettings;
         }
-       
+
         /// <summary>
         /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
         /// </summary>
@@ -375,10 +381,10 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var url = "{BaseUrlGoogleAi}/tunedModels";   // v1beta3
+            var url = "{BaseUrlGoogleAi}/tunedModels"; // v1beta3
             var queryStringParams = new Dictionary<string, string?>()
             {
-                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageSize)] = Convert.ToString(pageSize),
                 [nameof(pageToken)] = pageToken,
                 [nameof(filter)] = filter
             };
@@ -403,11 +409,11 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<List<ModelResponse>> ListModels(bool tuned = false, 
-            int? pageSize = 50, 
-            string? pageToken = null, 
-            string? filter = null, 
-            RequestOptions? requestOptions = null, 
+        public async Task<List<ModelResponse>> ListModels(bool tuned = false,
+            int? pageSize = 50,
+            string? pageToken = null,
+            string? filter = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (tuned)
@@ -418,7 +424,7 @@ namespace Mscc.GenerativeAI
             var url = _useVertexAi ? "{BaseUrlVertexAi}/models" : "{BaseUrlGoogleAi}/models";
             var queryStringParams = new Dictionary<string, string?>()
             {
-                [nameof(pageSize)] = Convert.ToString(pageSize), 
+                [nameof(pageSize)] = Convert.ToString(pageSize),
                 [nameof(pageToken)] = pageToken
             };
 
@@ -439,8 +445,8 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ModelResponse> GetModel(string? model = null, 
-            RequestOptions? requestOptions = null, 
+        public async Task<ModelResponse> GetModel(string? model = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             this.GuardSupported();
@@ -459,7 +465,7 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync();
             return await Deserialize<ModelResponse>(response);
         }
-        
+
         // ToDo: Copy model on Vertex AI
         // Ref: https://cloud.google.com/vertex-ai/docs/model-registry/copy-model
         /// <summary>
@@ -470,14 +476,19 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<CopyModelResponse> CopyModel(CopyModelRequest request, 
-            RequestOptions? requestOptions = null, 
+        public async Task<CopyModelResponse> CopyModel(CopyModelRequest request,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             ThrowIfUnsupportedRequest(request);
-            
+
             var url = "{BaseUrlVertexAi}/models:{method}";
-            return await PostAsync<CopyModelRequest, CopyModelResponse>(request, url, GenerativeAI.Method.Copy, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<CopyModelRequest, CopyModelResponse>(request,
+                url,
+                GenerativeAI.Method.Copy,
+                requestOptions,
+                HttpCompletionOption.ResponseContentRead,
+                cancellationToken);
         }
 
         /// <summary>
@@ -488,8 +499,8 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request, 
-            RequestOptions? requestOptions = null, 
+        public async Task<CreateTunedModelResponse> CreateTunedModel(CreateTunedModelRequest request,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
@@ -506,8 +517,13 @@ namespace Mscc.GenerativeAI
             // var method = "createTunedModel";
             // if (_model is (string)Model.BisonText001)
             //     method = "createTunedTextModel";
-            var url = "{BaseUrlGoogleAi}/{method}";   // v1beta3
-            return await PostAsync<CreateTunedModelRequest, CreateTunedModelResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            var url = "{BaseUrlGoogleAi}/{method}"; // v1beta3
+            return await PostAsync<CreateTunedModelRequest, CreateTunedModelResponse>(request,
+                url,
+                method,
+                requestOptions,
+                HttpCompletionOption.ResponseContentRead,
+                cancellationToken);
         }
 
         /// <summary>
@@ -519,8 +535,8 @@ namespace Mscc.GenerativeAI
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<string> DeleteTunedModel(string model, 
-            RequestOptions? requestOptions = null, 
+        public async Task<string> DeleteTunedModel(string model,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
@@ -555,10 +571,10 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<ModelResponse> UpdateTunedModel(string model, 
-            ModelResponse tunedModel, 
-            string? updateMask = null, 
-            RequestOptions? requestOptions = null, 
+        public async Task<ModelResponse> UpdateTunedModel(string model,
+            ModelResponse tunedModel,
+            string? updateMask = null,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
@@ -603,9 +619,9 @@ namespace Mscc.GenerativeAI
         /// <returns>If successful, the response body is empty.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> or <paramref name="emailAddress"/> is null or empty.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<string> TransferOwnership(string model, 
-            string emailAddress, 
-            RequestOptions? requestOptions = null, 
+        public async Task<string> TransferOwnership(string model,
+            string emailAddress,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentNullException(nameof(model));
@@ -674,14 +690,14 @@ namespace Mscc.GenerativeAI
             };
 
             var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
-            var url = $"{baseUri}/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
+            var url = $"{baseUri}/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
             if (resumable)
-            { 
-                url = $"{baseUri}/resumable/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
+            {
+                url = $"{baseUri}/resumable/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
             }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
-                ["alt"] = "json", 
+                ["alt"] = "json",
                 ["uploadType"] = "multipart"
             });
             var json = Serialize(request);
@@ -692,10 +708,11 @@ namespace Mscc.GenerativeAI
                 new StringContent(json, Encoding.UTF8, Constants.MediaType),
                 new StreamContent(fs, (int)Constants.ChunkSize)
                 {
-                    Headers = {
-                    ContentType = new MediaTypeHeaderValue(mimeType),
-                    ContentLength = totalBytes
-                }
+                    Headers =
+                    {
+                        ContentType = new MediaTypeHeaderValue(mimeType), 
+                        ContentLength = totalBytes
+                    }
                 }
             };
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
@@ -744,14 +761,14 @@ namespace Mscc.GenerativeAI
             };
 
             var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
-            var url = $"{baseUri}/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
+            var url = $"{baseUri}/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
             if (resumable)
-            { 
-                url = $"{baseUri}/resumable/upload/{{Version}}/files";   // v1beta3 // ?key={apiKey}
+            {
+                url = $"{baseUri}/resumable/upload/{{Version}}/files"; // v1beta3 // ?key={apiKey}
             }
             url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
             {
-                ["alt"] = "json", 
+                ["alt"] = "json",
                 ["uploadType"] = "multipart"
             });
             var json = Serialize(request);
@@ -761,10 +778,11 @@ namespace Mscc.GenerativeAI
                 new StringContent(json, Encoding.UTF8, Constants.MediaType),
                 new StreamContent(stream, (int)Constants.ChunkSize)
                 {
-                    Headers = {
-                    ContentType = new MediaTypeHeaderValue(mimeType),
-                    ContentLength = totalBytes
-                }
+                    Headers =
+                    {
+                        ContentType = new MediaTypeHeaderValue(mimeType), 
+                        ContentLength = totalBytes
+                    }
                 }
             };
 
@@ -792,7 +810,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             this.GuardSupported();
-            
+
             var url = "{BaseUrlGoogleAi}/files";
             var queryStringParams = new Dictionary<string, string?>()
             {
@@ -855,7 +873,7 @@ namespace Mscc.GenerativeAI
 
             file = file.SanitizeFileName();
 
-            var url = $"{BaseUrlGoogleAi}/{file}";   // v1beta3
+            var url = $"{BaseUrlGoogleAi}/{file}"; // v1beta3
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
@@ -866,7 +884,7 @@ namespace Mscc.GenerativeAI
             return await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
         }
-        
+
         #endregion
 
         /// <summary>
@@ -885,12 +903,12 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
         public async Task<GenerateContentResponse> GenerateContent(GenerateContentRequest? request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             ThrowIfUnsupportedRequest(request);
-            
+
             request.Tools ??= _tools;
             request.ToolConfig ??= _toolConfig;
             request.SystemInstruction ??= _systemInstruction;
@@ -903,6 +921,7 @@ namespace Mscc.GenerativeAI
                 {
                     request.Contents.AddRange(_cachedContent.Contents);
                 }
+
                 // "CachedContent can not be used with GenerateContent request setting system_instruction, tools or tool_config."
                 request.Tools = null;
                 request.ToolConfig = null;
@@ -912,7 +931,7 @@ namespace Mscc.GenerativeAI
             request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-            
+
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
@@ -948,10 +967,10 @@ namespace Mscc.GenerativeAI
             
             var url = ParseUrl(Url, Method);
             var json = Serialize(request);
-            
+
             Logger.LogMethodInvokingRequest(nameof(GenerateContent));
-            
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType); 
+
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
 
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
@@ -970,6 +989,7 @@ namespace Mscc.GenerativeAI
                 var contents = await Deserialize<List<GenerateContentResponse>>(response);
                 return contents.Merge();
             }
+
             return await Deserialize<GenerateContentResponse>(response);
         }
 
@@ -991,14 +1011,14 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             ToolConfig? toolConfig = null,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt, 
-                generationConfig ?? _generationConfig, 
-                safetySettings ?? _safetySettings, 
+            var request = new GenerateContentRequest(prompt,
+                generationConfig ?? _generationConfig,
+                safetySettings ?? _safetySettings,
                 tools ?? _tools,
                 toolConfig: toolConfig ?? _toolConfig);
             return await GenerateContent(request, requestOptions, cancellationToken);
@@ -1010,14 +1030,14 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             ToolConfig? toolConfig = null,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts, 
-                generationConfig ?? _generationConfig, 
-                safetySettings ?? _safetySettings, 
+            var request = new GenerateContentRequest(parts,
+                generationConfig ?? _generationConfig,
+                safetySettings ?? _safetySettings,
                 tools ?? _tools,
                 toolConfig: toolConfig ?? _toolConfig);
             request.Contents[0].Role = Role.User;
@@ -1037,7 +1057,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
         public async IAsyncEnumerable<GenerateContentResponse> GenerateContentStream(GenerateContentRequest? request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1051,6 +1071,7 @@ namespace Mscc.GenerativeAI
                         yield break;
                     yield return item;
                 }
+
                 yield break;
             }
 
@@ -1066,16 +1087,17 @@ namespace Mscc.GenerativeAI
                 {
                     request.Contents.AddRange(_cachedContent.Contents);
                 }
+
                 // "CachedContent can not be used with GenerateContent request setting system_instruction, tools or tool_config."
                 request.Tools = null;
                 request.ToolConfig = null;
                 request.SystemInstruction = null;
             }
-            
+
             request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-            
+
             if (UseJsonMode)
             {
                 request.GenerationConfig ??= new GenerationConfig();
@@ -1113,13 +1135,13 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
 
             if (Logger.IsEnabled(LogLevel.Debug)) Logger.LogMethodInvokingRequest(nameof(GenerateContentStream));
-            
+
             // Ref: https://code-maze.com/using-streams-with-httpclient-to-improve-performance-and-memory-usage/
             // Ref: https://www.stevejgordon.co.uk/using-httpcompletionoption-responseheadersread-to-improve-httpclient-performance-dotnet
             var ms = new MemoryStream();
             await JsonSerializer.SerializeAsync(ms, request, WriteOptions, cancellationToken);
             ms.Seek(0, SeekOrigin.Begin);
-            
+
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Version = _httpVersion;
             httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
@@ -1154,15 +1176,15 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             ToolConfig? toolConfig = null,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateContentRequest(prompt, 
-                generationConfig ?? _generationConfig, 
-                safetySettings ?? _safetySettings, 
-                tools ?? _tools, 
+            var request = new GenerateContentRequest(prompt,
+                generationConfig ?? _generationConfig,
+                safetySettings ?? _safetySettings,
+                tools ?? _tools,
                 toolConfig: toolConfig ?? _toolConfig);
             return GenerateContentStream(request, requestOptions, cancellationToken);
         }
@@ -1173,14 +1195,14 @@ namespace Mscc.GenerativeAI
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             ToolConfig? toolConfig = null,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
 
-            var request = new GenerateContentRequest(parts, 
-                generationConfig ?? _generationConfig, 
-                safetySettings ?? _safetySettings, 
+            var request = new GenerateContentRequest(parts,
+                generationConfig ?? _generationConfig,
+                safetySettings ?? _safetySettings,
                 tools ?? _tools,
                 toolConfig: toolConfig ?? _toolConfig);
             request.Contents[0].Role = Role.User;
@@ -1196,7 +1218,8 @@ namespace Mscc.GenerativeAI
         /// <returns>Response from the model for generated content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        internal async IAsyncEnumerable<GenerateContentResponse> GenerateContentStreamSSE(GenerateContentRequest? request, 
+        internal async IAsyncEnumerable<GenerateContentResponse> GenerateContentStreamSSE(
+            GenerateContentRequest? request,
             RequestOptions? requestOptions = null,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
@@ -1214,16 +1237,17 @@ namespace Mscc.GenerativeAI
                 {
                     request.Contents.AddRange(_cachedContent.Contents);
                 }
+
                 // "CachedContent can not be used with GenerateContent request setting system_instruction, tools or tool_config."
                 request.Tools = null;
                 request.ToolConfig = null;
                 request.SystemInstruction = null;
             }
-            
+
             request.Model = !string.IsNullOrEmpty(request.Model) ? request.Model : _model;
             request.GenerationConfig ??= _generationConfig;
             request.SafetySettings ??= _safetySettings;
-            
+
             var method = "streamGenerateContent";
             var url = ParseUrl(Url, method).AddQueryString(new Dictionary<string, string?>() { ["alt"] = "sse" });
             var json = Serialize(request);
@@ -1250,9 +1274,9 @@ namespace Mscc.GenerativeAI
 #else
                     var data = await sr.ReadLineAsync(cancellationToken);
 #endif
-                    if (string.IsNullOrWhiteSpace(data)) 
+                    if (string.IsNullOrWhiteSpace(data))
                         continue;
-                            
+
                     var item = JsonSerializer.Deserialize<GenerateContentResponse>(
                         data.Substring("data:".Length).Trim(), ReadOptions);
                     if (cancellationToken.IsCancellationRequested)
@@ -1277,12 +1301,12 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
         public async Task<Operation> BatchEmbedContent(AsyncBatchEmbedContentRequest request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             ThrowIfUnsupportedRequest(request);
-            
+
             var url = ParseUrl(Url, GenerativeAI.Method.AsyncBatchEmbedContent);
             return await PostAsync<AsyncBatchEmbedContentRequest, Operation>(request, url, GenerativeAI.Method.AsyncBatchEmbedContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -1303,12 +1327,12 @@ namespace Mscc.GenerativeAI
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
         public async Task<Operation> BatchGenerateContent(BatchGenerateContentRequest request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             ThrowIfUnsupportedRequest(request);
-            
+
             var url = ParseUrl(Url, GenerativeAI.Method.BatchGenerateContent);
             return await PostAsync<BatchGenerateContentRequest, Operation>(request, url, GenerativeAI.Method.BatchGenerateContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -1328,6 +1352,7 @@ namespace Mscc.GenerativeAI
             {
                 throw new NotSupportedException();
             }
+
             throw new NotImplementedException();
         }
 
@@ -1339,8 +1364,8 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        public async Task<GenerateImagesResponse> GenerateImages(GenerateImagesRequest request, 
-            RequestOptions? requestOptions = null, 
+        public async Task<GenerateImagesResponse> GenerateImages(GenerateImagesRequest request,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1371,10 +1396,10 @@ namespace Mscc.GenerativeAI
 
             var request = new GenerateImagesRequest(prompt);
             request.Parameters = (ImageGenerationParameters)config ?? request.Parameters;
-            
+
             return await GenerateImages(request, requestOptions, cancellationToken);
         }
-        
+
         /// <summary>
         /// Generates images from text prompt.
         /// </summary>
@@ -1394,7 +1419,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateImagesResponse> GenerateImages(string prompt,
-            int numberOfImages = 1, string? negativePrompt = null, 
+            int numberOfImages = 1, string? negativePrompt = null,
             ImageAspectRatio? aspectRatio = null, int? guidanceScale = null,
             ImagePromptLanguage? language = null, SafetyFilterLevel? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
@@ -1413,7 +1438,7 @@ namespace Mscc.GenerativeAI
             request.Parameters.PersonGeneration = personGeneration ?? request.Parameters.PersonGeneration;
             request.Parameters.EnhancePrompt = enhancePrompt ?? request.Parameters.EnhancePrompt;
             request.Parameters.AddWatermark = addWatermark ?? request.Parameters.AddWatermark;
-            
+
             return await GenerateImages(request, requestOptions, cancellationToken);
         }
 
@@ -1431,7 +1456,7 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         public async Task<GenerateVideosResponse> GenerateVideos(GenerateVideosRequest request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1460,10 +1485,10 @@ namespace Mscc.GenerativeAI
 
             var request = new GenerateVideosRequest(prompt);
             request.Parameters = config ?? request.Parameters;
-            
+
             return await GenerateVideos(request, requestOptions, cancellationToken);
         }
-        
+
         /// <summary>
         /// Generates images from text prompt.
         /// </summary>
@@ -1483,7 +1508,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateVideosResponse> GenerateVideos(string prompt,
-            int numberOfImages = 1, string? negativePrompt = null, 
+            int numberOfImages = 1, string? negativePrompt = null,
             ImageAspectRatio? aspectRatio = null, int? guidanceScale = null,
             ImagePromptLanguage? language = null, SafetyFilterLevel? safetyFilterLevel = null,
             PersonGeneration? personGeneration = null, bool? enhancePrompt = null,
@@ -1504,12 +1529,13 @@ namespace Mscc.GenerativeAI
             {
                 request.Parameters.PersonGeneration = personGeneration;
             }
+
             request.Parameters.EnhancePrompt = enhancePrompt;
 //            request.Parameters.AddWatermark = addWatermark;
-            
+
             return await GenerateVideos(request, requestOptions, cancellationToken);
         }
-        
+
         //ToDo: Implement new endpoint method createCachedContent 
         //Models: gemini-1.5-pro-001 & gemini-1.5-flash-001 only
 
@@ -1523,7 +1549,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException"></exception>
         public async Task<GenerateAnswerResponse> GenerateAnswer(GenerateAnswerRequest? request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1545,7 +1571,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var request = new GenerateAnswerRequest(prompt, 
+            var request = new GenerateAnswerRequest(prompt,
                 answerStyle,
                 safetySettings ?? _safetySettings);
             return await GenerateAnswer(request, requestOptions, cancellationToken);
@@ -1576,13 +1602,14 @@ namespace Mscc.GenerativeAI
             {
                 request.Model = model ?? _model;
             }
+
             request.TaskType ??= taskType;
             request.Title ??= title;
 
             string[] allowedModels =
             [
-                GenerativeAI.Model.Embedding.SanitizeModelName(), 
-                GenerativeAI.Model.GeminiEmbedding.SanitizeModelName(), 
+                GenerativeAI.Model.Embedding.SanitizeModelName(),
+                GenerativeAI.Model.GeminiEmbedding.SanitizeModelName(),
                 GenerativeAI.Model.TextEmbedding.SanitizeModelName()
             ];
             if (!allowedModels.Contains(request.Model.SanitizeModelName())) throw new NotSupportedException();
@@ -1614,7 +1641,7 @@ namespace Mscc.GenerativeAI
             if (requests == null) throw new ArgumentNullException(nameof(requests));
             string[] allowedModels =
             [
-                GenerativeAI.Model.Embedding.SanitizeModelName(), 
+                GenerativeAI.Model.Embedding.SanitizeModelName(),
                 GenerativeAI.Model.TextEmbedding.SanitizeModelName()
             ];
             if (!allowedModels.Contains(_model.SanitizeModelName())) throw new NotSupportedException();
@@ -1637,9 +1664,9 @@ namespace Mscc.GenerativeAI
         /// <returns>List containing the embedding (list of float values) for the input content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="content"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<EmbedContentResponse> EmbedContent(string content, 
-            string? model = null, 
-            TaskType? taskType = null, 
+        public async Task<EmbedContentResponse> EmbedContent(string content,
+            string? model = null,
+            TaskType? taskType = null,
             string? title = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
@@ -1668,9 +1695,9 @@ namespace Mscc.GenerativeAI
         /// <returns>List containing the embedding (list of float values) for the input content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="content"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<EmbedContentResponse> EmbedContent(IEnumerable<string> content, 
-            string? model = null, 
-            TaskType? taskType = null, 
+        public async Task<EmbedContentResponse> EmbedContent(IEnumerable<string> content,
+            string? model = null,
+            TaskType? taskType = null,
             string? title = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
@@ -1703,6 +1730,7 @@ namespace Mscc.GenerativeAI
                 if (string.IsNullOrEmpty(prompt)) continue;
                 request.Content.Parts.Add(new() { Text = prompt });
             }
+
             return await EmbedContent(request, requestOptions: requestOptions, cancellationToken: cancellationToken);
         }
 
@@ -1718,9 +1746,9 @@ namespace Mscc.GenerativeAI
         /// <returns>List containing the embedding (list of float values) for the input content.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="content"/> is <see langword="null"/>.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
-        public async Task<EmbedContentResponse> EmbedContent(ContentResponse content, 
-            string? model = null, 
-            TaskType? taskType = null, 
+        public async Task<EmbedContentResponse> EmbedContent(ContentResponse content,
+            string? model = null,
+            TaskType? taskType = null,
             string? title = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
@@ -1749,7 +1777,7 @@ namespace Mscc.GenerativeAI
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(GenerateContentRequest request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1758,7 +1786,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            
+
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
@@ -1768,11 +1796,11 @@ namespace Mscc.GenerativeAI
 
         /// <remarks/>
         public async Task<CountTokensResponse> CountTokens(string? prompt,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            
+
             var model = _model.SanitizeModelName().Split(new[] { '/' })[1];
             switch (model)
             {
@@ -1792,8 +1820,8 @@ namespace Mscc.GenerativeAI
         }
 
         /// <remarks/>
-        public async Task<CountTokensResponse> CountTokens(List<IPart>? parts, 
-            RequestOptions? requestOptions = null, 
+        public async Task<CountTokensResponse> CountTokens(List<IPart>? parts,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (parts == null) throw new ArgumentNullException(nameof(parts));
@@ -1802,8 +1830,8 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request, requestOptions, cancellationToken: cancellationToken);
         }
 
-        public async Task<CountTokensResponse> CountTokens(FileResource file, 
-            RequestOptions? requestOptions = null, 
+        public async Task<CountTokensResponse> CountTokens(FileResource file,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (file == null) throw new ArgumentNullException(nameof(file));
@@ -1813,16 +1841,16 @@ namespace Mscc.GenerativeAI
         }
 
         public async Task<ComputeTokensResponse> ComputeTokens(ComputeTokensRequest request,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            
+
             var method = GenerativeAI.Method.CountTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            
+
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
@@ -1840,9 +1868,9 @@ namespace Mscc.GenerativeAI
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="enableAutomaticFunctionCalling"></param>
         /// <returns>Returns a <see cref="ChatSession"/> attached to this model.</returns>
-        public ChatSession StartChat(List<ContentResponse>? history = null, 
+        public ChatSession StartChat(List<ContentResponse>? history = null,
             GenerationConfig? generationConfig = null,
-            List<SafetySetting>? safetySettings = null, 
+            List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             bool enableAutomaticFunctionCalling = false)
         {
@@ -1856,7 +1884,7 @@ namespace Mscc.GenerativeAI
                     new ContentResponse { Role = c.Role, Parts = c.PartTypes }
                 ).ToList();
             }
-            
+
             return new ChatSession(this, history, config, safety, tool, enableAutomaticFunctionCalling);
         }
 
@@ -1869,8 +1897,8 @@ namespace Mscc.GenerativeAI
         /// <returns>Prediction response.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<PredictResponse> Predict(PredictRequest request, 
-            RequestOptions? requestOptions = null, 
+        public async Task<PredictResponse> Predict(PredictRequest request,
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -1879,7 +1907,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             return await PostAsync<PredictRequest, PredictResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
-        
+
         /// <summary>
         /// Same as Predict but returns an LRO.
         /// </summary>
@@ -1899,7 +1927,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             return await PostAsync<PredictLongRunningRequest, Operation>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
-      
+
         #region "PaLM 2" methods
 
         /// <summary>
@@ -1935,7 +1963,7 @@ namespace Mscc.GenerativeAI
             var request = new GenerateTextRequest(prompt);
             return await GenerateText(request, requestOptions, cancellationToken);
         }
-        
+
         /// <summary>
         /// Counts the number of tokens in the content. 
         /// </summary>
@@ -1954,7 +1982,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            
+
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
@@ -2004,8 +2032,8 @@ namespace Mscc.GenerativeAI
         /// <returns>Number of tokens.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(GenerateMessageRequest request,
-                RequestOptions? requestOptions = null,
-                CancellationToken cancellationToken = default)
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -2013,7 +2041,7 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-        
+
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
@@ -2037,7 +2065,7 @@ namespace Mscc.GenerativeAI
             {
                 throw new NotSupportedException();
             }
-            
+
             var url = ParseUrl(Url, Method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -2046,9 +2074,8 @@ namespace Mscc.GenerativeAI
             var response = await SendAsync(httpRequest, null, cancellationToken);
             await response.EnsureSuccessAsync();
             return await Deserialize<EmbedTextResponse>(response);
-
         }
-        
+
         /// <remarks/>
         public async Task<EmbedTextResponse> EmbedText(string prompt,
             CancellationToken cancellationToken = default)
@@ -2058,7 +2085,7 @@ namespace Mscc.GenerativeAI
             {
                 throw new NotSupportedException();
             }
-            
+
             var request = new EmbedTextRequest(prompt);
             return await EmbedText(request, cancellationToken);
         }
@@ -2081,12 +2108,12 @@ namespace Mscc.GenerativeAI
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
-            
+
             if (requestOptions != null)
             {
                 //Client.Timeout = requestOptions.Timeout;
             }
-            
+
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, null, cancellationToken);

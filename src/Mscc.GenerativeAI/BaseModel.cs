@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Text.Json;
@@ -11,7 +12,6 @@ using System.Threading;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI
         private readonly IHttpClientFactory? _httpClientFactory;
         private HttpClient? _httpClient;
         private TimeSpan? _httpTimeout;
-        private IWebProxy? _proxy;
+        private RequestOptions? _requestOptions;
 
         protected HttpClient Client =>
             _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
@@ -54,9 +54,9 @@ namespace Mscc.GenerativeAI
             {
                 SslProtocols = SslProtocols.Tls12
             };
-            if (_proxy != null)
+            if (_requestOptions?.Proxy != null)
             {
-                handler.Proxy = _proxy;
+                handler.Proxy = _requestOptions?.Proxy;
                 handler.UseProxy = true;
             }
             var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
@@ -69,9 +69,9 @@ namespace Mscc.GenerativeAI
                 PooledConnectionLifetime = TimeSpan.FromMinutes(30),
                 EnableMultipleHttp2Connections = true
             };
-            if (_proxy != null)
+            if (_requestOptions?.Proxy != null)
             {
-                handler.Proxy = _proxy;
+                handler.Proxy = _requestOptions?.Proxy;
                 handler.UseProxy = true;
             }
             var client = new HttpClient(new HttpRequestTimeoutHandler(Logger)
@@ -92,6 +92,12 @@ namespace Mscc.GenerativeAI
         {
             get => _apiVersion;
             set => _apiVersion = value;
+        }
+
+        internal RequestOptions? RequestOptions
+        {
+            get => _requestOptions;
+            set => _requestOptions = value;
         }
 
         /// <summary>
@@ -159,15 +165,6 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Gets or sets the proxy to use for the request.
-        /// </summary>
-        public IWebProxy? Proxy
-        {
-            get => _proxy;
-            set => _proxy = value;
-        }
-
-        /// <summary>
         /// Throws a <see cref="NotSupportedException"/>, if the functionality is not supported by combination of settings.
         /// </summary>
         protected virtual void ThrowIfUnsupportedRequest<T>(T request) { }
@@ -183,9 +180,14 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public BaseModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(logger)
+        /// <param name="requestOptions">Optional. Provides options for API requests.</param>
+        public BaseModel(IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null,
+            RequestOptions? requestOptions = null) : base(logger)
         {
             _httpClientFactory = httpClientFactory;
+            _requestOptions = requestOptions;
+            
             // Initialize the default headers in constructor
             var productHeaderValue = new ProductHeaderValue(
                 name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
@@ -219,7 +221,8 @@ namespace Mscc.GenerativeAI
             string? region = null,
             string? model = null,
             IHttpClientFactory? httpClientFactory = null,
-            ILogger? logger = null) : this(httpClientFactory, logger)
+            ILogger? logger = null, 
+            RequestOptions? requestOptions = null) : this(httpClientFactory, logger, requestOptions)
         {
             var credentialsFile =
                 Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ??
@@ -239,9 +242,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
         /// </summary>
-        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null) : base(logger)
+        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null, RequestOptions? requestOptions = null) : base(logger)
         {
             _httpClient = new HttpClient(handler);
+            _requestOptions = requestOptions;
             // Initialize the default headers in constructor
             var productHeaderValue = new ProductHeaderValue(
                 name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
@@ -546,6 +550,8 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default,
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
+            requestOptions ??= _requestOptions;
+            
             var timeout = requestOptions?.Timeout ?? Timeout;
             request.SetTimeout(timeout);
             
@@ -557,6 +563,9 @@ namespace Mscc.GenerativeAI
             // Add instance default headers
             request.Headers.UserAgent.Add(_defaultUserAgent);
             request.Headers.Add(_defaultApiClientHeader.Key, _defaultApiClientHeader.Value);
+
+            // Add headers given in the request options
+            request.AddRequestHeaders(requestOptions?.Headers);
 
             Logger.LogParsedRequest(
                 request.Method,
