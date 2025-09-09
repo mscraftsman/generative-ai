@@ -9,6 +9,9 @@ namespace Mscc.GenerativeAI
     /// </summary>
     public class RequestOptions
     {
+        /// <summary>
+        /// Gets or sets the <see cref="Retry"/> options for this request.
+        /// </summary>
         public Retry Retry { get; set; }
         
         /// <summary>
@@ -20,6 +23,12 @@ namespace Mscc.GenerativeAI
         public TimeSpan Timeout { get; set; }
 
         /// <summary>
+        /// The base URL to use for the request.
+        /// If not set, the default base URL for the model will be used.
+        /// </summary>
+        public string? BaseUrl { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RequestOptions"/> class
         /// </summary>
         public RequestOptions()
@@ -27,28 +36,18 @@ namespace Mscc.GenerativeAI
             Retry = new Retry();
             Timeout = TimeSpan.FromSeconds(100);    // default value of HttpClient
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RequestOptions"/> class.
-        /// </summary>
-        /// <param name="timeout">Optional. The timeout duration for the request in seconds. 
-        /// If null, or if TimeSpan.Zero or a negative value is provided, no specific per-request timeout is applied.
-        /// </param>
-        public RequestOptions(TimeSpan? timeout = null) : this()
-        {
-            Retry = new Retry();
-            Timeout = timeout ?? Timeout;
-        }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestOptions"/> class
         /// </summary>
-        /// <param name="retry">Refer to [retry docs](https://googleapis.dev/python/google-api-core/latest/retry.html) for details.</param>
-        /// <param name="timeout">In seconds (or provide a [TimeToDeadlineTimeout](https://googleapis.dev/python/google-api-core/latest/timeout.html) object).</param>
-        public RequestOptions(Retry? retry, TimeSpan? timeout = null) : this()
+        /// <param name="retry">Optional. Refer to [retry docs](https://googleapis.dev/python/google-api-core/latest/retry.html) for details.</param>
+        /// <param name="timeout">Optional. In seconds (or provide a [TimeToDeadlineTimeout](https://googleapis.dev/python/google-api-core/latest/timeout.html) object).</param>
+        /// <param name="baseUrl">Optional. The base URL to use for the request.</param>
+        public RequestOptions(Retry? retry = null, TimeSpan? timeout = null, string? baseUrl = null) : this()
         {
             Retry = retry ?? Retry;
             Timeout = timeout ?? Timeout;
+            BaseUrl = baseUrl;
         }
     }
 
