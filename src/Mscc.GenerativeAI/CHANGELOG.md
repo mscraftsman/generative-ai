@@ -12,6 +12,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.6
+
+### Added
+
+- Implement RequestOptions.BaseUrl #107 (f91e6a4)
+- add test for default `RequestOptions` (a2f8b41)
+- add property `BaseUrl` (22e7356)
+- add property `ApiVersion` (22e7356) 
+- add property `Headers` (22e7356)
+
+### Changed
+
+- move `Proxy` to `RequestOptions`  (007bb70)
+- remove HttpHeader `x-api-key` (set via `RequestOptions.Headers`) (007bb70)
+
 ## 2.8.5
 
 ### Added
