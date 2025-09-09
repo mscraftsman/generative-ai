@@ -1,8 +1,9 @@
-using System.Net.Http.Headers;
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 #endif
+using System.Net.Http.Headers;
 
 namespace Mscc.GenerativeAI
 {
@@ -59,7 +60,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <seealso href="https://cloud.google.com/docs/authentication/api-keys-use#using-with-rest">Using an API key with REST</seealso>
         /// <param name="request"><see cref="HttpRequestMessage"/> to send to the API.</param>
-        /// <param name="apiKey"></param>
+        /// <param name="apiKey">The API key to use for the request.</param>
         internal static void AddApiKeyHeader(this HttpRequestMessage request, 
             string? apiKey)
         {
@@ -70,12 +71,6 @@ namespace Mscc.GenerativeAI
                     request.Headers.Remove("x-goog-api-key");
                 }
                 request.Headers.Add("x-goog-api-key", apiKey);
-                
-                if (request.Headers.Contains("x-api-key"))
-                {
-                    request.Headers.Remove("x-api-key");
-                }
-                request.Headers.Add("x-api-key", apiKey);
             }
         }
         
@@ -104,6 +99,23 @@ namespace Mscc.GenerativeAI
                 }
 
                 request.Headers.Add("x-goog-user-project", projectId);
+            }
+        }
+
+        internal static void AddRequestHeaders(this HttpRequestMessage request,
+            HttpRequestHeaders? headers)
+        {
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, IEnumerable<string>> header in headers)
+                {
+                    if (request.Headers.Contains(header.Key))
+                    {
+                        request.Headers.Remove(header.Key);
+                    }
+
+                    request.Headers.Add(header.Key, header.Value);
+                }
             }
         }
     }

@@ -23,7 +23,7 @@ namespace Mscc.GenerativeAI
         private readonly string? _accessToken;
         private readonly string _version;
         private readonly IHttpClientFactory? _httpClientFactory;
-        private readonly IWebProxy? _proxy;
+        private readonly RequestOptions? _requestOptions;
         private GenerativeModel? _generativeModel;
         private FilesModel? _filesModel;
         private MediaModel? _mediaModel;
@@ -35,7 +35,7 @@ namespace Mscc.GenerativeAI
         /// Sets default values, if available.
         /// </summary>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
-        /// <param name="proxy">Proxy settings to use for the request.</param>
+        /// <param name="requestOptions">Optional. Options for the request.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <remarks>The following environment variables are used:
         /// <list type="table">
@@ -46,16 +46,16 @@ namespace Mscc.GenerativeAI
         /// </list>
         /// </remarks>
         private GoogleAI(IHttpClientFactory? httpClientFactory = null, 
-            IWebProxy? proxy = null,
+            RequestOptions? requestOptions = null,
             ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
             _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
-            _version = ApiVersion.V1Beta;
+            _version = requestOptions?.ApiVersion ?? ApiVersion.V1Beta;
             _httpClientFactory = httpClientFactory;
-            _proxy = proxy;
+            _requestOptions = requestOptions;
         }
 
         /// <summary>
@@ -64,16 +64,16 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="apiKey">API key for Google AI Studio.</param>
         /// <param name="accessToken">Access token for the Google Cloud project.</param>
-        /// <param name="proxy">Proxy settings to use for the request.</param>
         /// <param name="apiVersion">Version of the API.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
+        /// <param name="requestOptions">Optional. Options for the request.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         public GoogleAI(string? apiKey = null,
             string? accessToken = null,
             string? apiVersion = null,
             IHttpClientFactory? httpClientFactory = null,
-            IWebProxy? proxy = null,
-            ILogger? logger = null) : this(httpClientFactory, proxy, logger)
+            RequestOptions? requestOptions = null,
+            ILogger? logger = null) : this(httpClientFactory, requestOptions, logger)
         {
             _apiKey = apiKey ?? _apiKey;
             _accessToken = accessToken ?? _accessToken;
@@ -110,7 +110,7 @@ namespace Mscc.GenerativeAI
             {
                 AccessToken = _apiKey is null ? _accessToken : null, 
                 Version = _version,
-                Proxy = _proxy
+                RequestOptions = _requestOptions
             };
             return _generativeModel;
         }
@@ -139,7 +139,9 @@ namespace Mscc.GenerativeAI
                 logger: logger ?? Logger)
             {
                 ApiKey = _apiKey,
-                AccessToken = _apiKey is null ? _accessToken : null
+                AccessToken = _apiKey is null ? _accessToken : null,
+                Version = _version,
+                RequestOptions = _requestOptions
             };
             return _generativeModel;
         }

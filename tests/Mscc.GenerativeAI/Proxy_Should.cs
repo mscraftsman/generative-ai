@@ -34,8 +34,9 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var proxy = new WebProxy("http://localhost:8888");
             var recordingHandler = new RecordingHandler();
+            var options = new RequestOptions(proxy: proxy);
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey,
-                proxy: proxy,
+                requestOptions: options,
                 httpClientFactory: new TestHttpClientFactory(recordingHandler));
             var model = googleAi.GenerativeModel(model: _model);
 
@@ -60,6 +61,7 @@ namespace Test.Mscc.GenerativeAI
             var proxy = new WebProxy("http://localhost:8888");
             var mockMessageHandler = new Mock<HttpMessageHandler>();
             var requestReceivedByProxy = false;
+            var options = new RequestOptions(proxy: proxy);
 
             mockMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
@@ -76,7 +78,7 @@ namespace Test.Mscc.GenerativeAI
                 });
 
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey,
-                proxy: proxy,
+                requestOptions: options,
                 httpClientFactory: new TestHttpClientFactory(mockMessageHandler.Object));
             var model = googleAi.GenerativeModel(model: _model);
 
