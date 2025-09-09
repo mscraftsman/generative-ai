@@ -270,7 +270,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 }
                 else if (timeout is not null)
                 {
-                    return new RequestOptions(timeout);
+                    return new RequestOptions(timeout: timeout);
                 }
 
                 return null;

@@ -83,7 +83,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Defines the retry strategy for a request.
     /// </summary>
-    public class Retry
+    public sealed class Retry
     {
         /// <summary>
         /// The initial delay before the first retry, in seconds.
