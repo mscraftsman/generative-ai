@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.5
+
+### Added
+
+- Merge pull request #106 from TeodorVecerdi/feature/meai-function-calling (2920962)
+
+### Changed
+
+- Improve M.E.AI support for function calls (9e2b1f4)
+- bump version
+
 ## 2.8.4
 
 ### Added

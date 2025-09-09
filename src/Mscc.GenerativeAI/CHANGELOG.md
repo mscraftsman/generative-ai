@@ -12,6 +12,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.5
+
+### Added
+
+- Merge pull request #106 from TeodorVecerdi/feature/meai-function-calling (2920962)
+- Simplify conversion to arguments dictionary (2dd4021)
+- Throw argument exception for empty/whitespace schema (0115825)
+- Generate parameters schema, return type schema and names from delegates (a5d1747)
+- Add more options for constructing a Schema (be4e16f)
+- Implement creating a Schema object from JsonElement (2b8595e)
+
+### Changed
+
+- Disable json converters for response schema and function declarations (a3960a0)
+- Remove custom json converters (ec8594e)
+- Improve M.E.AI support for function calls (9e2b1f4)
+
+### Fixed
+
+- Fix tests (9c83b0c)
+
 ## 2.8.4
 
 ### Added
