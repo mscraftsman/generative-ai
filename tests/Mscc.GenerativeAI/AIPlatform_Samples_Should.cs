@@ -93,7 +93,7 @@ namespace Test.Mscc.GenerativeAI
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content { Role = Role.User, Parts = parts });
             var fullText = new StringBuilder();
-            var options = new RequestOptions(TimeSpan.FromMinutes(5));
+            var options = new RequestOptions(timeout: TimeSpan.FromMinutes(5));
             //var options = new RequestOptions(TimeSpan.FromSeconds(2));
 
             // Act
