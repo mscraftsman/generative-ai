@@ -81,11 +81,11 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Set NuGet source
-      run: mv ./nuget.github ./nuget.config
-
     - name: Setup access to GitHub Package Registry (GPR)
       run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
+
+    - name: Set NuGet source
+      run: mv ./nuget.github ./nuget.config
 
     - name: Restore Dependencies
       run: dotnet restore ./GenerativeAI.sln

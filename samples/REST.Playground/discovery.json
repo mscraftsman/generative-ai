@@ -2259,7 +2259,7 @@
       }
     }
   },
-  "revision": "20250902",
+  "revision": "20250907",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -4127,7 +4127,7 @@
       "type": "object"
     },
     "GenerationConfig": {
-      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model.",
+      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model. Next ID: 28",
       "id": "GenerationConfig",
       "properties": {
         "candidateCount": {
