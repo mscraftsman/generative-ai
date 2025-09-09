@@ -610,6 +610,9 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(
             "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation.",
             "cat.jpg")]
+        [InlineData(
+            "Place the cat into a field of tulips.",
+            "cat.jpg")]
         public async Task Generate_Content_with_Text_and_Image(string prompt, string filename)
         {
             // Arrange
