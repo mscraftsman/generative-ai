@@ -791,7 +791,8 @@
       "supportedGenerationMethods": [
         "embedContent",
         "countTextTokens",
-        "countTokens"
+        "countTokens",
+        "asyncBatchEmbedContent"
       ],
       "version": "001"
     },
@@ -902,6 +903,28 @@
       "displayName": "Veo 3 fast",
       "inputTokenLimit": 480,
       "name": "models/veo-3.0-fast-generate-preview",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predictLongRunning"
+      ],
+      "version": "3.0"
+    },
+    {
+      "description": "Veo 3 preview.",
+      "displayName": "Veo 3",
+      "inputTokenLimit": 480,
+      "name": "models/veo-3.0-generate-001",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predictLongRunning"
+      ],
+      "version": "3.0"
+    },
+    {
+      "description": "Veo 3 fast preview.",
+      "displayName": "Veo 3 fast",
+      "inputTokenLimit": 480,
+      "name": "models/veo-3.0-fast-generate-001",
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "predictLongRunning"
