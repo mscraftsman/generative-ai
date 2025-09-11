@@ -25,8 +25,10 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             _fixture = fixture;
         }
 
-        [Fact]
-        public async Task Handle_AIFunction_Tool()
+        [Theory]
+        [InlineData("What is the user's name and age?")]
+        [InlineData("Who am I?")]
+        public async Task Handle_AIFunction_Tool(string prompt)
         {
             // Arrange
             var model = Model.Gemini25Pro;
@@ -44,7 +46,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             var chatHistory = new System.Collections.Generic.List<mea.ChatMessage>
             {
-                new(mea.ChatRole.User, "What is the user's name and age?")
+                new(mea.ChatRole.User, prompt)
             };
 
             // Act
