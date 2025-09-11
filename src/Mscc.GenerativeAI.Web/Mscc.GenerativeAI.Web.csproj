@@ -41,9 +41,16 @@
         <PackageReference Include="Microsoft.Extensions.Http" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
-		<PackageReference Include="Mscc.GenerativeAI" />
 		<PackageReference Include="System.Text.Encodings.Web" />
 	</ItemGroup>
+
+    <ItemGroup Condition="$(Configuration)=='Release'">
+        <PackageReference Include="Mscc.GenerativeAI" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(Configuration)=='Debug'">
+        <ProjectReference Include="..\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Test.Mscc.GenerativeAI" />
