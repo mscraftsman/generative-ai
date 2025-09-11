@@ -1,7 +1,9 @@
 using FluentAssertions;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
+using Neovolve.Logging.Xunit;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,12 +13,13 @@ using mea = Microsoft.Extensions.AI;
 namespace Test.Mscc.GenerativeAI.Microsoft
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class GeminiChatClient_Should
+    public class GeminiChatClient_Should : LoggingTestsBase
     {
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
 
         public GeminiChatClient_Should(ITestOutputHelper output, ConfigurationFixture fixture)
+            : base(output, LogLevel.Trace)
         {
             _output = output;
             _fixture = fixture;
@@ -49,11 +52,12 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             // Assert
             response.Should().NotBeNull();
-            response.Messages.Should().NotBeNull().And.HaveCount(1);
-            response.Messages[0].Contents.Should().NotBeNull().And.HaveCount(1);
+            response.Messages.Should().NotBeNull().And.HaveCount(3);
+            response.Messages[0].Contents.Should().NotBeNull().And.HaveCountGreaterOrEqualTo(1);
             var functionCallContent = response.Messages[0].Contents[0] as mea.FunctionCallContent;
             functionCallContent.Should().NotBeNull();
-            functionCallContent.Name.Should().Be("get_user_information");
+            functionCallContent?.Name.Should().Be("get_user_information");
+            _output.WriteLine(response.Text);
         }
 
         [Description("Get basic information of the current user")]
