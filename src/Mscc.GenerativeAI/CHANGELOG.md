@@ -12,6 +12,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.9
+
+### Added
+
+- Merge pull request #111 from mscraftsman/feature/edit_image (9dd4b1f)
+- add method `EditImage` (Vertex AI) (f9bc826)
+- add image upscaling (Vertex AI) (bb530a3)
+- add better constants for model `imagen-3.0-capability-001` (343b2d0)
+- add mapping to `Predictions` (833fc39)
+- specify JSON key explicitly (1c3c67b)
+- add type `VisionGenerativeModelResult` (3274f83)
+- add XMLdoc (9d9ce9c)
+- add `ImageReferenceType` classification to image (004bb31)
+
+### Changed
+
+- extend constructor (6111b29)
+- rename reference image configuration types (6458310)
+- remove obsolete overrides (7dd7e20)
+- modernize NuGet processing (6e4ad0d)
+- update azure-pipelines.yml for Azure Pipelines (3047542)
+
 ## 2.8.8
 
 ### Added
