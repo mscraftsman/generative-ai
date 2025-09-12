@@ -12,6 +12,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.8
+
+### Added
+
+- add sample for issue 90 (c8f0a4b)
+- add `virtual` modifier (c9cf1e7)
+
+### Changed
+
+- change to CPM (fba72bd)
+- change Fact to Theory and use OP's prompt #90 (c3e9832)
+- change scope (a93811a)
+- change namespace (f0a4254)
+- upgrade model (36b009f)
+- update test case #90 [skip ci] (06dfa17)
+
+### Fixed
+
+- fix #90: add type mapping in streaming (fb67fd1)
+
 ## 2.8.7
 
 ### Fixed
