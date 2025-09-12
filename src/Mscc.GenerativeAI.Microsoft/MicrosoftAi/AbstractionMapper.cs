@@ -316,12 +316,12 @@ namespace Mscc.GenerativeAI.Microsoft
 
             return new mea.ChatResponse(chatMessage)
             {
+                AdditionalProperties = chatMessage.AdditionalProperties,
+                CreatedAt = chatMessage.CreatedAt,
                 FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
-                AdditionalProperties = null,
-                CreatedAt = null,
-                ModelId = null,
+                ModelId = response.ModelVersion,
                 RawRepresentation = response,
-                ResponseId = null,
+                ResponseId = response.ResponseId,
                 Usage = ParseContentResponseUsage(response)
             };
         }
@@ -330,22 +330,33 @@ namespace Mscc.GenerativeAI.Microsoft
         /// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatResponseUpdate"/>.
         /// </summary>
         /// <param name="response">The response stream to convert.</param>
-        public static mea.ChatResponseUpdate ToChatResponseUpdate(GenerateContentResponse? response)
+        public static mea.ChatResponseUpdate? ToChatResponseUpdate(GenerateContentResponse? response)
         {
-            return new mea.ChatResponseUpdate(ToAbstractionRole(response?.Candidates?.FirstOrDefault()?.Content?.Role),
-                response?.Text)
+            if (response is null) return null;
+
+            var chatMessage = ToChatMessage(response);
+
+            return new mea.ChatResponseUpdate(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
+                chatMessage.Contents)
             {
-                // no need to set "Contents" as we set the text
-                CreatedAt = null,
-                AdditionalProperties = null,
-                FinishReason =
-                    response?.Candidates?.FirstOrDefault()?.FinishReason == FinishReason.Other
-                        ? mea.ChatFinishReason.Stop
-                        : null,
+                AuthorName = chatMessage.AuthorName,
+                AdditionalProperties = chatMessage.AdditionalProperties,
+                CreatedAt = chatMessage.CreatedAt,
+                FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
+                ModelId = response.ModelVersion,
                 RawRepresentation = response,
+                ResponseId = response.ResponseId,
+                Role = chatMessage.Role,
             };
         }
 
+        /// <summary>
+        /// Converts a <see cref="EmbedContentRequest"/> to a <see cref="EmbedContentResponse"/>.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified request or response is null.</exception>
         public static mea.GeneratedEmbeddings<mea.Embedding<float>> ToGeneratedEmbeddings(EmbedContentRequest request,
             EmbedContentResponse response)
         {
@@ -461,6 +472,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 null => null,
                 FinishReason.MaxTokens => mea.ChatFinishReason.Length,
                 FinishReason.Stop => mea.ChatFinishReason.Stop,
+                FinishReason.Other => mea.ChatFinishReason.Stop,
                 FinishReason.Safety => mea.ChatFinishReason.ContentFilter,
                 FinishReason.ProhibitedContent => mea.ChatFinishReason.ContentFilter,
                 FinishReason.Recitation => mea.ChatFinishReason.ContentFilter,

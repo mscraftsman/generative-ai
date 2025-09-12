@@ -80,7 +80,7 @@ public sealed class GeminiChatClient : mea.IChatClient
         var request = AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
         var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
-			yield return AbstractionMapper.ToChatResponseUpdate(response);
+			yield return AbstractionMapper.ToChatResponseUpdate(response) ?? new mea.ChatResponseUpdate();
     }
 
     /// <inheritdoc/>
