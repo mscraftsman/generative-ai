@@ -10,9 +10,21 @@ namespace Mscc.GenerativeAI
     [JsonConverter(typeof(JsonStringEnumConverter<SubjectReferenceType>))]
     public enum SubjectReferenceType
     {
+        /// <summary>
+        /// Default subject type.
+        /// </summary>
         SubjectTypeDefault,
+        /// <summary>
+        /// Person subject type.
+        /// </summary>
         SubjectTypePerson,
+        /// <summary>
+        /// Animal subject type.
+        /// </summary>
         SubjectTypeAnimal,
+        /// <summary>
+        /// Product subject type.
+        /// </summary>
         SubjectTypeProduct
     }
 }
