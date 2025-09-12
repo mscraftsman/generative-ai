@@ -10,7 +10,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Required. The reference image for the editing operation.
         /// </summary>
-        public Image? Image { get; set; }
+        [JsonPropertyName("referenceImage")]
+        public Image Image { get; set; }
         /// <summary>
         /// Required. The id of the reference image.
         /// </summary>
