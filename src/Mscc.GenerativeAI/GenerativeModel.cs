@@ -1388,7 +1388,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateImagesResponse> GenerateImages(string model,
-            string prompt, GenerateImagesConfig? config = null,
+            string prompt, 
+            GenerateImagesConfig? config = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
@@ -1444,7 +1445,57 @@ namespace Mscc.GenerativeAI
         }
 
         // ToDo: https://googleapis.github.io/python-genai/genai.html#genai.models.AsyncModels.edit_image
-        //public async Task<GenerateImagesResponse> EditImage() { }
+        /// <summary>
+        /// Edits a set of images specified in the request.
+        /// </summary>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        private async Task<EditImageResponse> EditImage(EditImageRequest request,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (!IsVertexAI) throw new NotSupportedException($"This method is only supported in the Vertex AI client.");
+
+            return await PostAsync<EditImageRequest, EditImageResponse>(request, Url, GenerativeAI.Method.Predict, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+        }
+
+        /// <summary>
+        /// Edits a set of images based on a text description and configuration.
+        /// </summary>
+        /// <param name="model">Required. Model to use.</param>
+        /// <param name="prompt">Required. A text description of the edit to apply to the image.</param>
+        /// <param name="images">List of references images for editing.</param>
+        /// <param name="numberOfImages">Number of images to generate. Range: 1..8.</param>
+        /// <param name="config">Configuration for image editing.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="prompt"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<EditImageResponse> EditImage(string? model,
+            string prompt,
+            List<ReferenceImage> images,
+            int numberOfImages = 1, 
+            EditImageConfig? config = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            Model = model ?? Model ?? throw new ArgumentNullException(nameof(model));
+            if (prompt == null) throw new ArgumentNullException(nameof(prompt));
+
+            var request = new EditImageRequest(prompt, numberOfImages);
+            request.Instances[0].ReferenceImages = images;
+            request.Parameters = config ?? request.Parameters;
+
+            return await EditImage(request, requestOptions, cancellationToken);
+        }
 
         // ToDo: https://googleapis.github.io/python-genai/genai.html#genai.models.AsyncModels.upscale_image
         /// <summary>

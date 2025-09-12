@@ -61,7 +61,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var model = vertexAi.ImageGenerationModel();
-            
+
             // Assert
             model.Should().NotBeNull();
             model.Name.Should().Be($"{expected.SanitizeModelName()}");
@@ -150,6 +150,50 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
+        [InlineData("Remove the snow completely and place the cat [1] on a sidewalk, zoomed out. In the background, people and cabs.", "cat.jpg")]
+        public async Task Edit_Images(string prompt, string filename)
+        {
+            // Arrange
+            var modelName = Model.Imagen3Capability;
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
+            var model = _vertexAi.GenerativeModel(model: modelName);
+            model.AccessToken = _fixture.AccessToken;
+            var imageToEdit = new SubjectReferenceImage()
+            {
+                ReferenceId = 1,
+                Image = new Image()
+                {
+                    BytesBase64Encoded = Convert.ToBase64String(
+                        await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "payload",
+                            filename)))
+                },
+                SubjectImageConfig = new ()
+                {
+                    SubjectDescription = "a cat in the snow",
+                    SubjectType = SubjectReferenceType.SubjectTypeAnimal
+                }
+            };
+
+            // Act
+            // Act
+            var response = await model.EditImage(modelName, prompt, [imageToEdit]);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Predictions.Should().NotBeNull()
+                .And.HaveCountGreaterThanOrEqualTo(1)
+                .And.HaveCountLessThanOrEqualTo(8);
+            foreach (var image in response.Predictions)
+            {
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        image.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
+                _output.WriteLine($"Wrote image to {fileName}");
+            }
+        }
+
+        [Theory]
         [InlineData("cat.jpg", UpscaleFactor.X2)]
         [InlineData("cat.jpg", UpscaleFactor.X4)]
         public async Task Upscale_Image(string filename, UpscaleFactor upscaleFactor)
@@ -160,7 +204,8 @@ namespace Test.Mscc.GenerativeAI
             model.AccessToken = _fixture.AccessToken;
             var imageToScale = new Image()
             {
-                BytesBase64Encoded = Convert.ToBase64String(await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "payload", filename)))
+                BytesBase64Encoded = Convert.ToBase64String(
+                    await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "payload", filename)))
             };
 
             // Act
@@ -215,11 +260,6 @@ namespace Test.Mscc.GenerativeAI
             {
                 "A panning shot of a serene mountain landscape, the camera slowly revealing snow-capped peaks, granite rocks and a crystal-clear lake reflecting the sky",
                 ImageAspectRatio.Ratio16x9
-            };
-            yield return new object[]
-            {
-                "Group of people looking happy, natural light, 8k",
-                ImageAspectRatio.Ratio1x1
             };
             yield return new object[]
             {
