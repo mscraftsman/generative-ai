@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.8" />
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.8.3" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    <PackageVersion Include="Mscc.GenerativeAI" />
   </ItemGroup>
 
   <ItemGroup>
