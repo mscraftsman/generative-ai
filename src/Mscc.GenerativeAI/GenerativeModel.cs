@@ -1359,11 +1359,12 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<GenerateImagesResponse> GenerateImages(GenerateImagesRequest request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
@@ -1446,12 +1447,64 @@ namespace Mscc.GenerativeAI
         //public async Task<GenerateImagesResponse> EditImage() { }
 
         // ToDo: https://googleapis.github.io/python-genai/genai.html#genai.models.AsyncModels.upscale_image
-        //public async Task<GenerateImagesResponse> UpscaleImage() { }
+        /// <summary>
+        /// Makes an API request to upscale a provided image.
+        /// </summary>
+        /// <param name="request">Required. The request to send to the API.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UpscaleImageResponse> UpscaleImage(UpscaleImageRequest request,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (!IsVertexAI) throw new NotSupportedException($"This method is only supported in the Vertex AI client.");
+            
+            return await PostAsync<UpscaleImageRequest, UpscaleImageResponse>(request, Url, GenerativeAI.Method.Predict, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+        }
 
         /// <summary>
-        /// 
+        /// Makes an API request to upscale a provided image.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="model">The model to use.</param>
+        /// <param name="image">The input image for upscaling.</param>
+        /// <param name="upscaleFactor">The factor to upscale the image (x2 or x4).</param>
+        /// <param name="config">Configuration for upscaling.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="image"/> is <see langword="null"/>.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<UpscaleImageResponse> UpscaleImage(string model,
+            Image? image,
+            UpscaleFactor? upscaleFactor = UpscaleFactor.X2,
+            UpscaleImageConfig? config = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            Model = model ?? throw new ArgumentNullException(nameof(model));
+            if (image == null) throw new ArgumentNullException(nameof(image));
+
+            var request = new UpscaleImageRequest();
+            request.Instances.Add(new Instance() { Image = image });
+            request.Parameters.Mode = "upscale"; // UpscaleMode.Upscale;
+            request.Parameters.NumberOfImages = 1;
+            request.Parameters.UpscaleConfig ??= new UpscaleConfig();
+            request.Parameters.UpscaleConfig.UpscaleFactor = upscaleFactor;
+            request.Config = config;
+
+            return await UpscaleImage(request, requestOptions, cancellationToken);
+        }
+
+        /// <summary>
+        /// Generates a video response from the model given an input <see cref="GenerateVideosRequest"/>.
+        /// </summary>
+        /// <param name="request">Required. The request to send to the API.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>

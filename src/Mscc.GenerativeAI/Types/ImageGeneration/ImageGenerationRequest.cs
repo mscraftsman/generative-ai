@@ -16,12 +16,12 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// An array that contains the object with image details to get information about.
         /// </summary>
-        public IEnumerable<Instance> Instances { get; set; }
+        public List<Instance> Instances { get; set; } = [];
 
         /// <summary>
         /// 
         /// </summary>
-        public ImageGenerationParameters Parameters { get; set; }
+        public ImageGenerationParameters Parameters { get; set; } = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationRequest"/> class.
@@ -40,7 +40,7 @@ namespace Mscc.GenerativeAI
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
             if (sampleCount < 1 || sampleCount > 8) throw new ArgumentOutOfRangeException(nameof(sampleCount));
 
-            Instances = new[] { new Instance { Prompt = prompt } };
+            Instances = [new Instance { Prompt = prompt }];
             Parameters = new ImageGenerationParameters { SampleCount = sampleCount };
         }
     }

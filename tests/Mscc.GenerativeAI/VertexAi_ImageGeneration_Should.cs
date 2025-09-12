@@ -13,7 +13,9 @@ using System.IO;
 using System.Threading.Tasks;
 #endif
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Neovolve.Logging.Xunit;
 using System.Collections;
 using Xunit;
 using Xunit.Abstractions;
@@ -21,9 +23,22 @@ using Xunit.Abstractions;
 namespace Test.Mscc.GenerativeAI
 {
     [Collection(nameof(ConfigurationFixture))]
-    public class VertexAiImageGenerationShould(ITestOutputHelper output, ConfigurationFixture fixture)
+    public class VertexAiImageGenerationShould : LoggingTestsBase
     {
-        private readonly string _model = Model.Imagen3;
+        private readonly string _model = Model.Imagen4Fast;
+        private readonly ITestOutputHelper _output;
+        private readonly ConfigurationFixture _fixture;
+        private readonly VertexAI _vertexAi;
+
+        public VertexAiImageGenerationShould(ITestOutputHelper output, ConfigurationFixture fixture)
+            : base(output, LogLevel.Trace)
+        {
+            _output = output;
+            _fixture = fixture;
+            _vertexAi = new(projectId: fixture.ProjectId,
+                region: fixture.Region,
+                logger: Logger);
+        }
 
         [Fact]
         public void Initialize_VertexAI()
@@ -31,7 +46,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Assert
             vertexAi.Should().NotBeNull();
@@ -42,7 +57,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.ImageGeneration;
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
             var model = vertexAi.ImageGenerationModel();
@@ -56,7 +71,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
             var model = vertexAi.ImageGenerationModel();
@@ -70,7 +85,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
 
             // Act
             var model = vertexAi.ImageGenerationModel(model: _model);
@@ -85,9 +100,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content(string prompt, string aspectRatio)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
             var model = vertexAi.ImageGenerationModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
+            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -103,7 +118,7 @@ namespace Test.Mscc.GenerativeAI
                     Path.ChangeExtension($"{Guid.NewGuid():D}",
                         image.MimeType.Replace("image/", "")));
                 File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
-                output.WriteLine($"Wrote image to {fileName}");
+                _output.WriteLine($"Wrote image to {fileName}");
             }
         }
 
@@ -112,9 +127,9 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Images(string prompt, ImageAspectRatio? aspectRatio)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
             var model = vertexAi.ImageGenerationModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
+            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var response = await model.GenerateImages(prompt, aspectRatio: aspectRatio);
@@ -130,7 +145,39 @@ namespace Test.Mscc.GenerativeAI
                     Path.ChangeExtension($"{Guid.NewGuid():D}",
                         image.MimeType.Replace("image/", "")));
                 File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
-                output.WriteLine($"Wrote image to {fileName}");
+                _output.WriteLine($"Wrote image to {fileName}");
+            }
+        }
+
+        [Theory]
+        [InlineData("cat.jpg", UpscaleFactor.X2)]
+        [InlineData("cat.jpg", UpscaleFactor.X4)]
+        public async Task Upscale_Image(string filename, UpscaleFactor upscaleFactor)
+        {
+            // Arrange
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
+            var model = _vertexAi.GenerativeModel(model: _model);
+            model.AccessToken = _fixture.AccessToken;
+            var imageToScale = new Image()
+            {
+                BytesBase64Encoded = Convert.ToBase64String(await File.ReadAllBytesAsync(Path.Combine(Environment.CurrentDirectory, "payload", filename)))
+            };
+
+            // Act
+            var response = await model.UpscaleImage(_model, imageToScale, upscaleFactor);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Predictions.Should().NotBeNull()
+                .And.HaveCountGreaterThanOrEqualTo(1)
+                .And.HaveCountLessThanOrEqualTo(8);
+            foreach (var image in response.Predictions)
+            {
+                var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                    Path.ChangeExtension($"{Guid.NewGuid():D}",
+                        image.MimeType.Replace("image/", "")));
+                File.WriteAllBytes(fileName, Convert.FromBase64String(image.BytesBase64Encoded));
+                _output.WriteLine($"Wrote image to {fileName}");
             }
         }
     }

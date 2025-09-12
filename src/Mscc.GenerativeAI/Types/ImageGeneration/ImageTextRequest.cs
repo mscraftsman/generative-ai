@@ -35,7 +35,7 @@ namespace Mscc.GenerativeAI
         /// <param name="question">The question to ask about the image.</param>
         /// <param name="sampleCount">The number of predictions.</param>
         /// <param name="language">Language of predicted text. Defaults to "en".</param>
-        /// <param name="storageUri">Optional. Cloud Storage uri where to store the generated predictions.</param>
+        /// <param name="storageUri">Optional. Cloud Storage URI where to store the generated predictions.</param>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="base64Image"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="sampleCount"/> is less than 1 or greater than 3.</exception>
         /// <exception cref="NotSupportedException">Thrown when the <paramref name="language"/> is not supported.</exception>

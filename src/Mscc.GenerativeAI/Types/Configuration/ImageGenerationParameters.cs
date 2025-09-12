@@ -27,7 +27,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Optional. Cloud Storage uri where to store the generated images.
+        /// Optional. Cloud Storage URI for where to store the generated images.
         /// </summary>
         public string? StorageUri { get; set; }
 
@@ -132,7 +132,7 @@ namespace Mscc.GenerativeAI
         public UpscaleConfig? UpscaleConfig { get; set; }
 
         /// <summary>
-        /// 
+        /// Optional. Describes the output image format in an <see cref="OutputOptions"/> object. 
         /// </summary>
         public OutputOptions? OutputOptions { get; set; }
 

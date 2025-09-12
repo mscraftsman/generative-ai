@@ -7,8 +7,12 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Response for the request to upscale an image.
     /// </summary>
-    public class UpscaleImageResponse
+    public class UpscaleImageResponse : ImageGenerationResponse
     {
+        /// <summary>
+        /// Output only. A list of the generated images.
+        /// </summary>
+        public List<Image> Images => Predictions;
         /// <summary>
         /// List of generated images.
         /// </summary>
