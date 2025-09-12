@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
     public class ImageGenerationResponse
     {
         /// <summary>
-        /// 
+        /// Output only. A list of the generated images.
         /// </summary>
         public List<Image> Predictions { get; set; }
     }

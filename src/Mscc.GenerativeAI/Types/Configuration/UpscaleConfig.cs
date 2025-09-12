@@ -6,8 +6,9 @@ namespace Mscc.GenerativeAI
     public class UpscaleConfig
     {
         /// <summary>
-        /// Optional. When upscaling, the factor to which the image will be upscaled. If not specified, the upscale factor will be determined from the longer side of the input image and sampleImageSize.
+        /// Optional. When upscaling, the factor to which the image will be upscaled.
+        /// If not specified, the upscale factor will be determined from the longer side of the input image and sampleImageSize.
         /// </summary>
-        public string? UpscaleFactor { get; set; }
+        public UpscaleFactor? UpscaleFactor { get; set; }
     }
 }

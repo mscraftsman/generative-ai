@@ -17,8 +17,9 @@ namespace Mscc.GenerativeAI
         public int? SampleCount { get; set; }
 
         /// <summary>
-        /// 
+        /// The number of generated images.
         /// </summary>
+        /// <remarks>Accepted integer values: 1-8 (v.002), 1-4 (v.005, v.006). Default value: 4.</remarks>
         [JsonIgnore]
         public int? NumberOfImages
         {
@@ -27,7 +28,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Optional. Cloud Storage uri where to store the generated images.
+        /// Optional. Cloud Storage URI for where to store the generated images.
         /// </summary>
         public string? StorageUri { get; set; }
 
@@ -58,6 +59,7 @@ namespace Mscc.GenerativeAI
         /// <remarks>
         /// Controls how much the model adheres to the text prompt.
         /// Large values increase output and prompt alignment, but may compromise image quality.
+        /// Values: 0-500 - Default: 60
         /// </remarks>
         public int? GuidanceScale { get; set; }
 
@@ -132,7 +134,7 @@ namespace Mscc.GenerativeAI
         public UpscaleConfig? UpscaleConfig { get; set; }
 
         /// <summary>
-        /// 
+        /// Optional. Describes the output image format in an <see cref="OutputOptions"/> object. 
         /// </summary>
         public OutputOptions? OutputOptions { get; set; }
 

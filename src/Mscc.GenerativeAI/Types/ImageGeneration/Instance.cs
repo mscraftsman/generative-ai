@@ -1,14 +1,19 @@
+using System.Collections.Generic;
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// An instance of an image with additional metadata.
     /// </summary>
     public class Instance
     {
         /// <summary>
-        /// The text prompt guides what images the model generates. This field is required for both generation and editing.
+        /// Required. The text prompt for the image.
         /// </summary>
-        public string? Prompt { get; set; }
+        /// <remarks>
+        /// The text prompt guides what images the model generates. This field is required for both generation and editing.
+        /// </remarks>
+        public string Prompt { get; set; } = string.Empty;
 
         /// <summary>
         /// Optional. Input image for editing.
@@ -21,5 +26,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <remarks>Base64 input image with 1s and 0s where 1 indicates regions to keep (PNG) (20 MB)</remarks>
         public Mask? Mask { get; set; }
+
+        /// <summary>
+        /// Optional. A list of reference images for the editing operation.
+        /// </summary>
+        public List<ReferenceImage> ReferenceImages { get; set; }
     }
 }

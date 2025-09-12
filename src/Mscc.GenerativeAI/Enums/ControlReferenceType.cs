@@ -10,9 +10,21 @@ namespace Mscc.GenerativeAI
     [JsonConverter(typeof(JsonStringEnumConverter<ControlReferenceType>))]
     public enum ControlReferenceType
     {
-        ControlTypeDefault = 0,
+        /// <summary>
+        /// Default control type.
+        /// </summary>
+        ControlTypeDefault,
+        /// <summary>
+        /// for canny edge
+        /// </summary>
         ControlTypeCanny,
+        /// <summary>
+        /// for face mesh (person customization)
+        /// </summary>
         ControlTypeFaceMesh,
+        /// <summary>
+        /// for scribble
+        /// </summary>
         ControlTypeScribble
     }
 }

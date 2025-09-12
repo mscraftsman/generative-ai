@@ -200,7 +200,9 @@ namespace Mscc.GenerativeAI
         public const string Imagen3Fast = Imagen3GenerateFast001;
         public const string Imagen3GenerateFast = Imagen3GenerateFast001;
         public const string Imagen3GenerateFast001 = "imagen-3.0-fast-generate-001";
-        public const string Imagen3Customization = "imagen-3.0-capability-001";
+        public const string Imagen3Customization = Imagen3Capability001;
+        public const string Imagen3Capability = Imagen3Capability001;
+        public const string Imagen3Capability001 = "imagen-3.0-capability-001";
         public const string ImageGeneration3 = "imagen-3.0-generate-0611";
         public const string ImageGeneration3Fast = "imagen-3.0-fast-generate-0611";
         public const string ImageVerification = "image-verification-001";

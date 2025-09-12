@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -6,32 +8,33 @@ namespace Mscc.GenerativeAI
     public abstract class ReferenceImage
     {
         /// <summary>
-        /// The reference image for the editing operation.
+        /// Required. The reference image for the editing operation.
         /// </summary>
-        public Image? Image { get; set; }
+        [JsonPropertyName("referenceImage")]
+        public Image Image { get; set; }
         /// <summary>
-        /// The id of the reference image.
+        /// Required. The id of the reference image.
         /// </summary>
-        public int? Id { get; set; }
+        public int ReferenceId { get; set; }
         /// <summary>
-        /// The type of the reference image. Only set by the SDK."
+        /// Required. The type of the reference image. Only set by the SDK."
         /// </summary>
-        public ReferenceType? ReferenceType { get; set; }
+        public virtual ImageReferenceType ReferenceType { get; set; }
         /// <summary>
         /// Configuration for the mask reference image.
         /// </summary>
-        public MaskReferenceConfig? MaskImageConfig { get; set; }
+        public MaskImageConfig? MaskImageConfig { get; set; }
         /// <summary>
         /// Configuration for the control reference image.
         /// </summary>
-        public ControlReferenceConfig? ControlImageConfig { get; set; }
+        public ControlImageConfig? ControlImageConfig { get; set; }
         /// <summary>
         /// Configuration for the style reference image.
         /// </summary>
-        public StyleReferenceConfig? StyleImageConfig { get; set; }
+        public StyleImageConfig? StyleImageConfig { get; set; }
         /// <summary>
         /// Configuration for the subject reference image.
         /// </summary>
-        public SubjectReferenceConfig? SubjectImageConfig { get; set; }
+        public SubjectImageConfig? SubjectImageConfig { get; set; }
     }
 }
