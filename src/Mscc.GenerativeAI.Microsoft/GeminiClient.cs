@@ -1,6 +1,6 @@
 namespace Mscc.GenerativeAI.Microsoft
 {
-    public sealed class GeminiClient
+    public class GeminiClient
     {
         private readonly IGenerativeAI _genAi; 
 
@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="model">Model to use.</param>
         /// <returns>An instance of <see cref="GenerativeModel"/>.</returns>
-        public GenerativeModel GetChatClient(string model)
+        public virtual GenerativeModel GetChatClient(string model)
         {
             return _genAi.GenerativeModel(model);
         }
@@ -38,7 +38,7 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="model">Model to use.</param>
         /// <returns>An instance of <see cref="GenerativeModel"/>.</returns>
-        public GenerativeModel GetEmbeddingGenerator(string model)
+        public virtual GenerativeModel GetEmbeddingGenerator(string model)
         {
             return _genAi.GenerativeModel(model);
         }
@@ -48,7 +48,7 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="model">Model to use.</param>
         /// <returns>An instance of <see cref="GenerativeModel"/>.</returns>
-        public GenerativeModel GetSpeechToTextClient(string model)
+        public virtual GenerativeModel GetSpeechToTextClient(string model)
         {
             return _genAi.GenerativeModel(model);
         }
