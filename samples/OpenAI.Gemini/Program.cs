@@ -4,7 +4,7 @@ using OpenAI.Models;
 using System.ClientModel;
 
 var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-var model = "gemini-2.0-flash";
+var model = "gemini-2.5-flash";
 var prompt = "Explain to me how AI works.";
 
 OpenAIClientOptions options = new()
