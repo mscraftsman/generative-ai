@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// An instance of an image with additional metadata.
     /// </summary>
     public class Instance
     {
@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI
         public Mask? Mask { get; set; }
 
         /// <summary>
-        /// 
+        /// Optional. A list of reference images for the editing operation.
         /// </summary>
         public List<ReferenceImage> ReferenceImages { get; set; }
     }

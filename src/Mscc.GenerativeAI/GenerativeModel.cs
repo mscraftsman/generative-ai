@@ -1531,14 +1531,14 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="model"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="image"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<UpscaleImageResponse> UpscaleImage(string model,
+        public async Task<UpscaleImageResponse> UpscaleImage(string? model,
             Image? image,
             UpscaleFactor? upscaleFactor = UpscaleFactor.X2,
             UpscaleImageConfig? config = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            Model = model ?? throw new ArgumentNullException(nameof(model));
+            Model = model ?? Model ?? throw new ArgumentNullException(nameof(model));
             if (image == null) throw new ArgumentNullException(nameof(image));
 
             var request = new UpscaleImageRequest();

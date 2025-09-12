@@ -11,7 +11,7 @@ namespace Mscc.GenerativeAI
     public enum ControlReferenceType
     {
         /// <summary>
-        /// 
+        /// Default control type.
         /// </summary>
         ControlTypeDefault,
         /// <summary>

@@ -5,13 +5,13 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// The mask mode of a reference image
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<MaskReferenceMode>))]
     public enum MaskReferenceMode
     {
         /// <summary>
-        /// 
+        /// Default mask mode.
         /// </summary>
         MaskModeDefault,
         /// <summary>

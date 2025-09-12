@@ -155,7 +155,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var modelName = Model.Imagen3Capability;
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
+            // var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
             var model = _vertexAi.GenerativeModel(model: modelName);
             model.AccessToken = _fixture.AccessToken;
             var imageToEdit = new SubjectReferenceImage()
@@ -174,7 +174,6 @@ namespace Test.Mscc.GenerativeAI
                 }
             };
 
-            // Act
             // Act
             var response = await model.EditImage(modelName, prompt, [imageToEdit]);
 
