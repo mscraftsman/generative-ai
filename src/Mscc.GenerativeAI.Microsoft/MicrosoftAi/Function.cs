@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using mea = Microsoft.Extensions.AI;
 
-namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi;
+namespace Mscc.GenerativeAI.Microsoft;
 
 public class Function
 {

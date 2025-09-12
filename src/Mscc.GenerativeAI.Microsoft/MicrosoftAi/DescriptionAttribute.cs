@@ -1,6 +1,6 @@
 using System;
 
-namespace Mscc.GenerativeAI.Microsoft.MicrosoftAi;
+namespace Mscc.GenerativeAI.Microsoft;
 
 [AttributeUsage(AttributeTargets.Parameter)]
 public sealed class DescriptionAttribute : Attribute
