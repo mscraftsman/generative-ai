@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.UploadMedia", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeminiCodeConversion", "GeminiCodeConversion\GeminiCodeConversion.csproj", "{F2D3682D-176F-4703-BDA3-430E9C03B019}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "issue90", "issue90\issue90.csproj", "{EB7777FA-A1A4-4A39-8C8B-96CFCE6EB528}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{F2D3682D-176F-4703-BDA3-430E9C03B019}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2D3682D-176F-4703-BDA3-430E9C03B019}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2D3682D-176F-4703-BDA3-430E9C03B019}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7777FA-A1A4-4A39-8C8B-96CFCE6EB528}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7777FA-A1A4-4A39-8C8B-96CFCE6EB528}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7777FA-A1A4-4A39-8C8B-96CFCE6EB528}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7777FA-A1A4-4A39-8C8B-96CFCE6EB528}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
