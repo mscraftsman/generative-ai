@@ -29,14 +29,17 @@ jobs:
   - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj --no-build
     displayName: 'Pack Main'
 
-  - task: NuGetToolInstaller@1                            # Minimum required NuGet version: 4.8.0.5385+.
-    displayName: 'NuGet Tool Installer'
   - task: NuGetAuthenticate@1
     displayName: 'NuGet Authenticate'
+  - task: NuGetToolInstaller@1                            # Minimum required NuGet version: 4.8.0.5385+.
+    displayName: 'NuGet Tool Installer'
+    inputs:
+      versionSpec: '*'
+      checkLatest: true
   - script: |
-      nuget.exe push -Source "$(publishVstsFeed)" -ApiKey az $(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg
+      nuget push -Source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
     displayName: 'Push Main Package to Feed'
-      # nuget.exe push -Source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/<FEED_NAME>/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
+#      nuget push -Source "$(publishVstsFeed)" -ApiKey az $(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg
 
 - job: BuildAndPublishDependents
   displayName: 'Build and Publish Dependent Packages'
