@@ -20,28 +20,14 @@ jobs:
       includePreviewVersions: true # Required for preview versions
 
   - script: dotnet --version
+    displayName: 'Check .NET version'
 
-  - task: DotNetCoreCLI@2
+  - script: dotnet restore ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj
     displayName: 'Restore Main'
-    inputs:
-      command: 'restore'
-      projects: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
-  - task: DotNetCoreCLI@2
+  - script: dotnet build -c $(buildConfiguration) ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj
     displayName: 'Build Main $(buildConfiguration)'
-    inputs:
-      command: 'build'
-      projects: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
-      arguments: '-c $(buildConfiguration)'
-      # configuration: '$(buildConfiguration)'
-      versioningScheme: 'off'
-  - task: DotNetCoreCLI@2
+  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj --no-build
     displayName: 'Pack Main'
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
-      configuration: '$(buildConfiguration)'
-      nobuild: true
-      versioningScheme: 'off'
   - task: NuGetCommand@2
     displayName: 'Push Main Package to Feed'
     inputs:
@@ -60,39 +46,23 @@ jobs:
     displayName: 'Install .NET SDK'
     inputs:
       version: 9.x
+
+#  - script: dotnet restore ./GenerativeAI.sln
+#    displayName: 'Restore packages'
   - task: DotNetCoreCLI@2
     displayName: 'Restore packages'
     inputs:
       command: 'restore'
       projects: './GenerativeAI.sln'
       feedsToUse: 'select'
-  - task: DotNetCoreCLI@2
+  - script: dotnet build -c $(buildConfiguration) ./GenerativeAI.sln
     displayName: 'Build Solution $(buildConfiguration)'
-    inputs:
-      command: 'build'
-      projects: './GenerativeAI.sln'
-      arguments: '-c $(buildConfiguration)'
-  - task: DotNetCoreCLI@2
+  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.Web.csproj --no-build
     displayName: 'Pack for ASP.NET Core'
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.Web.csproj'
-      nobuild: true
-      versioningScheme: 'off'
-  - task: DotNetCoreCLI@2
+  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.Google.csproj --no-build
     displayName: 'Pack for .NET using Google Cloud Client Library'
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.Google.csproj'
-      nobuild: true
-      versioningScheme: 'off'
-  - task: DotNetCoreCLI@2
+  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.Microsoft.csproj --no-build
     displayName: 'Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel'
-    inputs:
-      command: 'pack'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.Microsoft.csproj'
-      nobuild: true
-      versioningScheme: 'off'
   - task: NuGetCommand@2
     displayName: 'Push Dependent Packages to Feed'
     inputs:
