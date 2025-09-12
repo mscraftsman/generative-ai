@@ -198,7 +198,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Upscale_Image(string filename, UpscaleFactor upscaleFactor)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
+            //var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
             var model = _vertexAi.GenerativeModel(model: _model);
             model.AccessToken = _fixture.AccessToken;
             var imageToScale = new Image()
