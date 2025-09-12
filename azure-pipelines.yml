@@ -19,17 +19,20 @@ jobs:
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
 
+  - script: dotnet --version
+
   - task: DotNetCoreCLI@2
     displayName: 'Restore Main'
     inputs:
       command: 'restore'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      projects: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
   - task: DotNetCoreCLI@2
-    displayName: 'Build Main'
+    displayName: 'Build Main $(buildConfiguration)'
     inputs:
       command: 'build'
-      packagesToPack: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
-      configuration: '$(buildConfiguration)'
+      projects: './src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj'
+      arguments: '-c $(buildConfiguration)'
+      # configuration: '$(buildConfiguration)'
       versioningScheme: 'off'
   - task: DotNetCoreCLI@2
     displayName: 'Pack Main'
@@ -64,7 +67,7 @@ jobs:
       projects: './GenerativeAI.sln'
       feedsToUse: 'select'
   - task: DotNetCoreCLI@2
-    displayName: 'Build Solution'
+    displayName: 'Build Solution $(buildConfiguration)'
     inputs:
       command: 'build'
       projects: './GenerativeAI.sln'
