@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Configuration for a Mask reference image.
     /// </summary>
-    public class MaskReferenceConfig
+    public class MaskImageConfig
     {
         /// <summary>
         /// Prompts the model to generate a mask instead of you needing to provide
@@ -18,13 +18,13 @@ namespace Mscc.GenerativeAI
         /// A list of up to 5 class ids to use for semantic segmentation.
         /// Automatically creates an image mask based on specific objects.
         /// </summary>
-        public List<int>? SegmentationClasses { get; set; }
+        public List<int>? MaskClasses { get; set; }
         /// <summary>
         /// Dilation percentage of the mask provided.
         /// </summary>
         /// <remarks>
         /// Float between 0 and 1.
         /// </remarks>
-        public float? MaskDilation { get; set; }
+        public float? Dilation { get; set; }
     }
 }

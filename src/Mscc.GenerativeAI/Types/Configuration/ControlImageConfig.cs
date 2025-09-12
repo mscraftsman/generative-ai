@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Configuration for a Control reference image.
     /// </summary>
-    public class ControlReferenceConfig
+    public class ControlImageConfig
     {
         /// <summary>
         /// The type of control reference image to use.
