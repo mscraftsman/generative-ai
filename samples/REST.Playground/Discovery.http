@@ -15,5 +15,9 @@ GET https://aiplatform.googleapis.com/$discovery/rest?version=v1beta1
 
 ###
 
+GET https://aiplatform.googleapis.com/$discovery/rest?version=v1
+
+###
+
 # Get the API description of Google Cloud services from the discovery endpoint.
 GET https://discovery.googleapis.com/discovery/v1/apis

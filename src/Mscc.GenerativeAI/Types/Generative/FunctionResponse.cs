@@ -18,25 +18,26 @@ namespace Mscc.GenerativeAI
         /// Required. The name of the function to call.
         /// Matches [FunctionDeclaration.name] and [FunctionCall.name].
         /// </summary>
+        /// <remarks>
+        /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+        /// </remarks>
         public string Name { get; set; } = string.Empty;
-
         /// <summary>
         /// Required. The function response in JSON object format.
         /// </summary>
         /// <remarks>
-        /// Use "output" key to specify function output and "error" key to specify error details (if any).
-        /// If "output" and "error" keys are not specified, then whole "response" is treated as function output.
+        /// Callers can use any keys of their choice that fit the function's syntax to return the function output, e.g.
+        /// \"output\", \"result\", etc. In particular, if the function call failed to execute, the response can have
+        /// an \"error\" key to return error details to the model.
         /// </remarks>
         //Response map[string] any
         public object? Response { get; set; }
-
         //public virtual IDictionary<string, object> Response { get; set; }
         /// <summary>
         /// Optional. The id of the function call this response is for.
         /// Populated by the client to match the corresponding function call `id`.
         /// </summary>
         public string? Id { get; set; }
-
         /// <summary>
         /// Optional. Specifies how the response should be scheduled in the conversation.
         /// </summary>
@@ -56,5 +57,9 @@ namespace Mscc.GenerativeAI
         /// call, additionally set `scheduling` to `SILENT`.
         /// </remarks>
         public bool? WillContinue { get; set; }
+        /// <summary>
+        /// Optional. Ordered `Parts` that constitute a function response. Parts may have different IANA MIME types.
+        /// </summary>
+        public List<FunctionResponsePart>? Parts { get; set; }
     }
 }

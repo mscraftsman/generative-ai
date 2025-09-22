@@ -1772,6 +1772,66 @@
         }
       }
     },
+    "ragStores": {
+      "resources": {
+        "operations": {
+          "methods": {
+            "get": {
+              "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+              "flatPath": "v1beta/ragStores/{ragStoresId}/operations/{operationsId}",
+              "httpMethod": "GET",
+              "id": "generativelanguage.ragStores.operations.get",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "The name of the operation resource.",
+                  "location": "path",
+                  "pattern": "^ragStores/[^/]+/operations/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Operation"
+              }
+            }
+          }
+        },
+        "upload": {
+          "resources": {
+            "operations": {
+              "methods": {
+                "get": {
+                  "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+                  "flatPath": "v1beta/ragStores/{ragStoresId}/upload/operations/{operationsId}",
+                  "httpMethod": "GET",
+                  "id": "generativelanguage.ragStores.upload.operations.get",
+                  "parameterOrder": [
+                    "name"
+                  ],
+                  "parameters": {
+                    "name": {
+                      "description": "The name of the operation resource.",
+                      "location": "path",
+                      "pattern": "^ragStores/[^/]+/upload/operations/[^/]+$",
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  "path": "v1beta/{+name}",
+                  "response": {
+                    "$ref": "Operation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "tunedModels": {
       "methods": {
         "asyncBatchEmbedContent": {
@@ -2259,7 +2319,7 @@
       }
     }
   },
-  "revision": "20250907",
+  "revision": "20250918",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2665,7 +2725,7 @@
       "type": "object"
     },
     "Chunk": {
-      "description": "A `Chunk` is a subpart of a `Document` that is treated as an independent unit for the purposes of vector representation and storage. A `Corpus` can have a maximum of 1 million `Chunk`s.",
+      "description": "A `Chunk` is a subpart of a `Document` that is treated as an independent unit for the purposes of vector representation and storage.",
       "id": "Chunk",
       "properties": {
         "createTime": {
@@ -2901,7 +2961,7 @@
       "type": "object"
     },
     "Corpus": {
-      "description": "A `Corpus` is a collection of `Document`s. A project can create up to 5 corpora.",
+      "description": "A `Corpus` is a collection of `Document`s. A project can create up to 10 corpora.",
       "id": "Corpus",
       "properties": {
         "createTime": {
@@ -3109,7 +3169,7 @@
       "type": "object"
     },
     "Document": {
-      "description": "A `Document` is a collection of `Chunk`s. A `Corpus` can have a maximum of 10,000 `Document`s.",
+      "description": "A `Document` is a collection of `Chunk`s.",
       "id": "Document",
       "properties": {
         "createTime": {
@@ -3581,7 +3641,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Required. The name of the function to call. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 63.",
+          "description": "Required. The name of the function to call. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
           "type": "string"
         }
       },
@@ -3642,7 +3702,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Required. The name of the function. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 63.",
+          "description": "Required. The name of the function. Must be a-z, A-Z, 0-9, or contain underscores, colons, dots, and dashes, with a maximum length of 64.",
           "type": "string"
         },
         "parameters": {
@@ -3673,15 +3733,22 @@
           "type": "string"
         },
         "name": {
-          "description": "Required. The name of the function to call. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 63.",
+          "description": "Required. The name of the function to call. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.",
           "type": "string"
+        },
+        "parts": {
+          "description": "Optional. Ordered `Parts` that constitute a function response. Parts may have different IANA MIME types.",
+          "items": {
+            "$ref": "FunctionResponsePart"
+          },
+          "type": "array"
         },
         "response": {
           "additionalProperties": {
             "description": "Properties of the object.",
             "type": "any"
           },
-          "description": "Required. The function response in JSON object format.",
+          "description": "Required. The function response in JSON object format. Callers can use any keys of their choice that fit the function's syntax to return the function output, e.g. \"output\", \"result\", etc. In particular, if the function call failed to execute, the response can have an \"error\" key to return error details to the model.",
           "type": "object"
         },
         "scheduling": {
@@ -3703,6 +3770,33 @@
         "willContinue": {
           "description": "Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`.",
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "FunctionResponseBlob": {
+      "description": "Raw media bytes for function response. Text should not be sent as raw bytes, use the 'FunctionResponse.response' field.",
+      "id": "FunctionResponseBlob",
+      "properties": {
+        "data": {
+          "description": "Raw bytes for media formats.",
+          "format": "byte",
+          "type": "string"
+        },
+        "mimeType": {
+          "description": "The IANA standard MIME type of the source data. Examples: - image/png - image/jpeg If an unsupported MIME type is provided, an error will be returned. For a complete list of supported types, see [Supported file formats](https://ai.google.dev/gemini-api/docs/prompting_with_media#supported_file_formats).",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FunctionResponsePart": {
+      "description": "A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes.",
+      "id": "FunctionResponsePart",
+      "properties": {
+        "inlineData": {
+          "$ref": "FunctionResponseBlob",
+          "description": "Inline media bytes."
         }
       },
       "type": "object"
@@ -5911,7 +6005,7 @@
       "type": "object"
     },
     "Tool": {
-      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 11",
+      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 12",
       "id": "Tool",
       "properties": {
         "codeExecution": {

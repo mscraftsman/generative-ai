@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
     }
     
     /// <summary>
-    /// A `Corpus` is a collection of `Document`s. A project can create up to 5 corpora.
+    /// A `Corpus` is a collection of `Document`s. A project can create up to 10 corpora.
     /// </summary>
     [DebuggerDisplay("{DisplayName} ({Name})")]
     public class Corpus
