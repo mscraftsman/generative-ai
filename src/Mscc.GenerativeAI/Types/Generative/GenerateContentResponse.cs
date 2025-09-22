@@ -34,6 +34,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string? ModelVersion { get; set; }
         /// <summary>
+        /// Output only. Creation time of the response.
+        /// </summary>
+        //[JsonConverter(typeof(DateTimeFormatJsonConverter))]
+        public DateTime? CreateTime { get; set; }
+        /// <summary>
         /// Output only. response_id is used to identify each response.
         /// </summary>
         public string? ResponseId { get; set; }
