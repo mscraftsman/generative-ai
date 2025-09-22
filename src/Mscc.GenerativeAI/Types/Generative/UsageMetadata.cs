@@ -62,5 +62,9 @@ namespace Mscc.GenerativeAI
         /// Output only. List of modalities that were processed for tool-use request inputs.
         /// </summary>
         public List<ModalityTokenCount>? ToolUsePromptTokensDetails { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public TrafficType? TrafficType { get; set; }
     }
 }
