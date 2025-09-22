@@ -63,7 +63,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<ModalityTokenCount>? ToolUsePromptTokensDetails { get; set; }
         /// <summary>
-        /// 
+        /// Output only. The traffic type for this request.
         /// </summary>
         public TrafficType? TrafficType { get; set; }
     }
