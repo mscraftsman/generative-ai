@@ -84,7 +84,8 @@ namespace Mscc.GenerativeAI
         /// Adds the Google Maps tool to the list of tools.
         /// </summary>
         /// <param name="apiKey">The API key for Google Maps.</param>
-        public void AddGoogleMaps(string? apiKey = null)
+        /// <param name="enableWidget">Whether to return a token and enable the Google Maps widget (default is false).</param>
+        public void AddGoogleMaps(string? apiKey = null, bool? enableWidget = false)
         {
             if (!this.Any(t => t.GoogleMaps is not null))
             {
@@ -92,14 +93,15 @@ namespace Mscc.GenerativeAI
                 {
                     GoogleMaps = new()
                     {
-                        AuthConfig = new()
-                        {
-                            ApiKeyConfig = new()
-                            {
-                                ApiKeyString = apiKey ??
-                                               Environment.GetEnvironmentVariable("GOOGLE_MAPS_API_KEY")
-                            }
-                        }
+                        EnableWidget = enableWidget,
+                        // AuthConfig = new()
+                        // {
+                        //     ApiKeyConfig = new()
+                        //     {
+                        //         ApiKeyString = apiKey ??
+                        //                        Environment.GetEnvironmentVariable("GOOGLE_MAPS_API_KEY")
+                        //     }
+                        // }
                     }
                 });
             }
