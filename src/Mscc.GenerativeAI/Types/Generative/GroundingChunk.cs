@@ -15,7 +15,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public WebChunk? Web { get; set; }
         /// <summary>
-        /// 
+        /// Grounding chunk from Google Maps.
         /// </summary>
         public GoogleMapsChunk? Maps { get; set; }
     }
