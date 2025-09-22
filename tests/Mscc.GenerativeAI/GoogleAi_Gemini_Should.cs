@@ -730,7 +730,7 @@ namespace Test.Mscc.GenerativeAI
             "cat.jpg")]
         [InlineData("Remove the snow completely and place the cat [1] on a sidewalk, zoomed out. In the background, people and cabs.",
             "cat.jpg")]
-        [InlineData("Place the instrument into a cathedrale.",
+        [InlineData("Place the instrument into a cathedral.",
             "organ.jpg")]
         [InlineData("Generate a real-life example based on the drawing",
             "image.jpg")]
@@ -743,6 +743,59 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    _output.WriteLine($"{part.Text}");
+                if (part.InlineData is not null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+                }
+            });
+        }
+
+        [Theory]
+        [InlineData(
+            "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation.",
+            "cat.jpg")]
+        [InlineData(
+            "Place the cat into a field of tulips.",
+            "cat.jpg")]
+        [InlineData("Remove the snow completely and place the cat [1] on a sidewalk, zoomed out. In the background, people and cabs.",
+            "cat.jpg")]
+        [InlineData("Place the instrument into a cathedral.",
+            "organ.jpg")]
+        [InlineData("Generate a real-life example based on the drawing",
+            "image.jpg")]
+        public async Task Generate_Content_Image_Editing_Issue112(string prompt, string filename)
+        {
+            // Arrange
+            var _generativeModel = _googleAi.GenerativeModel(model: Model.Gemini25FlashImage);
+            var effectiveImage = Path.Combine(Environment.CurrentDirectory, "payload", filename);
+            var imageBytes = await File.ReadAllBytesAsync(effectiveImage);
+            var mimeType = Path.GetExtension(effectiveImage).ToLower() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                _ => throw new NotSupportedException("Unsupported image format.")
+            };
+
+            var parts = new List<IPart>
+            {
+                new TextData { Text = prompt },
+                new InlineData { MimeType = mimeType, Data = Convert.ToBase64String(imageBytes) }
+            };
+            
+            // Act
+            var response = await _generativeModel.GenerateContent(parts);
 
             // Assert
             response.Should().NotBeNull();
