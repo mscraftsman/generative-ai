@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Metadata returned to client when grounding is enabled.
     /// </summary>
-    public class GroundingMetadata
+    public sealed class GroundingMetadata
     {
         /// <summary>
         /// Optional. Google search entry for the following-up web searches.
@@ -33,5 +33,9 @@ namespace Mscc.GenerativeAI
         /// List of supporting references retrieved from specified grounding source.
         /// </summary>
         public List<GroundingChunk>? GroundingChunks { get; set; }
+        /// <summary>
+        /// A token to use with the Google Maps context widget user interface.
+        /// </summary>
+        public string? GoogleMapsWidgetContextToken { get; set; }
     }
 }
