@@ -16,6 +16,9 @@ namespace Mscc.GenerativeAI
         /// Required. The name of the function to call.
         /// Matches [FunctionDeclaration.name].
         /// </summary>
+        /// <remarks>
+        /// Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+        /// </remarks>
         public string Name { get; set; } = string.Empty;
         /// <summary>
         /// Optional. The function parameters and values in JSON object format.

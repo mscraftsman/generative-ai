@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// A `Chunk` is a subpart of a `Document` that is treated as an independent unit for the purposes of vector representation and storage. A `Corpus` can have a maximum of 1 million `Chunk`s.
+    /// A `Chunk` is a subpart of a `Document` that is treated as an independent unit for the purposes of vector representation and storage.
     /// </summary>
     public class Chunk
     {
