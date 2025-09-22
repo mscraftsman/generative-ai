@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GoogleMapChunk
+    public sealed class GoogleMapsChunk
     {
         /// <summary>
         /// A URI linking to the source.

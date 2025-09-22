@@ -17,6 +17,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
-        public GoogleMapChunk? Maps { get; set; }
+        public GoogleMapsChunk? Maps { get; set; }
     }
 }
