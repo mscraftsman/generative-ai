@@ -721,6 +721,43 @@ namespace Test.Mscc.GenerativeAI
             });
         }
 
+        [Theory]
+        [InlineData(
+            "Create a picture of my cat eating a nano-banana in a fancy restaurant under the Gemini constellation.",
+            "cat.jpg")]
+        [InlineData(
+            "Place the cat into a field of tulips.",
+            "cat.jpg")]
+        [InlineData("Remove the snow completely and place the cat [1] on a sidewalk, zoomed out. In the background, people and cabs.",
+            "cat.jpg")]
+        public async Task Generate_Content_Image_Editing(string prompt, string filename)
+        {
+            // Arrange
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25FlashImage);
+            var request = new GenerateContentRequest(prompt);
+            await request.AddMedia(uri: Path.Combine(Environment.CurrentDirectory, "payload", filename));
+
+            // Act
+            var response = await model.GenerateContent(request);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates![0].Content!.Parts.ForEach(part =>
+            {
+                if (!string.IsNullOrEmpty(part.Text))
+                    _output.WriteLine($"{part.Text}");
+                if (part.InlineData is not null)
+                {
+                    var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+                        Path.ChangeExtension($"{Guid.NewGuid():D}",
+                            part.InlineData.MimeType.Replace("image/", "")));
+                    File.WriteAllBytes(fileName, Convert.FromBase64String(part.InlineData.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+                }
+            });
+        }
+
         [Fact]
         public async Task Generate_Content_with_Default_RequestOptions()
         {
