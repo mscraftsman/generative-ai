@@ -730,6 +730,10 @@ namespace Test.Mscc.GenerativeAI
             "cat.jpg")]
         [InlineData("Remove the snow completely and place the cat [1] on a sidewalk, zoomed out. In the background, people and cabs.",
             "cat.jpg")]
+        [InlineData("Place the instrument into a cathedrale.",
+            "organ.jpg")]
+        [InlineData("Generate a real-life example based on the drawing",
+            "image.jpg")]
         public async Task Generate_Content_Image_Editing(string prompt, string filename)
         {
             // Arrange
