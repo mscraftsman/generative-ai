@@ -123,10 +123,10 @@
 
 	<ItemGroup>
 		<None Update=".env" Condition="Exists('.env')">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="appsettings.user.json" Condition="Exists('appsettings.user.json')">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Include="client_secret.json" Condition="Exists('client_secret.json')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
