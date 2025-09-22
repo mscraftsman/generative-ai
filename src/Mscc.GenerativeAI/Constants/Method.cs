@@ -8,6 +8,7 @@ namespace Mscc.GenerativeAI
         public static string BatchEmbedText = "batchEmbedText";
         public static string BatchGenerateContent = "batchGenerateContent";
         public static string CountTokens = "countTokens";
+        public static string ComputeTokens = "computeTokens";
         public static string EmbedContent = "embedContent";
         public static string GenerateAnswer = "generateAnswer";
         public static string GenerateContent = "generateContent";
@@ -23,6 +24,7 @@ namespace Mscc.GenerativeAI
         public static string PredictLongRunning = "predictLongRunning";
         public static string RawPredict = "rawPredict";
         public static string StreamRawPredict = "streamRawPredict";
+        public static string FetchPredictOperation = "fetchPredictOperation";
 
         public static string Query = "query";
         public static string RetrieveContexts = "retrieveContexts";
