@@ -50,7 +50,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Description of what to discourage in the generated images.
         /// </summary>
-        [Obsolete("Setting negativePrompt is no longer supported.")]
+        // [Obsolete("Setting negativePrompt is no longer supported.")]
         public string? NegativePrompt { get; set; }
 
         /// <summary>
