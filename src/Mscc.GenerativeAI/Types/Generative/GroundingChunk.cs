@@ -18,5 +18,9 @@ namespace Mscc.GenerativeAI
         /// Grounding chunk from Google Maps.
         /// </summary>
         public GoogleMapsChunk? Maps { get; set; }
+        /// <summary>
+        /// Grounding chunk from context retrieved by the retrieval tools.
+        /// </summary>
+        public RetrievedContext? RetrievedContext { get; set;}
     }
 }
