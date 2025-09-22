@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 #endif
+using System.Globalization;
 
 namespace Mscc.GenerativeAI
 {
@@ -16,7 +17,7 @@ namespace Mscc.GenerativeAI
         /// <inheritdoc cref="JsonConverter"/>
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return DateTime.Parse(reader.GetString()); // Or DateTime.ParseExact if you need strict parsing
+            return DateTime.Parse(reader.GetString(), CultureInfo.InvariantCulture); // Or DateTime.ParseExact if you need strict parsing
         }
 
         /// <inheritdoc cref="JsonConverter"/>
