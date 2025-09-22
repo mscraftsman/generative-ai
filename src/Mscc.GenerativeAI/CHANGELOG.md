@@ -12,6 +12,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.10
+
+### Added
+
+- add property `EnableWidget` (9be0e97)
+- add property `GoogleMapsWidgetContextToken` (9ab0648)
+- add property `CreateTime` (101123f)
+- add enum `TrafficType` (7e1e215)
+- add IFormatProvider for DateTime type (08a884d)
+
+### Changed
+
+- extend grounding with Google Maps (d545cea)
+- change class name to reflect product name better (3261c92)
+- update test for Grounding with Google Maps (7e15280)
+- seal class(es) (8b68a60)
+
 ## 2.8.9
 
 ### Added

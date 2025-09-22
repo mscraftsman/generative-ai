@@ -32,7 +32,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="Mscc.GenerativeAI" Version="2.8.9" />
+    <PackageVersion Include="Mscc.GenerativeAI" Version="2.8.10" />
     <PackageVersion Include="Neovolve.Logging.Xunit" Version="6.3.0" />
     <PackageVersion Include="OpenAI" Version="2.4.0" />
     <PackageVersion Include="System.Text.Encodings.Web" Version="9.0.9" />
