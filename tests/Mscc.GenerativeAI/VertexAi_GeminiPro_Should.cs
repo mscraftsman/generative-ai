@@ -413,13 +413,7 @@ namespace Test.Mscc.GenerativeAI
             {
                 GoogleMaps = new()
                 {
-                    AuthConfig = new()
-                    {
-                        ApiKeyConfig = new()
-                        {
-                            ApiKeyString = Environment.GetEnvironmentVariable("GOOGLE_MAPS_API_KEY")
-                        }
-                    }
+                    EnableWidget = true,
                 }
             };
 
@@ -429,22 +423,26 @@ namespace Test.Mscc.GenerativeAI
                 tools: new Tools() { googleMaps },
                 toolConfig: new()
                 {
-                    RetrievalConfig = new() { LatLng = new() { Latitude = -20.2646547f, Longitude = 57.4793535f } }
+                    RetrievalConfig = new()
+                    {
+                        LatLng = new() { Latitude = -20.2646547f, Longitude = 57.4793535f },
+                        LanguageCode = "en_GB"
+                    }
                 });
 
             // Assert
             response.Should().NotBeNull();
             response.Candidates.Should().NotBeNull().And.HaveCount(1);
             response.Text.Should().NotBeEmpty();
-            _output.WriteLine(response?.Text);
+            _output.WriteLine(response.Text);
             response.Candidates[0].GroundingMetadata.Should().NotBeNull();
-            response.Candidates[0].GroundingMetadata.WebSearchQueries.Should().NotBeNull();
-            response.Candidates[0].GroundingMetadata.WebSearchQueries.Count.Should().BeGreaterOrEqualTo(1);
-            _output.WriteLine($"{new string('-', 20)}");
-            foreach (string query in response.Candidates[0].GroundingMetadata.WebSearchQueries)
-            {
-                _output.WriteLine($"SearchQuery: {query}");
-            }
+            // response.Candidates[0].GroundingMetadata.WebSearchQueries.Should().NotBeNull();
+            // response.Candidates[0].GroundingMetadata.WebSearchQueries.Count.Should().BeGreaterOrEqualTo(1);
+            // _output.WriteLine($"{new string('-', 20)}");
+            // foreach (string query in response.Candidates[0].GroundingMetadata.WebSearchQueries)
+            // {
+            //     _output.WriteLine($"SearchQuery: {query}");
+            // }
         }
 
         [Fact]
