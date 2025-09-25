@@ -217,6 +217,7 @@ namespace Mscc.GenerativeAI
         /// <param name="model"></param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="requestOptions">Options for the request.</param>
         public BaseModel(string? projectId = null,
             string? region = null,
             string? model = null,
