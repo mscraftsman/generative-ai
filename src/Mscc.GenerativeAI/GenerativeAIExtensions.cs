@@ -385,19 +385,28 @@ namespace Mscc.GenerativeAI
         /// <param name="response">The HTTP response message to check.</param>
         /// <param name="errorMessage">Custom error message to prepend the <see cref="HttpRequestException"/> message."/></param>
         /// <param name="includeResponseContent">Include the response content in the error message.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>The HTTP response message if the call is successful.</returns>
         /// <exception cref="HttpRequestException"></exception>
         internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response,
-            string? errorMessage = null, bool includeResponseContent = true)
+            string errorMessage, 
+            bool includeResponseContent = true, 
+            CancellationToken cancellationToken = default)
         {
             if (response.IsSuccessStatusCode) return response;
 
             errorMessage = !string.IsNullOrEmpty(errorMessage)
                 ? errorMessage
                 : Constants.RequestFailed;
+#if NET472_OR_GREATER || NETSTANDARD2_0
             string errorMessageContent = includeResponseContent
                 ? Environment.NewLine + await response.Content.ReadAsStringAsync()
                 : string.Empty;
+#else
+            string errorMessageContent = includeResponseContent
+                ? Environment.NewLine + await response.Content.ReadAsStringAsync(cancellationToken)
+                : string.Empty;
+#endif
 
 #if NET8_0_OR_GREATER
             throw new HttpRequestException(
@@ -406,6 +415,34 @@ namespace Mscc.GenerativeAI
 #else
             throw new HttpRequestException($"{errorMessage}{Environment.NewLine}{Constants.RequestFailedWithStatusCode}{response.StatusCode}{errorMessageContent.Truncate()}");
 #endif
+        }
+
+        /// <summary>
+        /// Throws an exception if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP response is false.
+        /// </summary>
+        /// <param name="response">The HTTP response.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="GeminiApiException">The HTTP response was not successful.</exception>
+        public static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response, 
+            CancellationToken cancellationToken = default)
+        {
+            if (response.IsSuccessStatusCode) return response;
+
+            var message = response.ReasonPhrase;
+            if (response.Content != null)
+            {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                message = await response.Content.ReadAsStringAsync();
+#else
+                message = await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
+            }
+            throw new GeminiApiException($"The request was not successful. {message}", response);
+        }
+
+        internal static async Task<byte[]> ReadImageFileAsync(string url)
+        {
+            return await ReadImageFileAsync(url, CancellationToken.None);
         }
 
         internal static async Task<byte[]> ReadImageFileAsync(string url,
@@ -427,13 +464,6 @@ namespace Mscc.GenerativeAI
         {
             byte[] imageBytes = await ReadImageFileAsync(url, cancellationToken);
             return Convert.ToBase64String(imageBytes);
-        }
-
-        internal static async Task<byte[]> ReadImageFileAsync(string url)
-        {
-            using var response = await Client.GetAsync(url);
-            await response.EnsureSuccessAsync($"Download of '{url}' failed");
-            return await response.Content.ReadAsByteArrayAsync();
         }
 
         internal static string GetMimeType(string uri)
