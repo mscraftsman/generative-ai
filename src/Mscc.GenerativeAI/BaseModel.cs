@@ -274,7 +274,7 @@ namespace Mscc.GenerativeAI
         {
             var replacements = GetReplacements();
             replacements.Add("method", method);
-            if (string.Equals(_region, "global", StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(_region, "global", StringComparison.OrdinalIgnoreCase))
             {
                 replacements["BaseUrlVertexAi"] = BaseUrlVertexAiGlobal;
             }

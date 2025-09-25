@@ -53,9 +53,9 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!(request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Pro002}", StringComparison.InvariantCultureIgnoreCase) ||
-                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Flash002}", StringComparison.InvariantCultureIgnoreCase) ||
-                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini10Pro002}", StringComparison.InvariantCultureIgnoreCase)))
+            if (!(request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Pro002}", StringComparison.OrdinalIgnoreCase) ||
+                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Flash002}", StringComparison.OrdinalIgnoreCase) ||
+                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini10Pro002}", StringComparison.OrdinalIgnoreCase)))
             {
                 throw new NotSupportedException();
             }

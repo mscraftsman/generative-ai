@@ -47,7 +47,7 @@ namespace Mscc.GenerativeAI
             if (apiKey == null) return null;
             if (apiKey.Trim() != apiKey)
                 throw new ArgumentException("API key has extra whitespace at the start or end", nameof(apiKey));
-            if (apiKey.Length == 39 && !apiKey.Substring(0, 4).Equals("AIza"))
+            if (apiKey.Length == 39 && !apiKey.Substring(0, 4).Equals("AIza", StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("API key should start with 'AIza'", nameof(apiKey));
             if (apiKey.Length is not (39 or 53))
                 throw new ArgumentException("API key has not the correct length", nameof(apiKey));
@@ -441,7 +441,7 @@ namespace Mscc.GenerativeAI
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
             var extension = Path.GetExtension(uri).ToLower();
-            if (extension.StartsWith("."))
+            if (extension.StartsWith(".", StringComparison.OrdinalIgnoreCase))
                 extension = extension.Substring(1);
 
             switch (extension)

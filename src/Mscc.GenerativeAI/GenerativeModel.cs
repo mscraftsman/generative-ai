@@ -503,7 +503,7 @@ namespace Mscc.GenerativeAI
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase)))
+            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase)))
             {
                 throw new NotSupportedException();
             }
@@ -1348,7 +1348,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotImplementedException"></exception>
         public async Task<GenerateContentResponse> BidiGenerateContent()
         {
-            if (!_model.Equals($"{GenerativeAI.Model.Gemini20FlashExperimental.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.Gemini20FlashExperimental.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -1657,7 +1657,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.AttributedQuestionAnswering.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.AttributedQuestionAnswering.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2048,7 +2048,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.BisonText.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.BisonText.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2107,7 +2107,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.BisonChat.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.BisonChat.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2165,7 +2165,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2185,7 +2185,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
@@ -2237,7 +2237,7 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.InvariantCultureIgnoreCase))
+            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
             {
                 throw new NotSupportedException();
             }
