@@ -17,6 +17,11 @@ namespace Mscc.GenerativeAI
 
         protected override void AddApiKeyHeader(HttpRequestMessage request)
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             if (!string.IsNullOrEmpty(_apiKey))
             {
                 if (request.Headers.Contains("Authorization"))
