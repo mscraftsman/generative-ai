@@ -1905,7 +1905,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var model = _model.SanitizeModelName().Split('/')[1];
+            var model = _model.SanitizeModelName().Split('/').Last();
             switch (model)
             {
                 case GenerativeAI.Model.BisonChat:

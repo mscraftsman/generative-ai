@@ -589,11 +589,7 @@ namespace Mscc.GenerativeAI
                 {
                     if (lastResponse != null)
                     {
-#if NET472_OR_GREATER || NETSTANDARD2_0
-                        var message = await lastResponse.Content.ReadAsStringAsync();
-#else
-                        var message = await lastResponse.Content.ReadAsStringAsync(cancellationToken);
-#endif
+                        var message = GetResponseMessageAsync(lastResponse, cancellationToken);
                         throw new GeminiApiTimeoutException(
                             $"The request retry logic has timed out. Last response: {message}", lastResponse,
                             new TimeoutException());
@@ -621,11 +617,7 @@ namespace Mscc.GenerativeAI
                     {
                         if (lastResponse != null)
                         {
-#if NET472_OR_GREATER || NETSTANDARD2_0
-                            var message = await lastResponse.Content.ReadAsStringAsync();
-#else
-                            var message = await lastResponse.Content.ReadAsStringAsync(cancellationToken);
-#endif
+                            var message = GetResponseMessageAsync(lastResponse, cancellationToken);
                             throw new GeminiApiException($"The request was not successful. {message}", lastResponse, e);
                         }
 
@@ -642,6 +634,16 @@ namespace Mscc.GenerativeAI
             }
 
             return await lastResponse!.EnsureSuccessAsync(cancellationToken);
+        }
+
+        private static async Task<string> GetResponseMessageAsync(HttpResponseMessage response,
+            CancellationToken cancellationToken)
+        {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            return await response.Content.ReadAsStringAsync();
+#else
+            return await response.Content.ReadAsStringAsync(cancellationToken);
+#endif
         }
 
         private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req,
