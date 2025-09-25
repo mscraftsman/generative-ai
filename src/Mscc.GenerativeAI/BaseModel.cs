@@ -84,7 +84,7 @@ namespace Mscc.GenerativeAI
             };
 #endif
             client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
-            
+
             return client;
         }
 
@@ -132,7 +132,7 @@ namespace Mscc.GenerativeAI
         {
             request.AddApiKeyHeader(_apiKey);
         }
-        
+
         /// <summary>
         /// Sets the access token to use for the request.
         /// </summary>
@@ -172,7 +172,7 @@ namespace Mscc.GenerativeAI
         // Instance fields for default headers
         private readonly ProductInfoHeaderValue _defaultUserAgent;
         private readonly KeyValuePair<string, string> _defaultApiClientHeader;
-        
+
         private bool _disposedValue;
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Mscc.GenerativeAI
         {
             _httpClientFactory = httpClientFactory;
             _requestOptions = requestOptions;
-            
+
             // Initialize the default headers in constructor
             var productHeaderValue = new ProductHeaderValue(
                 name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
@@ -217,11 +217,12 @@ namespace Mscc.GenerativeAI
         /// <param name="model"></param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="requestOptions">Options for the request.</param>
         public BaseModel(string? projectId = null,
             string? region = null,
             string? model = null,
             IHttpClientFactory? httpClientFactory = null,
-            ILogger? logger = null, 
+            ILogger? logger = null,
             RequestOptions? requestOptions = null) : this(httpClientFactory, logger, requestOptions)
         {
             var credentialsFile =
@@ -242,7 +243,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
         /// </summary>
-        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null, RequestOptions? requestOptions = null) : base(logger)
+        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null,
+            RequestOptions? requestOptions = null) : base(logger)
         {
             _httpClient = new HttpClient(handler);
             _requestOptions = requestOptions;
@@ -274,7 +276,7 @@ namespace Mscc.GenerativeAI
         {
             var replacements = GetReplacements();
             replacements.Add("method", method);
-            if (string.Equals(_region, "global", StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(_region, "global", StringComparison.OrdinalIgnoreCase))
             {
                 replacements["BaseUrlVertexAi"] = BaseUrlVertexAiGlobal;
             }
@@ -527,6 +529,7 @@ namespace Mscc.GenerativeAI
         /// <typeparam name="TResponse"></typeparam>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="GeminiApiTimeoutException">The HTTP response timed out.</exception>
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request,
             string url, string method,
             RequestOptions? requestOptions = null,
@@ -541,7 +544,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken, completionOption);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<TResponse>(response);
         }
 
@@ -551,10 +554,10 @@ namespace Mscc.GenerativeAI
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
             requestOptions ??= _requestOptions;
-            
+
             var timeout = requestOptions?.Timeout ?? Timeout;
             request.SetTimeout(timeout);
-            
+
             // Add auth headers specific to this request
             request.AddApiKeyHeader(_apiKey);
             request.AddAccessTokenHeader(_accessToken);
@@ -580,11 +583,24 @@ namespace Mscc.GenerativeAI
             var stopwatch = Stopwatch.StartNew();
             HttpResponseMessage? lastResponse = null;
 
-            for (var i = 0; i < retry.Maximum; i++)
+            for (var index = 1; index <= retry.Maximum; index++)
             {
                 if (retry.Timeout.HasValue && stopwatch.Elapsed > retry.Timeout.Value)
                 {
-                    throw new TimeoutException("The request retry logic has timed out.");
+                    if (lastResponse != null)
+                    {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                        var message = await lastResponse.Content.ReadAsStringAsync();
+#else
+                        var message = await lastResponse.Content.ReadAsStringAsync(cancellationToken);
+#endif
+                        throw new GeminiApiTimeoutException(
+                            $"The request retry logic has timed out. Last response: {message}", lastResponse,
+                            new TimeoutException());
+                    }
+
+                    throw new GeminiApiTimeoutException("The request retry logic has timed out.",
+                        new TimeoutException());
                 }
 
                 try
@@ -600,8 +616,21 @@ namespace Mscc.GenerativeAI
                 }
                 catch (HttpRequestException e)
                 {
-                    Logger.LogWarning(0, e, "Request failed, attempting retry #{i + 1}.");
-                    if (i == retry.Maximum - 1) throw;
+                    Logger.LogRequestNotSuccessful(index);
+                    if (index == retry.Maximum)
+                    {
+                        if (lastResponse != null)
+                        {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                            var message = await lastResponse.Content.ReadAsStringAsync();
+#else
+                            var message = await lastResponse.Content.ReadAsStringAsync(cancellationToken);
+#endif
+                            throw new GeminiApiException($"The request was not successful. {message}", lastResponse, e);
+                        }
+
+                        throw new GeminiApiException("The request was not successful.", e);
+                    }
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
@@ -611,16 +640,14 @@ namespace Mscc.GenerativeAI
                     delay = retry.Maximum;
                 }
             }
-            
-            return await lastResponse!.EnsureSuccessAsync();
+
+            return await lastResponse!.EnsureSuccessAsync(cancellationToken);
         }
 
-        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req, CancellationToken cancellationToken)
+        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req,
+            CancellationToken cancellationToken)
         {
-            var clone = new HttpRequestMessage(req.Method, req.RequestUri)
-            {
-                Version = req.Version,
-            };
+            var clone = new HttpRequestMessage(req.Method, req.RequestUri) { Version = req.Version, };
 
             if (req.Content != null)
             {
@@ -654,7 +681,7 @@ namespace Mscc.GenerativeAI
                 clone.Options.Set(new HttpRequestOptionsKey<object?>(prop.Key), prop.Value);
             }
 #endif
-            
+
             foreach (var header in req.Headers)
             {
                 clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -662,7 +689,7 @@ namespace Mscc.GenerativeAI
 
             return clone;
         }
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

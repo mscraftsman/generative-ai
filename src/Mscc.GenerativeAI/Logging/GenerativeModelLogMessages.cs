@@ -96,5 +96,15 @@ namespace Mscc.GenerativeAI
         public static partial void LogRunExternalExe(
             this ILogger logger,
             string message);
+
+        /// <summary>
+        /// Logs <see cref="BaseModel"/> when exception thrown to run an external application.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="index">Nth attempt of request sent.</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Warning, Message = "Request failed, attempting retry #{index}.")]
+        public static partial void LogRequestNotSuccessful(
+            this ILogger logger,
+            int index);
     }
 }

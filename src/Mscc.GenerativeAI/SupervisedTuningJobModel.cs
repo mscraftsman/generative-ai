@@ -53,9 +53,9 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!(request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Pro002}", StringComparison.InvariantCultureIgnoreCase) ||
-                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Flash002}", StringComparison.InvariantCultureIgnoreCase) ||
-                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini10Pro002}", StringComparison.InvariantCultureIgnoreCase)))
+            if (!(request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Pro002}", StringComparison.OrdinalIgnoreCase) ||
+                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini15Flash002}", StringComparison.OrdinalIgnoreCase) ||
+                  request.BaseModel.Equals($"{GenerativeAI.Model.Gemini10Pro002}", StringComparison.OrdinalIgnoreCase)))
             {
                 throw new NotSupportedException();
             }
@@ -77,7 +77,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             var tuningJobs = await Deserialize<ListTuningJobResponse>(response);
             return tuningJobs.TuningJobs;
         }
@@ -102,7 +102,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<TuningJob>(response);
         }
 
@@ -147,7 +147,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
 #else

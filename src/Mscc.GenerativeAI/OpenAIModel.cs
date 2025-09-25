@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -17,6 +16,11 @@ namespace Mscc.GenerativeAI
 
         protected override void AddApiKeyHeader(HttpRequestMessage request)
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             if (!string.IsNullOrEmpty(_apiKey))
             {
                 if (request.Headers.Contains("Authorization"))
@@ -52,7 +56,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             var models = await Deserialize<SdkListModelsResponse>(response);
             return models;
         }
@@ -85,7 +89,7 @@ namespace Mscc.GenerativeAI
             }
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<SdkModel>(response);
         }
         
