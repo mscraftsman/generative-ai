@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace Mscc.GenerativeAI
 {
