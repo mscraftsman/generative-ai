@@ -84,7 +84,7 @@ namespace Mscc.GenerativeAI
             };
 #endif
             client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
-            
+
             return client;
         }
 
@@ -132,7 +132,7 @@ namespace Mscc.GenerativeAI
         {
             request.AddApiKeyHeader(_apiKey);
         }
-        
+
         /// <summary>
         /// Sets the access token to use for the request.
         /// </summary>
@@ -172,7 +172,7 @@ namespace Mscc.GenerativeAI
         // Instance fields for default headers
         private readonly ProductInfoHeaderValue _defaultUserAgent;
         private readonly KeyValuePair<string, string> _defaultApiClientHeader;
-        
+
         private bool _disposedValue;
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Mscc.GenerativeAI
         {
             _httpClientFactory = httpClientFactory;
             _requestOptions = requestOptions;
-            
+
             // Initialize the default headers in constructor
             var productHeaderValue = new ProductHeaderValue(
                 name: Assembly.GetExecutingAssembly().GetName().Name ?? "Mscc.GenerativeAI",
@@ -221,7 +221,7 @@ namespace Mscc.GenerativeAI
             string? region = null,
             string? model = null,
             IHttpClientFactory? httpClientFactory = null,
-            ILogger? logger = null, 
+            ILogger? logger = null,
             RequestOptions? requestOptions = null) : this(httpClientFactory, logger, requestOptions)
         {
             var credentialsFile =
@@ -242,7 +242,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
         /// </summary>
-        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null, RequestOptions? requestOptions = null) : base(logger)
+        internal BaseModel(HttpMessageHandler handler, ILogger? logger = null,
+            RequestOptions? requestOptions = null) : base(logger)
         {
             _httpClient = new HttpClient(handler);
             _requestOptions = requestOptions;
@@ -542,7 +543,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken, completionOption);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<TResponse>(response);
         }
 
@@ -552,10 +553,10 @@ namespace Mscc.GenerativeAI
             HttpCompletionOption completionOption = HttpCompletionOption.ResponseContentRead)
         {
             requestOptions ??= _requestOptions;
-            
+
             var timeout = requestOptions?.Timeout ?? Timeout;
             request.SetTimeout(timeout);
-            
+
             // Add auth headers specific to this request
             request.AddApiKeyHeader(_apiKey);
             request.AddAccessTokenHeader(_accessToken);
@@ -638,16 +639,14 @@ namespace Mscc.GenerativeAI
                     delay = retry.Maximum;
                 }
             }
-            
-            return await lastResponse!.EnsureSuccessAsync();
+
+            return await lastResponse!.EnsureSuccessAsync(cancellationToken);
         }
 
-        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req, CancellationToken cancellationToken)
+        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req,
+            CancellationToken cancellationToken)
         {
-            var clone = new HttpRequestMessage(req.Method, req.RequestUri)
-            {
-                Version = req.Version,
-            };
+            var clone = new HttpRequestMessage(req.Method, req.RequestUri) { Version = req.Version, };
 
             if (req.Content != null)
             {
@@ -681,7 +680,7 @@ namespace Mscc.GenerativeAI
                 clone.Options.Set(new HttpRequestOptionsKey<object?>(prop.Key), prop.Value);
             }
 #endif
-            
+
             foreach (var header in req.Headers)
             {
                 clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -689,7 +688,7 @@ namespace Mscc.GenerativeAI
 
             return clone;
         }
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

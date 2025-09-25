@@ -392,7 +392,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             var models = await Deserialize<ListTunedModelResponse>(response);
             return models?.TunedModels!;
         }
@@ -431,7 +431,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             var models = await Deserialize<ListModelsResponse>(response);
             return models?.Models!;
         }
@@ -462,7 +462,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<ModelResponse>(response);
         }
 
@@ -552,7 +552,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
 #else
@@ -605,7 +605,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<ModelResponse>(response);
         }
 
@@ -641,7 +641,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
 #else
@@ -719,7 +719,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Content = multipartContent;
 
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<UploadMediaResponse>(response);
         }
 
@@ -789,7 +789,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = multipartContent;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<UploadMediaResponse>(response);
         }
 
@@ -821,7 +821,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<ListFilesResponse>(response);
         }
 
@@ -849,7 +849,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<FileResource>(response);
         }
 
@@ -877,7 +877,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
 #else
@@ -982,7 +982,7 @@ namespace Mscc.GenerativeAI
             //     " Please upload your files with the File API instead."
             // "`f = genai.upload_file(path); m.generate_content(['tell me about this file:', f])`"
             //     )
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
 
             if (_useVertexAi && !_useVertexAiExpress)
             {
@@ -1150,7 +1150,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Content = payload;
             payload.Headers.ContentType = new MediaTypeHeaderValue(Constants.MediaType);
             using var response = await SendAsync(httpRequest, requestOptions, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             if (response.Content is not null)
             {
 #if NET472_OR_GREATER || NETSTANDARD2_0
@@ -1259,7 +1259,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
 
             using var response = await SendAsync(httpRequest, requestOptions, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             if (response.Content is not null)
             {
 #if NET472_OR_GREATER || NETSTANDARD2_0
@@ -1894,7 +1894,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -1910,13 +1910,13 @@ namespace Mscc.GenerativeAI
             {
                 case GenerativeAI.Model.BisonChat:
                     var chatRequest = new GenerateMessageRequest(prompt);
-                    return await CountTokens(chatRequest, requestOptions);
+                    return await CountTokens(chatRequest, requestOptions, cancellationToken);
                 case GenerativeAI.Model.BisonText:
                     var textRequest = new GenerateTextRequest(prompt);
-                    return await CountTokens(textRequest, requestOptions);
+                    return await CountTokens(textRequest, requestOptions, cancellationToken);
                 case GenerativeAI.Model.GeckoEmbedding:
                     var embeddingRequest = new GenerateTextRequest(prompt);
-                    return await CountTokens(embeddingRequest, requestOptions);
+                    return await CountTokens(embeddingRequest, requestOptions, cancellationToken);
                 default:
                     var request = new GenerateContentRequest(prompt, _generationConfig, _safetySettings, _tools);
                     return await CountTokens(request, requestOptions, cancellationToken);
@@ -1958,7 +1958,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<ComputeTokensResponse>(response);
         }
 
@@ -2090,7 +2090,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -2149,7 +2149,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<CountTokensResponse>(response);
         }
 
@@ -2176,7 +2176,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, null, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<EmbedTextResponse>(response);
         }
 
@@ -2221,7 +2221,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, null, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<CountTokensResponse>(response);
         }
 

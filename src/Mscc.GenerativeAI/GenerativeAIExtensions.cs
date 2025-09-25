@@ -450,7 +450,7 @@ namespace Mscc.GenerativeAI
         {
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             using var response = await Client.SendAsync(httpRequest, HttpCompletionOption.ResponseContentRead, cancellationToken);
-            await response.EnsureSuccessAsync($"Download of '{url}' failed");
+            await response.EnsureSuccessAsync($"Download of '{url}' failed", cancellationToken: cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
 #else

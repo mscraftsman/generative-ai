@@ -75,7 +75,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<Corpus>(response);
         }
 
@@ -101,7 +101,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             var corpora = await Deserialize<ListCorporaResponse>(response);
             return corpora.Corpora!;
         }
@@ -121,7 +121,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<Corpus>(response);
         }
 
@@ -144,7 +144,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url).AddQueryString(queryStringParams);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Delete, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return await response.Content.ReadAsStringAsync();
 #else

@@ -52,7 +52,7 @@ namespace Mscc.GenerativeAI
             url = ParseUrl(url);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             var models = await Deserialize<SdkListModelsResponse>(response);
             return models;
         }
@@ -85,7 +85,7 @@ namespace Mscc.GenerativeAI
             }
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<SdkModel>(response);
         }
         
