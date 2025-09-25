@@ -95,7 +95,8 @@ namespace Mscc.GenerativeAI
             var url = "{BaseUrlGoogleAi}/corpora";
             var queryStringParams = new Dictionary<string, string?>()
             {
-                [nameof(pageSize)] = Convert.ToString(pageSize), [nameof(pageToken)] = pageToken
+                [nameof(pageSize)] = Convert.ToString(pageSize),
+                [nameof(pageToken)] = pageToken
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
