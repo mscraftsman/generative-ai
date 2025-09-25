@@ -527,6 +527,7 @@ namespace Mscc.GenerativeAI
         /// <typeparam name="TResponse"></typeparam>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="GeminiApiTimeoutException">The HTTP response timed out.</exception>
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request,
             string url, string method,
             RequestOptions? requestOptions = null,
@@ -580,11 +581,24 @@ namespace Mscc.GenerativeAI
             var stopwatch = Stopwatch.StartNew();
             HttpResponseMessage? lastResponse = null;
 
-            for (var i = 0; i < retry.Maximum; i++)
+            for (var index = 1; index <= retry.Maximum; index++)
             {
                 if (retry.Timeout.HasValue && stopwatch.Elapsed > retry.Timeout.Value)
                 {
-                    throw new TimeoutException("The request retry logic has timed out.");
+                    if (lastResponse != null)
+                    {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                        var message = await lastResponse.Content.ReadAsStringAsync();
+#else
+                        var message = await lastResponse.Content.ReadAsStringAsync(cancellationToken);
+#endif
+                        throw new GeminiApiTimeoutException(
+                            $"The request retry logic has timed out. Last response: {message}", lastResponse,
+                            new TimeoutException());
+                    }
+
+                    throw new GeminiApiTimeoutException("The request retry logic has timed out.",
+                        new TimeoutException());
                 }
 
                 try
@@ -600,8 +614,21 @@ namespace Mscc.GenerativeAI
                 }
                 catch (HttpRequestException e)
                 {
-                    Logger.LogWarning(0, e, "Request failed, attempting retry #{i + 1}.");
-                    if (i == retry.Maximum - 1) throw;
+                    Logger.LogRequestNotSuccessful(index);
+                    if (index == retry.Maximum)
+                    {
+                        if (lastResponse != null)
+                        {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+                            var message = await lastResponse.Content.ReadAsStringAsync();
+#else
+                            var message = await lastResponse.Content.ReadAsStringAsync(cancellationToken);
+#endif
+                            throw new GeminiApiException($"The request was not successful. {message}", lastResponse, e);
+                        }
+
+                        throw new GeminiApiException("The request was not successful.", e);
+                    }
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
