@@ -12,6 +12,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.11
+
+### Added
+
+- Merge pull request #115 (e95b421)
+- Merge pull request #113 (b86d96f)
+- provide last API response in exception #112 (08a92de)
+- add test case using Parts collection #112 (0f7dcb9)
+- add test for image editing #112 (44fb2cc)
+- add more samples to image editing test (371e377)
+- add `RagStores` client/model (cc77afd)
+- add type `FunctionResponsePart` (b47bfb8)
+- add property `RetrievedContext` (3bc2833)
+- add Discovery API for Vertex AI (9dcc0d7)
+
+### Changed
+
+- improve string comparison (OrdinalIgnoreCase) (aa9eae5)
+- extend `EnsureSuccessAsync` with `CancellationToken` (190a925)
+- pass-through `CancellationToken` (463569e)
+- extend enum `TrafficType` and add XMLdoc (f5396d8)
+- sync available methods (f195c48)
+- update XMLdocs (02ee31a)
+- adjust Gemini CLI settings (9d7b307)
+
+### Fixed
+
+- Provide original API response in retry handling #114
+
 ## 2.8.10
 
 ### Added
