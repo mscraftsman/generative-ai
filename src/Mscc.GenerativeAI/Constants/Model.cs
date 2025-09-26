@@ -90,18 +90,25 @@ namespace Mscc.GenerativeAI
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
 
         // Gemini 2.5
+        public const string GeminiFlashLatest = "gemini-flash-latest";
+        public const string GeminiFlashLiteLatest = "gemini-flash-lite-latest";
+        public const string GeminiProLatest = "gemini-pro-latest";
         public const string Gemini25Flash = "gemini-2.5-flash";
-        public const string Gemini25FlashPreview = Gemini25FlashPreview0520;
+        public const string Gemini25FlashPreview = Gemini25FlashPreview092025;
         public const string Gemini25FlashPreview0520 = "gemini-2.5-flash-preview-05-20";
+        public const string Gemini25FlashPreview092025 = "gemini-2.5-flash-preview-09-2025";
         public const string Gemini25FlashLite = "gemini-2.5-flash-lite";
-        public const string Gemini25FlashLitePreview = Gemini25FlashLitePreview0617;
+        public const string Gemini25FlashLitePreview = Gemini25FlashLitePreview092025;
         public const string Gemini25FlashLitePreview0617 = "gemini-2.5-flash-lite-preview-06-17";
+        public const string Gemini25FlashLitePreview092025 = "gemini-2.5-flash-lite-preview-09-2025";
         public const string Gemini25FlashPreviewTts = "gemini-2.5-flash-preview-tts";
         public const string Gemini25FlashPreviewNativeAudio = "gemini-2.5-flash-preview-native-audio-dialog";
         public const string Gemini25FlashPreviewNativeAudioThinking = "gemini-2.5-flash-exp-native-audio-thinking-dialog";
         public const string Gemini25FlashPreviewNativeAudioDialog = "gemini-2.5-flash-preview-native-audio-dialog-rai-v3";
         public const string Gemini25FlashImage = Gemini25FlashImagePreview;
         public const string Gemini25FlashImagePreview = "gemini-2.5-flash-image-preview";
+        public const string Gemini25FlashNativeAudioLatest = "gemini-2.5-flash-native-audio-latest";
+        public const string Gemini25FlashNativeAudioPreview092025 = "gemini-2.5-flash-native-audio-preview-09-2025";
         public const string Gemini25Pro = "gemini-2.5-pro";
         public const string Gemini25ProExperimental = Gemini25ProExperimental0325;
         public const string Gemini25ProExperimental0325 = "gemini-2.5-pro-exp-03-25";
@@ -112,6 +119,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini25ProPreviewTts = "gemini-2.5-pro-preview-tts";
         public const string Gemini25LiveFlash = Gemini25LiveFlashPreview;
         public const string Gemini25LiveFlashPreview = "gemini-2.5-flash-live-preview";
+
+        public const string GeminiRoboticsEr15Preview = "gemini-robotics-er-1.5-preview";
 
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
