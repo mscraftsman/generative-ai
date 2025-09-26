@@ -595,6 +595,16 @@ We encourage the community to contribute to this project! If there are additiona
 - Commit your changes and push the branch to GitHub.  
 - Submit a pull request, and we will review it as soon as possible. 
 
+## Star History 🌟
+
+<a href="https://www.star-history.com/#mscraftsman/generative-ai&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mscraftsman/generative-ai&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=mscraftsman/generative-ai&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=mscraftsman/generative-ai&type=Date" />
+ </picture>
+</a>
+
 ## License 📜
 
 This project is licensed under the [Apache-2.0 License](LICENSE) - see the [LICENSE](LICENSE) file for details.
