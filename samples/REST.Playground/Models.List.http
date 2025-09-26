@@ -1,7 +1,7 @@
 #@apiKey={{$dotenv GOOGLE_API_KEY}}
 
 # Get a list of available models.
-GET https://generativelanguage.googleapis.com/v1beta/models?pageSize=70
+GET https://generativelanguage.googleapis.com/v1beta/models?pageSize=100
 x-goog-api-key: {{apiKey}}
 
 ###
