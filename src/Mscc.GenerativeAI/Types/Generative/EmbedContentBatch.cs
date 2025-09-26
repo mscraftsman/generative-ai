@@ -10,6 +10,10 @@ namespace Mscc.GenerativeAI
     public class EmbedContentBatch
     {
         /// <summary>
+        /// Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.
+        /// </summary>
+        public string? Model { get; set; }
+        /// <summary>
         /// Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.
         /// </summary>
         public string Name { get; set; }
