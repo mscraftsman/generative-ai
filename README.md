@@ -4,6 +4,10 @@
 [![MsccGenerativeAI](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml/badge.svg?branch=main)](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml)
 [![GitHub stars](https://img.shields.io/github/stars/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/stargazers)
 
+ <picture>
+   <img alt="Gemini SDK for .NET" src="./docs/images/GeminiNET.png" />
+ </picture>
+
 Access and integrate the Gemini API into your .NET applications. This SDK allows you to connect to the Gemini API through either [Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
 The SDK is fully compatible with all Gemini API models and features, including recent additions like improved tool usage (code execution, function calling and integrated Google search grounding), and media generation (Imagen).
 
