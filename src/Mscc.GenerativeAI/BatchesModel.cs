@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -151,6 +152,92 @@ namespace Mscc.GenerativeAI
 #else
             return await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
+        }
+
+        /// <summary>
+        /// Updates a batch of EmbedContent requests for batch processing.
+        /// </summary>
+        /// <param name="request">The batch resources to update</param>
+        /// <param name="batchesName">Required. The name of the operation resource to be deleted. Format: `batches/{id}`</param>
+        /// <param name="updateMask">Optional. The list of fields to update.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
+        public async Task<EmbedContentBatch> UpdateEmbedContentBatch(EmbedContentBatch request,
+            string batchesName,
+            string? updateMask = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(batchesName)) throw new ArgumentException("Value cannot be null or empty.", nameof(batchesName));
+
+            batchesName = batchesName.SanitizeBatchesName();
+
+            var url = $"{BaseUrlGoogleAi}/{batchesName}:updateEmbedContentBatch";
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(updateMask)] = updateMask
+            };
+            
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            var json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            httpRequest.Method = new HttpMethod("PATCH");
+#else
+            httpRequest.Method = HttpMethod.Patch;
+#endif
+            httpRequest.RequestUri = new Uri(url);
+            httpRequest.Version = _httpVersion;
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<EmbedContentBatch>(response);
+        }
+
+        /// <summary>
+        /// Updates a batch of GenerateContent requests for batch processing.
+        /// </summary>
+        /// <param name="request">The batch resources to update</param>
+        /// <param name="batchesName">Required. The name of the operation resource to be deleted. Format: `batches/{id}`</param>
+        /// <param name="updateMask">Optional. The list of fields to update.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
+        public async Task<GenerateContentBatch> UpdateGenerateContentBatch(GenerateContentBatch request,
+            string batchesName,
+            string? updateMask = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(batchesName)) throw new ArgumentException("Value cannot be null or empty.", nameof(batchesName));
+
+            batchesName = batchesName.SanitizeBatchesName();
+
+            var url = $"{BaseUrlGoogleAi}/{batchesName}:updateGenerateContentBatch";
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(updateMask)] = updateMask
+            };
+            
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            var json = Serialize(request);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            httpRequest.Method = new HttpMethod("PATCH");
+#else
+            httpRequest.Method = HttpMethod.Patch;
+#endif
+            httpRequest.RequestUri = new Uri(url);
+            httpRequest.Version = _httpVersion;
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync();
+            return await Deserialize<GenerateContentBatch>(response);
         }
     }
 }
