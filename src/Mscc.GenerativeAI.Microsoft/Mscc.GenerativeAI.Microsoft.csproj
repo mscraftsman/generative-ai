@@ -49,12 +49,12 @@
       <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(Configuration)=='Release'">
-      <PackageReference Include="Mscc.GenerativeAI" />
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
+        <PackageReference Include="Mscc.GenerativeAI" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(Configuration)=='Debug'">
-      <ProjectReference Include="..\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj" />
+    <ItemGroup Condition="'$(Configuration)'=='Debug'">
+        <ProjectReference Include="..\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj" />
     </ItemGroup>
 
     <Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">

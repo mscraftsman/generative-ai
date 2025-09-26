@@ -55,11 +55,11 @@
         <PackageReference Include="Google.Apis.Auth" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(Configuration)=='Release'">
+    <ItemGroup Condition="'$(Configuration)'=='Release'">
         <PackageReference Include="Mscc.GenerativeAI" />
     </ItemGroup>
 
-    <ItemGroup Condition="$(Configuration)=='Debug'">
+    <ItemGroup Condition="'$(Configuration)'=='Debug'">
         <ProjectReference Include="..\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj" />
     </ItemGroup>
 
