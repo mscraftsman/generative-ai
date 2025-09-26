@@ -91,7 +91,7 @@ jobs:
       run: dotnet restore ./GenerativeAI.sln
 
     - name: Build
-      run: dotnet build ./GenerativeAI.sln -c Release --no-restore
+      run: dotnet build ./GenerativeAI.sln -c Release
 
     - name: Pack for ASP.NET Core
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj -o output/ --no-build
