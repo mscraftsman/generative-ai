@@ -700,6 +700,63 @@
       "version": "001"
     },
     {
+      "description": "Latest release of Gemini Flash",
+      "displayName": "Gemini Flash Latest",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-flash-latest",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "Gemini Flash Latest"
+    },
+    {
+      "description": "Latest release of Gemini Flash-Lite",
+      "displayName": "Gemini Flash-Lite Latest",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-flash-lite-latest",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "Gemini Flash-Lite Latest"
+    },
+    {
+      "description": "Latest release of Gemini Pro",
+      "displayName": "Gemini Pro Latest",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-pro-latest",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "Gemini Pro Latest"
+    },
+    {
       "description": "Stable version of Gemini 2.5 Flash-Lite, released in July of 2025",
       "displayName": "Gemini 2.5 Flash-Lite",
       "inputTokenLimit": 1048576,
@@ -733,6 +790,61 @@
       "topK": 64,
       "topP": 0.95,
       "version": "2.0"
+    },
+    {
+      "description": "Gemini 2.5 Flash Preview Sep 2025",
+      "displayName": "Gemini 2.5 Flash Preview Sep 2025",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-preview-09-2025",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "Gemini 2.5 Flash Preview 09-2025"
+    },
+    {
+      "description": "Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash-Lite",
+      "displayName": "Gemini 2.5 Flash-Lite Preview Sep 2025",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-lite-preview-09-2025",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.5-preview-09-25"
+    },
+    {
+      "description": "Gemini Robotics-ER 1.5 Preview",
+      "displayName": "Gemini Robotics-ER 1.5 Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-robotics-er-1.5-preview",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "1.5-preview"
     },
     {
       "description": "Obtain a distributed representation of a text.",
@@ -910,7 +1022,7 @@
       "version": "3.0"
     },
     {
-      "description": "Veo 3 preview.",
+      "description": "Veo 3",
       "displayName": "Veo 3",
       "inputTokenLimit": 480,
       "name": "models/veo-3.0-generate-001",
@@ -921,7 +1033,7 @@
       "version": "3.0"
     },
     {
-      "description": "Veo 3 fast preview.",
+      "description": "Veo 3 fast",
       "displayName": "Veo 3 fast",
       "inputTokenLimit": 480,
       "name": "models/veo-3.0-fast-generate-001",
@@ -1011,6 +1123,38 @@
       "topK": 64,
       "topP": 0.95,
       "version": "001"
+    },
+    {
+      "description": "Latest release of Gemini 2.5 Flash Native Audio",
+      "displayName": "Gemini 2.5 Flash Native Audio Latest",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-native-audio-latest",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "Gemini 2.5 Flash Native Audio Latest"
+    },
+    {
+      "description": "Gemini 2.5 Flash Native Audio Preview 09-2025",
+      "displayName": "Gemini 2.5 Flash Native Audio Preview 09-2025",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-native-audio-preview-09-2025",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
     }
   ]
 }

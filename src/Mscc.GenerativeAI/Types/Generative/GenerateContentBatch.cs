@@ -10,6 +10,10 @@ namespace Mscc.GenerativeAI
     public class GenerateContentBatch
     {
         /// <summary>
+        /// Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.
+        /// </summary>
+        public string? Model { get; set; }
+        /// <summary>
         /// Required. Input configuration of the instances on which batch processing are performed.
         /// </summary>
         public InputConfig InputConfig { get; set; }

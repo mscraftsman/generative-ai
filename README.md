@@ -4,6 +4,10 @@
 [![MsccGenerativeAI](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml/badge.svg?branch=main)](https://github.com/mscraftsman/generative-ai/actions/workflows/dotnetcore.yml)
 [![GitHub stars](https://img.shields.io/github/stars/mscraftsman/generative-ai)](https://github.com/mscraftsman/generative-ai/stargazers)
 
+ <picture>
+   <img alt="Gemini SDK for .NET" src="./docs/images/GeminiNET.png" />
+ </picture>
+
 Access and integrate the Gemini API into your .NET applications. This SDK allows you to connect to the Gemini API through either [Google AI Studio](https://aistudio.google.com/prompts/new_chat?model=gemini-2.0-flash-exp) or [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/gemini-v2).
 The SDK is fully compatible with all Gemini API models and features, including recent additions like improved tool usage (code execution, function calling and integrated Google search grounding), and media generation (Imagen).
 
@@ -38,7 +42,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI" Version="2.8.11" />
+    <PackageReference Include="Mscc.GenerativeAI" Version="2.8.12" />
   </ItemGroup>
 ```
 
@@ -594,6 +598,16 @@ We encourage the community to contribute to this project! If there are additiona
 - Create a new branch for your feature or bugfix. 
 - Commit your changes and push the branch to GitHub.  
 - Submit a pull request, and we will review it as soon as possible. 
+
+## Star History 🌟
+
+<a href="https://www.star-history.com/#mscraftsman/generative-ai&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mscraftsman/generative-ai&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=mscraftsman/generative-ai&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=mscraftsman/generative-ai&type=Date" />
+ </picture>
+</a>
 
 ## License 📜
 

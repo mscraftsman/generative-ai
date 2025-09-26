@@ -201,6 +201,68 @@
           "response": {
             "$ref": "ListOperationsResponse"
           }
+        },
+        "updateEmbedContentBatch": {
+          "description": "Updates a batch of EmbedContent requests for batch processing.",
+          "flatPath": "v1beta/batches/{batchesId}:updateEmbedContentBatch",
+          "httpMethod": "PATCH",
+          "id": "generativelanguage.batches.updateEmbedContentBatch",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            },
+            "updateMask": {
+              "description": "Optional. The list of fields to update.",
+              "format": "google-fieldmask",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}:updateEmbedContentBatch",
+          "request": {
+            "$ref": "EmbedContentBatch"
+          },
+          "response": {
+            "$ref": "EmbedContentBatch"
+          }
+        },
+        "updateGenerateContentBatch": {
+          "description": "Updates a batch of GenerateContent requests for batch processing.",
+          "flatPath": "v1beta/batches/{batchesId}:updateGenerateContentBatch",
+          "httpMethod": "PATCH",
+          "id": "generativelanguage.batches.updateGenerateContentBatch",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
+              "location": "path",
+              "pattern": "^batches/[^/]+$",
+              "required": true,
+              "type": "string"
+            },
+            "updateMask": {
+              "description": "Optional. The list of fields to update.",
+              "format": "google-fieldmask",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}:updateGenerateContentBatch",
+          "request": {
+            "$ref": "GenerateContentBatch"
+          },
+          "response": {
+            "$ref": "GenerateContentBatch"
+          }
         }
       }
     },
@@ -2319,7 +2381,7 @@
       }
     }
   },
-  "revision": "20250918",
+  "revision": "20250922",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2860,6 +2922,32 @@
       },
       "type": "object"
     },
+    "ComputerUse": {
+      "description": "Computer Use tool type.",
+      "id": "ComputerUse",
+      "properties": {
+        "environment": {
+          "description": "Required. The environment being operated.",
+          "enum": [
+            "ENVIRONMENT_UNSPECIFIED",
+            "ENVIRONMENT_BROWSER"
+          ],
+          "enumDescriptions": [
+            "Defaults to browser.",
+            "Operates in a web browser."
+          ],
+          "type": "string"
+        },
+        "excludedPredefinedFunctions": {
+          "description": "Optional. By default, predefined functions are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "Condition": {
       "description": "Filter condition applicable to a single key.",
       "id": "Condition",
@@ -3262,6 +3350,10 @@
         "inputConfig": {
           "$ref": "InputEmbedContentConfig",
           "description": "Required. Input configuration of the instances on which batch processing are performed."
+        },
+        "model": {
+          "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+          "type": "string"
         },
         "name": {
           "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
@@ -3901,6 +3993,10 @@
         "inputConfig": {
           "$ref": "InputConfig",
           "description": "Required. Input configuration of the instances on which batch processing are performed."
+        },
+        "model": {
+          "description": "Required. The name of the `Model` to use for generating the completion. Format: `models/{model}`.",
+          "type": "string"
         },
         "name": {
           "description": "Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.",
@@ -6011,6 +6107,10 @@
         "codeExecution": {
           "$ref": "CodeExecution",
           "description": "Optional. Enables the model to execute code as part of generation."
+        },
+        "computerUse": {
+          "$ref": "ComputerUse",
+          "description": "Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations."
         },
         "functionDeclarations": {
           "description": "Optional. A list of `FunctionDeclarations` available to the model that can be used for function calling. The model or system does not execute the function. Instead the defined function may be returned as a FunctionCall with arguments to the client side for execution. The model may decide to call a subset of these functions by populating FunctionCall in the response. The next conversation turn may contain a FunctionResponse with the Content.role \"function\" generation context for the next model turn.",

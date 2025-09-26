@@ -57,6 +57,6 @@ namespace Mscc.GenerativeAI
         /// Optional. Tool to support the model interacting directly with the computer.
         /// If enabled, it automatically populates computer-use specific Function Declarations.
         /// </summary>
-        public ToolComputerUse? ComputerUse { get; set; }
+        public ComputerUse? ComputerUse { get; set; }
     }
 }

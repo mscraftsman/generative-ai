@@ -13,7 +13,7 @@ restore:
 	dotnet restore
 
 build: restore
-	dotnet build --no-restore --configuration $(CONFIGURATION)
+	dotnet build --configuration $(CONFIGURATION)
 
 test: build
 	dotnet test \
@@ -28,12 +28,12 @@ test: build
 		-- \
 		RunConfiguration.CollectSourceInformation=true
 
-generate-docs: clean restore
-	dotnet build --no-restore --configuration Release
+generate-docs: clean build
 	cp $(SOURCE_DIRECTORY)src/Mscc.GenerativeAI/CHANGELOG.md $(SOURCE_DIRECTORY)docs/changelog.md
+	cp $(SOURCE_DIRECTORY)src/Mscc.GenerativeAI/RELEASE_NOTES.md $(SOURCE_DIRECTORY)docs/release_notes.md
 	dotnet docfx $(DOCS_PATH)/docfx.json
 
 serve-docs: generate-docs
 	dotnet docfx serve $(ARTIFACT_PATH)/_site --port 8080
 
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := generate-docs

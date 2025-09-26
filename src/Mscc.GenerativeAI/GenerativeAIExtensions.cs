@@ -17,6 +17,16 @@ namespace Mscc.GenerativeAI
 {
     public static class GenerativeAIExtensions
     {
+        private static readonly HashSet<string> SensitiveHeaders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "Authorization",
+            "X-API-Key",
+            "Proxy-Authorization",
+            "x-goog-api-key",
+            "x-goog-user-project"
+            // Add any other sensitive header names here
+        };
+
 #if NET472_OR_GREATER || NETSTANDARD2_0
         private static readonly Version _httpVersion = HttpVersion.Version11;
         private static readonly HttpClient Client = new HttpClient(new HttpClientHandler
@@ -281,7 +291,7 @@ namespace Mscc.GenerativeAI
             part.VideoMetadata.Fps = fps;
             return part;
         }
-        
+
         public static string GetValue(this JsonElement element, string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
@@ -1065,7 +1075,7 @@ namespace Mscc.GenerativeAI
             if (maxLength - suffix.Length >= 0 && maxLength - suffix.Length <= value.Length)
             {
 #if NET472_OR_GREATER || NETSTANDARD2_0
-                value = value.Length >= maxLength 
+                value = value.Length >= maxLength
                     ? value.Substring(0, maxLength - suffix.Length) + suffix
                     : value;
 #else
@@ -1082,7 +1092,7 @@ namespace Mscc.GenerativeAI
         {
             return callback.Method.Name.ToSnakeCase();
         }
-        
+
         public static string ToFormattedString(this HttpHeaders headers)
         {
             if (headers == null)
@@ -1093,8 +1103,11 @@ namespace Mscc.GenerativeAI
             var sb = new StringBuilder();
             foreach (var header in headers)
             {
-                sb.AppendLine($"{header.Key}: {string.Join(", ", header.Value)}");
+                sb.AppendLine(SensitiveHeaders.Contains(header.Key)
+                    ? $"{header.Key}: [redacted]"
+                    : $"{header.Key}: {string.Join(", ", header.Value)}");
             }
+
             return sb.ToString();
         }
     }

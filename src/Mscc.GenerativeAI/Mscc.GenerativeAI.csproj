@@ -77,9 +77,9 @@
 	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
 	</ItemGroup>
 
-	<Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('CHANGELOG.md')">
+	<Target Name="InjectPackageReleaseNotesFromFile" BeforeTargets="GenerateNuspec" Condition="Exists('RELEASE_NOTES.md')">
 		<PropertyGroup>
-			<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/CHANGELOG.md"))</PackageReleaseNotes>
+			<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/RELEASE_NOTES.md"))</PackageReleaseNotes>
 		</PropertyGroup>
 	</Target>
 
