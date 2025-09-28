@@ -26,6 +26,7 @@ jobs:
     displayName: 'Restore Main'
   - script: dotnet build ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -c $(buildConfiguration)
     displayName: 'Build Main $(buildConfiguration)'
+
   - script: dotnet pack ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -c $(buildConfiguration) --no-build -o $(Build.ArtifactStagingDirectory)/
     displayName: 'Pack Main'
 
@@ -51,28 +52,27 @@ jobs:
     displayName: 'Install .NET SDK'
     inputs:
       version: 9.x
+      performMultiLevelLookup: true
+      includePreviewVersions: true # Required for preview versions
 
-#  - script: dotnet restore ./GenerativeAI.sln
-#    displayName: 'Restore packages'
-  - task: DotNetCoreCLI@2
+  - script: dotnet --version
+    displayName: 'Check .NET version'
+
+  - script: dotnet restore ./GenerativeAI.sln
     displayName: 'Restore packages'
-    inputs:
-      command: 'restore'
-      projects: './GenerativeAI.sln'
-      feedsToUse: 'select'
-  - script: dotnet build -c $(buildConfiguration) ./GenerativeAI.sln
+  - script: dotnet build ./GenerativeAI.sln -c $(buildConfiguration)
     displayName: 'Build Solution $(buildConfiguration)'
-  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.Web.csproj --no-build
+
+  - script: dotnet pack ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj -c $(buildConfiguration) --no-build -o $(Build.ArtifactStagingDirectory)/
     displayName: 'Pack for ASP.NET Core'
-  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.Google.csproj --no-build
+  - script: dotnet pack ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj -c $(buildConfiguration) --no-build -o $(Build.ArtifactStagingDirectory)/
     displayName: 'Pack for .NET using Google Cloud Client Library'
-  - script: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.Microsoft.csproj --no-build
+  - script: dotnet pack ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -c $(buildConfiguration) --no-build -o $(Build.ArtifactStagingDirectory)/
     displayName: 'Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel'
-  - task: NuGetCommand@2
+
+  - task: NuGetAuthenticate@1
+    displayName: 'NuGet Authenticate'
+  - script: |
+      dotnet nuget push --skip-duplicate --source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" --api-key az $(Build.ArtifactStagingDirectory)/*.nupkg
     displayName: 'Push Dependent Packages to Feed'
-    inputs:
-      command: 'push'
-      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg;!$(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg'
-      nuGetFeedType: 'internal'
-      publishVstsFeed: '$(publishVstsFeed)'
-      allowPackageConflicts: true
+#      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg;!$(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg'
