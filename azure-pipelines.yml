@@ -38,10 +38,8 @@ jobs:
   - task: NuGetAuthenticate@1
     displayName: 'NuGet Authenticate'
   - script: |
-      dotnet nuget push --skip-duplicate --source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" --api-key az $(Build.ArtifactStagingDirectory)/*.nupkg
+      dotnet nuget push --skip-duplicate --source "$(publishNugetFeed)" --api-key az $(Build.ArtifactStagingDirectory)/*.nupkg
     displayName: 'Push Main Package to Feed'
-#      nuget push -Source "$(publishVstsFeed)" -ApiKey az $(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg
-#      nuget push -Source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
 
 - job: BuildAndPublishDependents
   displayName: 'Build and Publish Dependent Packages'
@@ -73,6 +71,6 @@ jobs:
   - task: NuGetAuthenticate@1
     displayName: 'NuGet Authenticate'
   - script: |
-      dotnet nuget push --skip-duplicate --source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" --api-key az $(Build.ArtifactStagingDirectory)/*.nupkg
+      dotnet nuget push --skip-duplicate --source "$(publishNugetFeed)" --api-key az $(Build.ArtifactStagingDirectory)/*.nupkg
     displayName: 'Push Dependent Packages to Feed'
 #      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg;!$(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg'
