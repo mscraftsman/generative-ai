@@ -37,9 +37,10 @@ jobs:
       versionSpec: '*'
       checkLatest: true
   - script: |
-      nuget push -Source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
+      dotnet nuget push --source "mscc-generative-ai" --api-key az $(Build.ArtifactStagingDirectory)\*.nupkg
     displayName: 'Push Main Package to Feed'
 #      nuget push -Source "$(publishVstsFeed)" -ApiKey az $(Build.ArtifactStagingDirectory)/Mscc.GenerativeAI.*.nupkg
+#      nuget push -Source "https://pkgs.dev.azure.com/iosltd/MSCC/_packaging/mscc-generative-ai/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
 
 - job: BuildAndPublishDependents
   displayName: 'Build and Publish Dependent Packages'
