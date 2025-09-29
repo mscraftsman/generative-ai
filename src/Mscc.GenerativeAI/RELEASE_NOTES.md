@@ -1,25 +1,18 @@
 # Release Notes
 
-## 2.8.12
+## 2.8.13
 
 ### Added
 
-- add model `gemini-flash-latest`
-- add model `gemini-flash-lite-latest`
-- add model `gemini-pro-latest`
-- add model `gemini-2.5-flash-preview-09-2025`
-- add model `gemini-2.5-flash-lite-preview-09-2025`
-- add model `gemini-robotics-er-1.5-preview`
-- add model `gemini-2.5-flash-native-audio-latest`
-- add model `gemini-2.5-flash-native-audio-preview-09-2025` (9bd3c3c)
-- add tool `ComputerUse` (4c216c1)
-- add methods to update batches for embed and generate (f9b9a2d) (1a900d7)
+- add title banner (e238219)
+- add star history (4de290f)
+- add release notes (dfad242)
 
 ### Changed
 
-- redact sensitive HTTP header values (b0bd7e9)
-- increase page size (4f2e696)
-- ignore credentials (38710da)
+- remove all Gemini 1.5 models (9455051)
+- Use variable for feed URL (fa90d45)
+- Update paths to dependent projects (e0bb2fd)
 
 ## Changelog
 
