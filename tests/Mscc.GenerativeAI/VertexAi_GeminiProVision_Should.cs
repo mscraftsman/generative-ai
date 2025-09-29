@@ -18,7 +18,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class VertexAiGeminiProVisionShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini10ProVision;
+        private readonly string _model = Model.GeminiPro;
 
         [Fact]
         public void Initialize()
@@ -43,7 +43,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini10ProVision.SanitizeModelName());
+            model.Name.Should().Be(Model.GeminiPro.SanitizeModelName());
         }
 
         [Fact]

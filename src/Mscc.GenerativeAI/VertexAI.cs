@@ -242,7 +242,7 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when "projectId" or "region" is <see langword="null"/>.</exception>
-        public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.Gemini15Pro002,
+        public SupervisedTuningJobModel SupervisedTuningJob(string model = Model.GeminiPro,
             ILogger? logger = null)
         {
             Guard();

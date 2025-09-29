@@ -44,7 +44,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini15Pro.SanitizeModelName());
+            model.Name.Should().Be(Model.Gemini20FlashLite001.SanitizeModelName());
         }
 
         [Fact]
@@ -74,7 +74,6 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.Gemini15ProLatest)]
         [InlineData(Model.Gemini25Pro)]
         [InlineData(Model.BisonText)]
         [InlineData(Model.BisonChat)]
@@ -441,7 +440,7 @@ Answer:";
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini15Pro.SanitizeModelName());
+            model.Name.Should().Be(Model.Gemini20FlashLite001.SanitizeModelName());
         }
 
         [Fact]

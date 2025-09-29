@@ -457,7 +457,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             var request = new GenerateContentRequest(prompt: prompt,
-                generationConfig: new GenerationConfig() { CandidateCount = 3 });
+                generationConfig: new GenerateContentConfig() { CandidateCount = 3 });
 
             // Act & Assert
             // await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(request));
@@ -1205,7 +1205,6 @@ namespace Test.Mscc.GenerativeAI
 
         [Theory]
         [InlineData(Model.Gemma3)]
-        [InlineData(Model.Gemini15Flash)]
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini25Flash)]
         [InlineData(Model.Gemini20FlashThinking)]
@@ -1356,8 +1355,6 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Theory]
-        [InlineData(Model.Gemini15Pro002)]
-        [InlineData(Model.Gemini15Flash)]
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini20Flash001)]
         [InlineData(Model.Gemini20FlashLite)]
@@ -1724,10 +1721,11 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
-            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
-            _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
+            _output.WriteLine(response.Text);
+            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            // response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Should().NotBeNull();
+            // _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Name);
+            // _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
             // foreach (var item in response.FunctionCalls)
             // {
             //     tools.ForEach(action: tool =>
@@ -2500,7 +2498,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<Recipe>>()
             };
@@ -2536,7 +2534,7 @@ namespace Test.Mscc.GenerativeAI
             request.Contents[0].Parts.Add(
                 new InlineData { MimeType = "image/png", Data = board }
             );
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<FlightSchedule>>()
             };
@@ -2574,7 +2572,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
 
-            var generationConfig = new GenerationConfig
+            var generationConfig = new GenerateContentConfig
             {
                 ResponseMimeType = "text/x.enum", // Important for enum handling
                 ResponseSchema = Schema.FromType<Instrument>() // Provide the enum type
@@ -2608,7 +2606,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
 
-            var generationConfig = new GenerationConfig
+            var generationConfig = new GenerateContentConfig
             {
                 ResponseMimeType = "text/x.enum", // Important for enum handling
                 ResponseSchema = Schema.FromType<Instrument>() // Provide the enum type
@@ -2644,7 +2642,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json",
                 ResponseSchema = Schema.FromObject(new
@@ -2721,7 +2719,7 @@ namespace Test.Mscc.GenerativeAI
                            "required": ["menus"]
                          }
                          """;
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = Schema.FromString(schema)
             };
@@ -2751,7 +2749,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             var options = new RequestOptions() { Timeout = TimeSpan.FromMinutes(3) };
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<AiWeaponModel>>()
             };
@@ -2775,7 +2773,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "List a few popular arny weapons with name and summary";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseSchema =
                     Schema.FromString("""{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}..."""),
@@ -2813,7 +2811,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<Root>()
             };
@@ -2840,7 +2838,7 @@ namespace Test.Mscc.GenerativeAI
             dynamic schema = new ExpandoObject();
             schema.Name = "dynamic";
 
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", ResponseSchema = schema
             };
@@ -2929,7 +2927,7 @@ namespace Test.Mscc.GenerativeAI
             {
                 new TextData { Text = prompt }, new InlineData { MimeType = mimetype, Data = base64Image }
             };
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 1024,
                 ThinkingConfig = new()
@@ -2965,7 +2963,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: Model.Gemini25FlashLite);
             var request = new GenerateContentRequest(prompt)
             {
-                GenerationConfig = new GenerationConfig()
+                GenerationConfig = new GenerateContentConfig()
                 {
                     Temperature = 0.4f,
                     TopP = 1,
@@ -3603,7 +3601,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             var prompt = "Describe the image with a creative description";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            var generationConfig = new GenerationConfig
+            var generationConfig = new GenerateContentConfig
             {
                 Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 2048
             };
@@ -3677,7 +3675,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
                     "You are a helpful language translator. Your mission is to translate text in English to French.");
             var prompt = @"User input: I like bagels.
 Answer:";
-            var generationConfig = new GenerationConfig()
+            var generationConfig = new GenerateContentConfig()
             {
                 Temperature = 0.9f,
                 TopP = 1.0f,

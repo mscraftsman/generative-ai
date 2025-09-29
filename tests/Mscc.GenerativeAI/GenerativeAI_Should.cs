@@ -18,7 +18,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class GenerativeAiShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini15Flash;
+        private readonly string _model = Model.Gemini25Flash;
 
         [Fact]
         public void Initialize_Interface_GoogleAI()

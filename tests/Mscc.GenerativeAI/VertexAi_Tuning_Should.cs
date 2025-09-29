@@ -22,7 +22,7 @@ namespace Test.Mscc.GenerativeAI
     {
         private readonly ITestOutputHelper output;
         private readonly ConfigurationFixture fixture;
-        private readonly string _model = Model.Gemini15Pro002;
+        private readonly string _model = Model.Gemini20Flash001;
         private readonly VertexAI _genAi;
         private readonly SupervisedTuningJobModel _tuningJob;
 
@@ -50,7 +50,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Using_VertexAI()
         {
             // Arrange
-            var expected = Model.Gemini15Pro002;
+            var expected = Model.Gemini20Flash001;
             var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
 
             // Act

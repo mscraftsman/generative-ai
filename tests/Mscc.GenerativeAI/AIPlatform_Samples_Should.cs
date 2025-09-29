@@ -22,7 +22,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class AiPlatformSamplesShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini10ProVision;
+        private readonly string _model = Model.GeminiPro;
 
         [Fact]
         public async Task Gemini_QuickStart()
@@ -175,7 +175,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
             var model = vertex.GenerativeModel(model: _model);
             model.AccessToken = fixture.AccessToken;
-            var generationConfig = new GenerationConfig
+            var generationConfig = new GenerateContentConfig
             {
                 Temperature = 0.4f,
                 TopP = 1,
