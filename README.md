@@ -60,8 +60,8 @@ The provided code defines a C# library for interacting with Google's Generative 
 - **Generate embeddings**: This allows users to convert text into numerical representations that can be used for tasks like similarity search. 
 - **Count tokens**: This allows users to estimate the cost of using a model by counting the number of tokens in a prompt or response. 
 - **Start a chat session**: This allows users to have a back-and-forth conversation with a model.
-- **Create tuned models**: This allows users to provide samples for tuning an existing model. Currently, only the `text-bison-001` and `gemini-1.0-pro-001` models are supported for tuning
-- **File API**: This allows users to upload large files and use them with Gemini 1.5 and later.
+- **Create tuned models**: This allows users to provide samples for tuning an existing model. Currently, only the `text-bison-001` and `gemini-2.0-flash-001` models are supported for tuning
+- **File API**: This allows users to upload large files and use them with Gemini 2.0 and later.
 
 The package also defines various helper classes and enums to represent different aspects of the Gemini API, such as model names, request parameters, and response data.
 
