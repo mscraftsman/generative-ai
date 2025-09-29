@@ -56,6 +56,9 @@ jobs:
   - script: dotnet --version
     displayName: 'Check .NET version'
 
+  - script: mv ./nuget.azure ./nuget.config
+    displayName: Set NuGet source
+    
   - script: dotnet restore ./GenerativeAI.sln
     displayName: 'Restore packages'
   - script: dotnet build ./GenerativeAI.sln -c $(buildConfiguration)
