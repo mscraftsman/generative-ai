@@ -13,45 +13,9 @@ namespace Mscc.GenerativeAI
     {
         // Gemini 1.0
         // Discontinuation date: April 9, 2025.
-        public const string Gemini10Pro = Gemini10Pro002;
-
-        // Discontinuation date: April 9, 2025.
-        public const string Gemini10Pro001 = "gemini-1.0-pro-001";
-
-        // Discontinuation date: April 9, 2025.
-        public const string Gemini10Pro002 = "gemini-1.0-pro-002";
-        //public const string GeminiProVision = "gemini-pro-vision";
-        public const string Gemini10ProVision = "gemini-1.0-pro-vision";
-
-        // Discontinuation date: April 9, 2025.
-        public const string Gemini10ProVision001 = "gemini-1.0-pro-vision-001";
-        //public const string GeminiProVisionLatest = "gemini-1.0-pro-vision-latest";
-        public const string GeminiUltra = "gemini-ultra";
-        public const string GeminiUltraLatest = "gemini-1.0-ultra-latest";
 
         // Gemini 1.5
-        public const string GeminiPro = Gemini25Pro;
-        public const string Gemini15Pro = "gemini-1.5-pro";
-        //public const string Gemini15Pro001 = "gemini-1.5-pro-001";
-        public const string Gemini15Pro002 = "gemini-1.5-pro-002";
-        public const string Gemini15ProTuning = Gemini15Pro002;
-        public const string Gemini15ProPreview = "gemini-1.5-pro-preview-0409";
-        public const string Gemini15ProExperimental0801 = GeminiExperimental1206;
-        public const string Gemini15ProExperimental0827 = GeminiExperimental1206;
-        public const string Gemini15ProExperimental = GeminiExperimental1206;
-        public const string Gemini15ProLatest = "gemini-1.5-pro-latest";
-        public const string Gemini15Flash = "gemini-1.5-flash";
-        public const string Gemini15FlashLatest = "gemini-1.5-flash-latest";
-        //public const string Gemini15Flash001 = "gemini-1.5-flash-001";
-        public const string Gemini15Flash002 = "gemini-1.5-flash-002";
-        //public const string Gemini15Flash001Tuning = "gemini-1.5-flash-001-tuning";
-        //public const string Gemini15FlashTuning = Gemini15Flash001Tuning;
-        public const string Gemini15Flash8B = "gemini-1.5-flash-8b";
-        public const string Gemini15Flash8B001 = "gemini-1.5-flash-8b-001";
-        public const string Gemini15Flash8BLatest = "gemini-1.5-flash-8b-latest";
-        public const string Gemini15FlashExperimental0827 = GeminiExperimental1206;
-        //public const string Gemini15FlashExperimental0827_8B = "gemini-1.5-flash-8b-exp-0827";
-        //public const string Gemini15FlashExperimental0924_8B = "gemini-1.5-flash-8b-exp-0924";
+        // Discontinuation date: September 9, 2025.
 
         public const string GeminiExperimental = GeminiExperimental1206;
         public const string GeminiExperimental1114 = GeminiExperimental1206;
@@ -90,6 +54,7 @@ namespace Mscc.GenerativeAI
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
 
         // Gemini 2.5
+        public const string GeminiPro = Gemini25Pro;
         public const string GeminiFlashLatest = "gemini-flash-latest";
         public const string GeminiFlashLiteLatest = "gemini-flash-lite-latest";
         public const string GeminiProLatest = "gemini-pro-latest";
