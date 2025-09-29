@@ -56,6 +56,8 @@ jobs:
   - script: dotnet --version
     displayName: 'Check .NET version'
 
+  - task: NuGetAuthenticate@1
+    displayName: 'NuGet Authenticate'
   - script: mv ./nuget.azure ./nuget.config
     displayName: Set NuGet source
     
