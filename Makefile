@@ -28,7 +28,7 @@ test: build
 		-- \
 		RunConfiguration.CollectSourceInformation=true
 
-generate-docs: clean build
+generate-docs: clean restore
 	cp $(SOURCE_DIRECTORY)src/Mscc.GenerativeAI/CHANGELOG.md $(SOURCE_DIRECTORY)docs/changelog.md
 	cp $(SOURCE_DIRECTORY)src/Mscc.GenerativeAI/RELEASE_NOTES.md $(SOURCE_DIRECTORY)docs/release_notes.md
 	dotnet docfx build $(DOCS_PATH)/docfx.json -- -p:Configuration=$(CONFIGURATION)
