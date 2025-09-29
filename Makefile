@@ -31,7 +31,7 @@ test: build
 generate-docs: clean build
 	cp $(SOURCE_DIRECTORY)src/Mscc.GenerativeAI/CHANGELOG.md $(SOURCE_DIRECTORY)docs/changelog.md
 	cp $(SOURCE_DIRECTORY)src/Mscc.GenerativeAI/RELEASE_NOTES.md $(SOURCE_DIRECTORY)docs/release_notes.md
-	dotnet docfx $(DOCS_PATH)/docfx.json
+	dotnet docfx build $(DOCS_PATH)/docfx.json -- -p:Configuration=$(CONFIGURATION)
 
 serve-docs: generate-docs
 	dotnet docfx serve $(ARTIFACT_PATH)/_site --port 8080
