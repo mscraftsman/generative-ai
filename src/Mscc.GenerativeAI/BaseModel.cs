@@ -589,9 +589,9 @@ namespace Mscc.GenerativeAI
                 {
                     if (lastResponse != null)
                     {
-                        var message = GetResponseMessageAsync(lastResponse, cancellationToken);
+                        var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
                         throw new GeminiApiTimeoutException(
-                            $"The request retry logic has timed out. Last response: {message}", lastResponse,
+                            $"The request retry logic has timed out. Last API response:\n{message}", lastResponse,
                             new TimeoutException());
                     }
 

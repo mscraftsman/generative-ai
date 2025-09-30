@@ -447,7 +447,7 @@ namespace Mscc.GenerativeAI
                 message = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
             }
-            throw new GeminiApiException($"The request was not successful. {message}", response);
+            throw new GeminiApiException($"The request was not successful. Last API response:\n{message}", response);
         }
 
         internal static async Task<byte[]> ReadImageFileAsync(string url)
