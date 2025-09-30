@@ -66,6 +66,18 @@ namespace Mscc.GenerativeAI
         /// </summary>
         ImageSafety,
         /// <summary>
+        /// Image generation stopped because generated images has other prohibited content.
+        /// </summary>
+        ImageProhibitedContent,
+        /// <summary>
+        /// Image generation stopped because of other miscellaneous issue.
+        /// </summary>
+        ImageOther,
+        /// <summary>
+        /// The model was expected to generate an image, but none was generated.
+        /// </summary>
+        NoImage,
+        /// <summary>
         /// Model generated a tool call but no tools were enabled in the request.
         /// </summary>
         UnexpectedToolCall,
