@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -362,12 +363,14 @@ namespace Mscc.GenerativeAI
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
         /// <param name="pageToken">A page token, received from a previous ListModels call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="filter">Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone</param>
+        /// <param name="returnPartialSuccess">When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `"projects/example/locations/-"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="NotSupportedException"></exception>
         private async Task<List<ModelResponse>> ListTunedModels(int? pageSize = null, 
             string? pageToken = null, 
             string? filter = null, 
+            bool? returnPartialSuccess = false,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
@@ -384,9 +387,10 @@ namespace Mscc.GenerativeAI
             var url = "{BaseUrlGoogleAi}/tunedModels"; // v1beta3
             var queryStringParams = new Dictionary<string, string?>()
             {
-                [nameof(pageSize)] = Convert.ToString(pageSize),
+                [nameof(pageSize)] = Convert.ToString(pageSize, CultureInfo.InvariantCulture),
                 [nameof(pageToken)] = pageToken,
-                [nameof(filter)] = filter
+                [nameof(filter)] = filter,
+                [nameof(returnPartialSuccess)] = Convert.ToString(returnPartialSuccess, CultureInfo.InvariantCulture)
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
@@ -418,7 +422,7 @@ namespace Mscc.GenerativeAI
         {
             if (tuned)
             {
-                return await ListTunedModels(pageSize, pageToken, filter, requestOptions, cancellationToken);
+                return await ListTunedModels(pageSize, pageToken, filter, false, requestOptions, cancellationToken);
             }
 
             var url = _useVertexAi ? "{BaseUrlVertexAi}/models" : "{BaseUrlGoogleAi}/models";

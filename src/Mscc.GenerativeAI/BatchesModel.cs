@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Text;
 
 namespace Mscc.GenerativeAI
@@ -37,6 +38,7 @@ namespace Mscc.GenerativeAI
         /// <param name="filter">The standard list filter.</param>
         /// <param name="pageSize">Optional. The maximum number of cached contents to return. The service may return fewer than this value. If unspecified, some default (under maximum) number of items will be returned. The maximum value is 1000; values above 1000 will be coerced to 1000.</param>
         /// <param name="pageToken">Optional. A page token, received from a previous `ListCachedContents` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListCachedContents` must match the call that provided the page token.</param>
+        /// <param name="returnPartialSuccess">When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `"projects/example/locations/-"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
@@ -44,6 +46,7 @@ namespace Mscc.GenerativeAI
             string filter, 
             int? pageSize = 50, 
             string? pageToken = null,
+            bool? returnPartialSuccess = false,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
@@ -51,8 +54,9 @@ namespace Mscc.GenerativeAI
             var queryStringParams = new Dictionary<string, string?>()
             {
                 [nameof(filter)] = filter, 
-                [nameof(pageSize)] = Convert.ToString(pageSize), 
-                [nameof(pageToken)] = pageToken
+                [nameof(pageSize)] = Convert.ToString(pageSize, CultureInfo.InvariantCulture), 
+                [nameof(pageToken)] = pageToken,
+                [nameof(returnPartialSuccess)] = Convert.ToString(returnPartialSuccess, CultureInfo.InvariantCulture)
             };
 
             url = ParseUrl(url).AddQueryString(queryStringParams);
