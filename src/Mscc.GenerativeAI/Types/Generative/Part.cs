@@ -97,6 +97,13 @@ namespace Mscc.GenerativeAI
         /// Optional. An opaque signature for the thought so it can be reused in subsequent requests.
         /// </summary>
         public string? ThoughtSignature { get; set; }
+        
+        /// <summary>
+        /// Custom metadata associated with the Part. Agents using genai.Part as content representation may
+        /// need to keep track of the additional information.
+        /// For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams.
+        /// </summary>
+        public object? PartMetadata { get; set; }
 
         /// <summary>
         /// The ETag of the item.
