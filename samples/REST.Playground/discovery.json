@@ -195,6 +195,11 @@
               "description": "The standard list page token.",
               "location": "query",
               "type": "string"
+            },
+            "returnPartialSuccess": {
+              "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+              "location": "query",
+              "type": "boolean"
             }
           },
           "path": "v1beta/{+name}",
@@ -546,113 +551,6 @@
       "resources": {
         "documents": {
           "methods": {
-            "create": {
-              "description": "Creates an empty `Document`.",
-              "flatPath": "v1beta/corpora/{corporaId}/documents",
-              "httpMethod": "POST",
-              "id": "generativelanguage.corpora.documents.create",
-              "parameterOrder": [
-                "parent"
-              ],
-              "parameters": {
-                "parent": {
-                  "description": "Required. The name of the `Corpus` where this `Document` will be created. Example: `corpora/my-corpus-123`",
-                  "location": "path",
-                  "pattern": "^corpora/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+parent}/documents",
-              "request": {
-                "$ref": "Document"
-              },
-              "response": {
-                "$ref": "Document"
-              }
-            },
-            "delete": {
-              "description": "Deletes a `Document`.",
-              "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}",
-              "httpMethod": "DELETE",
-              "id": "generativelanguage.corpora.documents.delete",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "force": {
-                  "description": "Optional. If set to true, any `Chunk`s and objects related to this `Document` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `Document` contains any `Chunk`s.",
-                  "location": "query",
-                  "type": "boolean"
-                },
-                "name": {
-                  "description": "Required. The resource name of the `Document` to delete. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}",
-              "response": {
-                "$ref": "Empty"
-              }
-            },
-            "get": {
-              "description": "Gets information about a specific `Document`.",
-              "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}",
-              "httpMethod": "GET",
-              "id": "generativelanguage.corpora.documents.get",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "Required. The name of the `Document` to retrieve. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}",
-              "response": {
-                "$ref": "Document"
-              }
-            },
-            "list": {
-              "description": "Lists all `Document`s in a `Corpus`.",
-              "flatPath": "v1beta/corpora/{corporaId}/documents",
-              "httpMethod": "GET",
-              "id": "generativelanguage.corpora.documents.list",
-              "parameterOrder": [
-                "parent"
-              ],
-              "parameters": {
-                "pageSize": {
-                  "description": "Optional. The maximum number of `Document`s to return (per page). The service may return fewer `Document`s. If unspecified, at most 10 `Document`s will be returned. The maximum size limit is 20 `Document`s per page.",
-                  "format": "int32",
-                  "location": "query",
-                  "type": "integer"
-                },
-                "pageToken": {
-                  "description": "Optional. A page token, received from a previous `ListDocuments` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListDocuments` must match the call that provided the page token.",
-                  "location": "query",
-                  "type": "string"
-                },
-                "parent": {
-                  "description": "Required. The name of the `Corpus` containing `Document`s. Example: `corpora/my-corpus-123`",
-                  "location": "path",
-                  "pattern": "^corpora/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+parent}/documents",
-              "response": {
-                "$ref": "ListDocumentsResponse"
-              }
-            },
             "patch": {
               "description": "Updates a `Document`.",
               "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}",
@@ -663,7 +561,7 @@
               ],
               "parameters": {
                 "name": {
-                  "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"corpora/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
+                  "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"ragStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
                   "location": "path",
                   "pattern": "^corpora/[^/]+/documents/[^/]+$",
                   "required": true,
@@ -682,31 +580,6 @@
               },
               "response": {
                 "$ref": "Document"
-              }
-            },
-            "query": {
-              "description": "Performs semantic search over a `Document`.",
-              "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}:query",
-              "httpMethod": "POST",
-              "id": "generativelanguage.corpora.documents.query",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "Required. The name of the `Document` to query. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}:query",
-              "request": {
-                "$ref": "QueryDocumentRequest"
-              },
-              "response": {
-                "$ref": "QueryDocumentResponse"
               }
             }
           },
@@ -1823,6 +1696,11 @@
                   "description": "The standard list page token.",
                   "location": "query",
                   "type": "string"
+                },
+                "returnPartialSuccess": {
+                  "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+                  "location": "query",
+                  "type": "boolean"
                 }
               },
               "path": "v1beta/{+name}/operations",
@@ -1836,6 +1714,142 @@
     },
     "ragStores": {
       "resources": {
+        "documents": {
+          "methods": {
+            "create": {
+              "description": "Creates an empty `Document`.",
+              "flatPath": "v1beta/ragStores/{ragStoresId}/documents",
+              "httpMethod": "POST",
+              "id": "generativelanguage.ragStores.documents.create",
+              "parameterOrder": [
+                "parent"
+              ],
+              "parameters": {
+                "parent": {
+                  "description": "Required. The name of the `RagStore` where this `Document` will be created. Example: `ragStores/my-rag-store-123`",
+                  "location": "path",
+                  "pattern": "^ragStores/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+parent}/documents",
+              "request": {
+                "$ref": "Document"
+              },
+              "response": {
+                "$ref": "Document"
+              }
+            },
+            "delete": {
+              "description": "Deletes a `Document`.",
+              "flatPath": "v1beta/ragStores/{ragStoresId}/documents/{documentsId}",
+              "httpMethod": "DELETE",
+              "id": "generativelanguage.ragStores.documents.delete",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "force": {
+                  "description": "Optional. If set to true, any `Chunk`s and objects related to this `Document` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `Document` contains any `Chunk`s.",
+                  "location": "query",
+                  "type": "boolean"
+                },
+                "name": {
+                  "description": "Required. The resource name of the `Document` to delete. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "location": "path",
+                  "pattern": "^ragStores/[^/]+/documents/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Empty"
+              }
+            },
+            "get": {
+              "description": "Gets information about a specific `Document`.",
+              "flatPath": "v1beta/ragStores/{ragStoresId}/documents/{documentsId}",
+              "httpMethod": "GET",
+              "id": "generativelanguage.ragStores.documents.get",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "Required. The name of the `Document` to retrieve. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "location": "path",
+                  "pattern": "^ragStores/[^/]+/documents/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Document"
+              }
+            },
+            "list": {
+              "description": "Lists all `Document`s in a `Corpus`.",
+              "flatPath": "v1beta/ragStores/{ragStoresId}/documents",
+              "httpMethod": "GET",
+              "id": "generativelanguage.ragStores.documents.list",
+              "parameterOrder": [
+                "parent"
+              ],
+              "parameters": {
+                "pageSize": {
+                  "description": "Optional. The maximum number of `Document`s to return (per page). The service may return fewer `Document`s. If unspecified, at most 10 `Document`s will be returned. The maximum size limit is 20 `Document`s per page.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "pageToken": {
+                  "description": "Optional. A page token, received from a previous `ListDocuments` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListDocuments` must match the call that provided the page token.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "parent": {
+                  "description": "Required. The name of the `RagStore` containing `Document`s. Example: `ragStores/my-rag-store-123`",
+                  "location": "path",
+                  "pattern": "^ragStores/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+parent}/documents",
+              "response": {
+                "$ref": "ListDocumentsResponse"
+              }
+            },
+            "query": {
+              "description": "Performs semantic search over a `Document`.",
+              "flatPath": "v1beta/ragStores/{ragStoresId}/documents/{documentsId}:query",
+              "httpMethod": "POST",
+              "id": "generativelanguage.ragStores.documents.query",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "Required. The name of the `Document` to query. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "location": "path",
+                  "pattern": "^ragStores/[^/]+/documents/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}:query",
+              "request": {
+                "$ref": "QueryDocumentRequest"
+              },
+              "response": {
+                "$ref": "QueryDocumentResponse"
+              }
+            }
+          }
+        },
         "operations": {
           "methods": {
             "get": {
@@ -2232,6 +2246,11 @@
                   "description": "The standard list page token.",
                   "location": "query",
                   "type": "string"
+                },
+                "returnPartialSuccess": {
+                  "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+                  "location": "query",
+                  "type": "boolean"
                 }
               },
               "path": "v1beta/{+name}/operations",
@@ -2381,7 +2400,7 @@
       }
     }
   },
-  "revision": "20250922",
+  "revision": "20250928",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2719,6 +2738,9 @@
             "SPII",
             "MALFORMED_FUNCTION_CALL",
             "IMAGE_SAFETY",
+            "IMAGE_PROHIBITED_CONTENT",
+            "IMAGE_OTHER",
+            "NO_IMAGE",
             "UNEXPECTED_TOOL_CALL",
             "TOO_MANY_TOOL_CALLS"
           ],
@@ -2735,6 +2757,9 @@
             "Token generation stopped because the content potentially contains Sensitive Personally Identifiable Information (SPII).",
             "The function call generated by the model is invalid.",
             "Token generation stopped because generated images contain safety violations.",
+            "Image generation stopped because generated images has other prohibited content.",
+            "Image generation stopped because of other miscellaneous issue.",
+            "The model was expected to generate an image, but none was generated.",
             "Model generated a tool call but no tools were enabled in the request.",
             "Model called too many tools consecutively, thus the system exited execution."
           ],
@@ -3278,7 +3303,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"corpora/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
+          "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"ragStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
           "type": "string"
         },
         "updateTime": {
@@ -4063,7 +4088,7 @@
       "type": "object"
     },
     "GenerateContentRequest": {
-      "description": "Request to generate a completion from the model. NEXT ID: 16",
+      "description": "Request to generate a completion from the model. NEXT ID: 17",
       "id": "GenerateContentRequest",
       "properties": {
         "cachedContent": {
@@ -4987,6 +5012,13 @@
             "$ref": "Operation"
           },
           "type": "array"
+        },
+        "unreachable": {
+          "description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -5308,6 +5340,14 @@
         "inlineData": {
           "$ref": "Blob",
           "description": "Inline media bytes."
+        },
+        "partMetadata": {
+          "additionalProperties": {
+            "description": "Properties of the object.",
+            "type": "any"
+          },
+          "description": "Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams.",
+          "type": "object"
         },
         "text": {
           "description": "Inline text.",
