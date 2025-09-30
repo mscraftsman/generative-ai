@@ -6,6 +6,23 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
+    /// Response from `ListDocuments` containing a paginated list of <see cref="Document"/>s.
+    /// The <see cref="Document"/>s are sorted by ascending `document.create_time`.
+    /// </summary>
+    internal class ListDocumentsResponse
+    {
+        /// <summary>
+        /// The returned <see cref="Document"/>s.
+        /// </summary>
+        public List<Document> Documents { get; set; }
+        /// <summary>
+        /// A token, which can be sent as `page_token` to retrieve the next page.
+        /// If this field is omitted, there are no more pages.
+        /// </summary>
+        public string? NextPageToken { get; set; }
+    }
+
+    /// <summary>
     /// A `Document` is a collection of `Chunk`s.
     /// </summary>
     public class Document
