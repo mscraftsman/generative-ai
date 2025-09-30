@@ -7,7 +7,7 @@ var model = googleAi.GenerativeModel(Model.Gemini20Flash);
 var generationConfig = new GenerationConfig()
 {
     ResponseMimeType = "application/json", 
-    ResponseSchema = new List<Recipe>()
+    ResponseSchema = Schema.FromType<List<Recipe>>()
 };
 
 var response = await model.GenerateContent(prompt,

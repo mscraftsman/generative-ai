@@ -2500,7 +2500,8 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerateContentConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<Recipe>>()
+                ResponseMimeType = "application/json", 
+                ResponseSchema = Schema.FromType<List<Recipe>>()
             };
 
             // Act
