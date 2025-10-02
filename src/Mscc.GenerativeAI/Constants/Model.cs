@@ -54,6 +54,8 @@ namespace Mscc.GenerativeAI
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
 
         // Gemini 2.5
+        public const string NanoBanana = Gemini25FlashImage;
+        
         public const string GeminiPro = Gemini25Pro;
         public const string GeminiFlashLatest = "gemini-flash-latest";
         public const string GeminiFlashLiteLatest = "gemini-flash-lite-latest";
