@@ -153,5 +153,9 @@ namespace Mscc.GenerativeAI
         /// except for than those starting as a `$`, may be set.
         /// </summary>
         public object? ResponseJsonSchema { get; set; }
+        /// <summary>
+        /// Optional. Config for image generation. An error will be returned if this field is set for models that don't support these config options.
+        /// </summary>
+        public ImageConfig? ImageConfig { get; set; }
     }
 }
