@@ -1,26 +1,18 @@
 # Release Notes
 
-## 2.8.14
+## 2.8.15
 
 ### Added
 
-- add `Document` endpoints to `RagStores` (d97d6c4)
-- add property `PartMetadata` (2972e5f)
-- add property `Unreachable` (ac8e6ca)
-- add image related reasons (f9a3383)
-- add querystring parameter `returnPartialSuccess` (3eb78d7)
+- add property `LogProbabilitySum` (94cf95a)
+- add property / type `ImageConfig` (001b8ff)
+- add model `gemini-2.5-flash-image` (4ce731b)
 
 ### Changed
 
-- provide details of last API response
-- revision 20250928 (0ce6dd4)
-- upgrade NuGet packages
-
-### Fixed
-
-- update tests and docs #116 (2b2b020)
-- fix NuGet authentication for feed source (3c9e037)
-- fix NuGet feed sources in Azure DevOps (19facc3)
+- revision 20251001 (d04a6f2)
+- extend enum `ImageAspectRatio` (c1f17d5)
+- extend enum `FileResourceSource` (5017404)
 
 ## Changelog
 
