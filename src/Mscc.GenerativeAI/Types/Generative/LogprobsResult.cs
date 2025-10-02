@@ -16,5 +16,9 @@ namespace Mscc.GenerativeAI
         /// The chosen candidates may or may not be in topCandidates.
         /// </summary>
         public List<LogprobsResultCandidate> ChosenCanditates { get; set; }
+        /// <summary>
+        /// Sum of log probabilities for all tokens.
+        /// </summary>
+        public float? LogProbabilitySum { get; set; }
     }
 }
