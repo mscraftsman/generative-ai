@@ -70,7 +70,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini25FlashPreviewNativeAudio = "gemini-2.5-flash-preview-native-audio-dialog";
         public const string Gemini25FlashPreviewNativeAudioThinking = "gemini-2.5-flash-exp-native-audio-thinking-dialog";
         public const string Gemini25FlashPreviewNativeAudioDialog = "gemini-2.5-flash-preview-native-audio-dialog-rai-v3";
-        public const string Gemini25FlashImage = Gemini25FlashImagePreview;
+        public const string Gemini25FlashImage = "gemini-2.5-flash-image";
         public const string Gemini25FlashImagePreview = "gemini-2.5-flash-image-preview";
         public const string Gemini25FlashNativeAudioLatest = "gemini-2.5-flash-native-audio-latest";
         public const string Gemini25FlashNativeAudioPreview092025 = "gemini-2.5-flash-native-audio-preview-09-2025";

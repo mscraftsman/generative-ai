@@ -643,6 +643,22 @@
       "version": "2.0"
     },
     {
+      "description": "Gemini 2.5 Flash Preview Image",
+      "displayName": "Nano Banana",
+      "inputTokenLimit": 32768,
+      "maxTemperature": 1,
+      "name": "models/gemini-2.5-flash-image",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "2.0"
+    },
+    {
       "description": "Gemini 2.5 Flash Preview Sep 2025",
       "displayName": "Gemini 2.5 Flash Preview Sep 2025",
       "inputTokenLimit": 1048576,
@@ -987,6 +1003,7 @@
         "bidiGenerateContent"
       ],
       "temperature": 1,
+      "thinking": true,
       "topK": 64,
       "topP": 0.95,
       "version": "Gemini 2.5 Flash Native Audio Latest"
@@ -1003,6 +1020,7 @@
         "bidiGenerateContent"
       ],
       "temperature": 1,
+      "thinking": true,
       "topK": 64,
       "topP": 0.95,
       "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
