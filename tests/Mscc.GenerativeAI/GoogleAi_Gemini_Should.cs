@@ -780,6 +780,9 @@ namespace Test.Mscc.GenerativeAI
             "In the foreground, close up mobile screen showing the \"MedBuddy\" app. Beneath the mobile lies a prescription and medication from the pharmacy" +
             "The lighting is harsh, creating a dramatic, somber mood.",
             ImageAspectRatio.Ratio9x16)]
+        [InlineData(
+            "Create a fun colorful image in comic style of a banana and big text 'Launch Day'",
+            ImageAspectRatio.Ratio16x9)]
         public async Task Generate_Content_Image_AspectRatio(string prompt, ImageAspectRatio aspectRatio)
         {
             // Arrange
