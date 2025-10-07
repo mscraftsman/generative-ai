@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="FluentAssertions" Version="6.12.2" />
-    <PackageVersion Include="Google.Apis.Auth" Version="1.71.0" />
+    <PackageVersion Include="Google.Apis.Auth" Version="1.72.0" />
     <PackageVersion Include="Google.Protobuf" Version="3.32.1" />
     <PackageVersion Include="JsonSchema.Net.Generation" Version="5.0.0" />
     <PackageVersion Include="JsonSchema.Net.Generation.DataAnnotations" Version="1.2.0" />
