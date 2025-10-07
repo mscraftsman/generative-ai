@@ -714,6 +714,23 @@
       "version": "1.5-preview"
     },
     {
+      "description": "Gemini 2.5 Computer Use Preview 10-2025",
+      "displayName": "Gemini 2.5 Computer Use Preview 10-2025",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-computer-use-preview-10-2025",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "Gemini 2.5 Computer Use Preview 10-2025"
+    },
+    {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Embedding 001",
       "inputTokenLimit": 2048,

@@ -87,7 +87,11 @@ namespace Mscc.GenerativeAI
         public const string Gemini25LiveFlash = Gemini25LiveFlashPreview;
         public const string Gemini25LiveFlashPreview = "gemini-2.5-flash-live-preview";
 
+        public const string GeminiRoboticsEr15 = GeminiRoboticsEr15Preview;
         public const string GeminiRoboticsEr15Preview = "gemini-robotics-er-1.5-preview";
+        public const string Gemini25ComputerUse = Gemini25ComputerUsePreview102025;
+        public const string Gemini25ComputerUsePreview = Gemini25ComputerUsePreview102025;
+        public const string Gemini25ComputerUsePreview102025 = "gemini-2.5-computer-use-preview-10-2025";
 
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
