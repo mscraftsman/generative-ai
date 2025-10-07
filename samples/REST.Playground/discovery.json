@@ -2400,7 +2400,7 @@
       }
     }
   },
-  "revision": "20251001",
+  "revision": "20251006",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2722,6 +2722,11 @@
           "$ref": "Content",
           "description": "Output only. Generated content returned from the model.",
           "readOnly": true
+        },
+        "finishMessage": {
+          "description": "Optional. Output only. Details the reason why the model stopped generating tokens. This is populated only when `finish_reason` is set.",
+          "readOnly": true,
+          "type": "string"
         },
         "finishReason": {
           "description": "Optional. Output only. The reason why the model stopped generating tokens. If empty, the model has not stopped generating tokens.",
