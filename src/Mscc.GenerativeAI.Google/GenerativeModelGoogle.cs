@@ -99,16 +99,18 @@ namespace Mscc.GenerativeAI.Google
         /// Returns an instance of the specified model.
         /// </summary>
         /// <param name="model">The model name, ie. "gemini-pro"</param>
+        /// <param name="requestOptions">Optional. Options for the request.</param>
         /// <returns>The model.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public GenerativeModel CreateModel(string model = Model.Gemini25Pro)
+        public GenerativeModel CreateModel(string model = Model.Gemini25Pro,
+            RequestOptions? requestOptions = null)
         {
             if (ProjectId == null) throw new ArgumentNullException(nameof(ProjectId));
             if (Region == null) throw new ArgumentNullException(nameof(Region));
 
             var accessToken = _credential.GetAccessTokenForRequestAsync().Result;   // _credential.Token.AccessToken
-            var vertex = new VertexAI(projectId: ProjectId,region: Region);
+            var vertex = new VertexAI(projectId: ProjectId, region: Region, requestOptions: requestOptions);
             var generativeModel = vertex.GenerativeModel(model, GenerationConfig, SafetySettings);
             generativeModel.AccessToken = accessToken;
             return generativeModel;
