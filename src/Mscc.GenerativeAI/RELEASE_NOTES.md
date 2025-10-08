@@ -1,18 +1,20 @@
 # Release Notes
 
-## 2.8.15
+## 2.8.16
 
 ### Added
 
-- add property `LogProbabilitySum` (94cf95a)
-- add property / type `ImageConfig` (001b8ff)
-- add model `gemini-2.5-flash-image` (4ce731b)
+- re-add timeout mapping w/o retry (ac8f1ef)
+- add parameter `requestOptions` (07c101e)
+- add model `gemini-2.5-computer-use-preview-10-2025` (56d892f)
+- add `Launch Day` (987b06b)
+- add test for `ImageConfig` and aspect ratios (8da4020)
+- What The Banana!?! (125ff8f)
 
 ### Changed
 
-- revision 20251001 (d04a6f2)
-- extend enum `ImageAspectRatio` (c1f17d5)
-- extend enum `FileResourceSource` (5017404)
+- Update IChatClient to utilize newer surface area (0377aa1)
+- upgrade NuGet packages (20b585b)
 
 ## Changelog
 
