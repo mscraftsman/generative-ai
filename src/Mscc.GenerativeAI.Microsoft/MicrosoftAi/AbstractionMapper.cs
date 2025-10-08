@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 #endif
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using mea = Microsoft.Extensions.AI;
@@ -28,14 +29,20 @@ namespace Mscc.GenerativeAI.Microsoft
             GenerateContentRequest request =
                 options?.RawRepresentationFactory?.Invoke(client) as GenerateContentRequest ?? new();
 
-            StringBuilder? systemMessage = null;
+            void AddSystemInstruction(string? text)
+            {
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    ((request.SystemInstruction ??= new()).Parts ??= []).Add(new TextData() { Text = text });
+                }
+            }
 
             request.Contents ??= [];
             foreach (var message in messages)
             {
                 if (message.Role == mea.ChatRole.System)
                 {
-                    (systemMessage ??= new()).Append(message.Text);
+                    AddSystemInstruction(message.Text);
                     continue;
                 }
 
@@ -57,6 +64,10 @@ namespace Mscc.GenerativeAI.Microsoft
 
                         case mea.DataContent dc:
                             c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
+                            break;
+
+                        case mea.UriContent uc:
+                            c.Parts.Add(new FileData() { FileUri = uc.Uri.AbsoluteUri, MimeType = uc.MediaType });
                             break;
 
                         case mea.FunctionCallContent fcc:
@@ -91,26 +102,52 @@ namespace Mscc.GenerativeAI.Microsoft
                 }
             }
 
-            if (systemMessage is not null)
-            {
-                string systemInstruction = systemMessage.ToString();
-                if (!string.IsNullOrEmpty(systemInstruction))
-                {
-                    request.SystemInstruction ??= new Content(systemMessage.ToString());
-                }
-            }
-
             if (options is not null)
             {
+                AddSystemInstruction(options.Instructions);
+
                 request.GenerationConfig ??= new();
-                request.GenerationConfig.FrequencyPenalty = options.FrequencyPenalty;
-                request.GenerationConfig.PresencePenalty = options.PresencePenalty;
-                request.GenerationConfig.TopP = options.TopP;
-                request.GenerationConfig.TopK = options.TopK;
-                request.GenerationConfig.StopSequences = options.StopSequences?.ToList();
-                request.GenerationConfig.MaxOutputTokens = options.MaxOutputTokens;
-                request.GenerationConfig.Seed = (int?)options.Seed;
-                request.GenerationConfig.Temperature = options.Temperature;
+                
+                if (options.FrequencyPenalty is not null)
+                {
+                    request.GenerationConfig.FrequencyPenalty = options.FrequencyPenalty;
+                }
+
+                if (options.PresencePenalty is not null)
+                {
+                    request.GenerationConfig.PresencePenalty = options.PresencePenalty;
+                }
+
+                if (options.TopP is not null)
+                {
+                    request.GenerationConfig.TopP = options.TopP;
+                }
+
+                if (options.TopK is not null)
+                {
+                    request.GenerationConfig.TopK = options.TopK;
+                }
+
+                if (options.StopSequences is not null)
+                {
+                    request.GenerationConfig.StopSequences = options.StopSequences?.ToList();
+                }
+
+                if (options.MaxOutputTokens is not null)
+                {
+                    request.GenerationConfig.MaxOutputTokens = options.MaxOutputTokens;
+                }
+
+                if (options.Seed is not null)
+                {
+                    request.GenerationConfig.Seed = (int?)options.Seed;
+                }
+
+                if (options.Temperature is not null)
+                {
+                    request.GenerationConfig.Temperature = options.Temperature;
+                }
+
                 if (options.ResponseFormat is mea.ChatResponseFormatJson jsonFormat)
                 {
                     request.GenerationConfig.ResponseMimeType = "application/json";
@@ -157,7 +194,7 @@ namespace Mscc.GenerativeAI.Microsoft
                     {
                         switch (tool)
                         {
-                            case mea.AIFunction aif:
+                            case mea.AIFunctionDeclaration aif:
                                 functionDeclarations.Add(new FunctionDeclaration
                                 {
                                     Name = aif.Name,
@@ -217,12 +254,12 @@ namespace Mscc.GenerativeAI.Microsoft
         }
 
         /// <summary>
-        /// Wraps a value into a new <see cref="JsonElement"/> and the specified <see cref="key"/>.
+        /// Wraps a value into a new <see cref="JsonElement"/> and the specified <paramref name="key"/>.
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <param name="key">Property to use as wrapper.</param>
         /// <returns></returns>
-        private static JsonElement WrapInObject(object value, string key = "result")
+        private static JsonElement WrapInObject(object? value, string key = "result")
         {
             using MemoryStream stream = new();
             using Utf8JsonWriter writer = new(stream);
@@ -241,7 +278,8 @@ namespace Mscc.GenerativeAI.Microsoft
             writer.WriteEndObject();
             writer.Flush();
 
-            return JsonDocument.Parse(stream.ToArray()).RootElement.Clone();
+            using var jsonDoc = JsonDocument.Parse(stream.ToArray());
+            return jsonDoc.RootElement.Clone();
         }
 
         /// <summary>
@@ -268,12 +306,6 @@ namespace Mscc.GenerativeAI.Microsoft
                 {
                     return new RequestOptions(retry, timeout);
                 }
-                else if (timeout is not null)
-                {
-                    return new RequestOptions(timeout: timeout);
-                }
-
-                return null;
             }
 
             return null;
@@ -343,6 +375,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 AdditionalProperties = chatMessage.AdditionalProperties,
                 CreatedAt = chatMessage.CreatedAt,
                 FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
+                MessageId = response.ResponseId,
                 ModelId = response.ModelVersion,
                 RawRepresentation = response,
                 ResponseId = response.ResponseId,
@@ -369,7 +402,8 @@ namespace Mscc.GenerativeAI.Microsoft
             return new mea.GeneratedEmbeddings<mea.Embedding<float>>([
                 new mea.Embedding<float>(response.Embedding?.Values.ToArray() ?? [])
                 {
-                    CreatedAt = DateTimeOffset.Now, ModelId = request.Model
+                    CreatedAt = DateTimeOffset.Now,
+                    ModelId = request.Model
                 }
             ]) { AdditionalProperties = responseProps, Usage = usage };
         }
@@ -388,6 +422,8 @@ namespace Mscc.GenerativeAI.Microsoft
                 {
                     if (!string.IsNullOrEmpty(part.Text))
                         contents.Add(new mea.TextContent(part.Text));
+                    else if (part.Thought is true && part.ThoughtSignature is not null)
+                        contents.Add(new mea.TextReasoningContent(null) { ProtectedData = part.ThoughtSignature });
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                         contents.Add(new mea.DataContent(
                             Encoding.UTF8.GetBytes(part.InlineData.Data),
@@ -404,13 +440,19 @@ namespace Mscc.GenerativeAI.Microsoft
                     else if (part.ExecutableCode is not null)
                         contents.Add(new mea.TextContent(part.ExecutableCode.Code));
                     else if (part.VideoMetadata is not null)
-                        Console.WriteLine($"Video meta data returned.");
-                    else Console.WriteLine($"Part is not a string, inline data, or function call: {part.GetType()}");
+                        Debug.WriteLine("Video meta data returned.");
+                    else
+                        Debug.WriteLine($"Part is not a string, inline data, or function call: {part.GetType()}");
                 }
             }
 
             return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
-                contents) { RawRepresentation = response };
+                contents) 
+            {
+                CreatedAt = response.CreateTime,
+                MessageId = response.ResponseId,
+                RawRepresentation = response 
+            };
         }
 
         /// <summary>
@@ -492,12 +534,39 @@ namespace Mscc.GenerativeAI.Microsoft
         {
             if (response.UsageMetadata is null) return null;
 
-            return new()
+            mea.UsageDetails details = new()
             {
                 InputTokenCount = response.UsageMetadata.PromptTokenCount,
                 OutputTokenCount = response.UsageMetadata.CandidatesTokenCount,
                 TotalTokenCount = response.UsageMetadata.TotalTokenCount
             };
+
+            if (response.UsageMetadata.AudioDurationSeconds != 0)
+            {
+                (details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.AudioDurationSeconds)] = response.UsageMetadata.AudioDurationSeconds;
+            }
+
+            if (response.UsageMetadata.CachedContentTokenCount != 0)
+            {
+                (details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.CachedContentTokenCount)] = response.UsageMetadata.CachedContentTokenCount;
+            }
+
+            if (response.UsageMetadata.ThoughtsTokenCount != 0)
+            {
+                (details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.ThoughtsTokenCount)] = response.UsageMetadata.ThoughtsTokenCount;
+            }
+
+            if (response.UsageMetadata.ToolUsePromptTokenCount != 0)
+            {
+                (details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.ToolUsePromptTokenCount)] = response.UsageMetadata.ToolUsePromptTokenCount;
+            }
+
+            if (response.UsageMetadata.VideoDurationSeconds != 0)
+            {
+                (details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.VideoDurationSeconds)] = response.UsageMetadata.VideoDurationSeconds;
+            }
+
+            return details;
         }
 
         /// <summary>
