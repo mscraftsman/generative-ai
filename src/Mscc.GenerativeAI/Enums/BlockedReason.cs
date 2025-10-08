@@ -34,6 +34,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Candidates blocked due to unsafe image generation content.
         /// </summary>
-        ImageSafety
+        ImageSafety,
+        /// <summary>
+        /// The prompt was blocked as a jailbreak attempt.
+        /// </summary>
+        Jailbreak
     }
 }
