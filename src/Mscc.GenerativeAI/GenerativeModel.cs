@@ -1291,7 +1291,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Enqueues a batch of <see cref="EmbedContent"/> requests for batch processing.
+        /// Enqueues a batch of EmbedContent requests for batch processing.
         /// </summary>
         /// <remarks>
         /// We have a `BatchEmbedContents` handler in `GenerativeService`, but it was synchronized.
@@ -1316,7 +1316,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Enqueues a batch of <see cref="GenerateContent"/> requests for batch processing.
+        /// Enqueues a batch of GenerateContent requests for batch processing.
         /// </summary>
         /// <remarks>
         /// Refer to the [text generation guide](https://ai.google.dev/gemini-api/docs/text-generation) for detailed usage information.

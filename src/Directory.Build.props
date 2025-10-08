@@ -41,9 +41,11 @@
         <NoWarn>$(NoWarn);
             CA1002; <!-- Do not expose generic lists -->
             CA1510; <!-- ArgumentNullException.ThrowIfNull -->
+            CA1712; <!-- Do not prefix enum values with the name of the enum type -->
             CA1724; <!-- Type names should not match namespaces -->
             CA2007; <!-- Do not directly await a Task -->
             CS1591; <!-- Missing XML comment for publicly visible type or member -->
+            CS3008; <!-- Identifier is not CLS-compliant -->
             IL2026;
             IL3050;
         </NoWarn>

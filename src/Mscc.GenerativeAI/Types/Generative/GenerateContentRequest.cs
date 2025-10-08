@@ -294,7 +294,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Adds a <see cref="Part"/> object to the Content at the specified <param name="index"></param>.
+        /// Adds a <see cref="Part"/> object to the Content at the specified index.
         /// </summary>
         /// <param name="part">Part object to add to the <see cref="Contents"/> collection.</param>
         /// <param name="index">Zero-based index of element in the Contents collection.</param>

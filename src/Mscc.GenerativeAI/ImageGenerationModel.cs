@@ -65,9 +65,13 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="httpClientFactory"></param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public ImageGenerationModel(string? projectId = null, string? region = null,
-            string? model = null, IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
+        public ImageGenerationModel(string? projectId = null, 
+            string? region = null,
+            string? model = null, 
+            IHttpClientFactory? httpClientFactory = null, 
+            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
         {
             _useVertexAi = true;
         }

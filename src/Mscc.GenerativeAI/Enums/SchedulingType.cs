@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
         /// </summary>
-        When_Idle,
+        WhenIdle,
         /// <summary>
         /// Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
         /// </summary>

@@ -40,18 +40,26 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="methodName">Calling method</param>
-        /// <param name="url">URL of Gemini API endpoint</param>
-        /// <param name="payload">Data sent to the API endpoint</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "[{MethodName}]")]
         public static partial void LogMethodInvokingRequest(
             this ILogger logger,
             string methodName);
 
+        /// <summary>
+        /// Logs JSON from the request.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="json">A JSON string to log</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Request JSON: \n{json}")]
         public static partial void LogJsonRequest(
             this ILogger logger,
             string json);
 
+        /// <summary>
+        /// Logs JSON from the response.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="json">A JSON string to log</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Response JSON: \n{json}")]
         public static partial void LogJsonResponse(
             this ILogger logger,
