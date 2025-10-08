@@ -9,7 +9,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. The reason content was blocked during request processing.
         /// </summary>
-        public BlockedReason BlockReason { get; set; }
+        public BlockReason BlockReason { get; set; }
         /// <summary>
         /// A string that describes the filtering behavior in more detail.
         /// </summary>

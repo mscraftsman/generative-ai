@@ -12,7 +12,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Optional. If set, the prompt was blocked and no candidates are returned. Rephrase your prompt.
         /// </summary>
-        public BlockedReason BlockReason { get; set; }
+        public BlockReason BlockReason { get; set; }
         /// <summary>
         /// Output only. Ratings for safety of the prompt. There is at most one rating per category.
         /// </summary>

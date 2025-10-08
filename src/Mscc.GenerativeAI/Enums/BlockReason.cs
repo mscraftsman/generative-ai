@@ -7,8 +7,8 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// A list of reasons why content may have been blocked.
     /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<BlockedReason>))]
-    public enum BlockedReason
+    [JsonConverter(typeof(JsonStringEnumConverter<BlockReason>))]
+    public enum BlockReason
     {
         /// <summary>
         /// BlockedReasonUnspecified means unspecified blocked reason.
