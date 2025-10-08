@@ -37,6 +37,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         [Obsolete("Use EnableEnhancedCivicAnswers instead.")]
         HarmCategoryCivicIntegrity = 5,
+        /// <summary>
+        /// The harm category is for jailbreak prompts.
+        /// </summary>
+        HarmCategoryJailbreak,
         
         #region "PaLM 2" safety settings
         
