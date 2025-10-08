@@ -18,8 +18,12 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string NextPageToken { get; set; }
         /// <summary>
-        /// Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.
+        /// Unordered list. Unreachable resources.
         /// </summary>
+        /// <remarks>
+        /// Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across
+        /// collections e.g. when attempting to list all resources across all supported locations.
+        /// </remarks>
         public List<string>? Unreachable { get; set; }
     }
     
