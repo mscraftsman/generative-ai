@@ -19,28 +19,44 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// HarmCategoryHateSpeech means the harm category is hate speech.
         /// </summary>
-        HarmCategoryHateSpeech = 1,
+        HarmCategoryHateSpeech,
         /// <summary>
         /// HarmCategoryDangerousContent means the harm category is dangerous content.
         /// </summary>
-        HarmCategoryDangerousContent = 2,
+        HarmCategoryDangerousContent,
         /// <summary>
         /// HarmCategoryHarassment means the harm category is harassment.
         /// </summary>
-        HarmCategoryHarassment = 3,
+        HarmCategoryHarassment,
         /// <summary>
         /// HarmCategorySexuallyExplicit means the harm category is sexually explicit content.
         /// </summary>
-        HarmCategorySexuallyExplicit = 4,
+        HarmCategorySexuallyExplicit,
         /// <summary>
         /// Content that may be used to harm civic integrity.
         /// </summary>
         [Obsolete("Use EnableEnhancedCivicAnswers instead.")]
-        HarmCategoryCivicIntegrity = 5,
+        HarmCategoryCivicIntegrity,
         /// <summary>
         /// The harm category is for jailbreak prompts.
         /// </summary>
         HarmCategoryJailbreak,
+        /// <summary>
+        /// The harm category is image hate.
+        /// </summary>
+        HarmCategoryImageHate,
+        /// <summary>
+        /// The harm category is image dangerous content.
+        /// </summary>
+        HarmCategoryImageDangerousContent,
+        /// <summary>
+        /// The harm category is image harassment.
+        /// </summary>
+        HarmCategoryImageHarassment,
+        /// <summary>
+        /// The harm category is image sexually explicit content.
+        /// </summary>
+        HarmCategoryImageSexuallyExplicit,
         
         #region "PaLM 2" safety settings
         
