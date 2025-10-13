@@ -67,8 +67,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: Wait for GPR package propagation
-      run: sleep 300
+#    - name: Wait for GPR package propagation
+#      run: sleep 300
     
     - name: Check-out latest sources 
       uses: actions/checkout@v4
