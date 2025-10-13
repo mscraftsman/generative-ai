@@ -78,6 +78,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         NoImage,
         /// <summary>
+        /// Image generation stopped due to recitation.
+        /// </summary>
+        ImageRecitation,
+        /// <summary>
         /// Model generated a tool call but no tools were enabled in the request.
         /// </summary>
         UnexpectedToolCall,
