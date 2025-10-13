@@ -2400,7 +2400,7 @@
       }
     }
   },
-  "revision": "20251006",
+  "revision": "20251009",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2746,6 +2746,7 @@
             "IMAGE_PROHIBITED_CONTENT",
             "IMAGE_OTHER",
             "NO_IMAGE",
+            "IMAGE_RECITATION",
             "UNEXPECTED_TOOL_CALL",
             "TOO_MANY_TOOL_CALLS"
           ],
@@ -2765,6 +2766,7 @@
             "Image generation stopped because generated images has other prohibited content.",
             "Image generation stopped because of other miscellaneous issue.",
             "The model was expected to generate an image, but none was generated.",
+            "Image generation stopped due to recitation.",
             "Model generated a tool call but no tools were enabled in the request.",
             "Model called too many tools consecutively, thus the system exited execution."
           ],
@@ -4095,7 +4097,7 @@
       "type": "object"
     },
     "GenerateContentRequest": {
-      "description": "Request to generate a completion from the model. NEXT ID: 17",
+      "description": "Request to generate a completion from the model. NEXT ID: 18",
       "id": "GenerateContentRequest",
       "properties": {
         "cachedContent": {
@@ -4349,7 +4351,7 @@
       "type": "object"
     },
     "GenerationConfig": {
-      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model. Next ID: 28",
+      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model. Next ID: 29",
       "id": "GenerationConfig",
       "properties": {
         "candidateCount": {
@@ -4403,6 +4405,10 @@
         },
         "responseJsonSchema": {
           "description": "Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set.",
+          "type": "any"
+        },
+        "responseJsonSchemaOrdered": {
+          "description": "Optional. An internal detail. Use `responseJsonSchema` rather than this field.",
           "type": "any"
         },
         "responseLogprobs": {
