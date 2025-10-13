@@ -154,6 +154,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public object? ResponseJsonSchema { get; set; }
         /// <summary>
+        /// Optional. An internal detail. Use `responseJsonSchema` rather than this field.
+        /// </summary>
+        public object? ResponseJsonSchemaOrdered { get; set; }
+        /// <summary>
         /// Optional. Config for image generation. An error will be returned if this field is set for models that don't support these config options.
         /// </summary>
         public ImageConfig? ImageConfig { get; set; }
