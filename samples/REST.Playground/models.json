@@ -928,6 +928,28 @@
       "version": "3.0"
     },
     {
+      "description": "Veo 3.1",
+      "displayName": "Veo 3.1",
+      "inputTokenLimit": 480,
+      "name": "models/veo-3.1-generate-preview",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predictLongRunning"
+      ],
+      "version": "3.1"
+    },
+    {
+      "description": "Veo 3.1 fast",
+      "displayName": "Veo 3.1 fast",
+      "inputTokenLimit": 480,
+      "name": "models/veo-3.1-fast-generate-preview",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "predictLongRunning"
+      ],
+      "version": "3.1"
+    },
+    {
       "description": "Gemini 2.5 Flash Preview Native Audio Dialog",
       "displayName": "Gemini 2.5 Flash Preview Native Audio Dialog",
       "inputTokenLimit": 131072,

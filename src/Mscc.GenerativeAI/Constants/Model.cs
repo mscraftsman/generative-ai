@@ -208,6 +208,12 @@ namespace Mscc.GenerativeAI
         public const string Veo3FastGenerate = Veo3FastGenerate001;
         public const string Veo3FastGenerate001 = "veo-3.0-fast-generate-001";
         public const string Veo3FastPreview = "veo-3.0-fast-generate-preview";
+        public const string Veo31 = Veo31Generate;
+        public const string Veo31Generate = Veo31GeneratePreview;
+        public const string Veo31GeneratePreview = "veo-3.1-generate-preview";
+        public const string Veo31Fast = Veo31FastGenerate;
+        public const string Veo31FastGenerate = Veo31FastGeneratePreview;
+        public const string Veo31FastGeneratePreview = "veo-3.1-fast-generate-preview";
 
         // Lyria
         public const string Lyria = LyriaBase001;
