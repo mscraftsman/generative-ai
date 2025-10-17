@@ -39,11 +39,18 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Adds the Google Search tool to the list of tools.
         /// </summary>
-        public void AddGoogleSearch()
+        /// <param name="excludeDomains">List of domains to be excluded from the search results.</param>
+        /// <param name="blockingConfidence">Optional. Sites with confidence level chosen & above this value will be blocked from the search results.</param>
+        public void AddGoogleSearch(IEnumerable<string>? excludeDomains = null,
+            BlockingConfidence? blockingConfidence = null)
         {
             if (!this.Any(t => t.GoogleSearch is not null))
             {
-                this.Add(new Tool() { GoogleSearch = new() });
+                this.Add(new Tool() { GoogleSearch = new()
+                {
+                    BlockingConfidence = blockingConfidence,
+                    ExcludeDomains = excludeDomains?.ToList()
+                } });
             }
         }
 
@@ -111,11 +118,17 @@ namespace Mscc.GenerativeAI
         /// Adds the Enterprise Web Search tool to the list of tools.
         /// </summary>
         /// <param name="excludeDomains">List of domains to be excluded from the search results.</param>
-        public void AddEnterpriseWebSearch(IEnumerable<string>? excludeDomains = null)
+        /// <param name="blockingConfidence">Optional. Sites with confidence level chosen & above this value will be blocked from the search results.</param>
+        public void AddEnterpriseWebSearch(IEnumerable<string>? excludeDomains = null,
+            BlockingConfidence? blockingConfidence = null)
         {
             if (!this.Any(t => t.EnterpriseWebSearch is not null))
             {
-                this.Add(new Tool() { EnterpriseWebSearch = new() { ExcludeDomains = excludeDomains?.ToList() } });
+                this.Add(new Tool() { EnterpriseWebSearch = new()
+                {
+                    BlockingConfidence = blockingConfidence,
+                    ExcludeDomains = excludeDomains?.ToList()
+                } });
             }
         }
 
