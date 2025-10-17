@@ -29,6 +29,101 @@ namespace Mscc.GenerativeAI
         public MediaModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
+        /// Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<CustomLongRunningOperation> Upload(string uri,
+            string ragStoreName,
+            string? displayName = null,
+            bool resumable = false,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+            var fileInfo = new FileInfo(uri);
+            if (fileInfo.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(uri));
+            if (string.IsNullOrEmpty(ragStoreName)) throw new ArgumentException(nameof(ragStoreName));
+
+            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            GenerativeAIExtensions.GuardMimeType(mimeType);
+            
+            var totalBytes = new FileInfo(uri).Length;
+            var request = new UploadToRagStoreRequest()
+            {
+                DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                MimeType = mimeType
+            };
+
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{Version}/ragStores:uploadToRagStore";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{baseUri}/resumable/upload/{Version}/ragStores:uploadToRagStore";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            var json = Serialize(request);
+
+            using var fs = new FileStream(uri, FileMode.Open);
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = multipartContent;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<CustomLongRunningOperation>(response);
+        }
+
+        /// <summary>
+        /// Gets a generated file.
+        /// </summary>
+        /// <remarks>
+        /// When calling this method via REST, only the metadata of the generated file is returned.
+        /// To retrieve the file content via REST, add alt=media as a query parameter.
+        /// </remarks>
+        /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <param name="media">Optional. Flag indicating whether to retrieve the file content.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Metadata for the given file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GeneratedFile> Download(string file,
+            bool media = false,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
+
+            file = file.SanitizeGeneratedFileName();
+
+            var url = $"{BaseUrlGoogleAi}/{file}";
+            url = ParseUrl(url);
+            if (media)
+            {
+                url.AddQueryString(new Dictionary<string, string?>()
+                {
+                    ["alt"] = "media"
+                });
+            }
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<GeneratedFile>(response);
+        }
+        
+        /// <summary>
         /// Uploads a file to the File API backend.
         /// </summary>
         /// <param name="uri">URI or path to the file to upload.</param>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -150,7 +151,48 @@ namespace Mscc.GenerativeAI
             var documents = await Deserialize<ListDocumentsResponse>(response);
             return documents.Documents!;
         }
-        
+
+        /// <summary>
+        /// Updates a `RagStore`.
+        /// </summary>
+        /// <param name="ragStoresId">Required. The name of the `RagStore` where the `Document`s exist. Example: `ragStores/my-rag-store-123`</param>
+        /// <param name="ragStore"></param>
+        /// <param name="updateMask">Optional. The list of fields to update.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="ragStoresId"/> is <see langword="null"/> or empty.</exception>
+        public async Task<RagStore> Patch(string ragStoresId,
+            RagStore ragStore,
+            string? updateMask = null,
+            RequestOptions requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(ragStoresId)) throw new ArgumentException("Value cannot be null or empty.", nameof(ragStoresId));
+
+            var url = $"{BaseUrlGoogleAi}/ragStores/{ragStoresId}";
+            var queryStringParams = new Dictionary<string, string?>()
+            {
+                [nameof(updateMask)] = updateMask
+            };
+            
+            url = ParseUrl(url).AddQueryString(queryStringParams);
+            var json = Serialize(ragStore);
+            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+            using var httpRequest = new HttpRequestMessage();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            httpRequest.Method = new HttpMethod("PATCH");
+#else
+            httpRequest.Method = HttpMethod.Patch;
+#endif
+            httpRequest.RequestUri = new Uri(url);
+            httpRequest.Version = _httpVersion;
+            httpRequest.Content = payload;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<RagStore>(response);
+        }
+
         /// <summary>
         /// Performs semantic search over a <see cref="Document"/>.
         /// </summary>
