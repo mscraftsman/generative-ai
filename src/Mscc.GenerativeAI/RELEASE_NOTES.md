@@ -18,6 +18,7 @@
 - extend Enterprise Web Search (3fee060)
 - extend Google Search (3fee060)
 - reduce MaxUploadFileSize (ec28077)
+- upgrade NuGet packages
 
 ## Changelog
 

@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - extend Enterprise Web Search (3fee060) 
 - extend Google Search (3fee060)
 - reduce MaxUploadFileSize (ec28077)
+- upgrade NuGet packages
 
 ## 2.8.17
 
