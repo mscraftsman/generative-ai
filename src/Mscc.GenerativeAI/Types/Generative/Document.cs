@@ -47,5 +47,17 @@ namespace Mscc.GenerativeAI
         /// Optional. User provided custom metadata stored as key-value pairs used for querying. A `Document` can have a maximum of 20 `CustomMetadata`.
         /// </summary>
         public List<CustomMetadata> CustomMetadata { get; set; }
+        /// <summary>
+        /// Output only. The size in bytes of the Ragstore. This is the total size of all the documents in the Ragstore.
+        /// </summary>
+        public int? SizeBytes { get; set; }
+        /// <summary>
+        /// Optional. MIME type of the data. If not provided, it will be inferred from the uploaded content.
+        /// </summary>
+        public string? MimeType { get; set; }
+        /// <summary>
+        /// Output only. Current state of the `Document`.
+        /// </summary>
+        public StateDocument? State { get; set; }
     }
 }
