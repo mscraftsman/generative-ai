@@ -58,5 +58,9 @@ namespace Mscc.GenerativeAI
         /// If enabled, it automatically populates computer-use specific Function Declarations.
         /// </summary>
         public ComputerUse? ComputerUse { get; set; }
+        /// <summary>
+        /// Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora.
+        /// </summary>
+        public FileSearch? FileSearch { get; set; }
     }
 }
