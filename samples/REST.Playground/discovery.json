@@ -1151,39 +1151,69 @@
     },
     "media": {
       "methods": {
+        "download": {
+          "description": "Gets a generated file. When calling this method via REST, only the metadata of the generated file is returned. To retrieve the file content via REST, add alt=media as a query parameter.",
+          "flatPath": "v1beta/generatedFiles/{generatedFilesId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.media.download",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`",
+              "location": "path",
+              "pattern": "^generatedFiles/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "GeneratedFile"
+          },
+          "supportsMediaDownload": true,
+          "useMediaDownloadService": true
+        },
         "upload": {
-          "description": "Creates a `File`.",
-          "flatPath": "v1beta/files",
+          "description": "Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.",
+          "flatPath": "v1beta/ragStores/{ragStoresId}:uploadToRagStore",
           "httpMethod": "POST",
           "id": "generativelanguage.media.upload",
           "mediaUpload": {
             "accept": [
               "*/*"
             ],
-            "maxSize": "2147483648",
+            "maxSize": "104857600",
             "protocols": {
               "resumable": {
                 "multipart": true,
-                "path": "/resumable/upload/v1beta/files"
+                "path": "/resumable/upload/v1beta/{+ragStoreName}:uploadToRagStore"
               },
               "simple": {
                 "multipart": true,
-                "path": "/upload/v1beta/files"
+                "path": "/upload/v1beta/{+ragStoreName}:uploadToRagStore"
               }
             }
           },
           "parameterOrder": [
-
+            "ragStoreName"
           ],
           "parameters": {
-
+            "ragStoreName": {
+              "description": "Required. Immutable. The name of the `RagStore` to upload the file into. Example: `ragStores/my-rag-store-123`",
+              "location": "path",
+              "pattern": "^ragStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
           },
-          "path": "v1beta/files",
+          "path": "v1beta/{+ragStoreName}:uploadToRagStore",
           "request": {
-            "$ref": "CreateFileRequest"
+            "$ref": "UploadToRagStoreRequest"
           },
           "response": {
-            "$ref": "CreateFileResponse"
+            "$ref": "CustomLongRunningOperation"
           },
           "supportsMediaUpload": true
         }
@@ -1713,6 +1743,133 @@
       }
     },
     "ragStores": {
+      "methods": {
+        "create": {
+          "description": "Creates an empty `RagStore`.",
+          "flatPath": "v1beta/ragStores",
+          "httpMethod": "POST",
+          "id": "generativelanguage.ragStores.create",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/ragStores",
+          "request": {
+            "$ref": "RagStore"
+          },
+          "response": {
+            "$ref": "RagStore"
+          }
+        },
+        "delete": {
+          "description": "Deletes a `RagStore`.",
+          "flatPath": "v1beta/ragStores/{ragStoresId}",
+          "httpMethod": "DELETE",
+          "id": "generativelanguage.ragStores.delete",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "force": {
+              "description": "Optional. If set to true, any `Document`s and objects related to this `RagStore` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `RagStore` contains any `Document`s.",
+              "location": "query",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Required. The resource name of the `RagStore`. Example: `ragStores/my-rag-store-123`",
+              "location": "path",
+              "pattern": "^ragStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "Empty"
+          }
+        },
+        "get": {
+          "description": "Gets information about a specific `RagStore`.",
+          "flatPath": "v1beta/ragStores/{ragStoresId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.ragStores.get",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Required. The name of the `RagStore`. Example: `ragStores/my-rag-store-123`",
+              "location": "path",
+              "pattern": "^ragStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "RagStore"
+          }
+        },
+        "list": {
+          "description": "Lists all `RagStores` owned by the user.",
+          "flatPath": "v1beta/ragStores",
+          "httpMethod": "GET",
+          "id": "generativelanguage.ragStores.list",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+            "pageSize": {
+              "description": "Optional. The maximum number of `RagStores` to return (per page). The service may return fewer `RagStores`. If unspecified, at most 10 `RagStores` will be returned. The maximum size limit is 20 `RagStores` per page.",
+              "format": "int32",
+              "location": "query",
+              "type": "integer"
+            },
+            "pageToken": {
+              "description": "Optional. A page token, received from a previous `ListRagStores` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListRagStores` must match the call that provided the page token.",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/ragStores",
+          "response": {
+            "$ref": "ListRagStoresResponse"
+          }
+        },
+        "patch": {
+          "description": "Updates a `RagStore`.",
+          "flatPath": "v1beta/ragStores/{ragStoresId}",
+          "httpMethod": "PATCH",
+          "id": "generativelanguage.ragStores.patch",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Output only. Immutable. Identifier. The `RagStore` resource name. It is an ID (name excluding the \"ragStores/\" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/my-awesome-rag-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated.",
+              "location": "path",
+              "pattern": "^ragStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            },
+            "updateMask": {
+              "description": "Required. The list of fields to update. Currently, this only supports updating `display_name`.",
+              "format": "google-fieldmask",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "request": {
+            "$ref": "RagStore"
+          },
+          "response": {
+            "$ref": "RagStore"
+          }
+        }
+      },
       "resources": {
         "documents": {
           "methods": {
@@ -2400,7 +2557,7 @@
       }
     }
   },
-  "revision": "20251009",
+  "revision": "20251015",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2880,6 +3037,17 @@
       },
       "type": "object"
     },
+    "ChunkingConfig": {
+      "description": "Parameters for telling the service how to chunk the file. inspired by google3/cloud/ai/platform/extension/lib/retrieval/config/chunker_config.proto",
+      "id": "ChunkingConfig",
+      "properties": {
+        "whiteSpaceConfig": {
+          "$ref": "WhiteSpaceConfig",
+          "description": "White space chunking configuration."
+        }
+      },
+      "type": "object"
+    },
     "CitationMetadata": {
       "description": "A collection of source attributions for a piece of content.",
       "id": "CitationMetadata",
@@ -3242,6 +3410,41 @@
       },
       "type": "object"
     },
+    "CustomLongRunningOperation": {
+      "description": "This is a copy of google.longrunning.Operation. We need to copy it because for interacting with scotty, we need to add a scotty specific field that can't be added in the top level Operation proto.",
+      "id": "CustomLongRunningOperation",
+      "properties": {
+        "done": {
+          "description": "If the value is `false`, it means the operation is still in progress. If `true`, the operation is completed, and either `error` or `response` is available.",
+          "type": "boolean"
+        },
+        "error": {
+          "$ref": "Status",
+          "description": "The error result of the operation in case of failure or cancellation."
+        },
+        "metadata": {
+          "additionalProperties": {
+            "description": "Properties of the object. Contains field @type with type URL.",
+            "type": "any"
+          },
+          "description": "Service-specific metadata associated with the operation. It typically contains progress information and common metadata such as create time. Some services might not provide such metadata. Any method that returns a long-running operation should document the metadata type, if any.",
+          "type": "object"
+        },
+        "name": {
+          "description": "The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.",
+          "type": "string"
+        },
+        "response": {
+          "additionalProperties": {
+            "description": "Properties of the object. Contains field @type with type URL.",
+            "type": "any"
+          },
+          "description": "The normal, successful response of the operation. If the original method returns no data on success, such as `Delete`, the response is `google.protobuf.Empty`. If the original method is standard `Get`/`Create`/`Update`, the response should be the resource. For other methods, the response should have the type `XxxResponse`, where `Xxx` is the original method name. For example, if the original method name is `TakeSnapshot()`, the inferred response type is `TakeSnapshotResponse`.",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
     "CustomMetadata": {
       "description": "User provided metadata stored as key-value pairs.",
       "id": "CustomMetadata",
@@ -3309,8 +3512,36 @@
           "description": "Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: \"Semantic Retriever Documentation\"",
           "type": "string"
         },
+        "mimeType": {
+          "description": "Output only. The mime type of the Document.",
+          "readOnly": true,
+          "type": "string"
+        },
         "name": {
           "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"ragStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
+          "type": "string"
+        },
+        "sizeBytes": {
+          "description": "Output only. The size in bytes of the Document.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "state": {
+          "description": "Output only. Current state of the `Document`.",
+          "enum": [
+            "STATE_UNSPECIFIED",
+            "STATE_PENDING",
+            "STATE_ACTIVE",
+            "STATE_FAILED"
+          ],
+          "enumDescriptions": [
+            "The default value. This value is used if the state is omitted.",
+            "Some `Chunks` of the `Document` are being processed (embedding and vector storage).",
+            "All `Chunks` of the `Document` is processed and available for querying.",
+            "Some `Chunks` of the `Document` failed processing."
+          ],
+          "readOnly": true,
           "type": "string"
         },
         "updateTime": {
@@ -3746,6 +3977,40 @@
         "mimeType": {
           "description": "Optional. The IANA standard MIME type of the source data.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FileSearch": {
+      "description": "The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API.",
+      "id": "FileSearch",
+      "properties": {
+        "retrievalConfig": {
+          "$ref": "FileSearchRetrievalConfig",
+          "description": "Optional. The configuration for the retrieval."
+        },
+        "retrievalResources": {
+          "description": "Required. Semantic retrieval resources to retrieve from. Currently only supports one corpus. In the future we may open up multiple corpora support.",
+          "items": {
+            "$ref": "RetrievalResource"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "FileSearchRetrievalConfig": {
+      "description": "Semantic retrieval configuration.",
+      "id": "FileSearchRetrievalConfig",
+      "properties": {
+        "metadataFilter": {
+          "description": "Optional. Metadata filter to apply to the semantic retrieval documents and chunks.",
+          "type": "string"
+        },
+        "topK": {
+          "description": "Optional. The number of semantic retrieval chunks to retrieve.",
+          "format": "int32",
+          "type": "integer"
         }
       },
       "type": "object"
@@ -4351,9 +4616,13 @@
       "type": "object"
     },
     "GenerationConfig": {
-      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model. Next ID: 29",
+      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model. Next ID: 30",
       "id": "GenerationConfig",
       "properties": {
+        "_responseJsonSchema": {
+          "description": "Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set.",
+          "type": "any"
+        },
         "candidateCount": {
           "description": "Optional. Number of generated responses to return. If unset, this will default to 1. Please note that this doesn't work for previous generation models (Gemini 1.0 family)",
           "format": "int32",
@@ -4404,10 +4673,6 @@
           "type": "number"
         },
         "responseJsonSchema": {
-          "description": "Optional. Output schema of the generated response. This is an alternative to `response_schema` that accepts [JSON Schema](https://json-schema.org/). If set, `response_schema` must be omitted, but `response_mime_type` is required. While the full JSON Schema may be sent, not all features are supported. Specifically, only the following properties are supported: - `$id` - `$defs` - `$ref` - `$anchor` - `type` - `format` - `title` - `description` - `enum` (for strings and numbers) - `items` - `prefixItems` - `minItems` - `maxItems` - `minimum` - `maximum` - `anyOf` - `oneOf` (interpreted the same as `anyOf`) - `properties` - `additionalProperties` - `required` The non-standard `propertyOrdering` property may also be set. Cyclic references are unrolled to a limited degree and, as such, may only be used within non-required properties. (Nullable properties are not sufficient.) If `$ref` is set on a sub-schema, no other properties, except for than those starting as a `$`, may be set.",
-          "type": "any"
-        },
-        "responseJsonSchemaOrdered": {
           "description": "Optional. An internal detail. Use `responseJsonSchema` rather than this field.",
           "type": "any"
         },
@@ -4522,6 +4787,10 @@
       "description": "Grounding chunk.",
       "id": "GroundingChunk",
       "properties": {
+        "retrievedContext": {
+          "$ref": "RetrievedContext",
+          "description": "Optional. Grounding chunk from context retrieved by the file search tool."
+        },
         "web": {
           "$ref": "Web",
           "description": "Grounding chunk from the web."
@@ -5063,6 +5332,24 @@
           "description": "Returned permissions.",
           "items": {
             "$ref": "Permission"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "ListRagStoresResponse": {
+      "description": "Response from `ListRagStores` containing a paginated list of `RagStores`. The results are sorted by ascending `rag_store.create_time`.",
+      "id": "ListRagStoresResponse",
+      "properties": {
+        "nextPageToken": {
+          "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no more pages.",
+          "type": "string"
+        },
+        "ragStores": {
+          "description": "The returned rag_stores.",
+          "items": {
+            "$ref": "RagStore"
           },
           "type": "array"
         }
@@ -5619,6 +5906,58 @@
       },
       "type": "object"
     },
+    "RagStore": {
+      "description": "A `RagStore` is a collection of `Document`s.",
+      "id": "RagStore",
+      "properties": {
+        "activeDocumentsCount": {
+          "description": "Output only. The number of documents in the Ragstore that are active and ready for retrieval.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "createTime": {
+          "description": "Output only. The Timestamp of when the `RagStore` was created.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Optional. The human-readable display name for the `RagStore`. The display name must be no more than 512 characters in length, including spaces. Example: \"Docs on Semantic Retriever\"",
+          "type": "string"
+        },
+        "failedDocumentsCount": {
+          "description": "Output only. The number of documents in the Ragstore that have failed processing.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "name": {
+          "description": "Output only. Immutable. Identifier. The `RagStore` resource name. It is an ID (name excluding the \"ragStores/\" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/my-awesome-rag-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "pendingDocumentsCount": {
+          "description": "Output only. The number of documents in the Ragstore that are being processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "sizeBytes": {
+          "description": "Output only. The size in bytes of the Ragstore. This is the total size of all the documents in the Ragstore.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updateTime": {
+          "description": "Output only. The Timestamp of when the `RagStore` was last updated.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "RelevantChunk": {
       "description": "The information for a chunk relevant to a query.",
       "id": "RelevantChunk",
@@ -5647,6 +5986,36 @@
           "description": "Optional. Score indicating how likely information from google search could help answer the prompt. The score is in the range [0, 1], where 0 is the least likely and 1 is the most likely. This score is only populated when google search grounding and dynamic retrieval is enabled. It will be compared to the threshold to determine whether to trigger google search.",
           "format": "float",
           "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "RetrievalResource": {
+      "description": "The semantic retrieval resource to retrieve from.",
+      "id": "RetrievalResource",
+      "properties": {
+        "ragStoreName": {
+          "description": "Required. The name of the semantic retrieval resource to retrieve from. Example: `ragStores/my-rag-store-123`",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "RetrievedContext": {
+      "description": "Chunk from context retrieved by the file search tool.",
+      "id": "RetrievedContext",
+      "properties": {
+        "text": {
+          "description": "Optional. Text of the chunk.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Optional. Title of the document.",
+          "type": "string"
+        },
+        "uri": {
+          "description": "Optional. URI reference of the semantic retrieval document.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -6185,6 +6554,10 @@
           "$ref": "ComputerUse",
           "description": "Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations."
         },
+        "fileSearch": {
+          "$ref": "FileSearch",
+          "description": "Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora."
+        },
         "functionDeclarations": {
           "description": "Optional. A list of `FunctionDeclarations` available to the model that can be used for function calling. The model or system does not execute the function. Instead the defined function may be returned as a FunctionCall with arguments to the client side for execution. The model may decide to call a subset of these functions by populating FunctionCall in the response. The next conversation turn may contain a FunctionResponse with the Content.role \"function\" generation context for the next model turn.",
           "items": {
@@ -6462,6 +6835,32 @@
       },
       "type": "object"
     },
+    "UploadToRagStoreRequest": {
+      "description": "Request for `UploadToRagStore`.",
+      "id": "UploadToRagStoreRequest",
+      "properties": {
+        "chunkingConfig": {
+          "$ref": "ChunkingConfig",
+          "description": "Optional. Config for telling the service how to chunk the data. If not provided, the service will use default parameters."
+        },
+        "customMetadata": {
+          "description": "Custom metadata to be associated with the data.",
+          "items": {
+            "$ref": "CustomMetadata"
+          },
+          "type": "array"
+        },
+        "displayName": {
+          "description": "Optional. Display name of the created document.",
+          "type": "string"
+        },
+        "mimeType": {
+          "description": "Optional. MIME type of the data. If not provided, it will be inferred from the uploaded content.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "UrlContext": {
       "description": "Tool to support URL context retrieval.",
       "id": "UrlContext",
@@ -6640,6 +7039,23 @@
         "uri": {
           "description": "URI reference of the chunk.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "WhiteSpaceConfig": {
+      "description": "Configuration for a white space chunking algorithm [white space delimited].",
+      "id": "WhiteSpaceConfig",
+      "properties": {
+        "maxOverlapTokens": {
+          "description": "Maximum number of overlapping tokens between two adjacent chunks.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "maxTokensPerChunk": {
+          "description": "Maximum number of tokens per chunk. Tokens are defined as words for this chunking algorithm. Note: we are defining tokens as words split by whitespace as opposed to the output of a tokenizer. The context window of the latest gemini embedding model as of 2025-04-17 is currently 8192 tokens. We assume that the average word is 5 characters. Therefore, we set the upper limit to 2**9, which is 512 words, or 2560 tokens, assuming worst case a character per token. This is a conservative estimate meant to prevent context window overflow.",
+          "format": "int32",
+          "type": "integer"
         }
       },
       "type": "object"
