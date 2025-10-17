@@ -197,7 +197,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<EmbedContentBatch>(response);
         }
 
@@ -240,7 +240,7 @@ namespace Mscc.GenerativeAI
             httpRequest.Version = _httpVersion;
             httpRequest.Content = payload;
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync();
+            await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<GenerateContentBatch>(response);
         }
     }
