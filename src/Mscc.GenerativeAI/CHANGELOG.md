@@ -12,6 +12,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.18
+
+### Added
+
+- add model `veo-3.1-generate-preview` add model `veo-3.1-fast-generate-preview` (afbb60d)
+- add handling fpr `RagStores` (1a9049b)
+- add tool `FileSearch` (40823c0)
+- add enum `StateDocument` (6998875)
+- add enum `BlockingConfidence` (3fee060)
+- add properties to `Document` (7606d8f)
+- add type `CustomLongRunningOperation` (38f0e43)
+- add type `WhiteSpaceConfig` (09f20d8)
+
+### Changed
+
+- extend Enterprise Web Search (3fee060) 
+- extend Google Search (3fee060)
+- reduce MaxUploadFileSize (ec28077)
+
 ## 2.8.17
 
 ### Added

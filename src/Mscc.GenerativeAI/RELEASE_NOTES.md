@@ -1,19 +1,23 @@
 # Release Notes
 
-## 2.8.17
+## 2.8.18
 
 ### Added
 
-- add property `ResponseJsonSchemaOrdered` (6f23dce)
-- add FinishReason `ImageRecitation` (6f69cdf)
-- add harm categories for images (8c53e88)
-- add HarmCategory `Jailbreak` (7f64668)
-- add BlockReason `Jailbreak` (d8b388b)
+- add model `veo-3.1-generate-preview` add model `veo-3.1-fast-generate-preview` (afbb60d)
+- add handling fpr `RagStores` (1a9049b)
+- add tool `FileSearch` (40823c0)
+- add enum `StateDocument` (6998875)
+- add enum `BlockingConfidence` (3fee060)
+- add properties to `Document` (7606d8f)
+- add type `CustomLongRunningOperation` (38f0e43)
+- add type `WhiteSpaceConfig` (09f20d8)
 
 ### Changed
 
-- disable NuGet waiting period (0f770d7)
-- rename enum `BlockReason` (3025d62)
+- extend Enterprise Web Search (3fee060)
+- extend Google Search (3fee060)
+- reduce MaxUploadFileSize (ec28077)
 
 ## Changelog
 
