@@ -161,5 +161,9 @@ namespace Mscc.GenerativeAI
         /// Optional. Config for image generation. An error will be returned if this field is set for models that don't support these config options.
         /// </summary>
         public ImageConfig? ImageConfig { get; set; }
+        /// <summary>
+        /// Optional. If enabled, the model will detect emotions and adapt its responses accordingly.
+        /// </summary>
+        public bool? EnableAffectiveDialog { get; set; }
     }
 }
