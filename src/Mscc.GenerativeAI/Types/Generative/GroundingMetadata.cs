@@ -34,7 +34,9 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<GroundingChunk>? GroundingChunks { get; set; }
         /// <summary>
-        /// A token to use with the Google Maps context widget user interface.
+        /// Optional. Resource name of the Google Maps widget context token that can be used with
+        /// the PlacesContextElement widget in order to render contextual data.
+        /// Only populated in the case that grounding with Google Maps is enabled.
         /// </summary>
         public string? GoogleMapsWidgetContextToken { get; set; }
     }

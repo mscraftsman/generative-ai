@@ -1,7 +1,7 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// 
+    /// The Tool configuration containing parameters for specifying `Tool` use in the request.
     /// </summary>
     public sealed class ToolConfig
     {

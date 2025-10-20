@@ -5,7 +5,11 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Place answers provide deeper contextual information about a specific place using data, such as user reviews.
+    /// Collection of sources that provide answers about the features of a given place in Google Maps.
+    /// Each PlaceAnswerSources message corresponds to a specific place in Google Maps.
+    /// The Google Maps tool used these sources in order to answer questions about features of the
+    /// place (e.g: "does Bar Foo have Wifi" or "is Foo Bar wheelchair accessible?").
+    /// Currently we only support review snippets as sources.
     /// </summary>
     public class PlaceAnswerSources
     {
