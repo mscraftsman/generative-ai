@@ -950,39 +950,6 @@
       "version": "3.1"
     },
     {
-      "description": "Gemini 2.5 Flash Preview Native Audio Dialog",
-      "displayName": "Gemini 2.5 Flash Preview Native Audio Dialog",
-      "inputTokenLimit": 131072,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-preview-native-audio-dialog",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "countTokens",
-        "bidiGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
-    },
-    {
-      "description": "Gemini 2.5 Flash Exp Native Audio Thinking Dialog",
-      "displayName": "Gemini 2.5 Flash Exp Native Audio Thinking Dialog",
-      "inputTokenLimit": 131072,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-exp-native-audio-thinking-dialog",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "countTokens",
-        "bidiGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "gemini-2.5-flash-exp-native-audio-thinking-dialog-2025-05-19"
-    },
-    {
       "description": "Gemini 2.0 Flash 001",
       "displayName": "Gemini 2.0 Flash 001",
       "inputTokenLimit": 131072,
