@@ -2557,7 +2557,7 @@
       }
     }
   },
-  "revision": "20251015",
+  "revision": "20251017",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -4745,6 +4745,17 @@
       },
       "type": "object"
     },
+    "GoogleMaps": {
+      "description": "The GoogleMaps Tool that provides geospatial context for the user's query.",
+      "id": "GoogleMaps",
+      "properties": {
+        "enableWidget": {
+          "description": "Optional. Whether to return a widget context token in the GroundingMetadata of the response. Developers can use the widget context token to render a Google Maps widget with geospatial context related to the places that the model references in the response.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "GoogleSearch": {
       "description": "GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google.",
       "id": "GoogleSearch",
@@ -4787,6 +4798,10 @@
       "description": "Grounding chunk.",
       "id": "GroundingChunk",
       "properties": {
+        "maps": {
+          "$ref": "Maps",
+          "description": "Optional. Grounding chunk from Google Maps."
+        },
         "retrievedContext": {
           "$ref": "RetrievedContext",
           "description": "Optional. Grounding chunk from context retrieved by the file search tool."
@@ -4802,6 +4817,10 @@
       "description": "Metadata returned to client when grounding is enabled.",
       "id": "GroundingMetadata",
       "properties": {
+        "googleMapsWidgetContextToken": {
+          "description": "Optional. Resource name of the Google Maps widget context token that can be used with the PlacesContextElement widget in order to render contextual data. Only populated in the case that grounding with Google Maps is enabled.",
+          "type": "string"
+        },
         "groundingChunks": {
           "description": "List of supporting references retrieved from specified grounding source.",
           "items": {
@@ -5169,6 +5188,23 @@
       },
       "type": "object"
     },
+    "LatLng": {
+      "description": "An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.",
+      "id": "LatLng",
+      "properties": {
+        "latitude": {
+          "description": "The latitude in degrees. It must be in the range [-90.0, +90.0].",
+          "format": "double",
+          "type": "number"
+        },
+        "longitude": {
+          "description": "The longitude in degrees. It must be in the range [-180.0, +180.0].",
+          "format": "double",
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
     "ListCachedContentsResponse": {
       "description": "Response with CachedContents list.",
       "id": "ListCachedContentsResponse",
@@ -5417,6 +5453,33 @@
           "description": "The candidate’s token id value.",
           "format": "int32",
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "Maps": {
+      "description": "A grounding chunk from Google Maps. A Maps chunk corresponds to a single place.",
+      "id": "Maps",
+      "properties": {
+        "placeAnswerSources": {
+          "$ref": "PlaceAnswerSources",
+          "description": "Sources that provide answers about the features of a given place in Google Maps."
+        },
+        "placeId": {
+          "description": "This ID of the place, in `places/{place_id}` format. A user can use this ID to look up that place.",
+          "type": "string"
+        },
+        "text": {
+          "description": "Text description of the place answer.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the place.",
+          "type": "string"
+        },
+        "uri": {
+          "description": "URI reference of the place.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -5737,6 +5800,20 @@
       },
       "type": "object"
     },
+    "PlaceAnswerSources": {
+      "description": "Collection of sources that provide answers about the features of a given place in Google Maps. Each PlaceAnswerSources message corresponds to a specific place in Google Maps. The Google Maps tool used these sources in order to answer questions about features of the place (e.g: \"does Bar Foo have Wifi\" or \"is Foo Bar wheelchair accessible?\"). Currently we only support review snippets as sources.",
+      "id": "PlaceAnswerSources",
+      "properties": {
+        "reviewSnippets": {
+          "description": "Snippets of reviews that are used to generate answers about the features of a given place in Google Maps.",
+          "items": {
+            "$ref": "ReviewSnippet"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "PrebuiltVoiceConfig": {
       "description": "The configuration for the prebuilt speaker to use.",
       "id": "PrebuiltVoiceConfig",
@@ -5978,6 +6055,21 @@
       },
       "type": "object"
     },
+    "RetrievalConfig": {
+      "description": "Retrieval config.",
+      "id": "RetrievalConfig",
+      "properties": {
+        "languageCode": {
+          "description": "Optional. The language code of the user. Language code for content. Use language tags defined by [BCP47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt).",
+          "type": "string"
+        },
+        "latLng": {
+          "$ref": "LatLng",
+          "description": "Optional. The location of the user."
+        }
+      },
+      "type": "object"
+    },
     "RetrievalMetadata": {
       "description": "Metadata related to retrieval in the grounding flow.",
       "id": "RetrievalMetadata",
@@ -6015,6 +6107,25 @@
         },
         "uri": {
           "description": "Optional. URI reference of the semantic retrieval document.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ReviewSnippet": {
+      "description": "Encapsulates a snippet of a user review that answers a question about the features of a specific place in Google Maps.",
+      "id": "ReviewSnippet",
+      "properties": {
+        "googleMapsUri": {
+          "description": "A link that corresponds to the user review on Google Maps.",
+          "type": "string"
+        },
+        "reviewId": {
+          "description": "The ID of the review snippet.",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the review.",
           "type": "string"
         }
       },
@@ -6565,6 +6676,10 @@
           },
           "type": "array"
         },
+        "googleMaps": {
+          "$ref": "GoogleMaps",
+          "description": "Optional. Tool that allows grounding the model's response with geospatial context related to the user's query."
+        },
         "googleSearch": {
           "$ref": "GoogleSearch",
           "description": "Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google."
@@ -6587,6 +6702,10 @@
         "functionCallingConfig": {
           "$ref": "FunctionCallingConfig",
           "description": "Optional. Function calling config."
+        },
+        "retrievalConfig": {
+          "$ref": "RetrievalConfig",
+          "description": "Optional. Retrieval config."
         }
       },
       "type": "object"
