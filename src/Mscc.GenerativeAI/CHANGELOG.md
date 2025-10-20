@@ -12,6 +12,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.19
+
+### Added
+
+- add properties of Google AI (87ebf3b)
+- add enum `TurnCoverage` (adc4e4a)
+- add enum `StartOfSpeechSensitivity` add enum `EndOfSpeechSensitivity` (0e2006d)
+- add enum `ActivityHandling` (e930db6)
+- add property `EnableAffectiveDialog` (b7105fb)
+- add XMLdoc (e435684)
+
+### Changed
+
+- extend HTTP status codes (40e8866)
+- revision 20251017 (4439861)
+- split types into own files (30276ce)
+
 ## 2.8.18
 
 ### Added

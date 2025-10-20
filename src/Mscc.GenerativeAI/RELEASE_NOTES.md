@@ -1,24 +1,21 @@
 # Release Notes
 
-## 2.8.18
+## 2.8.19
 
 ### Added
 
-- add model `veo-3.1-generate-preview` add model `veo-3.1-fast-generate-preview` (afbb60d)
-- add handling fpr `RagStores` (1a9049b)
-- add tool `FileSearch` (40823c0)
-- add enum `StateDocument` (6998875)
-- add enum `BlockingConfidence` (3fee060)
-- add properties to `Document` (7606d8f)
-- add type `CustomLongRunningOperation` (38f0e43)
-- add type `WhiteSpaceConfig` (09f20d8)
+- add properties of Google AI (87ebf3b)
+- add enum `TurnCoverage` (adc4e4a)
+- add enum `StartOfSpeechSensitivity` add enum `EndOfSpeechSensitivity` (0e2006d)
+- add enum `ActivityHandling` (e930db6)
+- add property `EnableAffectiveDialog` (b7105fb)
+- add XMLdoc (e435684)
 
 ### Changed
 
-- extend Enterprise Web Search (3fee060)
-- extend Google Search (3fee060)
-- reduce MaxUploadFileSize (ec28077)
-- upgrade NuGet packages
+- extend HTTP status codes (40e8866)
+- revision 20251017 (4439861)
+- split types into own files (30276ce)
 
 ## Changelog
 
