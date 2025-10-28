@@ -25,5 +25,9 @@ namespace Mscc.GenerativeAI
         /// URI reference of the attribution.
         /// </summary>
         public string? Uri { get; set; }
+        /// <summary>
+        /// Optional. Name of the `RagStore` containing the document. Example: `ragStores/123`
+        /// </summary>
+        public string? RagStore { get; set; }
     }
 }
