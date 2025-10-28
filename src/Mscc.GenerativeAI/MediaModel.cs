@@ -32,7 +32,7 @@ namespace Mscc.GenerativeAI
         /// Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.
         /// </summary>
         /// <returns></returns>
-        public async Task<CustomLongRunningOperation> Upload(string uri,
+        public async Task<CustomLongRunningOperation> UploadToRagStore(string uri,
             string ragStoreName,
             string? displayName = null,
             bool resumable = false,
@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI
             if (uri == null) throw new ArgumentNullException(nameof(uri));
             if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
             var fileInfo = new FileInfo(uri);
-            if (fileInfo.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(uri));
+            if (fileInfo.Length > Constants.MaxUploadFileSizeRagStore) throw new MaxUploadFileSizeException(nameof(uri));
             if (string.IsNullOrEmpty(ragStoreName)) throw new ArgumentException(nameof(ragStoreName));
 
             var mimeType = GenerativeAIExtensions.GetMimeType(uri);
@@ -83,44 +83,6 @@ namespace Mscc.GenerativeAI
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<CustomLongRunningOperation>(response);
-        }
-
-        /// <summary>
-        /// Gets a generated file.
-        /// </summary>
-        /// <remarks>
-        /// When calling this method via REST, only the metadata of the generated file is returned.
-        /// To retrieve the file content via REST, add alt=media as a query parameter.
-        /// </remarks>
-        /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
-        /// <param name="media">Optional. Flag indicating whether to retrieve the file content.</param>
-        /// <param name="requestOptions">Options for the request.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Metadata for the given file.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
-        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<GeneratedFile> Download(string file,
-            bool media = false,
-            RequestOptions? requestOptions = null, 
-            CancellationToken cancellationToken = default)
-        {
-            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
-
-            file = file.SanitizeGeneratedFileName();
-
-            var url = $"{BaseUrlGoogleAi}/{file}";
-            url = ParseUrl(url);
-            if (media)
-            {
-                url.AddQueryString(new Dictionary<string, string?>()
-                {
-                    ["alt"] = "media"
-                });
-            }
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync(cancellationToken);
-            return await Deserialize<GeneratedFile>(response);
         }
         
         /// <summary>
@@ -255,6 +217,44 @@ namespace Mscc.GenerativeAI
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<UploadMediaResponse>(response);
+        }
+
+        /// <summary>
+        /// Gets a generated file.
+        /// </summary>
+        /// <remarks>
+        /// When calling this method via REST, only the metadata of the generated file is returned.
+        /// To retrieve the file content via REST, add alt=media as a query parameter.
+        /// </remarks>
+        /// <param name="file">Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`</param>
+        /// <param name="media">Optional. Flag indicating whether to retrieve the file content.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Metadata for the given file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        public async Task<GeneratedFile> Download(string file,
+            bool media = false,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(file)) throw new ArgumentNullException(nameof(file));
+
+            file = file.SanitizeGeneratedFileName();
+
+            var url = $"{BaseUrlGoogleAi}/{file}";
+            url = ParseUrl(url);
+            if (media)
+            {
+                url.AddQueryString(new Dictionary<string, string?>()
+                {
+                    ["alt"] = "media"
+                });
+            }
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<GeneratedFile>(response);
         }
 
         /// <summary>
