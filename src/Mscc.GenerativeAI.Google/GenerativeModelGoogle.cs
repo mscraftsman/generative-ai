@@ -47,17 +47,19 @@ namespace Mscc.GenerativeAI.Google
         private Tools Tools { get; set; }
 
         /// <summary>
-        /// Constructor via user credentials using client ID and secret.
+        /// Constructor via application default credentials (ADC) or user credentials using client ID and secret.
         /// </summary>
         public GenerativeModelGoogle()
         {
             var clientSecrets = getClientSecrets();
-            _credential = gauth.GoogleWebAuthorizationBroker.AuthorizeAsync(
-                clientSecrets,
-                _scopes,
-                "user",
-                CancellationToken.None,
-                new FileDataStore(_tokenFile)).Result;
+            _credential = clientSecrets == null
+                ? GetApplicationDefaultCredentials()
+                : gauth.GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    clientSecrets,
+                    _scopes,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(_tokenFile)).Result;
         }
 
         /// <summary>
@@ -73,10 +75,8 @@ namespace Mscc.GenerativeAI.Google
                 passphrase ?? _certificatePassphrase,
                 X509KeyStorageFlags.Exportable);
             _credential = new gauth.ServiceAccountCredential(
-                new gauth.ServiceAccountCredential.Initializer(serviceAccountEmail)
-                {
-                    Scopes = _scopes
-                }.FromCertificate(x509Certificate));
+                new gauth.ServiceAccountCredential.Initializer(serviceAccountEmail) { Scopes = _scopes }
+                    .FromCertificate(x509Certificate));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Mscc.GenerativeAI.Google
         /// <param name="certificate"></param>
         /// <param name="passphrase"></param>
         /// <returns></returns>
-        public static GenerativeModelGoogle CreateInstance(string? serviceAccountEmail = null, 
+        public static GenerativeModelGoogle CreateInstance(string? serviceAccountEmail = null,
             string? certificate = null,
             string? passphrase = null)
         {
@@ -109,14 +109,14 @@ namespace Mscc.GenerativeAI.Google
             if (ProjectId == null) throw new ArgumentNullException(nameof(ProjectId));
             if (Region == null) throw new ArgumentNullException(nameof(Region));
 
-            var accessToken = _credential.GetAccessTokenForRequestAsync().Result;   // _credential.Token.AccessToken
+            var accessToken = _credential.GetAccessTokenForRequestAsync().Result; // _credential.Token.AccessToken
             var vertex = new VertexAI(projectId: ProjectId, region: Region, requestOptions: requestOptions);
             var generativeModel = vertex.GenerativeModel(model, GenerationConfig, SafetySettings);
             generativeModel.AccessToken = accessToken;
             return generativeModel;
         }
 
-        private gauth.ClientSecrets getClientSecrets()
+        private gauth.ClientSecrets? getClientSecrets()
         {
             // _credentials = GoogleCredential.GetApplicationDefaultAsync();
 
@@ -142,6 +142,31 @@ namespace Mscc.GenerativeAI.Google
             }
 
             return clientSecrets;
+        }
+
+        private gauth.GoogleCredential GetApplicationDefaultCredentials()
+        {
+            try
+            {
+                var credentialTask = gauth.GoogleCredential.GetApplicationDefaultAsync();
+                gauth.GoogleCredential credential = credentialTask.GetAwaiter().GetResult();
+
+                if (credential.IsCreateScopedRequired)
+                {
+                    foreach (var scope in _scopes)
+                    {
+                        credential = credential.CreateScoped(scope);
+                    }
+                }
+
+                return credential;
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException(
+                    "Failed to get application default credentials. Please ensure credentials are set up correctly (e.g., via gcloud auth application-default login) or provide them explicitly.",
+                    e);
+            }
         }
 
         // private ICredential LoadCredentials()
