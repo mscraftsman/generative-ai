@@ -1,21 +1,23 @@
 # Release Notes
 
-## 2.8.19
+## 2.8.20
 
 ### Added
 
-- add properties of Google AI (87ebf3b)
-- add enum `TurnCoverage` (adc4e4a)
-- add enum `StartOfSpeechSensitivity` add enum `EndOfSpeechSensitivity` (0e2006d)
-- add enum `ActivityHandling` (e930db6)
-- add property `EnableAffectiveDialog` (b7105fb)
-- add XMLdoc (e435684)
+- add types for image recontextualization. (b0830a2)
+- add property `RagStore` (0c32768)
+- add method `UploadToRagStore` (8a25b38)
+- add handling of Application Default Credentials (ADC) (a9d4128)
+- add property `Labels` (178887e)
+- add automatic MIME type from file (b537d84)
+- add enum `ApiSpec` (e05c48f)
 
 ### Changed
 
-- extend HTTP status codes (40e8866)
-- revision 20251017 (4439861)
-- split types into own files (30276ce)
+- remove model `gemini-2.5-flash-preview-native-audio-dialog`
+- remove model `gemini-2.5-flash-exp-native-audio-thinking-dialog` (5c66e8c)
+- upgrade NuGet packages (ea69d80)
+- revision 20251026 (ad41770)
 
 ## Changelog
 

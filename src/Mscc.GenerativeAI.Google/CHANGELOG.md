@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.20
+
+### Added
+
+- add handling of Application Default Credentials (ADC) (a9d4128)
+
 ## 2.8.19
 
 ### Changed
