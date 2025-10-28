@@ -1,5 +1,6 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 #endif
 
@@ -157,5 +158,9 @@ namespace Mscc.GenerativeAI
         /// Compression quality of the generated image (for `image/jpeg` only).
         /// </summary>
         public int? OutputCompressionQuality { get; set; }
+        /// <summary>
+        /// User specified labels to track billing usage.
+        /// </summary>
+        public Dictionary<string, string>? Labels { get; set; }
     }
 }
