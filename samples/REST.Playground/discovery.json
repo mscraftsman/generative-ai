@@ -1151,35 +1151,47 @@
     },
     "media": {
       "methods": {
-        "download": {
-          "description": "Gets a generated file. When calling this method via REST, only the metadata of the generated file is returned. To retrieve the file content via REST, add alt=media as a query parameter.",
-          "flatPath": "v1beta/generatedFiles/{generatedFilesId}",
-          "httpMethod": "GET",
-          "id": "generativelanguage.media.download",
-          "parameterOrder": [
-            "name"
-          ],
-          "parameters": {
-            "name": {
-              "description": "Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`",
-              "location": "path",
-              "pattern": "^generatedFiles/[^/]+$",
-              "required": true,
-              "type": "string"
+        "upload": {
+          "description": "Creates a `File`.",
+          "flatPath": "v1beta/files",
+          "httpMethod": "POST",
+          "id": "generativelanguage.media.upload",
+          "mediaUpload": {
+            "accept": [
+              "*/*"
+            ],
+            "maxSize": "2147483648",
+            "protocols": {
+              "resumable": {
+                "multipart": true,
+                "path": "/resumable/upload/v1beta/files"
+              },
+              "simple": {
+                "multipart": true,
+                "path": "/upload/v1beta/files"
+              }
             }
           },
-          "path": "v1beta/{+name}",
-          "response": {
-            "$ref": "GeneratedFile"
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
           },
-          "supportsMediaDownload": true,
-          "useMediaDownloadService": true
+          "path": "v1beta/files",
+          "request": {
+            "$ref": "CreateFileRequest"
+          },
+          "response": {
+            "$ref": "CreateFileResponse"
+          },
+          "supportsMediaUpload": true
         },
-        "upload": {
+        "uploadToRagStore": {
           "description": "Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.",
           "flatPath": "v1beta/ragStores/{ragStoresId}:uploadToRagStore",
           "httpMethod": "POST",
-          "id": "generativelanguage.media.upload",
+          "id": "generativelanguage.media.uploadToRagStore",
           "mediaUpload": {
             "accept": [
               "*/*"
@@ -2557,7 +2569,7 @@
       }
     }
   },
-  "revision": "20251017",
+  "revision": "20251026",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -4362,7 +4374,7 @@
       "type": "object"
     },
     "GenerateContentRequest": {
-      "description": "Request to generate a completion from the model. NEXT ID: 18",
+      "description": "Request to generate a completion from the model.",
       "id": "GenerateContentRequest",
       "properties": {
         "cachedContent": {
@@ -4616,7 +4628,7 @@
       "type": "object"
     },
     "GenerationConfig": {
-      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model. Next ID: 30",
+      "description": "Configuration options for model generation and outputs. Not all parameters are configurable for every model.",
       "id": "GenerationConfig",
       "properties": {
         "_responseJsonSchema": {
@@ -6097,6 +6109,10 @@
       "description": "Chunk from context retrieved by the file search tool.",
       "id": "RetrievedContext",
       "properties": {
+        "ragStore": {
+          "description": "Optional. Name of the `RagStore` containing the document. Example: `ragStores/123`",
+          "type": "string"
+        },
         "text": {
           "description": "Optional. Text of the chunk.",
           "type": "string"
