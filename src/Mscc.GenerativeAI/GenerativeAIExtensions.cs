@@ -286,10 +286,17 @@ namespace Mscc.GenerativeAI
 
         public static Part FromVideoMetadata(this Part part, string startOffset, string endOffset, double fps)
         {
+            part.VideoMetadata ??= new();
             part.VideoMetadata.StartOffset = startOffset;
             part.VideoMetadata.EndOffset = endOffset;
             part.VideoMetadata.Fps = fps;
             return part;
+        }
+
+        public static Image FromFile(string uri, string? mimeType = null)
+        {
+            mimeType ??= GetMimeType(uri);
+            return new Image() { ImageBytes = File.ReadAllBytes(uri), MimeType = mimeType };
         }
 
         public static string GetValue(this JsonElement element, string key)
