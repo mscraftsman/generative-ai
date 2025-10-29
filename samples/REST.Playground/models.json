@@ -635,7 +635,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
@@ -651,7 +652,8 @@
       "outputTokenLimit": 8192,
       "supportedGenerationMethods": [
         "generateContent",
-        "countTokens"
+        "countTokens",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
