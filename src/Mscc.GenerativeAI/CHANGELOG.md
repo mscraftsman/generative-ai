@@ -12,6 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.21
+
+### Added
+
+- add implementation of `IImageGenerator` as `GeminiImageGenerator` (2366e37)
+- add interface `IAsyncDisposable` (c89785f)
+
+### Changed
+
+- provide another example using newer Gemini models (fe2b7b8)
+- refactor to provide lazily-initialized metadata (4714360)
+- more batch endpoints (e22d720)
+
 ## 2.8.20
 
 ### Added
