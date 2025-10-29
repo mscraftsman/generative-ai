@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI
 {
@@ -10,6 +11,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// 
         /// </summary>
+        [JsonPropertyName("inlinedResponses")]
         public List<InlinedResponse> Responses { get; set; }
     }
     

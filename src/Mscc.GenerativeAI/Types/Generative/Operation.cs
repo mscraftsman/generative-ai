@@ -66,4 +66,15 @@ namespace Mscc.GenerativeAI
         /// </remarks>
         public object Response { get; set; }
     }
+
+    /// <summary>
+    /// This resource represents a long-running operation that is the result of a network API call.
+    /// </summary>
+    public class Operation<TResponse> : Operation
+    {
+        /// <summary>
+        /// The normal, successful response of the operation.
+        /// </summary>
+        public new TResponse Response { get; set; }
+    }
 }

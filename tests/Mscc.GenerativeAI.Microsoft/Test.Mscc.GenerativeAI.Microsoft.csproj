@@ -49,8 +49,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\Mscc.GenerativeAI.Microsoft\Mscc.GenerativeAI.Microsoft.csproj" />
-		<ProjectReference Include="..\..\src\Mscc.GenerativeAI\Mscc.GenerativeAI.csproj" />
-		<ProjectReference Include="..\Mscc.GenerativeAI\Test.Mscc.GenerativeAI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
