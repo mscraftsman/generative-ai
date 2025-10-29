@@ -74,7 +74,7 @@ namespace Mscc.GenerativeAI
         /// <param name="batchesName">Required. The name of the operation resource. Format: `batches/{id}`</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>The cached content resource.</returns>
+        /// <returns>The long-running operation resource.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
         public async Task<Operation> Get(string batchesName,
             RequestOptions? requestOptions = null, 
@@ -99,7 +99,7 @@ namespace Mscc.GenerativeAI
         /// <param name="batchesName">Required. The name of the operation resource. Format: `batches/{id}`</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>The cached content resource.</returns>
+        /// <returns>The long-running operation resource.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
         public async Task<Operation<TResponse>> Get<TResponse>(string batchesName,
             RequestOptions? requestOptions = null, 
