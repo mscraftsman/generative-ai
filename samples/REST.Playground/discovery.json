@@ -2569,7 +2569,7 @@
       }
     }
   },
-  "revision": "20251026",
+  "revision": "20251028",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -3534,7 +3534,7 @@
           "type": "string"
         },
         "sizeBytes": {
-          "description": "Output only. The size in bytes of the Document.",
+          "description": "Output only. The size of raw bytes ingested into the Document.",
           "format": "int64",
           "readOnly": true,
           "type": "string"
@@ -3864,11 +3864,13 @@
           "description": "Required. Programming language of the `code`.",
           "enum": [
             "LANGUAGE_UNSPECIFIED",
-            "PYTHON"
+            "PYTHON",
+            "BASH"
           ],
           "enumDescriptions": [
             "Unspecified language. This value should not be used.",
-            "Python >= 3.10, with numpy and simpy available."
+            "Python >= 3.10, with numpy and simpy available. Python is the default language.",
+            "Bash. Only available for Gemini 3.0 model or above."
           ],
           "type": "string"
         }
@@ -6033,7 +6035,7 @@
           "type": "string"
         },
         "sizeBytes": {
-          "description": "Output only. The size in bytes of the Ragstore. This is the total size of all the documents in the Ragstore.",
+          "description": "Output only. The size of raw bytes ingested into the Ragstore. This is the total size of all the documents in the Ragstore.",
           "format": "int64",
           "readOnly": true,
           "type": "string"
@@ -6662,7 +6664,7 @@
           "type": "boolean"
         },
         "thinkingBudget": {
-          "description": "The number of thoughts tokens that the model should generate.",
+          "description": "Only one of the thinking_budget or thinking_level fields in this message may be set at a time. For backward compatibility, the validation will be done in application logic. The number of thoughts tokens that the model should generate.",
           "format": "int32",
           "type": "integer"
         }
