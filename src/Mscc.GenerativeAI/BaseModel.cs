@@ -20,7 +20,7 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public abstract class BaseModel : BaseLogger, IDisposable
+    public abstract class BaseModel : BaseLogger, IDisposable, IAsyncDisposable
     {
         protected const string BaseUrlGoogleAi = "https://generativelanguage.googleapis.com/{version}";
         protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}";
@@ -79,7 +79,7 @@ namespace Mscc.GenerativeAI
                 InnerHandler = handler
             })
             {
-                DefaultRequestVersion = _httpVersion, 
+                DefaultRequestVersion = _httpVersion,
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher
             };
 #endif
@@ -173,7 +173,7 @@ namespace Mscc.GenerativeAI
         private readonly ProductInfoHeaderValue _defaultUserAgent;
         private readonly KeyValuePair<string, string> _defaultApiClientHeader;
 
-        private bool _disposedValue;
+        private int _disposed;
 
         /// <summary>
         /// 
@@ -692,19 +692,27 @@ namespace Mscc.GenerativeAI
             return clone;
         }
 
+        /// <summary>
+        /// Disposes <see cref="BaseModel"/> and its underlying resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
-            if (!_disposedValue)
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
             {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects)
-                    Client?.Dispose();
-                }
+                return;
+            }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                _disposedValue = true;
+            if (disposing)
+            {
+                // TODO: dispose managed state (managed objects)
+                Client?.Dispose();
             }
         }
 
@@ -715,11 +723,18 @@ namespace Mscc.GenerativeAI
         //     Dispose(disposing: false);
         // }
 
-        public void Dispose()
+        /// <summary>
+        /// Asynchronously disposes <see cref="BaseModel"/> and its underlying resources.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous dispose operation.</returns>
+        public virtual ValueTask DisposeAsync()
         {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            Dispose();
+#if NET472_OR_GREATER || NETSTANDARD2_0
+            return new ValueTask(Task.CompletedTask);
+#else
+            return ValueTask.CompletedTask;
+#endif
         }
     }
 }
