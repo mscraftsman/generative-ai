@@ -93,6 +93,7 @@ namespace Mscc.GenerativeAI
 
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
+        // public const string Gemma3_270M = "gemma-3-270m-it";
         public const string Gemma3_1B = "gemma-3-1b-it";
         public const string Gemma3_4B = "gemma-3-4b-it";
         public const string Gemma3_12B = "gemma-3-12b-it";
