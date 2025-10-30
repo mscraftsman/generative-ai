@@ -100,15 +100,7 @@ namespace Mscc.GenerativeAI
                 {
                     GoogleMaps = new()
                     {
-                        EnableWidget = enableWidget,
-                        // AuthConfig = new()
-                        // {
-                        //     ApiKeyConfig = new()
-                        //     {
-                        //         ApiKeyString = apiKey ??
-                        //                        Environment.GetEnvironmentVariable("GOOGLE_MAPS_API_KEY")
-                        //     }
-                        // }
+                        EnableWidget = enableWidget
                     }
                 });
             }

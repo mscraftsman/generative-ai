@@ -10,11 +10,6 @@ namespace Mscc.GenerativeAI
     public class GoogleMaps
     {
         /// <summary>
-        /// Optional. Auth config for the Google Maps tool.
-        /// </summary>
-        //[JsonPropertyName("auth_config")]
-        public AuthConfig? AuthConfig { get; set; }
-        /// <summary>
         /// Whether to return a token and enable the Google Maps widget (default is false).
         /// </summary>
         public bool? EnableWidget { get; set; }
