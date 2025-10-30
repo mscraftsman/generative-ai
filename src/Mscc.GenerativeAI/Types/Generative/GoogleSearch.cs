@@ -17,7 +17,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Optional. Sites with confidence level chosen and above this value will be blocked from the search results.
         /// </summary>
-        public BlockingConfidence? BlockingConfidence { get; set; }
+        public PhishBlockThreshold? BlockingConfidence { get; set; }
         /// <summary>
         /// Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"].
         /// </summary>

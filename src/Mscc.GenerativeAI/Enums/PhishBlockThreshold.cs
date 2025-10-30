@@ -5,10 +5,10 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Optional. Sites with confidence level chosen & above this value will be blocked from the search results.
+    /// Optional. Sites with confidence level chosen and above this value will be blocked from the search results.
     /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<BlockingConfidence>))]
-    public enum BlockingConfidence
+    [JsonConverter(typeof(JsonStringEnumConverter<PhishBlockThreshold>))]
+    public enum PhishBlockThreshold
     {
         /// <summary>
         /// Defaults to unspecified.

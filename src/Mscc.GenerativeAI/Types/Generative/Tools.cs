@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI
         /// <param name="excludeDomains">List of domains to be excluded from the search results.</param>
         /// <param name="blockingConfidence">Optional. Sites with confidence level chosen & above this value will be blocked from the search results.</param>
         public void AddGoogleSearch(IEnumerable<string>? excludeDomains = null,
-            BlockingConfidence? blockingConfidence = null)
+            PhishBlockThreshold? blockingConfidence = null)
         {
             if (!this.Any(t => t.GoogleSearch is not null))
             {
@@ -112,7 +112,7 @@ namespace Mscc.GenerativeAI
         /// <param name="excludeDomains">List of domains to be excluded from the search results.</param>
         /// <param name="blockingConfidence">Optional. Sites with confidence level chosen & above this value will be blocked from the search results.</param>
         public void AddEnterpriseWebSearch(IEnumerable<string>? excludeDomains = null,
-            BlockingConfidence? blockingConfidence = null)
+            PhishBlockThreshold? blockingConfidence = null)
         {
             if (!this.Any(t => t.EnterpriseWebSearch is not null))
             {
