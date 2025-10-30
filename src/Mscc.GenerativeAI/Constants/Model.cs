@@ -217,5 +217,7 @@ namespace Mscc.GenerativeAI
         public const string Lyria = LyriaBase001;
         public const string LyriaBase001 = "lyria-base-001";
         public const string Lyria2 = "lyria-002";
+        public const string LyriaRealtime = LyriaRealtimeExperimental;
+        public const string LyriaRealtimeExperimental = "lyria-realtime-exp";
     }
 }
