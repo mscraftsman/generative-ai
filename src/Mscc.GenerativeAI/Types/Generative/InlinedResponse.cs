@@ -1,5 +1,7 @@
+#if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+#endif
 
 namespace Mscc.GenerativeAI
 {
@@ -9,7 +11,7 @@ namespace Mscc.GenerativeAI
     public class InlinedResponses
     {
         /// <summary>
-        /// 
+        /// Output only. The responses to the requests in the batch.
         /// </summary>
         [JsonPropertyName("inlinedResponses")]
         public List<InlinedResponse> Responses { get; set; }
