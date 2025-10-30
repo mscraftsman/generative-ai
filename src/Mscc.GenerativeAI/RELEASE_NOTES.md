@@ -1,17 +1,23 @@
 # Release Notes
 
-## 2.8.21
+## 2.8.22
 
 ### Added
 
-- add implementation of `IImageGenerator` as `GeminiImageGenerator` (2366e37)
-- add interface `IAsyncDisposable` (c89785f)
+- add model `lyria-realtime-exp` (f8a0f6d)
+- add enum `HttpElementLocation` (4cb3e93)
+- Merge pull request #118 from ddunkin/batch (c8004af)
+- add target moniker and XMLdoc (cc539c0)
+- Correct batch get return docs. (4e988c2)
+- Fix inlinedResponse key, support typed batch responses. (aca7d21)
 
 ### Changed
 
-- provide another example using newer Gemini models (fe2b7b8)
-- refactor to provide lazily-initialized metadata (4714360)
-- more batch endpoints (e22d720)
+- update `ApiKeyConfig` (d3e169f)
+- remove property `AuthConfig` from tool `GoogleMaps` (ec851eb)
+- extend enum `Language` with Bash (5cbb7ff)
+- revision 20251028 (2953079)
+- Not sure about Gemma3 2770m model (716629b)
 
 ## Changelog
 
