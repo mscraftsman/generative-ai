@@ -74,7 +74,7 @@ namespace Mscc.GenerativeAI
         /// <param name="batchesName">Required. The name of the operation resource. Format: `batches/{id}`</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>The cached content resource.</returns>
+        /// <returns>The long-running operation resource.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
         public async Task<Operation> Get(string batchesName,
             RequestOptions? requestOptions = null, 
@@ -90,6 +90,31 @@ namespace Mscc.GenerativeAI
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<Operation>(response);
+        }
+        
+        /// <summary>
+        /// Gets the latest state of a long-running operation.
+        /// Clients can use this method to poll the operation result at intervals as recommended by the API service.
+        /// </summary>
+        /// <param name="batchesName">Required. The name of the operation resource. Format: `batches/{id}`</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>The long-running operation resource.</returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="batchesName"/> is <see langword="null"/> or empty.</exception>
+        public async Task<Operation<TResponse>> Get<TResponse>(string batchesName,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(batchesName)) throw new ArgumentException("Value cannot be null or empty.", nameof(batchesName));
+
+            batchesName = batchesName.SanitizeBatchesName();
+
+            var url = $"{BaseUrlGoogleAi}/{batchesName}";
+            url = ParseUrl(url);
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<Operation<TResponse>>(response);
         }
         
         /// <summary>

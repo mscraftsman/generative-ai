@@ -1330,7 +1330,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model or combination of features.</exception>
-        public async Task<Operation> BatchGenerateContent(BatchGenerateContentRequest request,
+        public async Task<Operation<GenerateContentBatchOutput>> BatchGenerateContent(BatchGenerateContentRequest request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
@@ -1338,7 +1338,7 @@ namespace Mscc.GenerativeAI
             ThrowIfUnsupportedRequest(request);
 
             var url = ParseUrl(Url, GenerativeAI.Method.BatchGenerateContent);
-            return await PostAsync<BatchGenerateContentRequest, Operation>(request, url, GenerativeAI.Method.BatchGenerateContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<BatchGenerateContentRequest, Operation<GenerateContentBatchOutput>>(request, url, GenerativeAI.Method.BatchGenerateContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         // ToDo: Implement methode
