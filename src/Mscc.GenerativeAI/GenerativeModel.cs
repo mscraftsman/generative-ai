@@ -507,11 +507,6 @@ namespace Mscc.GenerativeAI
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            if (!(_model.Equals($"{GenerativeAI.Model.BisonText001.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new NotSupportedException();
-            }
-
             if (!string.IsNullOrEmpty(_apiKey))
             {
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
@@ -1352,11 +1347,6 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotImplementedException"></exception>
         public async Task<GenerateContentResponse> BidiGenerateContent()
         {
-            if (!_model.Equals($"{GenerativeAI.Model.Gemini20FlashExperimental.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
-
             throw new NotImplementedException();
         }
 
@@ -1655,16 +1645,11 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Response from the model for a grounded answer.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException"></exception>
         public async Task<GenerateAnswerResponse> GenerateAnswer(GenerateAnswerRequest? request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.AttributedQuestionAnswering.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
 
             var url = ParseUrl(Url, Method);
             return await PostAsync<GenerateAnswerRequest, GenerateAnswerResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
@@ -1714,13 +1699,6 @@ namespace Mscc.GenerativeAI
             request.TaskType ??= taskType;
             request.Title ??= title;
 
-            string[] allowedModels =
-            [
-                GenerativeAI.Model.Embedding.SanitizeModelName(),
-                GenerativeAI.Model.GeminiEmbedding.SanitizeModelName(),
-                GenerativeAI.Model.TextEmbedding.SanitizeModelName()
-            ];
-            if (!allowedModels.Contains(request.Model.SanitizeModelName())) throw new NotSupportedException();
             if (!string.IsNullOrEmpty(request.Title) && request.TaskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
             
             var url = ParseUrl(Url, Method);
@@ -1747,12 +1725,6 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (requests == null) throw new ArgumentNullException(nameof(requests));
-            string[] allowedModels =
-            [
-                GenerativeAI.Model.Embedding.SanitizeModelName(),
-                GenerativeAI.Model.TextEmbedding.SanitizeModelName()
-            ];
-            if (!allowedModels.Contains(_model.SanitizeModelName())) throw new NotSupportedException();
             if (!string.IsNullOrEmpty(title) && taskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
 
             var method = GenerativeAI.Method.BatchEmbedContents;
@@ -2046,16 +2018,11 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException"></exception>
         public async Task<GenerateTextResponse> GenerateText(GenerateTextRequest? request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.BisonText.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
 
             var url = ParseUrl(Url, Method);
             return await PostAsync<GenerateTextRequest, GenerateTextResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
@@ -2111,10 +2078,6 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.BisonChat.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
 
             var url = ParseUrl(Url, Method);
             return await PostAsync<GenerateMessageRequest, GenerateMessageResponse>(request, url, Method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
@@ -2164,15 +2127,10 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedTextResponse> EmbedText(EmbedTextRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
 
             var url = ParseUrl(Url, Method);
             var json = Serialize(request);
@@ -2189,10 +2147,6 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
 
             var request = new EmbedTextRequest(prompt);
             return await EmbedText(request, cancellationToken);
@@ -2236,15 +2190,10 @@ namespace Mscc.GenerativeAI
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>List of Embeddings of the content as a list of floating numbers.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
-        /// <exception cref="NotSupportedException"></exception>
         public async Task<EmbedTextResponse> BatchEmbedText(BatchEmbedTextRequest request,
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!_model.Equals($"{GenerativeAI.Model.GeckoEmbedding.SanitizeModelName()}", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new NotSupportedException();
-            }
 
             var url = ParseUrl(Url, GenerativeAI.Method.BatchEmbedText);
             var json = Serialize(request);

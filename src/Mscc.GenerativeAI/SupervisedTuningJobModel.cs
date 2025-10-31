@@ -53,10 +53,6 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (!(request.BaseModel.Equals($"{GenerativeAI.Model.Gemini20Flash001}", StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new NotSupportedException();
-            }
 
             var url = $"{BaseUrlVertexAi}/tuningJobs";
             return await PostAsync<CreateTuningJobRequest, TuningJob>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
