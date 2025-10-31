@@ -1,23 +1,21 @@
 # Release Notes
 
-## 2.8.22
+## 2.8.23
 
 ### Added
 
-- add model `lyria-realtime-exp` (f8a0f6d)
-- add enum `HttpElementLocation` (4cb3e93)
-- Merge pull request #118 from ddunkin/batch (c8004af)
-- add target moniker and XMLdoc (cc539c0)
-- Correct batch get return docs. (4e988c2)
-- Fix inlinedResponse key, support typed batch responses. (aca7d21)
+- add endpoint `v1alpha` (d8f19d8)
+- add model `lyria-realtime-exp` (9e66940)
+- add property `TimeRangeFilter` to `EnterpriseWebSearch` (7b75d61)
+- chore: sync with `EnterpriseWebSearch` (6a16f9f)
 
 ### Changed
 
-- update `ApiKeyConfig` (d3e169f)
-- remove property `AuthConfig` from tool `GoogleMaps` (ec851eb)
-- extend enum `Language` with Bash (5cbb7ff)
-- revision 20251028 (2953079)
-- Not sure about Gemma3 2770m model (716629b)
+- rename enum `BlockingConfidence` to `PhishBlockThreshold` (63d6d82)
+
+### Fixed
+
+- remove obsolete model checks #119 (016c276)
 
 ## Changelog
 
