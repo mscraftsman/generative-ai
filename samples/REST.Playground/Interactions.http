@@ -1,0 +1,11 @@
+
+POST https://generativelanguage.googleapis.com/v1alpha/interactions
+x-goog-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "model": "gemini-2.5-flash",
+  "input": "Tell me a one-sentence joke about programming."
+}
+
+###
