@@ -70,6 +70,22 @@ namespace Mscc.GenerativeAI
             this ILogger logger);
 
         /// <summary>
+        /// Logs <see cref="Client"/>
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Live model starting")]
+        public static partial void LogClientInvoking(
+            this ILogger logger);
+
+        /// <summary>
+        /// Logs <see cref="LiveModel"/>
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Live model starting")]
+        public static partial void LogLiveModelInvoking(
+            this ILogger logger);
+        
+        /// <summary>
         /// Logs <see cref="DynamicModel"/>
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
