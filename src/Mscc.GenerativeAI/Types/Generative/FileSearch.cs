@@ -15,8 +15,14 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public FileSearchRetrievalConfig? RetrievalConfig { get; set; }
         /// <summary>
-        /// Required. Semantic retrieval resources to retrieve from. Currently only supports one corpus. In the future we may open up multiple corpora support.
+        /// Required. Semantic retrieval resources to retrieve from. Currently only supports one corpus.
+        /// In the future we may open up multiple corpora support.
         /// </summary>
         public List<RetrievalResource> RetrievalResources { get; set; }
+        /// <summary>
+        /// Required. The names of the file_search_stores to retrieve from.
+        /// Example: `fileSearchStores/my-file-search-store-123`
+        /// </summary>
+        public List<string>? FileSearchStoreNames { get; set; }
     }
 }

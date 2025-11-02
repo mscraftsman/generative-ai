@@ -227,6 +227,18 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        public static string SanitizeFileSearchStoreName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (!value.StartsWith("fileSearchStore", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"fileSearchStores/{value}";
+            }
+
+            return value;
+        }
+
         public static Part FromBytes(this Part part, string value, string mimeType)
         {
             if (string.IsNullOrEmpty(value)) return part;

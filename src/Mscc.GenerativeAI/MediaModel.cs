@@ -84,6 +84,64 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<CustomLongRunningOperation>(response);
         }
+
+        /// <summary>
+        /// Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<CustomLongRunningOperation> UploadToFileSearchStore(string uri,
+            string fileSearchStoreName,
+            string? displayName = null,
+            bool resumable = false,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
+            var fileInfo = new FileInfo(uri);
+            if (fileInfo.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(uri));
+            if (string.IsNullOrEmpty(fileSearchStoreName)) throw new ArgumentException(nameof(fileSearchStoreName));
+            fileSearchStoreName = fileSearchStoreName.SanitizeFileSearchStoreName();
+            
+            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            GenerativeAIExtensions.GuardMimeType(mimeType);
+            
+            var totalBytes = new FileInfo(uri).Length;
+            var request = new UploadToFileSearchStoreRequest()
+            {
+                DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                MimeType = mimeType
+            };
+
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{Version}/{fileSearchStoreName}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{baseUri}/resumable/upload/{Version}/{fileSearchStoreName}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            var json = Serialize(request);
+
+            using var fs = new FileStream(uri, FileMode.Open);
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = multipartContent;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<CustomLongRunningOperation>(response);
+        }
         
         /// <summary>
         /// Uploads a file to the File API backend.
