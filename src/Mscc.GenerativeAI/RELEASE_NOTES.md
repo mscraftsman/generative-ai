@@ -1,21 +1,22 @@
 # Release Notes
 
-## 2.8.23
+## 2.8.24
 
 ### Added
 
-- add endpoint `v1alpha` (d8f19d8)
-- add model `lyria-realtime-exp` (9e66940)
-- add property `TimeRangeFilter` to `EnterpriseWebSearch` (7b75d61)
-- chore: sync with `EnterpriseWebSearch` (6a16f9f)
+- add `FileSearchStore` handling (87eea39)
+- add new test for structured output (fdd9e40)
+- add missing namespace (f6af732)
+- add property `AutoTruncate` (a2b376a)
 
 ### Changed
 
-- rename enum `BlockingConfidence` to `PhishBlockThreshold` (63d6d82)
-
-### Fixed
-
-- remove obsolete model checks #119 (016c276)
+- update models for Live API (2f0d0bb)
+- update enum `TaskType` (10ab9eb)
+- update enum `PersonGeneration` (070ff0b)
+- update XMLdoc (sync with genai) (ab69baf)
+- revision 20251028 (708606c)
+- revision 20251031 (1c33282)
 
 ## Changelog
 
