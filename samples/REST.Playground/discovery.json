@@ -1017,6 +1017,129 @@
         }
       }
     },
+    "fileSearchStores": {
+      "methods": {
+        "create": {
+          "description": "Creates an empty `FileSearchStore`.",
+          "flatPath": "v1beta/fileSearchStores",
+          "httpMethod": "POST",
+          "id": "generativelanguage.fileSearchStores.create",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+
+          },
+          "path": "v1beta/fileSearchStores",
+          "request": {
+            "$ref": "FileSearchStore"
+          },
+          "response": {
+            "$ref": "FileSearchStore"
+          }
+        },
+        "delete": {
+          "description": "Deletes a `FileSearchStore`.",
+          "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}",
+          "httpMethod": "DELETE",
+          "id": "generativelanguage.fileSearchStores.delete",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "force": {
+              "description": "Optional. If set to true, any `Document`s and objects related to this `FileSearchStore` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `FileSearchStore` contains any `Document`s.",
+              "location": "query",
+              "type": "boolean"
+            },
+            "name": {
+              "description": "Required. The resource name of the `FileSearchStore`. Example: `fileSearchStores/my-file-search-store-123`",
+              "location": "path",
+              "pattern": "^fileSearchStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "Empty"
+          }
+        },
+        "get": {
+          "description": "Gets information about a specific `FileSearchStore`.",
+          "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.fileSearchStores.get",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Required. The name of the `FileSearchStore`. Example: `fileSearchStores/my-file-search-store-123`",
+              "location": "path",
+              "pattern": "^fileSearchStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "FileSearchStore"
+          }
+        },
+        "importFile": {
+          "description": "Imports a `File` from File Service to a `FileSearchStore`.",
+          "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}:importFile",
+          "httpMethod": "POST",
+          "id": "generativelanguage.fileSearchStores.importFile",
+          "parameterOrder": [
+            "fileSearchStoreName"
+          ],
+          "parameters": {
+            "fileSearchStoreName": {
+              "description": "Required. Immutable. The name of the `FileSearchStore` to import the file into. Example: `fileSearchStores/my-file-search-store-123`",
+              "location": "path",
+              "pattern": "^fileSearchStores/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+fileSearchStoreName}:importFile",
+          "request": {
+            "$ref": "ImportFileRequest"
+          },
+          "response": {
+            "$ref": "Operation"
+          }
+        },
+        "list": {
+          "description": "Lists all `FileSearchStores` owned by the user.",
+          "flatPath": "v1beta/fileSearchStores",
+          "httpMethod": "GET",
+          "id": "generativelanguage.fileSearchStores.list",
+          "parameterOrder": [
+
+          ],
+          "parameters": {
+            "pageSize": {
+              "description": "Optional. The maximum number of `FileSearchStores` to return (per page). The service may return fewer `FileSearchStores`. If unspecified, at most 10 `FileSearchStores` will be returned. The maximum size limit is 20 `FileSearchStores` per page.",
+              "format": "int32",
+              "location": "query",
+              "type": "integer"
+            },
+            "pageToken": {
+              "description": "Optional. A page token, received from a previous `ListFileSearchStores` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListFileSearchStores` must match the call that provided the page token.",
+              "location": "query",
+              "type": "string"
+            }
+          },
+          "path": "v1beta/fileSearchStores",
+          "response": {
+            "$ref": "ListFileSearchStoresResponse"
+          }
+        }
+      }
+    },
     "files": {
       "methods": {
         "delete": {
@@ -1187,11 +1310,11 @@
           },
           "supportsMediaUpload": true
         },
-        "uploadToRagStore": {
-          "description": "Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.",
-          "flatPath": "v1beta/ragStores/{ragStoresId}:uploadToRagStore",
+        "uploadToFileSearchStore": {
+          "description": "Uploads data to a FileSearchStore, preprocesses and chunks before storing it in a FileSearchStore Document.",
+          "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}:uploadToFileSearchStore",
           "httpMethod": "POST",
-          "id": "generativelanguage.media.uploadToRagStore",
+          "id": "generativelanguage.media.uploadToFileSearchStore",
           "mediaUpload": {
             "accept": [
               "*/*"
@@ -1200,29 +1323,29 @@
             "protocols": {
               "resumable": {
                 "multipart": true,
-                "path": "/resumable/upload/v1beta/{+ragStoreName}:uploadToRagStore"
+                "path": "/resumable/upload/v1beta/{+fileSearchStoreName}:uploadToFileSearchStore"
               },
               "simple": {
                 "multipart": true,
-                "path": "/upload/v1beta/{+ragStoreName}:uploadToRagStore"
+                "path": "/upload/v1beta/{+fileSearchStoreName}:uploadToFileSearchStore"
               }
             }
           },
           "parameterOrder": [
-            "ragStoreName"
+            "fileSearchStoreName"
           ],
           "parameters": {
-            "ragStoreName": {
-              "description": "Required. Immutable. The name of the `RagStore` to upload the file into. Example: `ragStores/my-rag-store-123`",
+            "fileSearchStoreName": {
+              "description": "Required. Immutable. The name of the `FileSearchStore` to upload the file into. Example: `fileSearchStores/my-file-search-store-123`",
               "location": "path",
-              "pattern": "^ragStores/[^/]+$",
+              "pattern": "^fileSearchStores/[^/]+$",
               "required": true,
               "type": "string"
             }
           },
-          "path": "v1beta/{+ragStoreName}:uploadToRagStore",
+          "path": "v1beta/{+fileSearchStoreName}:uploadToFileSearchStore",
           "request": {
-            "$ref": "UploadToRagStoreRequest"
+            "$ref": "UploadToFileSearchStoreRequest"
           },
           "response": {
             "$ref": "CustomLongRunningOperation"
@@ -2569,7 +2692,7 @@
       }
     }
   },
-  "revision": "20251028",
+  "revision": "20251031",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -3864,13 +3987,11 @@
           "description": "Required. Programming language of the `code`.",
           "enum": [
             "LANGUAGE_UNSPECIFIED",
-            "PYTHON",
-            "BASH"
+            "PYTHON"
           ],
           "enumDescriptions": [
             "Unspecified language. This value should not be used.",
-            "Python >= 3.10, with numpy and simpy available. Python is the default language.",
-            "Bash. Only available for Gemini 3.0 model or above."
+            "Python >= 3.10, with numpy and simpy available. Python is the default language."
           ],
           "type": "string"
         }
@@ -3999,24 +4120,13 @@
       "description": "The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API.",
       "id": "FileSearch",
       "properties": {
-        "retrievalConfig": {
-          "$ref": "FileSearchRetrievalConfig",
-          "description": "Optional. The configuration for the retrieval."
-        },
-        "retrievalResources": {
-          "description": "Required. Semantic retrieval resources to retrieve from. Currently only supports one corpus. In the future we may open up multiple corpora support.",
+        "fileSearchStoreNames": {
+          "description": "Required. The names of the file_search_stores to retrieve from. Example: `fileSearchStores/my-file-search-store-123`",
           "items": {
-            "$ref": "RetrievalResource"
+            "type": "string"
           },
           "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "FileSearchRetrievalConfig": {
-      "description": "Semantic retrieval configuration.",
-      "id": "FileSearchRetrievalConfig",
-      "properties": {
+        },
         "metadataFilter": {
           "description": "Optional. Metadata filter to apply to the semantic retrieval documents and chunks.",
           "type": "string"
@@ -4025,6 +4135,58 @@
           "description": "Optional. The number of semantic retrieval chunks to retrieve.",
           "format": "int32",
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "FileSearchStore": {
+      "description": "A `FileSearchStore` is a collection of `Document`s.",
+      "id": "FileSearchStore",
+      "properties": {
+        "activeDocumentsCount": {
+          "description": "Output only. The number of documents in the `FileSearchStore` that are active and ready for retrieval.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "createTime": {
+          "description": "Output only. The Timestamp of when the `FileSearchStore` was created.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Optional. The human-readable display name for the `FileSearchStore`. The display name must be no more than 512 characters in length, including spaces. Example: \"Docs on Semantic Retriever\"",
+          "type": "string"
+        },
+        "failedDocumentsCount": {
+          "description": "Output only. The number of documents in the `FileSearchStore` that have failed processing.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "name": {
+          "description": "Output only. Immutable. Identifier. The `FileSearchStore` resource name. It is an ID (name excluding the \"fileSearchStores/\" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/my-awesome-file-search-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "pendingDocumentsCount": {
+          "description": "Output only. The number of documents in the `FileSearchStore` that are being processed.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "sizeBytes": {
+          "description": "Output only. The size of raw bytes ingested into the `FileSearchStore`. This is the total size of all the documents in the `FileSearchStore`.",
+          "format": "int64",
+          "readOnly": true,
+          "type": "string"
+        },
+        "updateTime": {
+          "description": "Output only. The Timestamp of when the `FileSearchStore` was last updated.",
+          "format": "google-datetime",
+          "readOnly": true,
+          "type": "string"
         }
       },
       "type": "object"
@@ -4979,6 +5141,28 @@
       },
       "type": "object"
     },
+    "ImportFileRequest": {
+      "description": "Request for `ImportFile` to import a File API file with a `FileSearchStore`. LINT.IfChange(ImportFileRequest)",
+      "id": "ImportFileRequest",
+      "properties": {
+        "chunkingConfig": {
+          "$ref": "ChunkingConfig",
+          "description": "Optional. Config for telling the service how to chunk the file. If not provided, the service will use default parameters."
+        },
+        "customMetadata": {
+          "description": "Custom metadata to be associated with the file.",
+          "items": {
+            "$ref": "CustomMetadata"
+          },
+          "type": "array"
+        },
+        "fileName": {
+          "description": "Required. The name of the `File` to import. Example: `files/abc-123`",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "InlinedEmbedContentRequest": {
       "description": "The request to be processed in the batch.",
       "id": "InlinedEmbedContentRequest",
@@ -5281,6 +5465,24 @@
           "description": "The returned `Document`s.",
           "items": {
             "$ref": "Document"
+          },
+          "type": "array"
+        },
+        "nextPageToken": {
+          "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no more pages.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ListFileSearchStoresResponse": {
+      "description": "Response from `ListFileSearchStores` containing a paginated list of `FileSearchStores`. The results are sorted by ascending `file_search_store.create_time`.",
+      "id": "ListFileSearchStoresResponse",
+      "properties": {
+        "fileSearchStores": {
+          "description": "The returned rag_stores.",
+          "items": {
+            "$ref": "FileSearchStore"
           },
           "type": "array"
         },
@@ -6092,17 +6294,6 @@
           "description": "Optional. Score indicating how likely information from google search could help answer the prompt. The score is in the range [0, 1], where 0 is the least likely and 1 is the most likely. This score is only populated when google search grounding and dynamic retrieval is enabled. It will be compared to the threshold to determine whether to trigger google search.",
           "format": "float",
           "type": "number"
-        }
-      },
-      "type": "object"
-    },
-    "RetrievalResource": {
-      "description": "The semantic retrieval resource to retrieve from.",
-      "id": "RetrievalResource",
-      "properties": {
-        "ragStoreName": {
-          "description": "Required. The name of the semantic retrieval resource to retrieve from. Example: `ragStores/my-rag-store-123`",
-          "type": "string"
         }
       },
       "type": "object"
@@ -6972,9 +7163,9 @@
       },
       "type": "object"
     },
-    "UploadToRagStoreRequest": {
-      "description": "Request for `UploadToRagStore`.",
-      "id": "UploadToRagStoreRequest",
+    "UploadToFileSearchStoreRequest": {
+      "description": "Request for `UploadToFileSearchStore`.",
+      "id": "UploadToFileSearchStoreRequest",
       "properties": {
         "chunkingConfig": {
           "$ref": "ChunkingConfig",
