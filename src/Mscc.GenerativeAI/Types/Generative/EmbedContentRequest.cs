@@ -40,7 +40,11 @@ namespace Mscc.GenerativeAI
         /// If set, excessive values in the output embedding are truncated from the end.
         /// Supported by newer models since 2024, and the earlier model (`models/embedding-001`) cannot specify this value.
         /// </remarks>
-        public int? OutputDimensionality { get; set; } 
+        public int? OutputDimensionality { get; set; }
+        /// <summary>
+        /// Optional. Whether to silently truncate the input content if it's longer than the maximum sequence length.
+        /// </summary>
+        public bool? AutoTruncate { get; set; }
 
         /// <summary>
         /// 
