@@ -2631,7 +2631,8 @@ namespace Test.Mscc.GenerativeAI
             );
             var generationConfig = new GenerateContentConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<List<FlightSchedule>>()
+                ResponseMimeType = "application/json", 
+                ResponseSchema = Schema.FromType<List<FlightSchedule>>()
             };
 
             // Act
@@ -2647,6 +2648,43 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
+        class CalendarEvent
+        {
+            [Description("Event name")]
+            public string Name { get; set; }
+            [Description("Event date and time")]
+            public DateTime Date { get; set; }
+            [Description("List of participants during the event")]
+            public List<string> Participants { get; set; }
+        }
+        
+        [Fact]
+        public async Task Generate_Content_Using_ResponseSchema_with_DateTime()
+        {
+            // Arrange
+            var systemInstruction = new Content("Extract the event information.");
+            var prompt = "Alice and Bob are going to a science fair on Friday.";
+            var model = _googleAi.GenerativeModel(model: _model,
+                systemInstruction: systemInstruction);
+            var config = new GenerateContentConfig()
+            {
+                ResponseMimeType = "application/json", 
+                ResponseSchema = Schema.FromType<CalendarEvent>(),
+            };
+            
+            // Act
+            var response = await model.GenerateContent(prompt,
+                generationConfig: config);
+            
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
+            response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
+                .HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(response?.Text);
+        }
+        
         // Define the Instrument enum
         public enum Instrument
         {
