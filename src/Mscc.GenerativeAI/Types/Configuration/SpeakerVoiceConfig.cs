@@ -6,11 +6,11 @@ namespace Mscc.GenerativeAI
     public class SpeakerVoiceConfig
     {
         /// <summary>
-        /// Required. The name of the speaker to use. Should be the same as in the prompt.
+        /// The name of the speaker. This should be the same as the speaker name used in the prompt.
         /// </summary>
         public string Speaker { get; set; }
         /// <summary>
-        /// Required. The configuration for the voice to use.
+        /// The configuration for the voice of this speaker.
         /// </summary>
         public VoiceConfig VoiceConfig { get; set; }
     }

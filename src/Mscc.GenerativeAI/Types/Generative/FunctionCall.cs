@@ -13,7 +13,7 @@ namespace Mscc.GenerativeAI
     public class FunctionCall : IPart
     {
         /// <summary>
-        /// Required. The name of the function to call.
+        /// Optional. The name of the function to call.
         /// Matches [FunctionDeclaration.name].
         /// </summary>
         /// <remarks>
