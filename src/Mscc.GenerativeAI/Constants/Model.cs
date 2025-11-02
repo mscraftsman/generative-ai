@@ -72,6 +72,8 @@ namespace Mscc.GenerativeAI
         public const string Gemini25FlashPreviewNativeAudioDialog = "gemini-2.5-flash-preview-native-audio-dialog-rai-v3";
         public const string Gemini25FlashImage = "gemini-2.5-flash-image";
         public const string Gemini25FlashImagePreview = "gemini-2.5-flash-image-preview";
+        public const string Gemini25FlashNativeAudio = Gemini25FlashNativeAudioPreview092025;
+        public const string Gemini25FlashNativeAudioPreview = Gemini25FlashNativeAudioPreview092025;
         public const string Gemini25FlashNativeAudioLatest = "gemini-2.5-flash-native-audio-latest";
         public const string Gemini25FlashNativeAudioPreview092025 = "gemini-2.5-flash-native-audio-preview-09-2025";
         public const string Gemini25Pro = "gemini-2.5-pro";
@@ -83,7 +85,7 @@ namespace Mscc.GenerativeAI
         public const string Gemini25ProPreview0605 = "gemini-2.5-pro-preview-06-05";
         public const string Gemini25ProPreviewTts = "gemini-2.5-pro-preview-tts";
         public const string Gemini25LiveFlash = Gemini25LiveFlashPreview;
-        public const string Gemini25LiveFlashPreview = "gemini-2.5-flash-live-preview";
+        public const string Gemini25LiveFlashPreview = "gemini-live-2.5-flash-preview";
 
         public const string GeminiRoboticsEr15 = GeminiRoboticsEr15Preview;
         public const string GeminiRoboticsEr15Preview = "gemini-robotics-er-1.5-preview";
