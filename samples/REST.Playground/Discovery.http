@@ -15,6 +15,11 @@ GET https://aiplatform.googleapis.com/$discovery/rest?version=v1beta1
 
 ###
 
+# Get the Vertex AI REST API description from the discovery endpoint.
+GET https://aiplatform.googleapis.com/$discovery/rest?version=v1alpha1
+
+###
+
 GET https://aiplatform.googleapis.com/$discovery/rest?version=v1
 
 ###
