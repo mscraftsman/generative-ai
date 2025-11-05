@@ -1138,6 +1138,64 @@
             "$ref": "ListFileSearchStoresResponse"
           }
         }
+      },
+      "resources": {
+        "operations": {
+          "methods": {
+            "get": {
+              "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/operations/{operationsId}",
+              "httpMethod": "GET",
+              "id": "generativelanguage.fileSearchStores.operations.get",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "The name of the operation resource.",
+                  "location": "path",
+                  "pattern": "^fileSearchStores/[^/]+/operations/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Operation"
+              }
+            }
+          }
+        },
+        "upload": {
+          "resources": {
+            "operations": {
+              "methods": {
+                "get": {
+                  "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
+                  "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/upload/operations/{operationsId}",
+                  "httpMethod": "GET",
+                  "id": "generativelanguage.fileSearchStores.upload.operations.get",
+                  "parameterOrder": [
+                    "name"
+                  ],
+                  "parameters": {
+                    "name": {
+                      "description": "The name of the operation resource.",
+                      "location": "path",
+                      "pattern": "^fileSearchStores/[^/]+/upload/operations/[^/]+$",
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  "path": "v1beta/{+name}",
+                  "response": {
+                    "$ref": "Operation"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "files": {
@@ -2141,62 +2199,6 @@
               }
             }
           }
-        },
-        "operations": {
-          "methods": {
-            "get": {
-              "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
-              "flatPath": "v1beta/ragStores/{ragStoresId}/operations/{operationsId}",
-              "httpMethod": "GET",
-              "id": "generativelanguage.ragStores.operations.get",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "The name of the operation resource.",
-                  "location": "path",
-                  "pattern": "^ragStores/[^/]+/operations/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}",
-              "response": {
-                "$ref": "Operation"
-              }
-            }
-          }
-        },
-        "upload": {
-          "resources": {
-            "operations": {
-              "methods": {
-                "get": {
-                  "description": "Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.",
-                  "flatPath": "v1beta/ragStores/{ragStoresId}/upload/operations/{operationsId}",
-                  "httpMethod": "GET",
-                  "id": "generativelanguage.ragStores.upload.operations.get",
-                  "parameterOrder": [
-                    "name"
-                  ],
-                  "parameters": {
-                    "name": {
-                      "description": "The name of the operation resource.",
-                      "location": "path",
-                      "pattern": "^ragStores/[^/]+/upload/operations/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+name}",
-                  "response": {
-                    "$ref": "Operation"
-                  }
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -2692,7 +2694,7 @@
       }
     }
   },
-  "revision": "20251031",
+  "revision": "20251103",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -6863,7 +6865,7 @@
       "type": "object"
     },
     "Tool": {
-      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 12",
+      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 13",
       "id": "Tool",
       "properties": {
         "codeExecution": {
