@@ -28,29 +28,9 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="model">Model to use.</param>
         /// <returns>An instance of <see cref="GenerativeModel"/>.</returns>
-        public virtual GenerativeModel GetChatClient(string model)
+        internal virtual GenerativeModel GetGenerativeModel(string? model)
         {
-            return _genAi.GenerativeModel(model);
-        }
-
-        /// <summary>
-        /// Gets an instance of <see cref="GenerativeModel"/>.
-        /// </summary>
-        /// <param name="model">Model to use.</param>
-        /// <returns>An instance of <see cref="GenerativeModel"/>.</returns>
-        public virtual GenerativeModel GetEmbeddingGenerator(string model)
-        {
-            return _genAi.GenerativeModel(model);
-        }
-
-        /// <summary>
-        /// Gets an instance of <see cref="GenerativeModel"/>/
-        /// </summary>
-        /// <param name="model">Model to use.</param>
-        /// <returns>An instance of <see cref="GenerativeModel"/>.</returns>
-        public virtual GenerativeModel GetSpeechToTextClient(string model)
-        {
-            return _genAi.GenerativeModel(model);
+            return _genAi.GenerativeModel(model: model);
         }
     }
 }

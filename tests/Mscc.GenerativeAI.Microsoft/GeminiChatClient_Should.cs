@@ -5,6 +5,7 @@ using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
 using Neovolve.Logging.Xunit;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -33,21 +34,16 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             // Arrange
             var model = Model.Gemini25Pro;
             var gemini = new GeminiChatClient(_fixture.ApiKey, model);
-            mea.IChatClient chatClient = new mea.ChatClientBuilder(gemini)
+            IChatClient chatClient = new ChatClientBuilder(gemini)
                 .UseFunctionInvocation()
                 .Build();
 
-            mea.AIFunction getUserInformationTool = mea.AIFunctionFactory.Create(GetUserInformation, name: "get_user_information");
+            AIFunction getUserInformationTool =
+                AIFunctionFactory.Create(GetUserInformation, name: "get_user_information");
 
-            var options = new mea.ChatOptions
-            {
-                Tools = [getUserInformationTool]
-            };
+            var options = new ChatOptions { Tools = [getUserInformationTool] };
 
-            var chatHistory = new System.Collections.Generic.List<mea.ChatMessage>
-            {
-                new(mea.ChatRole.User, prompt)
-            };
+            var chatHistory = new List<mea.ChatMessage> { new(ChatRole.User, prompt) };
 
             // Act
             var response = await chatClient.GetResponseAsync(chatHistory, options);
@@ -56,7 +52,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             response.Should().NotBeNull();
             response.Messages.Should().NotBeNull().And.HaveCount(3);
             response.Messages[0].Contents.Should().NotBeNull().And.HaveCountGreaterOrEqualTo(1);
-            var functionCallContent = response.Messages[0].Contents[0] as mea.FunctionCallContent;
+            var functionCallContent = response.Messages[0].Contents[0] as FunctionCallContent;
             functionCallContent.Should().NotBeNull();
             functionCallContent?.Name.Should().Be("get_user_information");
             _output.WriteLine(response.Text);
@@ -70,25 +66,21 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             // Arrange
             var model = Model.Gemini25Pro;
             var gemini = new GeminiChatClient(_fixture.ApiKey, model);
-            mea.IChatClient chatClient = new mea.ChatClientBuilder(gemini)
+            IChatClient chatClient = new ChatClientBuilder(gemini)
                 .UseFunctionInvocation()
                 .Build();
 
-            mea.AIFunction getUserInformationTool = mea.AIFunctionFactory.Create(GetUserInformation, name: "get_user_information");
+            AIFunction getUserInformationTool =
+                AIFunctionFactory.Create(GetUserInformation, name: "get_user_information");
 
-            var options = new mea.ChatOptions
-            {
-                Tools = [getUserInformationTool]
-            };
+            var options = new ChatOptions { Tools = [getUserInformationTool] };
 
-            var chatHistory = new System.Collections.Generic.List<mea.ChatMessage>
-            {
-                new(mea.ChatRole.User, prompt)
-            };
+            var chatHistory = new List<mea.ChatMessage> { new(ChatRole.User, prompt) };
 
             // Act
-            IAsyncEnumerable<ChatResponseUpdate> responseStream = chatClient.GetStreamingResponseAsync(chatHistory, options);
-	
+            IAsyncEnumerable<ChatResponseUpdate> responseStream =
+                chatClient.GetStreamingResponseAsync(chatHistory, options);
+
             // Assert
             responseStream.Should().NotBeNull();
             await foreach (ChatResponseUpdate responseUpdate in responseStream)
@@ -104,6 +96,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         }
 
         [System.ComponentModel.Description("Get basic information of the current user")]
+        [Description("Get basic information of the current user")]
         private static string GetUserInformation() => @"{ ""Name"": ""John Doe"", ""Age"": 42 }";
     }
 }
