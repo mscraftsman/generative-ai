@@ -2929,7 +2929,7 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerateContentConfig()
             {
                 ResponseSchema =
-                    Schema.FromString("""{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}..."""),
+                    Schema.FromString("""{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}}}"""),
                 ResponseMimeType = "application/json"
             };
 
@@ -2982,7 +2982,8 @@ namespace Test.Mscc.GenerativeAI
         }
 #endif
 
-        [Fact(Skip = "ReadOnly declaration not accepted.")]
+        // [Fact(Skip = "Cannot implicitly convert type 'System.Dynamic.ExpandoObject' to 'Mscc.GenerativeAI.Schema'")]
+        [Fact]
         public async Task Generate_Content_Using_ResponseSchema_with_Dynamic()
         {
             // Arrange
@@ -2990,11 +2991,13 @@ namespace Test.Mscc.GenerativeAI
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
             dynamic schema = new ExpandoObject();
-            schema.Name = "dynamic";
+            schema.Name = "";
+            schema.Recipe = "";
 
             var generationConfig = new GenerateContentConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = schema
+                ResponseMimeType = "application/json", 
+                ResponseSchema = Schema.FromObject(schema)
             };
 
             // Act
