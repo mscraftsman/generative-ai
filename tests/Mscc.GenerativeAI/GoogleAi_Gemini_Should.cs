@@ -15,11 +15,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 #endif
 using FluentAssertions;
+using Json.Schema.Generation;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
 using System.Collections;
-using System.ComponentModel;
 using System.Dynamic;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -1736,8 +1736,8 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
-        [Description("Toggles the current between dark and light.")]
-        string ToggleDarkMode([Description("Flag indicating whether dark mode is on or not.")]bool isOn)
+        [System.ComponentModel.Description("Toggles the current between dark and light.")]
+        string ToggleDarkMode([System.ComponentModel.Description("Flag indicating whether dark mode is on or not.")]bool isOn)
         {
             return $"Dark mode is set to: {isOn}";
         }
@@ -1939,10 +1939,10 @@ namespace Test.Mscc.GenerativeAI
             // Method body
         }
 
-        [Description("Provide undefined information along with details.")]
+        [System.ComponentModel.Description("Provide undefined information along with details.")]
         public void TestNullable(
-            [Description("Expected temperature of the day")] double? numberNullable, 
-            [Description("Mood of the day")] string? stringNullable) { }
+            [System.ComponentModel.Description("Expected temperature of the day")] double? numberNullable, 
+            [System.ComponentModel.Description("Mood of the day")] string? stringNullable) { }
 
         [Fact]
         public async Task Function_Calling_Constructor_Format()
@@ -2609,9 +2609,22 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
+        /// <summary>
+        /// Flight information
+        /// </summary>
+        [Description("Schedule information for a flight")]
         class FlightSchedule
         {
+            /// <summary>
+            /// Flight time
+            /// </summary>
+            [Description("Time of the flight")]
+            //[MaxLength(5)]
             public string Time { get; set; }
+            /// <summary>
+            /// Flight destination
+            /// </summary>
+            [Description("Destination of the flight")]
             public string Destination { get; set; }
         }
 
@@ -2650,11 +2663,11 @@ namespace Test.Mscc.GenerativeAI
 
         class CalendarEvent
         {
-            [Description("Event name")]
+            [System.ComponentModel.Description("Event name")]
             public string Name { get; set; }
-            [Description("Event date and time")]
+            [System.ComponentModel.Description("Event date and time")]
             public DateTime Date { get; set; }
-            [Description("List of participants during the event")]
+            [System.ComponentModel.Description("List of participants during the event")]
             public List<string> Participants { get; set; }
         }
         
@@ -2926,7 +2939,7 @@ namespace Test.Mscc.GenerativeAI
 
 #if NET9_0
         public record Root(
-            [Description("A list of menus, each representing a specific day.")]
+            [System.ComponentModel.Description("A list of menus, each representing a specific day.")]
             List<Menu> Menus);
 
         public record Menu(DateOnly Date, List<Meal> Meals);
