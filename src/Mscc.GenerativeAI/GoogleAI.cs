@@ -83,7 +83,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Create a generative model on Google AI to use.
         /// </summary>
-        /// <param name="model">Model to use (default: "gemini-1.5-pro")</param>
+        /// <param name="model">Model to use (default: "gemini-2.5-pro")</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
