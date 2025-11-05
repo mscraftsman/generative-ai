@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		azure-pipelines.yml = azure-pipelines.yml
 		dotnetcore.yml = .github/workflows/dotnetcore.yml
 		VERSION = VERSION
+		Directory.Packages.props = Directory.Packages.props
+		docs\docfx.json = docs\docfx.json
+		docs\index.md = docs\index.md
+		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CA866D95-03CA-40DC-815A-8FA42C1803A9}"
