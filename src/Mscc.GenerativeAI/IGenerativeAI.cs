@@ -22,6 +22,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="tools">Optional. A list of Tools the model may use to generate the next response.</param>
         /// <param name="systemInstruction">Optional. </param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(string model = Model.Gemini25Pro,
@@ -37,6 +38,7 @@ namespace Mscc.GenerativeAI
         /// <param name="cachedContent">Content that has been preprocessed.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Generative model instance.</returns>
         public GenerativeModel GenerativeModel(CachedContent cachedContent,
             GenerationConfig? generationConfig = null,
