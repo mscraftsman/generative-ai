@@ -215,7 +215,8 @@ namespace Mscc.GenerativeAI
 
         private static ParameterType ParseSingleParameterType(string? typeString)
         {
-            return typeString?.ToUpperInvariant() switch
+            string? normalized = typeString?.Trim().ToUpperInvariant();
+            return normalized switch
             {
                 "STRING" => ParameterType.String,
                 "NUMBER" => ParameterType.Number,

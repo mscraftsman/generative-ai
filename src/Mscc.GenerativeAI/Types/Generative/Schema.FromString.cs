@@ -73,16 +73,16 @@ namespace Mscc.GenerativeAI
 
         private static Schema FromTypeName(string? typeName)
         {
-            string? normalized = typeName?.Trim().ToLowerInvariant();
+            string? normalized = typeName?.Trim().ToUpperInvariant();
             return normalized switch
             {
-                "string" => new Schema { Type = ParameterType.String },
-                "number" => new Schema { Type = ParameterType.Number },
-                "integer" => new Schema { Type = ParameterType.Integer },
-                "boolean" => new Schema { Type = ParameterType.Boolean },
-                "array" => new Schema { Type = ParameterType.Array },
-                "object" => new Schema { Type = ParameterType.Object },
-                "null" => new Schema { Type = ParameterType.Null, Nullable = true },
+                "STRING" => new Schema { Type = ParameterType.String },
+                "NUMBER" => new Schema { Type = ParameterType.Number },
+                "INTEGER" => new Schema { Type = ParameterType.Integer },
+                "BOOLEAN" => new Schema { Type = ParameterType.Boolean },
+                "ARRAY" => new Schema { Type = ParameterType.Array },
+                "OBJECT" => new Schema { Type = ParameterType.Object },
+                "NULL" => new Schema { Type = ParameterType.Null, Nullable = true },
                 _ => throw new ArgumentException($"Unrecognized schema string '{typeName}'. Provide JSON schema or a known type name.")
             };
         }
