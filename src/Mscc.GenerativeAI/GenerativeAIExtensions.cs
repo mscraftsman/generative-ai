@@ -141,7 +141,12 @@ namespace Mscc.GenerativeAI
         public static string SanitizeModelName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
-
+            
+            if (value.Contains("..") || value.Contains("?") || value.Contains("&"))
+            {
+                throw new ArgumentException($"invalid model parameter.");
+            }
+            
             if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
             {
                 return value;
