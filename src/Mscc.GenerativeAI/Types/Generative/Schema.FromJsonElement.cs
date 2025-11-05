@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 #endif
-
+using System.Globalization;
 
 namespace Mscc.GenerativeAI
 {
@@ -45,12 +45,12 @@ namespace Mscc.GenerativeAI
 
             if (jsonElement.TryGetProperty("format", out JsonElement formatElement))
             {
-                schema.Format = formatElement.GetString() ?? "";
+                schema.Format = formatElement.GetString();
             }
 
             if (jsonElement.TryGetProperty("description", out JsonElement descriptionElement))
             {
-                schema.Description = descriptionElement.GetString() ?? "";
+                schema.Description = descriptionElement.GetString();
             }
 
             // Explicit nullable property takes precedence over type array inference
@@ -89,16 +89,25 @@ namespace Mscc.GenerativeAI
             if (jsonElement.TryGetProperty("enum", out JsonElement enumElement))
             {
                 schema.Enum = ParseStringArray(enumElement);
+                schema.Type ??= ParameterType.String;
             }
 
             if (jsonElement.TryGetProperty("maxLength", out JsonElement maxLengthElement))
             {
-                schema.MaxLength = maxLengthElement.GetString();
+                schema.MaxLength = maxLengthElement.ValueKind switch
+                {
+                    JsonValueKind.Number => Convert.ToString(maxLengthElement.GetInt32(), CultureInfo.InvariantCulture),
+                    _ => maxLengthElement.GetString()
+                };
             }
 
             if (jsonElement.TryGetProperty("minLength", out JsonElement minLengthElement))
             {
-                schema.MinLength = minLengthElement.GetString();
+                schema.MinLength = minLengthElement.ValueKind switch
+                {
+                    JsonValueKind.Number => Convert.ToString(minLengthElement.GetInt32(), CultureInfo.InvariantCulture),
+                    _ => minLengthElement.GetString()
+                };
             }
 
             if (jsonElement.TryGetProperty("pattern", out JsonElement patternElement))
@@ -135,12 +144,20 @@ namespace Mscc.GenerativeAI
 
             if (jsonElement.TryGetProperty("maxProperties", out JsonElement maxPropertiesElement))
             {
-                schema.MaxProperties = maxPropertiesElement.GetString();
+                schema.MaxProperties = maxPropertiesElement.ValueKind switch
+                {
+                    JsonValueKind.Number => Convert.ToString(maxPropertiesElement.GetInt32(), CultureInfo.InvariantCulture),
+                    _ => maxPropertiesElement.GetString()
+                };
             }
 
             if (jsonElement.TryGetProperty("minProperties", out JsonElement minPropertiesElement))
             {
-                schema.MinProperties = minPropertiesElement.GetString();
+                schema.MinProperties = minPropertiesElement.ValueKind switch
+                {
+                    JsonValueKind.Number => Convert.ToString(minPropertiesElement.GetInt32(), CultureInfo.InvariantCulture),
+                    _ => minPropertiesElement.GetString()
+                };
             }
 
             // Parse anyOf
@@ -198,15 +215,15 @@ namespace Mscc.GenerativeAI
 
         private static ParameterType ParseSingleParameterType(string? typeString)
         {
-            return typeString?.ToLowerInvariant() switch
+            return typeString?.ToUpperInvariant() switch
             {
-                "string" => ParameterType.String,
-                "number" => ParameterType.Number,
-                "integer" => ParameterType.Integer,
-                "boolean" => ParameterType.Boolean,
-                "array" => ParameterType.Array,
-                "object" => ParameterType.Object,
-                "null" => ParameterType.Null,
+                "STRING" => ParameterType.String,
+                "NUMBER" => ParameterType.Number,
+                "INTEGER" => ParameterType.Integer,
+                "BOOLEAN" => ParameterType.Boolean,
+                "ARRAY" => ParameterType.Array,
+                "OBJECT" => ParameterType.Object,
+                "NULL" => ParameterType.Null,
                 _ => ParameterType.TypeUnspecified,
             };
         }

@@ -13,21 +13,50 @@ namespace Mscc.GenerativeAI
 {
     public partial class Schema
     {
+        private static readonly SchemaGeneratorConfiguration _schemaGeneratorConfiguration = new() { PropertyNameResolver = PropertyNameResolvers.CamelCase };
+        
         /// <summary>
         /// Builds a Schema from a .NET object using Json.Schema generation, then maps it into the internal Schema model.
         /// </summary>
-        public static Schema FromObject(object obj) => FromType(obj.GetType());
+        public static Schema FromObject(object obj) => FromType(obj.GetType(), _schemaGeneratorConfiguration);
 
         /// <summary>
         /// Builds a Schema from a .NET type using Json.Schema generation, then maps it into the internal Schema model.
         /// </summary>
-        public static Schema FromType<T>() => FromType(typeof(T));
+        /// <typeparam name="T">Any type.</typeparam>
+        public static Schema FromType<T>() => FromType(typeof(T), _schemaGeneratorConfiguration);
 
         /// <summary>
         /// Builds a Schema from a .NET type using Json.Schema generation, then maps it into the internal Schema model.
         /// </summary>
-        public static Schema FromType(Type type)
+        /// <param name="filename">The file name of the assembly's XML comment file.</param>
+        /// <typeparam name="T">Any type in the assembly.</typeparam>
+        public static Schema FromType<T>(string filename)
         {
+            var config = _schemaGeneratorConfiguration;
+            if (!string.IsNullOrEmpty(filename))
+            {
+                config = new SchemaGeneratorConfiguration() { PropertyNameResolver = PropertyNameResolvers.CamelCase };
+                config.RegisterXmlCommentFile<T>(filename);
+            }
+            return FromType(typeof(T), config);
+        }
+
+        /// <summary>
+        /// Builds a Schema from a .NET type using Json.Schema generation, then maps it into the internal Schema model.
+        /// </summary>
+        /// <param name="type">The type to generate.</param>
+        public static Schema FromType(Type type) => FromType(type, _schemaGeneratorConfiguration);
+
+        /// <summary>
+        /// Builds a Schema from a .NET type using Json.Schema generation, then maps it into the internal Schema model.
+        /// </summary>
+        /// <param name="type">The type to generate.</param>
+        /// <param name="config">The <see cref="SchemaGeneratorConfiguration"/> to use.</param>
+        private static Schema FromType(Type type, SchemaGeneratorConfiguration config)
+        {
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            
             // Handle Nullable<T>
             bool isNullable = false;
             if (IsNullableValueType(type, out Type? underlyingNullable))
@@ -54,7 +83,7 @@ namespace Mscc.GenerativeAI
             }
 
             JsonSchemaBuilder schemaBuilder = new();
-            SchemaGeneratorConfiguration config = new() { PropertyNameResolver = PropertyNameResolvers.CamelCase };
+            config ??= _schemaGeneratorConfiguration;
             JsonSchema jsonSchema = schemaBuilder.FromType(type, config).Build();
 
             JsonElement element = JsonSerializer.SerializeToElement(jsonSchema, jsonSchema.GetType());
@@ -200,7 +229,7 @@ namespace Mscc.GenerativeAI
                 return null;
             }
 
-            return FromType(returnType);
+            return FromType(returnType, _schemaGeneratorConfiguration);
         }
     }
 }

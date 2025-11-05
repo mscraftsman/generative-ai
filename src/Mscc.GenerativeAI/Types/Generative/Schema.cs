@@ -30,12 +30,12 @@ namespace Mscc.GenerativeAI
         /// for INTEGER type: int32, int64
         /// for STRING type: enum, date-time
         /// </summary>
-        public string Format { get; set; } = "";
+        public string? Format { get; set; }
 
         /// <summary>
         /// Optional. A brief description of the parameter. This could contain examples of use. Parameter description may be formatted as Markdown.
         /// </summary>
-        public string Description { get; set; } = "";
+        public string? Description { get; set; }
 
         /// <summary>
         /// Optional. Indicates if the value may be null.

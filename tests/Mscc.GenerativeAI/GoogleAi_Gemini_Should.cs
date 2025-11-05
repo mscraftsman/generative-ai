@@ -2619,8 +2619,13 @@ namespace Test.Mscc.GenerativeAI
             /// Flight time
             /// </summary>
             [Json.Schema.Generation.Description("Time of the flight")]
-            //[MaxLength(5)]
+#if NET9_0
+            public TimeOnly TimeOnly { get; set; }
+#else
+            [Json.Schema.Generation.MaxLength(5)]
+            [Json.Schema.Generation.Pattern("[0-9]{2}:[0-9]{2}")]
             public string Time { get; set; }
+#endif
             /// <summary>
             /// Flight destination
             /// </summary>
@@ -2658,6 +2663,8 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
             response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And
                 .HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine($"Model: {response.ModelVersion}");
+            _output.WriteLine($"ResponseId: {response.ResponseId}");
             _output.WriteLine(response?.Text);
         }
 
@@ -2939,7 +2946,7 @@ namespace Test.Mscc.GenerativeAI
 
 #if NET9_0
         public record Root(
-            [System.ComponentModel.Description("A list of menus, each representing a specific day.")]
+            [Description("A list of menus, each representing a specific day.")]
             List<Menu> Menus);
 
         public record Menu(DateOnly Date, List<Meal> Meals);
@@ -2959,7 +2966,8 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
             var generationConfig = new GenerateContentConfig()
             {
-                ResponseMimeType = "application/json", ResponseSchema = Schema.FromType<Root>()
+                ResponseMimeType = "application/json", 
+                ResponseSchema = Schema.FromType<Root>()
             };
 
             // Act
