@@ -95,7 +95,37 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             }
         }
 
-        [System.ComponentModel.Description("Get basic information of the current user")]
+        [Fact]
+        public async Task Dotnet_Genai_Sample()
+        {
+            // assuming credentials are set up in environment variables.
+            IChatClient chatClient = new GeminiClient(_fixture.ApiKey)
+                .AsIChatClient("gemini-2.0-flash")
+                .AsBuilder()
+                .UseFunctionInvocation()
+                .UseOpenTelemetry()
+                .Build();
+
+            ChatOptions options = new()
+            {
+                Tools = [AIFunctionFactory.Create(
+                        ([Description("The name of the person whose age is to be retrieved")] string personName) =>
+                            personName switch
+                            {
+                                "Alice" => 30,
+                                "Bob" => 25,
+                                _ => 35
+                            }, "get_person_age", "Gets the age of the specified person")
+                ]
+            };
+
+            await foreach (var update in chatClient.GetStreamingResponseAsync(
+                               "How much older is Alice than Bob?", options))
+            {
+                _output.WriteLine(update.Text);
+            }
+        }
+
         [Description("Get basic information of the current user")]
         private static string GetUserInformation() => @"{ ""Name"": ""John Doe"", ""Age"": 42 }";
     }
