@@ -89,7 +89,7 @@ namespace Mscc.GenerativeAI
         {
             get
             {
-                var model = _model.SanitizeModelName().Split(new[] { '/' })[1];
+                var model = _model.SanitizeModelName().Split(['/'], 2, StringSplitOptions.RemoveEmptyEntries)[1];
 #if NET472_OR_GREATER || NETSTANDARD2_0
                 switch (model)
                 {
@@ -1881,7 +1881,7 @@ namespace Mscc.GenerativeAI
         {
             if (prompt == null) throw new ArgumentNullException(nameof(prompt));
 
-            var model = _model.SanitizeModelName().Split('/').Last();
+            var model = _model.SanitizeModelName().Split(['/'], 2, StringSplitOptions.RemoveEmptyEntries).Last();
             switch (model)
             {
                 case GenerativeAI.Model.BisonChat:
