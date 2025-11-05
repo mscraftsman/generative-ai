@@ -44,6 +44,7 @@
             CA1724; <!-- Type names should not match namespaces -->
             CA2007; <!-- Do not directly await a Task -->
             CS1591; <!-- Missing XML comment for publicly visible type or member -->
+            CS3008; <!-- Identifier is not CLS-compliant-->
             IL2026;
             IL3050;
         </NoWarn>
