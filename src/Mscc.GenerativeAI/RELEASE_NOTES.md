@@ -1,22 +1,21 @@
 # Release Notes
 
-## 2.8.24
+## 2.8.25
 
 ### Added
 
-- add `FileSearchStore` handling (87eea39)
-- add new test for structured output (fdd9e40)
-- add missing namespace (f6af732)
-- add property `AutoTruncate` (a2b376a)
+- add improvements to Schema generation #120 (a844a88)
+- add test from `dotnet-genai` (MEAI) (f4520d8)
+- add extension methods `AsI...` (921e508)
 
 ### Changed
 
-- update models for Live API (2f0d0bb)
-- update enum `TaskType` (10ab9eb)
-- update enum `PersonGeneration` (070ff0b)
-- update XMLdoc (sync with genai) (ab69baf)
-- revision 20251028 (708606c)
-- revision 20251031 (1c33282)
+- remove obsolete `DescriptionAttribute` (7376bc6)
+- upgrade NuGet packages (195d341)
+- toggle namespace usage (8935529)
+- using namespace Json.Schema.Generation to annotate types for JSON schema. (357e083)
+- amend test with `ExpandoObject` (02b1c70)
+- revision 20251103 (105394f)
 
 ## Changelog
 

@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.8.25
+
+### Added
+
+- add test from `dotnet-genai` (MEAI) (f4520d8)
+- add extension methods `AsI...` (921e508)
+
 ## 2.8.24
 
 ### Changed
