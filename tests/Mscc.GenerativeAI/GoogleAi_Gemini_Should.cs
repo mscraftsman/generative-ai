@@ -15,11 +15,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 #endif
 using FluentAssertions;
-using Json.Schema.Generation;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
 using System.Collections;
+using System.ComponentModel;
 using System.Dynamic;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -1736,8 +1736,8 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
-        [System.ComponentModel.Description("Toggles the current between dark and light.")]
-        string ToggleDarkMode([System.ComponentModel.Description("Flag indicating whether dark mode is on or not.")]bool isOn)
+        [Description("Toggles the current between dark and light.")]
+        string ToggleDarkMode([Description("Flag indicating whether dark mode is on or not.")]bool isOn)
         {
             return $"Dark mode is set to: {isOn}";
         }
@@ -1939,10 +1939,10 @@ namespace Test.Mscc.GenerativeAI
             // Method body
         }
 
-        [System.ComponentModel.Description("Provide undefined information along with details.")]
+        [Description("Provide undefined information along with details.")]
         public void TestNullable(
-            [System.ComponentModel.Description("Expected temperature of the day")] double? numberNullable, 
-            [System.ComponentModel.Description("Mood of the day")] string? stringNullable) { }
+            [Description("Expected temperature of the day")] double? numberNullable, 
+            [Description("Mood of the day")] string? stringNullable) { }
 
         [Fact]
         public async Task Function_Calling_Constructor_Format()
@@ -2612,19 +2612,19 @@ namespace Test.Mscc.GenerativeAI
         /// <summary>
         /// Flight information
         /// </summary>
-        [Description("Schedule information for a flight")]
+        [Json.Schema.Generation.Description("Schedule information for a flight")]
         class FlightSchedule
         {
             /// <summary>
             /// Flight time
             /// </summary>
-            [Description("Time of the flight")]
+            [Json.Schema.Generation.Description("Time of the flight")]
             //[MaxLength(5)]
             public string Time { get; set; }
             /// <summary>
             /// Flight destination
             /// </summary>
-            [Description("Destination of the flight")]
+            [Json.Schema.Generation.Description("Destination of the flight")]
             public string Destination { get; set; }
         }
 
