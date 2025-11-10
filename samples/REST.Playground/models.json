@@ -632,7 +632,7 @@
       "inputTokenLimit": 32768,
       "maxTemperature": 1,
       "name": "models/gemini-2.5-flash-image-preview",
-      "outputTokenLimit": 8192,
+      "outputTokenLimit": 32768,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
@@ -649,7 +649,7 @@
       "inputTokenLimit": 32768,
       "maxTemperature": 1,
       "name": "models/gemini-2.5-flash-image",
-      "outputTokenLimit": 8192,
+      "outputTokenLimit": 32768,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
