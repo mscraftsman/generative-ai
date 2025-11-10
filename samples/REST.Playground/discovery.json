@@ -1140,6 +1140,142 @@
         }
       },
       "resources": {
+        "documents": {
+          "methods": {
+            "create": {
+              "description": "Creates an empty `Document`.",
+              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents",
+              "httpMethod": "POST",
+              "id": "generativelanguage.fileSearchStores.documents.create",
+              "parameterOrder": [
+                "parent"
+              ],
+              "parameters": {
+                "parent": {
+                  "description": "Required. The name of the `RagStore` where this `Document` will be created. Example: `ragStores/my-rag-store-123`",
+                  "location": "path",
+                  "pattern": "^fileSearchStores/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+parent}/documents",
+              "request": {
+                "$ref": "Document"
+              },
+              "response": {
+                "$ref": "Document"
+              }
+            },
+            "delete": {
+              "description": "Deletes a `Document`.",
+              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents/{documentsId}",
+              "httpMethod": "DELETE",
+              "id": "generativelanguage.fileSearchStores.documents.delete",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "force": {
+                  "description": "Optional. If set to true, any `Chunk`s and objects related to this `Document` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `Document` contains any `Chunk`s.",
+                  "location": "query",
+                  "type": "boolean"
+                },
+                "name": {
+                  "description": "Required. The resource name of the `Document` to delete. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "location": "path",
+                  "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Empty"
+              }
+            },
+            "get": {
+              "description": "Gets information about a specific `Document`.",
+              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents/{documentsId}",
+              "httpMethod": "GET",
+              "id": "generativelanguage.fileSearchStores.documents.get",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "Required. The name of the `Document` to retrieve. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "location": "path",
+                  "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}",
+              "response": {
+                "$ref": "Document"
+              }
+            },
+            "list": {
+              "description": "Lists all `Document`s in a `Corpus`.",
+              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents",
+              "httpMethod": "GET",
+              "id": "generativelanguage.fileSearchStores.documents.list",
+              "parameterOrder": [
+                "parent"
+              ],
+              "parameters": {
+                "pageSize": {
+                  "description": "Optional. The maximum number of `Document`s to return (per page). The service may return fewer `Document`s. If unspecified, at most 10 `Document`s will be returned. The maximum size limit is 20 `Document`s per page.",
+                  "format": "int32",
+                  "location": "query",
+                  "type": "integer"
+                },
+                "pageToken": {
+                  "description": "Optional. A page token, received from a previous `ListDocuments` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListDocuments` must match the call that provided the page token.",
+                  "location": "query",
+                  "type": "string"
+                },
+                "parent": {
+                  "description": "Required. The name of the `RagStore` containing `Document`s. Example: `ragStores/my-rag-store-123`",
+                  "location": "path",
+                  "pattern": "^fileSearchStores/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+parent}/documents",
+              "response": {
+                "$ref": "ListDocumentsResponse"
+              }
+            },
+            "query": {
+              "description": "Performs semantic search over a `Document`.",
+              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents/{documentsId}:query",
+              "httpMethod": "POST",
+              "id": "generativelanguage.fileSearchStores.documents.query",
+              "parameterOrder": [
+                "name"
+              ],
+              "parameters": {
+                "name": {
+                  "description": "Required. The name of the `Document` to query. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "location": "path",
+                  "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
+                  "required": true,
+                  "type": "string"
+                }
+              },
+              "path": "v1beta/{+name}:query",
+              "request": {
+                "$ref": "QueryDocumentRequest"
+              },
+              "response": {
+                "$ref": "QueryDocumentResponse"
+              }
+            }
+          }
+        },
         "operations": {
           "methods": {
             "get": {
@@ -2062,144 +2198,6 @@
             "$ref": "RagStore"
           }
         }
-      },
-      "resources": {
-        "documents": {
-          "methods": {
-            "create": {
-              "description": "Creates an empty `Document`.",
-              "flatPath": "v1beta/ragStores/{ragStoresId}/documents",
-              "httpMethod": "POST",
-              "id": "generativelanguage.ragStores.documents.create",
-              "parameterOrder": [
-                "parent"
-              ],
-              "parameters": {
-                "parent": {
-                  "description": "Required. The name of the `RagStore` where this `Document` will be created. Example: `ragStores/my-rag-store-123`",
-                  "location": "path",
-                  "pattern": "^ragStores/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+parent}/documents",
-              "request": {
-                "$ref": "Document"
-              },
-              "response": {
-                "$ref": "Document"
-              }
-            },
-            "delete": {
-              "description": "Deletes a `Document`.",
-              "flatPath": "v1beta/ragStores/{ragStoresId}/documents/{documentsId}",
-              "httpMethod": "DELETE",
-              "id": "generativelanguage.ragStores.documents.delete",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "force": {
-                  "description": "Optional. If set to true, any `Chunk`s and objects related to this `Document` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `Document` contains any `Chunk`s.",
-                  "location": "query",
-                  "type": "boolean"
-                },
-                "name": {
-                  "description": "Required. The resource name of the `Document` to delete. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^ragStores/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}",
-              "response": {
-                "$ref": "Empty"
-              }
-            },
-            "get": {
-              "description": "Gets information about a specific `Document`.",
-              "flatPath": "v1beta/ragStores/{ragStoresId}/documents/{documentsId}",
-              "httpMethod": "GET",
-              "id": "generativelanguage.ragStores.documents.get",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "Required. The name of the `Document` to retrieve. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^ragStores/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}",
-              "response": {
-                "$ref": "Document"
-              }
-            },
-            "list": {
-              "description": "Lists all `Document`s in a `Corpus`.",
-              "flatPath": "v1beta/ragStores/{ragStoresId}/documents",
-              "httpMethod": "GET",
-              "id": "generativelanguage.ragStores.documents.list",
-              "parameterOrder": [
-                "parent"
-              ],
-              "parameters": {
-                "pageSize": {
-                  "description": "Optional. The maximum number of `Document`s to return (per page). The service may return fewer `Document`s. If unspecified, at most 10 `Document`s will be returned. The maximum size limit is 20 `Document`s per page.",
-                  "format": "int32",
-                  "location": "query",
-                  "type": "integer"
-                },
-                "pageToken": {
-                  "description": "Optional. A page token, received from a previous `ListDocuments` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListDocuments` must match the call that provided the page token.",
-                  "location": "query",
-                  "type": "string"
-                },
-                "parent": {
-                  "description": "Required. The name of the `RagStore` containing `Document`s. Example: `ragStores/my-rag-store-123`",
-                  "location": "path",
-                  "pattern": "^ragStores/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+parent}/documents",
-              "response": {
-                "$ref": "ListDocumentsResponse"
-              }
-            },
-            "query": {
-              "description": "Performs semantic search over a `Document`.",
-              "flatPath": "v1beta/ragStores/{ragStoresId}/documents/{documentsId}:query",
-              "httpMethod": "POST",
-              "id": "generativelanguage.ragStores.documents.query",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "Required. The name of the `Document` to query. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^ragStores/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}:query",
-              "request": {
-                "$ref": "QueryDocumentRequest"
-              },
-              "response": {
-                "$ref": "QueryDocumentResponse"
-              }
-            }
-          }
-        }
       }
     },
     "tunedModels": {
@@ -2694,7 +2692,7 @@
       }
     }
   },
-  "revision": "20251103",
+  "revision": "20251106",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
