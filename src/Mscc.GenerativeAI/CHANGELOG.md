@@ -12,6 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.1
+
+### Added
+
+- add .NET 10.0 (ca4f1e4)
+- refactor for .NET 10.0 (2af575a)
+- add guardrail for invalid chars in resource names. (b6f8c30)
+
+### Changed
+
+- ignore warning CA1054 (d663707)
+- simplify test code (d7192b0)
+
 ## 2.9.0
 
 ### Added
