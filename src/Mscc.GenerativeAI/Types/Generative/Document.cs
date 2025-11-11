@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 #endif
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI
 {
@@ -9,7 +10,7 @@ namespace Mscc.GenerativeAI
     /// Response from `ListDocuments` containing a paginated list of <see cref="Document"/>s.
     /// The <see cref="Document"/>s are sorted by ascending `document.create_time`.
     /// </summary>
-    internal class ListDocumentsResponse
+    public class ListDocumentsResponse
     {
         /// <summary>
         /// The returned <see cref="Document"/>s.
@@ -25,6 +26,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// A `Document` is a collection of `Chunk`s.
     /// </summary>
+    [DebuggerDisplay("{DisplayName,nq} ({MimeType,nq}, {State}) - '{Name,nq}'")]
     public class Document
     {
         /// <summary>
