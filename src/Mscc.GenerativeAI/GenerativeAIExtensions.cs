@@ -372,14 +372,23 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException($"The language `{language}` is not supported by the API.");
         }
 
+        /// <summary>
+        /// Checks if invalid characters are part of the name of an entity.
+        /// </summary>
+        /// <param name="value">The name of the URL resource.</param>
+        /// <exception cref="ArgumentException">Thrown when <see cref="value"/> contains invalid characters.</exception>
+        internal static void GuardInvalidStringsInName(this string value)
+        {
+            if (value.Contains("..") || value.Contains("?") || value.Contains("&"))
+            {
+                throw new ArgumentException($"invalid characters in name `{value}`.");
+            }
+        }
+        
         public static string SanitizeModelName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
-
-            if (value.Contains("..") || value.Contains("?") || value.Contains("&"))
-            {
-                throw new ArgumentException($"invalid model parameter.");
-            }
+            GuardInvalidStringsInName(value);
 
             if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -397,6 +406,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("file", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -409,6 +419,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeGeneratedFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("generatedFile", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -421,6 +432,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeCachedContentName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("cachedContent", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -433,6 +445,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeBatchesName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("batch", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -445,6 +458,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeTuningJobsName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("tuningJob", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -457,6 +471,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeEndpointName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (value.StartsWith("endpoint", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -469,6 +484,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeFileSearchStoreName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("fileSearchStore", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -481,6 +497,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeCorporaName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("corpora", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -493,6 +510,7 @@ namespace Mscc.GenerativeAI
         public static string SanitizeDocumentName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
+            GuardInvalidStringsInName(value);
 
             if (!value.StartsWith("document", StringComparison.InvariantCultureIgnoreCase))
             {
