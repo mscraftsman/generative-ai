@@ -49,7 +49,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET SDK'
     inputs:
-      version: 9.x
+      version: 10.x
       performMultiLevelLookup: true
       includePreviewVersions: true # Required for preview versions
 
