@@ -1,5 +1,6 @@
 #if NET472_OR_GREATER || NETSTANDARD2_0
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 #endif
 
 namespace Mscc.GenerativeAI
@@ -24,5 +25,15 @@ namespace Mscc.GenerativeAI
         /// Example: `fileSearchStores/my-file-search-store-123`
         /// </summary>
         public List<string>? FileSearchStoreNames { get; set; }
+
+        /// <summary>
+        /// Convenience property.
+        /// </summary>
+        [JsonIgnore]
+        public List<string>? Stores
+        {
+            get => FileSearchStoreNames;
+            set => FileSearchStoreNames = value;
+        }
     }
 }
