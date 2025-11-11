@@ -4214,16 +4214,13 @@ Answer:";
             var model = _googleAi.GenerativeModel(model: _model);
             if (string.IsNullOrEmpty(storeName))
             {
-                var fileSearchStoresModel = new FileSearchStoresModel(logger: Logger)
-                {
-                    ApiKey = _fixture.ApiKey
-                };
+                var fileSearchStoresModel = _googleAi.FileSearchStoresModel(Logger);
                 var store = fileSearchStoresModel.List().Result.FileSearchStores
                     .FirstOrDefault(s => s.ActiveDocumentsCount > 0);
                 storeName = store.Name;
             }
-
             storeName = storeName.SanitizeFileSearchStoreName();
+
             Tools tools = [new Tool()
             {
                 FileSearch = new FileSearch() { Stores = [storeName] }
