@@ -40,6 +40,7 @@
 
         <NoWarn>$(NoWarn);
             CA1002; <!-- Do not expose generic lists -->
+            CA1054; <!-- Change the type to System.Uri -->
             CA1510; <!-- ArgumentNullException.ThrowIfNull -->
             CA1724; <!-- Type names should not match namespaces -->
             CA2007; <!-- Do not directly await a Task -->
