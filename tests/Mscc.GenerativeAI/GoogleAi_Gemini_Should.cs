@@ -23,6 +23,7 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Threading;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -55,7 +56,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini25ProExperimental.SanitizeModelName());
+            model.Name.Should().Be(Model.Gemini25Pro.SanitizeModelName());
         }
 
         [Fact]
@@ -1382,7 +1383,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Who won Wimbledon this year?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel("gemini-1.5-pro-002",
+            var model = _googleAi.GenerativeModel(_model,
                 tools: [new Tool { GoogleSearchRetrieval = new() }]);
 
             // Act
@@ -1416,7 +1417,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Who won Wimbledon this year?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel("gemini-1.5-pro-002",
+            var model = _googleAi.GenerativeModel(_model,
                 tools:
                 [
                     new Tool
@@ -3205,6 +3206,7 @@ namespace Test.Mscc.GenerativeAI
             "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context")]
         [InlineData("Big_Buck_Bunny.mp4", "Video clip (CC BY 3.0) from https://peach.blender.org/download/")]
         [InlineData("GeminiDocumentProcessing.rtf", "Sample document in Rich Text Format")]
+        [InlineData("a11.txt", "Apollo 11 Flight Report")]
         public async Task Upload_File_Using_FileAPI(string filename, string displayName)
         {
             // Arrange
@@ -3213,7 +3215,7 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(_model);
 
             // Act
-            var response = await ((GoogleAI)genAi).UploadFile(filePath, displayName);
+            var response = await _googleAi.UploadFile(filePath, displayName);
 
             // Assert
             response.Should().NotBeNull();
@@ -3958,7 +3960,7 @@ Answer:";
 
             // Assert
             model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini25ProExperimental);
+            model.Name.Should().Be(Model.Gemini25Pro.SanitizeModelName());
         }
 
         [Fact]
@@ -4045,6 +4047,204 @@ Answer:";
                 yield return new[] { "What's the weather in the capital of the UK?" };
                 yield return new[] { "Send an email to gemini@example.com with the following subject 'Testing function calls' and describe Google Gemini's feature of Function Calling." };
             }
+        }
+
+        [Fact]
+        public async Task FileSearchStore_Create()
+        {
+            // Arrange
+            var model = new FileSearchStoresModel(logger: Logger)
+            {
+                ApiKey = _fixture.ApiKey
+            };
+            
+            // Act
+            var response = await model.Create();
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Name.Should().NotBeEmpty();
+            response.CreateTime.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
+            response.UpdateTime.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
+            _output.WriteLine($"Store name: {response.Name}");
+            _output.WriteLine($"  Created: {response.CreateTime} - Updated: {response.UpdateTime}");
+        }
+
+        [Fact]
+        public async Task FileSearchStore_List()
+        {
+            // Arrange
+            var model = new FileSearchStoresModel(logger: Logger)
+            {
+                ApiKey = _fixture.ApiKey
+            };
+            
+            // Act
+            var response = await model.List();
+
+            // Assert
+            response.Should().NotBeNull();
+            response.FileSearchStores.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.FileSearchStores.ForEach(store =>
+            {
+                store.Name.Should().NotBeEmpty();
+                _output.WriteLine($"Store name: {store.Name}");
+                _output.WriteLine($"  Created: {store.CreateTime} - Updated: {store.UpdateTime}");
+            });
+        }
+
+        [Fact]
+        public async Task FileSearchStore_Get()
+        {
+            // Arrange
+            var model = new FileSearchStoresModel(logger: Logger)
+            {
+                ApiKey = _fixture.ApiKey
+            };
+            var store = model.List().Result.FileSearchStores.FirstOrDefault();
+            
+            // Act
+            var response = await model.Get(store.Name);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Name.Should().NotBeEmpty();
+            // response.CreateTime.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
+            // response.UpdateTime.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
+            _output.WriteLine($"Store name: {response.Name}");
+            _output.WriteLine($"  Created: {response.CreateTime} - Updated: {response.UpdateTime}");
+        }
+
+        [Fact]
+        public async Task FileSearchStore_Delete()
+        {
+            // Arrange
+            var model = new FileSearchStoresModel(logger: Logger)
+            {
+                ApiKey = _fixture.ApiKey
+            };
+            var store = model.List().Result.FileSearchStores.FirstOrDefault();
+            
+            // Act
+            var response = await model.Delete(store.Name, force: true);
+
+            // Assert
+            response.Should().NotBeNull();
+        }
+
+        [Theory]
+        [InlineData("gemini.pdf",
+            "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context")]
+        [InlineData("a11.txt", "Apollo 11 Flight Report")]
+        public async Task FileSearchStore_Upload(string filename, string displayName)
+        {
+            // Arrange
+            var filePath = Path.Combine(Environment.CurrentDirectory, "payload", filename);
+            var model = _googleAi.FileSearchStoresModel(Logger);
+            var operations = _googleAi.OperationsModel(Logger);
+            var store = model.List().Result.FileSearchStores.FirstOrDefault();
+
+            // Act
+            var response = await model.Upload(store.Name, filePath, displayName);
+            while (!response.Done)
+            {
+                Thread.Sleep(5000);
+                response = await operations.Get<CustomLongRunningOperation, CustomLongRunningOperation>(response);
+            }
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Name.Should().NotBeEmpty();
+            _output.WriteLine($"Operation '{response?.Name}' Status: {response?.Done}");
+        }
+
+        [Fact]
+        public async Task FileSearchStore_ImportFile()
+        {
+            // Arrange
+            var files = await _googleAi.ListFiles();
+            var file = files.Files.FirstOrDefault(x => x.MimeType.StartsWith("text/"));
+            var model = _googleAi.FileSearchStoresModel(Logger);
+            var operations = _googleAi.OperationsModel(Logger);
+            var store = model.List().Result.FileSearchStores.FirstOrDefault();
+
+            // Act
+            var response = await model.ImportFile(store.Name, file.Name);
+            while (!response.Done)
+            {
+                Thread.Sleep(5000);
+                response = await operations.Get<Operation, Operation>(response);
+            }
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Name.Should().NotBeEmpty();
+            _output.WriteLine($"Operation '{response?.Name}' Status: {response?.Done}");
+        }
+
+        [Fact]
+        public async Task FileSearchStore_Documents_List()
+        {
+            // Arrange
+            var model = _googleAi.FileSearchStoresModel(Logger);
+            var store = model.List().Result.FileSearchStores.FirstOrDefault(s => 
+                s.ActiveDocumentsCount > 0);
+            
+            // Act
+            var response = await model.Documents.List(store.Name);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Documents.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.Documents.ForEach(document =>
+            {
+                document.Name.Should().NotBeEmpty();
+                _output.WriteLine($"Document: {document.Name}");
+                _output.WriteLine($"  Created: {document.CreateTime} - Updated: {document.UpdateTime}");
+            });
+        }
+
+        [Theory]
+        [InlineData("Can you tell me about Robert Graves", "")]
+        [InlineData("What were the first words on the moon?", "hhablrucai0e-cz7rit6wgzai")]
+        public async Task Generate_Content_using_FileSearch(string prompt, string storeName)
+        {
+            // Arrange
+            var genAi = new GoogleAI(_fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            if (string.IsNullOrEmpty(storeName))
+            {
+                var fileSearchStoresModel = new FileSearchStoresModel(logger: Logger)
+                {
+                    ApiKey = _fixture.ApiKey
+                };
+                var store = fileSearchStoresModel.List().Result.FileSearchStores
+                    .FirstOrDefault(s => s.ActiveDocumentsCount > 0);
+                storeName = store.Name;
+            }
+
+            storeName = storeName.SanitizeFileSearchStoreName();
+            Tools tools = [new Tool()
+            {
+                FileSearch = new FileSearch() { Stores = [storeName] }
+            }];
+
+            // Act
+            var response = await model.GenerateContent(prompt, tools: tools);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Candidates.Should().NotBeNull().And.HaveCount(1);
+            // response.Candidates![0].GroundingMetadata.Should().NotBeNull();
+            // response.Candidates![0].GroundingMetadata!.GroundingChunks.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            // response.Candidates![0].GroundingMetadata!.GroundingSupports.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Select(x => x.Text)
+                    .ToArray()));
+            // response.Candidates![0].GroundingMetadata!.GroundingChunks?
+            //     .ForEach(c =>
+            //         _output.WriteLine($"{c!.RetrievedContext!.Title} - {c!.RetrievedContext!.Text}"));
         }
     }
 }
