@@ -1,11 +1,5 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
+﻿using System;
 using System.IO;
-#endif
-#if NET9_0
-using System;
-using System.IO;
-#endif
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;

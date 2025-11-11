@@ -1,10 +1,8 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-#endif
 using mea = Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft

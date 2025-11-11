@@ -1,4 +1,3 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +7,6 @@ using System.Security.Authentication;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-#endif
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http.Headers;

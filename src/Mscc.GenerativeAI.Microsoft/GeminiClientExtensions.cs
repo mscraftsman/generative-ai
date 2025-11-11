@@ -1,6 +1,4 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
-#endif
 using mea = Microsoft.Extensions.AI;
 
 namespace Mscc.GenerativeAI.Microsoft

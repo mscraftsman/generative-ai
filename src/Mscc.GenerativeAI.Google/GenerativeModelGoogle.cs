@@ -1,9 +1,7 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-#endif
 using gauth = Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
 using System.Security.Cryptography.X509Certificates;

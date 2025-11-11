@@ -1,9 +1,7 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-#endif
 using System.Drawing;
 using mea = Microsoft.Extensions.AI;
 

@@ -1,8 +1,6 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 using System.Threading;
-#endif
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;

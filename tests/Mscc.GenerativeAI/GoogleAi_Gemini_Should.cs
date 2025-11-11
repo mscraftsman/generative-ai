@@ -1,29 +1,19 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-#endif
-#if NET9_0
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-#endif
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -2671,11 +2661,11 @@ namespace Test.Mscc.GenerativeAI
 
         class CalendarEvent
         {
-            [System.ComponentModel.Description("Event name")]
+            [Description("Event name")]
             public string Name { get; set; }
-            [System.ComponentModel.Description("Event date and time")]
+            [Description("Event date and time")]
             public DateTime Date { get; set; }
-            [System.ComponentModel.Description("List of participants during the event")]
+            [Description("List of participants during the event")]
             public List<string> Participants { get; set; }
         }
         

@@ -1,9 +1,7 @@
-﻿#if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-#endif
 using System.Globalization;
 
 namespace Mscc.GenerativeAI

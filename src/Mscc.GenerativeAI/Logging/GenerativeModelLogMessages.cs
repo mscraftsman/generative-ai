@@ -1,7 +1,5 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Net.Http;
-#endif
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 

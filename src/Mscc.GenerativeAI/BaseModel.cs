@@ -1,23 +1,21 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Security.Authentication;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Threading;
-#endif
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Authentication;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {

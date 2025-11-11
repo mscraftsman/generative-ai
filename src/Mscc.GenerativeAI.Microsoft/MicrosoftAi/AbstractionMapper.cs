@@ -1,9 +1,7 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-#endif
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;

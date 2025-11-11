@@ -1,11 +1,8 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-#endif
-using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace Mscc.GenerativeAI
 {
