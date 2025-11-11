@@ -86,30 +86,42 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.
+        /// Uploads data to a <see cref="FileSearchStore"/>, preprocesses and chunks before storing it in a <see cref="FileSearchStore"/> Document.
         /// </summary>
-        /// <returns></returns>
-        public async Task<CustomLongRunningOperation> UploadToFileSearchStore(string uri,
+        /// <param name="fileSearchStoreName">Name of the File Search Store.</param>
+        /// <param name="file">URI or path to the file to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An operation of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="file"/> is not found.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the MIME type of the URI is not supported by the API.</exception>
+        public async Task<CustomLongRunningOperation> UploadToFileSearchStore(
+            string file,
             string fileSearchStoreName,
             string? displayName = null,
             bool resumable = false,
-            RequestOptions? requestOptions = null, 
+            RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
-            if (!File.Exists(uri)) throw new FileNotFoundException(nameof(uri));
-            var fileInfo = new FileInfo(uri);
-            if (fileInfo.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(uri));
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            if (!File.Exists(file)) throw new FileNotFoundException(nameof(file));
+            var fileInfo = new FileInfo(file);
+            if (fileInfo.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(file));
             if (string.IsNullOrEmpty(fileSearchStoreName)) throw new ArgumentException(nameof(fileSearchStoreName));
             fileSearchStoreName = fileSearchStoreName.SanitizeFileSearchStoreName();
             
-            var mimeType = GenerativeAIExtensions.GetMimeType(uri);
+            var mimeType = GenerativeAIExtensions.GetMimeType(file);
             GenerativeAIExtensions.GuardMimeType(mimeType);
             
-            var totalBytes = new FileInfo(uri).Length;
             var request = new UploadToFileSearchStoreRequest()
             {
-                DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
+                DisplayName = displayName ?? Path.GetFileNameWithoutExtension(file),
                 MimeType = mimeType
             };
 
@@ -126,14 +138,14 @@ namespace Mscc.GenerativeAI
             });
             var json = Serialize(request);
 
-            using var fs = new FileStream(uri, FileMode.Open);
+            using var fs = new FileStream(file, FileMode.Open);
             var multipartContent = new MultipartContent("related");
             multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
             multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
             {
                 Headers = { 
                     ContentType = new MediaTypeHeaderValue(mimeType), 
-                    ContentLength = totalBytes 
+                    ContentLength = fileInfo.Length 
                 }
             });
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);

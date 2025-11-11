@@ -210,6 +210,35 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Returns an instance of <see cref="FileSearchStoresModel"/>.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <returns></returns>
+        public FileSearchStoresModel FileSearchStoresModel(ILogger? logger = null)
+        {
+            Guard();
+
+            var model = new FileSearchStoresModel(_httpClientFactory, logger: logger)
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return model;
+        }
+
+        public OperationsModel OperationsModel(ILogger? logger = null)
+        {
+            Guard();
+
+            var model = new OperationsModel(_httpClientFactory, logger: logger)
+            {
+                ApiKey = _apiKey, 
+                AccessToken = _apiKey is null ? _accessToken : null
+            };
+            return model;
+        }
+
+        /// <summary>
         /// Uploads a file to the File API backend.
         /// </summary>
         /// <param name="uri">URI or path to the file to upload.</param>

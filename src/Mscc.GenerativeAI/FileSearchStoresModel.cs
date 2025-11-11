@@ -7,13 +7,27 @@ using System.Threading.Tasks;
 #endif
 using Microsoft.Extensions.Logging;
 using System.Globalization;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace Mscc.GenerativeAI
 {
     public class FileSearchStoresModel : BaseModel
     {
+        private readonly DocumentsModel? _documents;
         internal override string Version => ApiVersion.V1Beta;
+        
+        public DocumentsModel Documents
+        {
+            get
+            {
+                var result = _documents ?? new DocumentsModel();
+                result.ApiKey = _apiKey;
+                result.AccessToken = _apiKey is null ? _accessToken : null;
+                return result;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSearchStoresModel"/> class.
@@ -25,7 +39,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public FileSearchStoresModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
+        public FileSearchStoresModel(IHttpClientFactory? httpClientFactory = null,
+            ILogger? logger = null) : base(httpClientFactory, logger)
+        {
+            _documents = new DocumentsModel(httpClientFactory, logger);
+        }
 
         /// <summary>
         /// Creates an empty <see cref="FileSearchStore"/>.
@@ -37,16 +55,27 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when the request is null.</exception>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<FileSearchStore> Create(FileSearchStore request,
+        public async Task<FileSearchStore> Create(FileSearchStore? request = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            if (request is null) throw new ArgumentNullException(nameof(request));
+            request ??= new FileSearchStore();
             
             var url = "{BaseUrlGoogleAi}/fileSearchStores";
             return await PostAsync<FileSearchStore, FileSearchStore>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
-        
+
+        public async Task<FileSearchStore> Create(string displayName,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new FileSearchStore
+            {
+                DisplayName = displayName
+            };
+            return await Create(request, requestOptions, cancellationToken);
+        }
+
         /// <summary>
         /// Deletes a <see cref="FileSearchStore"/>.
         /// </summary>
@@ -59,7 +88,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
         public async Task<string> Delete(string fileSearchStoreName,
-            bool force,
+            bool force = false,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
@@ -108,14 +137,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Lists all <see cref="FileSearchStore"/>s owned by the user.
         /// </summary>
-        /// <param name="pageSize"></param>
-        /// <param name="pageToken"></param>
+        /// <param name="pageSize">The maximum number of items to return (per page).</param>
+        /// <param name="pageToken">A page token, received from a previous List call. Provide the pageToken returned by one request as an argument to the next request to retrieve the next page.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException">Thrown when the functionality is not supported by the model.</exception>
         /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
-        public async Task<ListFileSearchStoresResponse> List(int? pageSize = 50,
+        public async Task<ListFileSearchStoresResponse> List(int? pageSize = 10,
             string? pageToken = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
@@ -133,26 +162,176 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<ListFileSearchStoresResponse>(response);
         }
-
+        
         /// <summary>
-        /// Imports a `File` from File Service to a `FileSearchStore`.
+        /// Imports a <see cref="FileResource"/> from File Service to a <see cref="FileSearchStore"/>.
         /// </summary>
+        /// <param name="name">Required. Immutable. The name of the <see cref="FileSearchStore"/> to import the file into. Example: `fileSearchStores/my-file-search-store-123`</param>
         /// <param name="request"></param>
-        /// <param name="fileSearchStoreName">Required. Immutable. The name of the `FileSearchStore` to import the file into. Example: `fileSearchStores/my-file-search-store-123`</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">Thrown when the <paramref name="fileSearchStoreName"/> is <see langword="null"/> or empty.</exception>
-        public async Task<Operation> ImportFile(ImportFileRequest request,
-            string fileSearchStoreName,
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is <see langword="null"/> or empty.</exception>
+        public async Task<Operation> ImportFile(string name,
+            ImportFileRequest request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrEmpty(fileSearchStoreName)) throw new ArgumentException("Value cannot be null or empty", nameof(fileSearchStoreName));
-            fileSearchStoreName = fileSearchStoreName.SanitizeFileSearchStoreName();
+            if (string.IsNullOrEmpty(name)) throw new ArgumentException("Value cannot be null or empty", nameof(name));
+            name = name.SanitizeFileSearchStoreName();
             
-            var url = "{BaseUrlGoogleAi}/{fileSearchStoresName}:importFile";
+            var url = $"{BaseUrlGoogleAi}/{name}:importFile";
             return await PostAsync<ImportFileRequest, Operation>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+        }
+
+
+        /// <summary>
+        /// Imports a <see cref="FileResource"/> from File Service to a <see cref="FileSearchStore"/>.
+        /// </summary>
+        /// <param name="name">Required. Immutable. The name of the <see cref="FileSearchStore"/> to import the file into. Example: `fileSearchStores/my-file-search-store-123`</param>
+        /// <param name="fileResource">The <see cref="FileResource"/> from the Files API.</param>
+        /// <param name="customMetadata">Custom metadata to be associated with the file.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is <see langword="null"/> or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="fileResource"/> is <see langword="null"/>.</exception>
+        public async Task<Operation> ImportFile(string name,
+            FileResource fileResource,
+            List<CustomMetadata>? customMetadata = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (fileResource is null) throw new ArgumentNullException(nameof(fileResource));
+            var request = new ImportFileRequest()
+            {
+                FileName = fileResource.Name,
+                CustomMetadata = customMetadata
+            };
+            return await ImportFile(name, request, requestOptions, cancellationToken);
+        }
+
+
+        /// <summary>
+        /// Imports a <see cref="FileResource"/> from File Service to a <see cref="FileSearchStore"/>.
+        /// </summary>
+        /// <param name="name">Required. Immutable. The name of the <see cref="FileSearchStore"/> to import the file into. Example: `fileSearchStores/my-file-search-store-123`</param>
+        /// <param name="filename">Name of the <see cref="FileResource"/>.</param>
+        /// <param name="customMetadata">Custom metadata to be associated with the file.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is <see langword="null"/> or empty.</exception>
+        /// <exception cref="ArgumentException">Thrown when the <paramref name="filename"/> is <see langword="null"/> or empty.</exception>
+        public async Task<Operation> ImportFile(string name,
+            string filename,
+            List<CustomMetadata>? customMetadata = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(filename)) throw new ArgumentException("Value cannot be null or empty", nameof(name));
+            var request = new ImportFileRequest()
+            {
+                FileName = filename,
+                CustomMetadata = customMetadata
+            };
+            return await ImportFile(name, request, requestOptions, cancellationToken);
+        }
+
+        /// <summary>
+        /// Uploads data to a <see cref="FileSearchStore"/>, preprocesses and chunks before storing it in a <see cref="FileSearchStore"/> Document.
+        /// </summary>
+        /// <param name="name">Name of the File Search Store.</param>
+        /// <param name="file">URI or path to the file to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="config">Configuration settings for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An operation of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="file"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="file"/> is not found.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the MIME type of the URI is not supported by the API.</exception>
+        public async Task<CustomLongRunningOperation> Upload(string name,
+            string file,
+            string? displayName,
+            UploadToFileSearchStoreRequest? config = null,
+            bool resumable = false,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            if (!File.Exists(file)) throw new FileNotFoundException(nameof(file));
+            var fileInfo = new FileInfo(file);
+            if (fileInfo.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(file));
+            if (string.IsNullOrEmpty(name)) throw new ArgumentException(nameof(name));
+            name = name.SanitizeFileSearchStoreName();
+            
+            var mimeType = GenerativeAIExtensions.GetMimeType(file);
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType);
+            
+            var request = config ?? new UploadToFileSearchStoreRequest();
+            request.DisplayName ??= displayName ?? Path.GetFileNameWithoutExtension(file);
+            request.MimeType ??= mimeType;
+
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{baseUri}/resumable/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            var json = Serialize(request);
+
+            using var fs = new FileStream(file, FileMode.Open);
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(fs, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = fileInfo.Length 
+                }
+            });
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = multipartContent;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<CustomLongRunningOperation>(response);
+        }
+
+        /// <summary>
+        /// Compatibility method with Google SDK. Use <see cref="Upload"/> for convenience.
+        /// </summary>
+        /// <param name="fileSearchStoreName">Name of the File Search Store.</param>
+        /// <param name="file">URI or path to the file to upload.</param>
+        /// <param name="config">Configuration settings for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        public async Task<CustomLongRunningOperation> UploadToFileSearchStore(
+            string fileSearchStoreName,
+            string file,
+            UploadToFileSearchStoreRequest? config = null,
+            bool resumable = false,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await Upload(fileSearchStoreName,
+                file,
+                null,
+                config,
+                resumable,
+                requestOptions,
+                cancellationToken);
         }
     }
 }
