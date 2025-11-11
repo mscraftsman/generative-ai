@@ -612,14 +612,21 @@ namespace Mscc.GenerativeAI
 
                 try
                 {
-                    using (var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken))
+                    // using (var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken))
+                    using var requestMessage = new HttpRequestMessage(request.Method, request.RequestUri)
                     {
-                        lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
-                        if (!statusCodes.Contains((int)lastResponse.StatusCode))
-                        {
-                            return lastResponse;
-                        }
+                        Content = request.Content,
+                        Version = request.Version
+                    };
+                    request.CopyHeadersPropertiesOptions(requestMessage);
+                    lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
+                    if (!statusCodes.Contains((int)lastResponse.StatusCode))
+                    {
+                        return lastResponse;
                     }
+                    
+                    var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
+                    Logger.LogRequestNotSuccessful(index, message);
                 }
                 catch (HttpRequestException e)
                 {
@@ -664,20 +671,26 @@ namespace Mscc.GenerativeAI
 
             if (req.Content != null)
             {
-                var ms = new MemoryStream();
-#if NET472_OR_GREATER || NETSTANDARD2_0
-                await req.Content.CopyToAsync(ms).ConfigureAwait(false);
-#else
-                await req.Content.CopyToAsync(ms, cancellationToken).ConfigureAwait(false);
-#endif
-                ms.Position = 0;
-                clone.Content = new StreamContent(ms);
+                clone.Content = req.Content switch
+                {
+                    StringContent stringContent => await stringContent.Clone(),
+                    StreamContent streamContent => await streamContent.Clone(),
+                    MultipartContent multipartContent => await multipartContent.Clone(),
+                    _ => clone.Content
+                };
 
                 if (req.Content.Headers != null)
                 {
-                    foreach (var h in req.Content.Headers)
+                    foreach (var header in req.Content.Headers)
                     {
-                        clone.Content.Headers.Add(h.Key, h.Value);
+                        if (header.Key.Equals("Content-Type", StringComparison.InvariantCultureIgnoreCase)
+                            || header.Key.Equals("Content-Length", StringComparison.InvariantCultureIgnoreCase)
+                            || header.Key.Equals("Content-Disposition", StringComparison.InvariantCultureIgnoreCase))
+                            // && clone.Headers.Contains("Content-Type"))
+                        {
+                            continue;
+                        }
+                        clone.Content.Headers.Add(header.Key, header.Value);
                     }
                 }
             }
@@ -689,9 +702,9 @@ namespace Mscc.GenerativeAI
             }
 #else
             clone.VersionPolicy = req.VersionPolicy;
-            foreach (var prop in req.Options)
+            foreach (var option in req.Options)
             {
-                clone.Options.Set(new HttpRequestOptionsKey<object?>(prop.Key), prop.Value);
+                clone.Options.Set(new HttpRequestOptionsKey<object?>(option.Key), option.Value);
             }
 #endif
 
