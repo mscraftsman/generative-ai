@@ -260,7 +260,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new(_httpClientFactory)
+            _mediaModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -291,7 +291,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new(_httpClientFactory)
+            _mediaModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -318,7 +318,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _mediaModel ??= new(_httpClientFactory)
+            _mediaModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -343,7 +343,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _filesModel ??= new(_httpClientFactory)
+            _filesModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -367,7 +367,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _filesModel ??= new(_httpClientFactory)
+            _filesModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -391,7 +391,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _filesModel ??= new(_httpClientFactory)
+            _filesModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
@@ -416,7 +416,7 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            _generatedFilesModel ??= new(_httpClientFactory)
+            _generatedFilesModel ??= new(_httpClientFactory, logger: Logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
