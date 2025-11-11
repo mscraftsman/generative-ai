@@ -15,8 +15,9 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Mscc.GenerativeAI
 {
@@ -427,7 +428,7 @@ namespace Mscc.GenerativeAI
         /// <returns>The access token.</returns>
         private string GetAccessTokenFromAdc()
         {
-            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token").TrimEnd();
             }
