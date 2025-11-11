@@ -582,6 +582,16 @@ namespace Mscc.GenerativeAI
             var delay = retry.Initial;
             var stopwatch = Stopwatch.StartNew();
             HttpResponseMessage? lastResponse = null;
+            
+            // Buffer the content to make it explicitly reusable
+            if (request.Content != null)
+            {
+#if NET9_0_OR_GREATER
+                await request.Content.LoadIntoBufferAsync(cancellationToken);
+#else
+                await request.Content.LoadIntoBufferAsync();
+#endif
+            }
 
             for (var index = 1; index <= retry.Maximum; index++)
             {
