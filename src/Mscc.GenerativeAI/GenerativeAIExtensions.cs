@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 #endif
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -111,8 +112,8 @@ namespace Mscc.GenerativeAI
         /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
         public static void GuardMimeType(string mimeType)
         {
-            string[] allowedMimeTypes =
-            [
+            ReadOnlyCollection<string> allowedMimeTypes = new List<string>
+            {
                 "image/jpeg", "image/png", "image/heif", "image/heic", "image/webp",
                 "audio/wav", "audio/mp3", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac",
                 "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm",
@@ -120,9 +121,242 @@ namespace Mscc.GenerativeAI
                 "application/pdf", "application/x-javascript", "text/javascript", "application/x-python",
                 "application/rtf",
                 "text/x-python", "text/plain", "text/html", "text/css", "text/md", "text/csv", "text/xml", "text/rtf"
-            ];
+            }.AsReadOnly();
 
-            if (!allowedMimeTypes.Contains(mimeType.ToLowerInvariant()))
+            if (!allowedMimeTypes.Contains(mimeType, StringComparer.OrdinalIgnoreCase))
+                throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
+        }
+
+        /// <summary>
+        /// A comprehensive and complete list of MIME types supported by the 
+        /// Gemini API's File Search feature. This list has been verified to
+        /// include all text/x-* types.
+        /// Source: https://ai.google.dev/gemini-api/docs/file-search#supported-files
+        /// </summary>
+        public static void GuardMimeTypeFileSearchStore(string mimeType)
+        {
+            ReadOnlyCollection<string> allowedMimeTypes = new List<string>
+            {
+                // --- Application file types ---
+                "application/dart",
+                "application/ecmascript",
+                "application/json",
+                "application/ms-java",
+                "application/msword",
+                "application/pdf",
+                "application/sql",
+                "application/typescript",
+                "application/vnd.curl",
+                "application/vnd.dart",
+                "application/vnd.ibm.secure-container",
+                "application/vnd.jupyter",
+                "application/vnd.ms-excel",
+                "application/vnd.oasis.opendocument.text",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.template",
+                "application/x-csh",
+                "application/x-hwp",
+                "application/x-hwp-v5",
+                "application/x-latex",
+                "application/x-php",
+                "application/x-powershell",
+                "application/x-sh",
+                "application/x-shellscript",
+                "application/x-tex",
+                "application/x-zsh",
+                "application/xml",
+                "application/zip",
+
+                // --- Text file types (Complete) ---
+                "text/1d-interleaved-parityfec",
+                "text/RED",
+                "text/SGML",
+                "text/cache-manifest",
+                "text/calendar",
+                "text/cql",
+                "text/cql-extension",
+                "text/cql-identifier",
+                "text/css",
+                "text/csv",
+                "text/csv-schema",
+                "text/dns",
+                "text/encaprtp",
+                "text/enriched",
+                "text/example",
+                "text/fhirpath",
+                "text/flexfec",
+                "text/fwdred",
+                "text/gff3",
+                "text/grammar-ref-list",
+                "text/hl7v2",
+                "text/html",
+                "text/javascript",
+                "text/jcr-cnd",
+                "text/jsx",
+                "text/markdown",
+                "text/mizar",
+                "text/n3",
+                "text/parameters",
+                "text/parityfec",
+                "text/php",
+                "text/plain",
+                "text/provenance-notation",
+                "text/prs.fallenstein.rst",
+                "text/prs.lines.tag",
+                "text/prs.prop.logic",
+                "text/raptorfec",
+                "text/rfc822-headers",
+                "text/rtf",
+                "text/rtp-enc-aescm128",
+                "text/rtploopback",
+                "text/rtx",
+                "text/sgml",
+                "text/shaclc",
+                "text/shex",
+                "text/spdx",
+                "text/strings",
+                "text/t140",
+                "text/tab-separated-values",
+                "text/texmacs",
+                "text/troff",
+                "text/tsv",
+                "text/tsx",
+                "text/turtle",
+                "text/ulpfec",
+                "text/uri-list",
+                "text/vcard",
+                "text/vnd.DMClientScript",
+                "text/vnd.IPTC.NITF",
+                "text/vnd.IPTC.NewsML",
+                "text/vnd.a",
+                "text/vnd.abc",
+                "text/vnd.ascii-art",
+                "text/vnd.curl",
+                "text/vnd.debian.copyright",
+                "text/vnd.dvb.subtitle",
+                "text/vnd.esmertec.theme-descriptor",
+                "text/vnd.exchangeable",
+                "text/vnd.familysearch.gedcom",
+                "text/vnd.ficlab.flt",
+                "text/vnd.fly",
+                "text/vnd.fmi.flexstor",
+                "text/vnd.gml",
+                "text/vnd.graphviz",
+                "text/vnd.hans",
+                "text/vnd.hgl",
+                "text/vnd.in3d.3dml",
+                "text/vnd.in3d.spot",
+                "text/vnd.latex-z",
+                "text/vnd.motorola.reflex",
+                "text/vnd.ms-mediapackage",
+                "text/vnd.net2phone.commcenter.command",
+                "text/vnd.radisys.msml-basic-layout",
+                "text/vnd.senx.warpscript",
+                "text/vnd.sosi",
+                "text/vnd.sun.j2me.app-descriptor",
+                "text/vnd.trolltech.linguist",
+                "text/vnd.wap.si",
+                "text/vnd.wap.sl",
+                "text/vnd.wap.wml",
+                "text/vnd.wap.wmlscript",
+                "text/vtt",
+                "text/wgsl",
+                "text/x-asm",
+                "text/x-bibtex",
+                "text/x-boo",
+                "text/x-c",
+                "text/x-c++hdr",
+                "text/x-c++src",
+                "text/x-cassandra",
+                "text/x-chdr",
+                "text/x-coffeescript",
+                "text/x-component",
+                "text/x-csh",
+                "text/x-csharp",
+                "text/x-csrc",
+                "text/x-cuda",
+                "text/x-d",
+                "text/x-diff",
+                "text/x-dsrc",
+                "text/x-emacs-lisp",
+                "text/x-erlang",
+                "text/x-fortran",
+                "text/x-gss",
+                "text/x-go",
+                "text/x-golo",
+                "text/x-groovy",
+                "text/x-haskell",
+                "text/x-handlebars-template",
+                "text/x-haxe",
+                "text/x-hh",
+                "text/x-idl",
+                "text/x-inform",
+                "text/x-ini",
+                "text/x-java",
+                "text/x-java-source",
+                "text/x-jruby",
+                "text/x-jsex",
+                "text/x-kotlin",
+                "text/x-less",
+                "text/x-lilypond",
+                "text/x-lisp",
+                "text/x-livescript",
+                "text/x-log",
+                "text/x-lua",
+                "text/x-lyx",
+                "text/x-makefile",
+                "text/x-markdown",
+                "text/x-mathematica",
+                "text/x-matlab",
+                "text/x-nim",
+                "text/x-nix",
+                "text/x-objcsrc",
+                "text/x-ocaml",
+                "text/x-opencl-src",
+                "text/x-pascal",
+                "text/x-perl",
+                "text/x-processing",
+                "text/x-prolog",
+                "text/x-properties",
+                "text/x-protobuf",
+                "text/x-puppet",
+                "text/x-python",
+                "text/x-qml",
+                "text/x-r",
+                "text/x-r-doc",
+                "text/x-r-source",
+                "text/x-ruby",
+                "text/x-rustsrc",
+                "text/x-sass",
+                "text/x-scala",
+                "text/x-scheme",
+                "text/x-scss",
+                "text/x-sfd",
+                "text/x-sh",
+                "text/x-smalltalk",
+                "text/x-sql",
+                "text/x-stylus",
+                "text/x-swift",
+                "text/x-systemd-unit",
+                "text/x-tcl",
+                "text/x-tex",
+                "text/x-toml",
+                "text/x-typescript",
+                "text/x-uri",
+                "text/x-uuencode",
+                "text/x-vala",
+                "text/x-vcalendar",
+                "text/x-vcard",
+                "text/x-verilog",
+                "text/x-vhdl",
+                "text/x-web-config",
+                "text/x-yaml",
+                "text/yaml"
+            }.AsReadOnly();
+
+            if (!allowedMimeTypes.Contains(mimeType, StringComparer.OrdinalIgnoreCase))
                 throw new NotSupportedException($"The mime type `{mimeType}` is not supported by the API.");
         }
 
@@ -134,19 +368,19 @@ namespace Mscc.GenerativeAI
         public static void GuardSupportedLanguage(this string language)
         {
             string[] supportedLanguages = { "en", "de", "fr", "it", "es" };
-            if (!supportedLanguages.Contains(language.ToLowerInvariant()))
+            if (!supportedLanguages.Contains(language, StringComparer.OrdinalIgnoreCase))
                 throw new NotSupportedException($"The language `{language}` is not supported by the API.");
         }
 
         public static string SanitizeModelName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
-            
+
             if (value.Contains("..") || value.Contains("?") || value.Contains("&"))
             {
                 throw new ArgumentException($"invalid model parameter.");
             }
-            
+
             if (value.StartsWith("tuned", StringComparison.InvariantCultureIgnoreCase))
             {
                 return value;
@@ -239,6 +473,30 @@ namespace Mscc.GenerativeAI
             if (!value.StartsWith("fileSearchStore", StringComparison.InvariantCultureIgnoreCase))
             {
                 return $"fileSearchStores/{value}";
+            }
+
+            return value;
+        }
+
+        public static string SanitizeCorporaName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (!value.StartsWith("corpora", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"corpora/{value}";
+            }
+
+            return value;
+        }
+
+        public static string SanitizeDocumentName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+
+            if (!value.StartsWith("document", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return $"documents/{value}";
             }
 
             return value;
@@ -423,8 +681,8 @@ namespace Mscc.GenerativeAI
         /// <returns>The HTTP response message if the call is successful.</returns>
         /// <exception cref="HttpRequestException"></exception>
         internal static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response,
-            string errorMessage, 
-            bool includeResponseContent = true, 
+            string errorMessage,
+            bool includeResponseContent = true,
             CancellationToken cancellationToken = default)
         {
             if (response.IsSuccessStatusCode) return response;
@@ -457,7 +715,7 @@ namespace Mscc.GenerativeAI
         /// <param name="response">The HTTP response.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="GeminiApiException">The HTTP response was not successful.</exception>
-        public static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response, 
+        public static async Task<HttpResponseMessage> EnsureSuccessAsync(this HttpResponseMessage response,
             CancellationToken cancellationToken = default)
         {
             if (response.IsSuccessStatusCode) return response;
@@ -471,6 +729,7 @@ namespace Mscc.GenerativeAI
                 message = await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
             }
+
             throw new GeminiApiException($"The request was not successful. Last API response:\n{message}", response);
         }
 
@@ -483,13 +742,14 @@ namespace Mscc.GenerativeAI
             CancellationToken cancellationToken = default)
         {
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-            using var response = await Client.SendAsync(httpRequest, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            using var response = await Client.SendAsync(httpRequest, HttpCompletionOption.ResponseContentRead,
+                cancellationToken);
             await response.EnsureSuccessAsync($"Download of '{url}' failed", cancellationToken: cancellationToken);
 #if NET472_OR_GREATER || NETSTANDARD2_0
             byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
 #else
             byte[] imageBytes = await response.Content.ReadAsByteArrayAsync(cancellationToken);
-#endif            
+#endif
             return imageBytes;
         }
 
