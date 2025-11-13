@@ -10,9 +10,8 @@ body:
   - type: dropdown
     id: packageId
     attributes:
-      label: Nuget Package
-      description: Which package are you using?
-      description: Which package is bothering you?
+      label: NuGet Package
+      description: Which NuGet package is bothering you?
       options:
         - Mscc.GenerativeAI
         - Mscc.GenerativeAI.Google
