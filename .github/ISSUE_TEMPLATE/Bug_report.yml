@@ -5,8 +5,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Mistakes can happen... we are all humans and things could have overlooked.
-        Tell us about anything you've noticed today. We appreciate your feedback!
+        Mistakes can happen... we are all humans and things could have been overlooked.
+        Tell us what you've noticed today. We appreciate your feedback!
   - type: dropdown
     id: packageId
     attributes:
