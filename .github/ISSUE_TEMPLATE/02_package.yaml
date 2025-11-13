@@ -1,0 +1,34 @@
+name: Package Feedback
+description: Let us know which package is bothering you.
+title: "[PackageId]: "
+labels: [nuget]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Mistakes can happen... we are all humans and things could have overlooked.
+        Tell us about anythinh you've noticed today.
+  - type: input
+    id: packageId
+    attributes:
+      label: Package Id
+      description: Which package is bothering you?
+      placeholder: Mscc.GenerativeAI
+    validation:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package Version(s)
+      description: List the version(s) you have struggle with. Use `comma` to separate.
+      placeholder: 2.8.15, 2.9.0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Additional details
+      description: What's bothering you? Please be informative and add some detailed code snippets that we could use to create test cases or a sample application to replicate the issue.
+      placeholder: Description
+    validations:
+      required: true
