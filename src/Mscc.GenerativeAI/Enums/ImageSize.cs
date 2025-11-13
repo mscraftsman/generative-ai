@@ -20,6 +20,15 @@ namespace Mscc.GenerativeAI
         Size1792X1024,
         [EnumMember(Value = "1024x1792")]
         [JsonStringEnumMemberName("1024x1792")]
-        Size1024X1792
+        Size1024X1792,
+        [EnumMember(Value = "1K")]
+        [JsonStringEnumMemberName("1K")]
+        Size1K,
+        [EnumMember(Value = "2K")]
+        [JsonStringEnumMemberName("2K")]
+        Size2K,
+        [EnumMember(Value = "4K")]
+        [JsonStringEnumMemberName("4K")]
+        Size4K
     }
 }
