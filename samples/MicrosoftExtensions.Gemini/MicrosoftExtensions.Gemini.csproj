@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageVersion Include="Mscc.GenerativeAI.Microsoft" />
-        <PackageVersion Include="Microsoft.Extensions.AI.Abstractions" />
+        <PackageReference Include="Mscc.GenerativeAI.Microsoft" />
+        <PackageReference Include="Microsoft.Extensions.AI.Abstractions" />
     </ItemGroup>
 
 <!--    <ItemGroup>-->

@@ -9,13 +9,13 @@
     </PropertyGroup>
  
    <ItemGroup>
-      <PackageVersion Include="Microsoft.Extensions.Configuration" />
-      <PackageVersion Include="Microsoft.Extensions.Configuration.Json" />
-      <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
-      <PackageVersion Include="Microsoft.SemanticKernel.Abstractions" />
-      <PackageVersion Include="Microsoft.SemanticKernel.Connectors.Google" />
-      <PackageVersion Include="Microsoft.SemanticKernel.Connectors.OpenAI" />
-      <PackageVersion Include="Microsoft.SemanticKernel.Plugins.Web" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+      <PackageReference Include="Microsoft.SemanticKernel.Abstractions" />
+      <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" />
+      <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" />
+      <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,12 +25,6 @@
       <None Update="appsettings.user.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Configuration">
-        <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.extensions.configuration\8.0.0\lib\net8.0\Microsoft.Extensions.Configuration.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

@@ -16,7 +16,7 @@ if (string.IsNullOrEmpty(apiKey))
 var googleAi = new GoogleAI(apiKey: apiKey, logger: logger);
 var model = googleAi.GenerativeModel(Model.Gemini20Flash);
 
-List<Tool> tools =
+Tools tools =
 [
     new Tool()
     {
