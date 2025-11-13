@@ -14,13 +14,12 @@ body:
       label: Nuget Package
       description: Which package are you using?
       description: Which package is bothering you?
-      placeholder: Mscc.GenerativeAI
       options:
         - Mscc.GenerativeAI
         - Mscc.GenerativeAI.Google
         - Mscc.GenerativeAI.Microsoft
         - Mscc.GenerativeAI.Web
-    validation:
+    validations:
       required: true
   - type: input
     id: version
