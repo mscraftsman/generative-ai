@@ -49,6 +49,7 @@ body:
     id: expectation
     attributes:
       label: What did you expect?
+      description: Give us a clear and concise description of what you expected to happen. Inspire us to solve your problem.
     validations:
       required: true
   - type: checkboxes
