@@ -7,13 +7,19 @@ body:
     attributes:
       value: |
         Mistakes can happen... we are all humans and things could have overlooked.
-        Tell us about anythinh you've noticed today.
-  - type: input
+        Tell us about anything you've noticed today. We appreciate your feedback!
+  - type: dropdown
     id: packageId
     attributes:
-      label: Package Id
+      label: Nuget Package
+      description: Which package are you using?
       description: Which package is bothering you?
       placeholder: Mscc.GenerativeAI
+      options:
+        - Mscc.GenerativeAI
+        - Mscc.GenerativeAI.Google
+        - Mscc.GenerativeAI.Microsoft
+        - Mscc.GenerativeAI.Web
     validation:
       required: true
   - type: input
@@ -24,6 +30,16 @@ body:
       placeholder: 2.8.15, 2.9.0
     validations:
       required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - Mac
+        - Linux
+    validations:
+      required: false
   - type: textarea
     id: description
     attributes:
@@ -32,3 +48,11 @@ body:
       placeholder: Description
     validations:
       required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct & Contributor Guidelines
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/mscraftsman/generative-ai/blob/master/CODE_OF_CONDUCT.md) and [Contribution Guidelines](https://github.com/mscraftsman/generative-ai/blob/master/CONTRIBUTING.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct and Contribution Guidelines.
+          required: true
