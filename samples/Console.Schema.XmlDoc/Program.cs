@@ -1,21 +1,27 @@
+using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
-using Mscc.GenerativeAI.Google;
-using System.Xml.Linq;
+
+namespace Console.Schema.XmlDoc;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
+        using ILoggerFactory factory = LoggerFactory.Create(builder => builder
+            .SetMinimumLevel(LogLevel.Debug)
+            .AddConsole());
+        ILogger logger = factory.CreateLogger("Program");
+
         // Get the API key from the environment variable
         var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
         if (string.IsNullOrEmpty(apiKey))
         {
-            Console.WriteLine("Please set the GOOGLE_API_KEY environment variable.");
+            System.Console.WriteLine("Please set the GOOGLE_API_KEY environment variable.");
             return;
         }
 
         // Create a new generative model
-        var genai = new GoogleAI(apiKey);
+        var genai = new GoogleAI(apiKey, logger: logger);
         var model = genai.GenerativeModel(Model.GeminiPro);
 
         // Define the prompt
@@ -25,7 +31,7 @@ public class Program
         var generationConfig = new GenerationConfig()
         {
             ResponseMimeType = "application/json",
-            ResponseSchema = Schema.FromType<ReviewAnalysisOutputModel>(GetXmlDocumentationPath())
+            ResponseSchema = Mscc.GenerativeAI.Schema.FromType<ReviewAnalysisOutputModel>(GetXmlDocumentationPath())
         };
 
         // Create the request
@@ -35,7 +41,7 @@ public class Program
         var result = await model.GenerateContent(request);
 
         // Print the result
-        Console.WriteLine(result.Text);
+        System.Console.WriteLine(result.Text);
     }
 
     /// <summary>
