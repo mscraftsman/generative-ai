@@ -2,18 +2,28 @@ name: MsccGenerativeAI
 
 on:
   push:
+    branches:
+      - main
     paths:
       - '**'
+      - '.github/workflows/dotnetcore.yml'
       - '!**.md'
       - '!docs/**'
       - '!samples/**'
       - '!tests/**'
       - '!LICENSE'
-    branches:
-      - main
   pull_request:
     branches:
       - main
+    paths:
+      - '**'
+      - '.github/workflows/dotnetcore.yml'
+      - '!**.md'
+      - '!docs/**'
+      - '!samples/**'
+      - '!tests/**'
+      - '!LICENSE'
+  workflow_dispatch: 
 
 jobs:
   build_and_push_main:
