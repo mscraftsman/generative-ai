@@ -1,6 +1,5 @@
 name: Package Feedback
 description: Let us know which package is bothering you.
-title: "[PackageId]: "
 labels: [nuget]
 body:
   - type: markdown
