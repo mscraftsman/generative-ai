@@ -42,9 +42,15 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Additional details
+      label: A clear and concise description of the bug.
       description: What's bothering you? Please be informative and add some detailed code snippets that we could use to create test cases or a sample application to replicate the issue.
       placeholder: Description
+    validations:
+      required: true
+  - type: textarea
+    id: expectation
+    attributes:
+      label: What did you expect?
     validations:
       required: true
   - type: checkboxes
