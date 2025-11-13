@@ -1,5 +1,7 @@
 {
     "editor.formatOnType": true,
     "coverage-gutters.showGutterCoverage": false,
-    "coverage-gutters.showLineCoverage": true
+    "coverage-gutters.showLineCoverage": true,
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }
