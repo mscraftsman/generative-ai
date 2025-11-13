@@ -628,6 +628,10 @@ If you use [Mscc.GenerativeAI](https://github.com/mscraftsman/generative-ai) in 
 }
 ```
 
+## Sponsorship 💲
+
+If you found these libraries helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/jochenkirstaetter).
+
 --- 
 
 Created by [Jochen Kirstätter](https://jochen.kirstaetter.name/).
