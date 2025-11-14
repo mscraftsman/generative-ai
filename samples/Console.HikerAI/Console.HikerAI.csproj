@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="Microsoft.Extensions.Configuration" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" />
-    <PackageVersion Include="Mscc.GenerativeAI" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="Mscc.GenerativeAI" />
   </ItemGroup>
 
 </Project>

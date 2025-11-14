@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Mscc.GenerativeAI" Version="2.6.1" />
+      <PackageReference Include="Mscc.GenerativeAI" />
     </ItemGroup>
 
 </Project>

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.AI.Chat;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
 
@@ -34,7 +36,7 @@ class Program
             Tools = [getUserInformationTool]
         };
 
-        var chatHistory = new List<ChatMessage>();
+        var chatHistory = new List<Microsoft.Extensions.AI.ChatMessage>();
 
         while (true)
         {
@@ -44,19 +46,19 @@ class Program
             if (String.IsNullOrEmpty(prompt))
                 return;
 
-            var userChatMessage = new ChatMessage(ChatRole.User, prompt);
+            var userChatMessage = new Microsoft.Extensions.AI.ChatMessage(ChatRole.User, prompt);
             chatHistory.Add(userChatMessage);
 
             var response = await chatClient.GetResponseAsync(chatHistory, options);
-            var responseMessage = response.GetSingleResponseMessage();
+            var responseMessage = response.Messages.First();
             chatHistory.Add(responseMessage);
 
-            if (responseMessage.Content is string content)
+            if (responseMessage.Text is string content)
             {
                 System.Console.WriteLine($"Assistant > {content}");
             }
 
-            if (responseMessage.FinishReason == ChatFinishReason.ToolCalls)
+            if (response.FinishReason == ChatFinishReason.ToolCalls)
             {
                 System.Console.WriteLine("Assistant > Tool call requested.");
                 // In a real application, you would execute the tool and send the result back to the model.

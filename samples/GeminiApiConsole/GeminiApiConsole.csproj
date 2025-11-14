@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageVersion Include="Mscc.GenerativeAI" />
-      <PackageVersion Include="Spectre.Console" />
-      <PackageVersion Include="Spectre.Console.ImageSharp" />
+      <PackageReference Include="Mscc.GenerativeAI" />
+      <PackageReference Include="Spectre.Console" />
+      <PackageReference Include="Spectre.Console.ImageSharp" />
     </ItemGroup>
 
 </Project>
