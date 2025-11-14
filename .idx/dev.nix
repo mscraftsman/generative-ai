@@ -7,6 +7,7 @@
   packages = [
     pkgs.dotnetCorePackages.sdk_10_0
     pkgs.dotnet-sdk_10
+    pkgs.gnumake
   ];
 
   # Sets environment variables in the workspace
@@ -14,6 +15,7 @@
     DOTNET_NOLOGO = "true";
     DOTNET_CLI_TELEMETRY_OPTOUT = "true";
     DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true";
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT = "1";
   };
 
   # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
