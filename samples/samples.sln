@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.2.0
+VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console.Minimal.Prompt", "Console.Minimal.Prompt\Console.Minimal.Prompt.csproj", "{C215A856-B604-4B61-9932-812F9C69D883}"
 EndProject
@@ -18,8 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console.HikerAI", "Console.HikerAI\Console.HikerAI.csproj", "{EB19E607-4C4D-4B04-A2B3-DDD5A3833019}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeminiApiConsole", "GeminiApiConsole\GeminiApiConsole.csproj", "{EC6B67F6-37F0-418E-A3FE-B2E4FC65241F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mscc.GenerativeAI.Microsoft", "..\src\Mscc.GenerativeAI.Microsoft\Mscc.GenerativeAI.Microsoft.csproj", "{4C59046E-DB37-4FDF-858E-8896F725343A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftExtensions.Gemini", "MicrosoftExtensions.Gemini\MicrosoftExtensions.Gemini.csproj", "{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}"
 EndProject
@@ -153,18 +151,6 @@ Global
 		{EC6B67F6-37F0-418E-A3FE-B2E4FC65241F}.Release|x64.Build.0 = Release|Any CPU
 		{EC6B67F6-37F0-418E-A3FE-B2E4FC65241F}.Release|x86.ActiveCfg = Release|Any CPU
 		{EC6B67F6-37F0-418E-A3FE-B2E4FC65241F}.Release|x86.Build.0 = Release|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Debug|x64.Build.0 = Debug|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Debug|x86.Build.0 = Debug|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Release|x64.ActiveCfg = Release|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Release|x64.Build.0 = Release|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Release|x86.ActiveCfg = Release|Any CPU
-		{4C59046E-DB37-4FDF-858E-8896F725343A}.Release|x86.Build.0 = Release|Any CPU
 		{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5EA3C55-64E4-45B8-AB92-DE3E3509BFB6}.Debug|x64.ActiveCfg = Debug|Any CPU
