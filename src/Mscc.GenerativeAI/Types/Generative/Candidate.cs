@@ -44,10 +44,6 @@ namespace Mscc.GenerativeAI
         public CitationMetadata? CitationMetadata { get; set; }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public FunctionCall? FunctionCall { get; set; }
-
         /// Output only. Metadata returned when grounding is enabled. It contains the sources used to
         /// ground the generated content.
         /// </summary>

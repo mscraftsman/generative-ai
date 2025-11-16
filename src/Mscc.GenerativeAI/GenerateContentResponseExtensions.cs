@@ -62,7 +62,6 @@ namespace Mscc.GenerativeAI
                     FinishMessage         = lastCandidateWithMetadata.FinishMessage,
                     SafetyRatings         = lastCandidateWithMetadata.SafetyRatings,
                     CitationMetadata      = lastCandidateWithMetadata.CitationMetadata,
-                    FunctionCall          = lastCandidateWithMetadata.FunctionCall,
                     GroundingMetadata     = lastCandidateWithMetadata.GroundingMetadata,
                     TokenCount            = lastCandidateWithMetadata.TokenCount,
                     GroundingAttributions = lastCandidateWithMetadata.GroundingAttributions,
