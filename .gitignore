@@ -418,6 +418,7 @@ nCrunchTemp_*
 *.p12
 *.DotSettings
 **/.venv/
+**/.stable/
 **/token.json
 
 # Auto-generated documentation
