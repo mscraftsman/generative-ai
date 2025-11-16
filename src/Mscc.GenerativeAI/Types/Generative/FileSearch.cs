@@ -23,6 +23,14 @@ namespace Mscc.GenerativeAI
         /// Example: `fileSearchStores/my-file-search-store-123`
         /// </summary>
         public List<string>? FileSearchStoreNames { get; set; }
+        /// <summary>
+        /// Optional. Metadata filter to apply to the semantic retrieval documents and chunks.
+        /// </summary>
+        public string? MetadataFilter { get; set; }
+        // /// <summary>
+        // /// Optional. The number of semantic retrieval chunks to retrieve.
+        // /// </summary>
+        // public float? TopK { get; set; } = default;
 
         /// <summary>
         /// Convenience property.
@@ -32,6 +40,15 @@ namespace Mscc.GenerativeAI
         {
             get => FileSearchStoreNames;
             set => FileSearchStoreNames = value;
+        }
+        /// <summary>
+        /// Convenience property.
+        /// </summary>
+        [JsonIgnore]
+        public string? Filter
+        {
+            get => MetadataFilter;
+            set => MetadataFilter = value;
         }
     }
 }
