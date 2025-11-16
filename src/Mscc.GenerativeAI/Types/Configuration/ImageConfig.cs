@@ -26,5 +26,15 @@ namespace Mscc.GenerativeAI
         /// Compression quality of the generated image (for ``image/jpeg`` only).
         /// </summary>
         public int? OutputCompressionQuality { get; set; }
+        /// <summary>
+        /// Optional. The image output format for generated images. This field is not supported in
+        /// Gemini API.
+        /// </summary>
+        public ImageOutputOptions? ImageOutputOptions { get; set; }
+        /// <summary>
+        /// Optional. Controls whether the model can generate people. This field is not supported in
+        /// Gemini API.
+        /// </summary>
+        public PersonGeneration? PersonGeneration { get; set; }
     }
 }
