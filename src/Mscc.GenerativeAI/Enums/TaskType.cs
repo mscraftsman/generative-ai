@@ -10,9 +10,15 @@ namespace Mscc.GenerativeAI
     public enum TaskType
     {
         /// <summary>
-        /// Unset value, which will default to one of the other enum values.
+        /// Unset value, which will default to one of the other enum values. This enum value is not
+        /// supported in Vertex AI.
         /// </summary>
-        Unspecified = 0,
+        TaskTypeUnspecified = 0,
+        /// <summary>
+        /// Unset value, which will default to one of the other enum values. This enum value is not
+        /// supported in Gemini API.
+        /// </summary>
+        Unspecified,
         /// <summary>
         /// Specifies the given text is a query in a search/retrieval setting.
         /// </summary>
