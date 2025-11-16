@@ -180,5 +180,19 @@ namespace Mscc.GenerativeAI
         /// empathetic response. This field is not supported in Gemini API.
         /// </summary>
         public bool? EnableAffectiveDialog { get; set; }
+        /// <summary>
+        /// Optional. Config for model selection.
+        /// </summary>
+        public ModelSelectionConfig? ModelSelectionConfig { get; set; }
+        /// <summary>
+        /// Optional. The number of candidate responses to generate. A higher `candidate_count` can
+        /// provide more options to choose from, but it also consumes more resources. This can be useful
+        /// for generating a variety of responses and selecting the best one.
+        /// </summary>
+        public bool? AudioTimestamp { get; set; }
+        /// <summary>
+        /// Optional. Routing configuration. This field is not supported in Gemini API.
+        /// </summary>
+        public RoutingConfig? RoutingConfig { get; set; }
     }
 }
