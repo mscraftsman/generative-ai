@@ -8,27 +8,27 @@ namespace Mscc.GenerativeAI
     public class CitationSource
     {
         /// <summary>
-        /// Output only. Start index into the content.
+        /// Output only. The start index of the citation in the content.
         /// </summary>
         public int? StartIndex { get; internal set; }
         /// <summary>
-        /// Output only. End index into the content.
+        /// Output only. The end index of the citation in the content.
         /// </summary>
         public int? EndIndex { get; internal set; }
         /// <summary>
-        /// Output only. Url reference of the attribution.
+        /// Output only. The URI of the source of the citation.
         /// </summary>
         public string? Uri { get; internal set; }
         /// <summary>
-        /// Output only. Title of the attribution.
+        /// Output only. The title of the source of the citation.
         /// </summary>
         public string? Title { get; internal set; }
         /// <summary>
-        /// Output only. License of the attribution.
+        /// Output only. The license of the source of the citation.
         /// </summary>
         public string? License { get; internal set; }
         /// <summary>
-        /// Output only. Publication date of the attribution.
+        /// Output only. The publication date of the source of the citation.
         /// </summary>
         public DateTimeOffset? PublicationDate { get; internal set; }
     }

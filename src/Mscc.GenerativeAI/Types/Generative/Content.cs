@@ -20,8 +20,8 @@ namespace Mscc.GenerativeAI
         [JsonIgnore]
         public List<IPart>? Parts { get; set; }
         /// <summary>
-        /// Optional. The producer of the content. Must be either 'user' or 'model'.
-        /// Useful to set for multi-turn conversations, otherwise can be left blank or unset.
+        /// Optional. The producer of the content. Must be either 'user' or 'model'. If not set, the
+        /// service will default to 'user'.
         /// </summary>
         [JsonPropertyOrder(-1)]
         public string? Role { get; set; }

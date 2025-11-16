@@ -15,8 +15,11 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public float? Temperature { get; set; } = default;
         /// <summary>
-        /// Optional. If specified, nucleus sampling will be used.
-        /// Top-p changes how the model selects tokens for output. Tokens are selected from most probable to least until the sum of their probabilities equals the top-p value. For example, if tokens A, B and C have a probability of .3, .2 and .1 and the top-p value is .5, then the model will select either A or B as the next token (using temperature).
+        /// Optional. Specifies the nucleus sampling threshold. The model considers only the smallest
+        /// set of tokens whose cumulative probability is at least `top_p`. This helps generate more
+        /// diverse and less repetitive responses. For example, a `top_p` of 0.9 means the model
+        /// considers tokens until the cumulative probability of the tokens to select from reaches 0.9.
+        /// It's recommended to adjust either temperature or `top_p`, but not both.
         /// </summary>
         public float? TopP { get; set; } = default;
         /// <summary>
@@ -43,8 +46,10 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public List<string>? StopSequences { get; set; }
         /// <summary>
-        /// Optional. Output response mimetype of the generated candidate text.
-        /// Supported mimetype: `text/plain`: (default) Text output. `application/json`: JSON response in the candidates.
+        /// Optional. The IANA standard MIME type of the response. The model will generate output that
+        /// conforms to this MIME type. Supported values include 'text/plain' (default) and
+        /// 'application/json'. The model needs to be prompted to output the appropriate response type,
+        /// otherwise the behavior is undefined. This is a preview feature.
         /// </summary>
         public string? ResponseMimeType { get; set; }
         /// <summary>
@@ -108,11 +113,21 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public SpeechConfig? SpeechConfig { get; set; }
         /// <summary>
-        /// Optional. If specified, the media resolution specified will be used.
+        /// Optional. The token resolution at which input media content is sampled. This is used to
+        /// control the trade-off between the quality of the response and the number of tokens used to
+        /// represent the media. A higher resolution allows the model to perceive more detail, which can
+        /// lead to a more nuanced response, but it will also use more tokens. This does not affect the
+        /// image dimensions sent to the model.
         /// </summary>
         public MediaResolution? MediaResolution { get; set; }
         /// <summary>
-        /// Optional. Seed used in decoding. If not set, the request uses a randomly generated seed.
+        /// Optional. A seed for the random number generator. By setting a seed, you can make the
+        /// model's output mostly deterministic. For a given prompt and parameters (like temperature,
+        /// top_p, etc.), the model will produce the same response every time. However, it's not a
+        /// guaranteed absolute deterministic behavior. This is different from parameters like
+        /// `temperature`, which control the *level* of randomness. `seed` ensures that the "random"
+        /// choices the model makes are the same on every run, making it essential for testing and
+        /// ensuring reproducible results.
         /// </summary>
         public int? Seed { get; set; }
         /// <summary>
@@ -161,6 +176,8 @@ namespace Mscc.GenerativeAI
         public ImageConfig? ImageConfig { get; set; }
         /// <summary>
         /// Optional. If enabled, the model will detect emotions and adapt its responses accordingly.
+        /// For example, if the model detects that the user is frustrated, it may provide a more
+        /// empathetic response. This field is not supported in Gemini API.
         /// </summary>
         public bool? EnableAffectiveDialog { get; set; }
     }

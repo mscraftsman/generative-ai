@@ -27,12 +27,13 @@ namespace Mscc.GenerativeAI
         public string? FinishMessage { get; set; }
 
         /// <summary>
-        /// Output only. Index of the candidate.
+        /// Output only. The 0-based index of this candidate in the list of generated responses. This is
+        /// useful for distinguishing between multiple candidates when `candidate_count` > 1.
         /// </summary>
         public int? Index { get; set; }
 
         /// <summary>
-        /// Output only. List of ratings for the safety of a response candidate. 
+        /// Output only. A list of ratings for the safety of a response candidate. 
         /// There is at most one rating per category.
         /// </summary>
         public List<SafetyRating>? SafetyRatings { get; set; }
@@ -47,8 +48,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public FunctionCall? FunctionCall { get; set; }
 
-        /// <summary>
-        /// 
+        /// Output only. Metadata returned when grounding is enabled. It contains the sources used to
+        /// ground the generated content.
         /// </summary>
         public GroundingMetadata? GroundingMetadata { get; set; }
 
@@ -64,12 +65,15 @@ namespace Mscc.GenerativeAI
         public List<GroundingAttribution>? GroundingAttributions { get; set; }
 
         /// <summary>
-        /// Output only. 
+        /// Output only. The average log probability of the tokens in this candidate. This is a
+        /// length-normalized score that can be used to compare the quality of candidates of different
+        /// lengths. A higher average log probability suggests a more confident and coherent response.
         /// </summary>
         public float? AvgLogprobs { get; set; }
 
         /// <summary>
-        /// Output only. Log-likelihood scores for the response tokens and top tokens
+        /// Output only. The detailed log probability information for the tokens in this candidate. This
+        /// is useful for debugging, understanding model uncertainty, and identifying potential
         /// </summary>
         public LogprobsResult? LogprobsResult { get; set; }
 
@@ -79,7 +83,8 @@ namespace Mscc.GenerativeAI
         public UrlRetrievalMetadata? UrlRetrievalMetadata { get; set; }
 
         /// <summary>
-        /// Output only. Metadata related to url context retrieval tool.
+        /// Output only. Metadata returned when the model uses the `url_context` tool to get information
+        /// from a user-provided URL.
         /// </summary>
         public UrlContextMetadata? UrlContextMetadata { get; set; }
     }
