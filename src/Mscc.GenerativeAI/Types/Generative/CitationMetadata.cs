@@ -1,4 +1,6 @@
-﻿namespace Mscc.GenerativeAI
+﻿using System.Collections.Generic;
+
+namespace Mscc.GenerativeAI
 {
     /// <summary>
     /// A collection of source attributions for a piece of content.
@@ -9,6 +11,6 @@
         /// <summary>
         /// Output only. List of citations.
         /// </summary>
-        public CitationSource[]? Citations { get; internal set; }   // citationSources
+        public List<CitationSource>? Citations { get; internal set; }   // citationSources
     }
 }
