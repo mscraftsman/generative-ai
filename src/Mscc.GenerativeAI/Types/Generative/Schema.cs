@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Mscc.GenerativeAI
 {

@@ -1,12 +1,14 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Metadata related to retrieval in the grounding flow.
+    /// Metadata related to the retrieval grounding source. This is part of the `GroundingMetadata`
+    /// returned when grounding is enabled.
     /// </summary>
     public class RetrievalMetadata
     {
         /// <summary>
-        /// Optional. Score indicating how likely information from google search could help answer the prompt. 
+        /// Optional. A score indicating how likely it is that a Google Search query could help answer
+        /// the prompt. 
         /// </summary>
         /// <remarks>
         /// The score is in the range [0, 1], where 0 is the least likely and 1 is the most likely.

@@ -3,41 +3,51 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Safety rating for a piece of content.
+    /// A safety rating for a piece of content. The safety rating contains the harm category and the
+    /// harm probability level.
     /// Ref: https://ai.google.dev/api/rest/v1beta/SafetyRating
     /// </summary>
     [DebuggerDisplay("{Category}: {Probability} ({Blocked})")]
     public class SafetyRating
     {
         /// <summary>
-        /// Output only. Required. The category for this rating.
+        /// Output only. The harm category of this rating.
         /// </summary>
-        //public HarmCategory Category { get; internal set; }
-        public HarmCategory Category { get; set; } = default;
+        public HarmCategory? Category { get; set; }
         /// <summary>
-        /// Output only. Required. The probability of harm for this content.
+        /// Output only. The overwritten threshold for the safety category of Gemini 2.0 image out. If
+        /// minors are detected in the output image, the threshold of each safety category will be
+        /// overwritten if user sets a lower threshold. This field is not supported in Gemini API.
         /// </summary>
-        //public HarmProbability Probability { get; internal set; }
-        public HarmProbability Probability { get; set; } = default;
+        public HarmBlockThreshold? OverwrittenThreshold { get; set; }
         /// <summary>
-        /// Output only. Indicates whether the content was filtered out because of this rating.
+        /// Output only. The probability of harm for this category.
+        /// </summary>
+        public HarmProbability? Probability { get; set; }
+        /// <summary>
+        /// Output only. Indicates whether the content was blocked because of this rating.
         /// </summary>
         public bool? Blocked { get; set; }
         /// <summary>
-        /// Output only. Harm probability scoring in the content.
-        /// Vertex AI only
+        /// Output only. The probability score of harm for this category.
         /// </summary>
+        /// <remarks>
+        /// This field is not supported in Gemini API.
+        /// </remarks>
         public float? ProbabilityScore { get; set; }
         /// <summary>
-        /// Output only. Harm severity levels in the content.
-        /// Vertex AI only
+        /// Output only. The severity of harm for this category.
         /// </summary>
+        /// <remarks>
+        /// This field is not supported in Gemini API.
+        /// </remarks>
         public HarmSeverity? Severity { get; set; }
-        //public string? Severty {  get; set; }
         /// <summary>
-        /// Output only. Harm severity scoring in the content.
-        /// Vertex AI only
+        /// Output only. The severity score of harm for this category.
         /// </summary>
+        /// <remarks>
+        /// This field is not supported in Gemini API.
+        /// </remarks>
         public float? SeverityScore { get; set; }
     }
 }

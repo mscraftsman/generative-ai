@@ -3,13 +3,14 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Metadata related to url context retrieval tool.
+    /// Metadata returned when the model uses the `url_context` tool to get information from a
+    /// user-provided URL.
     /// </summary>
     public class UrlContextMetadata
     {
         /// <summary>
-        /// List of url context.
+        /// Output only. A list of URL metadata, with one entry for each URL retrieved by the tool.
         /// </summary>
-        public List<UrlMetadata> UrlMetadata { get; set; } 
+        public List<UrlMetadata>? UrlMetadata { get; set; } 
     }
 }

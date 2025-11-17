@@ -9,15 +9,17 @@ namespace Mscc.GenerativeAI
     public sealed class GroundingChunk
     {
         /// <summary>
-        /// Grounding chunk from the web.
+        /// A grounding chunk from a web page, typically from Google Search. See the `Web` message for
+        /// details.
         /// </summary>
         public WebChunk? Web { get; set; }
         /// <summary>
-        /// Grounding chunk from Google Maps.
+        /// A grounding chunk from Google Maps. See the `Maps` message for details.
         /// </summary>
         public GoogleMapsChunk? Maps { get; set; }
         /// <summary>
-        /// Optional. Grounding chunk from context retrieved by the file search tool.
+        /// Optional. A grounding chunk from a data source retrieved by a retrieval tool, such as Vertex AI
+        /// Search. See the <see cref="RetrievedContext"/> message for details
         /// </summary>
         public RetrievedContext? RetrievedContext { get; set;}
     }

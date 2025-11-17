@@ -14,15 +14,15 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Identifier. Resource name of the batch. Format: `batches/{batch_id}`.
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
         /// <summary>
         /// Required. The user-defined name of this batch.
         /// </summary>
-        public string DisplayName { get; set; }
+        public string? DisplayName { get; set; }
         /// <summary>
         /// Required. Input configuration of the instances on which batch processing are performed.
         /// </summary>
-        public InputEmbedContentConfig InputConfig { get; set; }
+        public InputEmbedContentConfig? InputConfig { get; set; }
         /// <summary>
         /// Optional. The priority of the batch.
         /// Batches with a higher priority value will be processed before batches with a lower
@@ -36,7 +36,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. Stats about the batch.
         /// </summary>
-        public EmbedContentBatchStats BatchStats { get; set; }
+        public EmbedContentBatchStats? BatchStats { get; set; }
         /// <summary>
         /// Output only. The time at which the batch was created.
         /// </summary>

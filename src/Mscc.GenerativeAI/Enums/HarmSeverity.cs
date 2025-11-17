@@ -3,30 +3,30 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Harm severity levels.
+    /// Output only. The severity of harm for this category. This enum is not supported in Gemini API.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmSeverity>))]
     public enum HarmSeverity
     {
         /// <summary>
-        /// Unspecified means harm probability unspecified.
+        /// The harm severity is unspecified.
         /// </summary>
         HarmSeverityUnspecified = 0,
         /// <summary>
-        /// Negligible means negligible level of harm.
+        /// The harm severity is negligible.
         /// </summary>
-        HarmSeverityNegligible = 1,
+        HarmSeverityNegligible,
         /// <summary>
-        /// Low means low level of harm.
+        /// The harm severity is low.
         /// </summary>
-        HarmSeverityLow = 2,
+        HarmSeverityLow,
         /// <summary>
-        /// Medium means medium level of harm.
+        /// The harm severity is medium.
         /// </summary>
-        HarmSeverityMedium = 3,
+        HarmSeverityMedium,
         /// <summary>
-        /// High means high level of harm.
+        /// The harm severity is high.
         /// </summary>
-        HarmSeverityHigh = 4
+        HarmSeverityHigh
     }
 }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The configuration for the multi-speaker setup.
+    /// Configuration for a multi-speaker text-to-speech request.
     /// </summary>
     public class MultiSpeakerVoiceConfig
     {
         /// <summary>
-        /// Required. All the enabled speaker voices.
+        /// Required. A list of configurations for the voices of the speakers. Exactly two speaker voice
+        /// configurations must be provided.
         /// </summary>
         public List<SpeakerVoiceConfig> SpeakerVoiceConfigs { get; set; }
     }

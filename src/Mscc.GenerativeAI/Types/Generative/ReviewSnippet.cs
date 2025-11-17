@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Encapsulates a snippet of a user review that answers a question about the features of a specific place in Google Maps.
+    /// Encapsulates a snippet of a user review that answers a question about the features
+    /// of a specific place in Google Maps.
     /// </summary>
     public class ReviewSnippet
     {
@@ -12,6 +15,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// A link that corresponds to the user review on Google Maps.
         /// </summary>
+        //[JsonIgnore]
         public string? Uri { get; set; }
         /// <summary>
         /// A link that corresponds to the user review on Google Maps.
@@ -24,6 +28,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The ID of the review snippet.
         /// </summary>
+        //[JsonIgnore]
         public string? Id { get; set; }
         /// <summary>
         /// The ID of the review snippet.

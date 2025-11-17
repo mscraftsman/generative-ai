@@ -1,13 +1,13 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The configuration for the voice to use.
+    /// Configuration for a voice.
     /// </summary>
     public class VoiceConfig
     {
         /// <summary>
-        /// The configuration for the prebuilt voice to use.
+        /// The configuration for a prebuilt voice.
         /// </summary>
-        public PrebuiltVoiceConfig PrebuiltVoiceConfig { get; set; }
+        public PrebuiltVoiceConfig? PrebuiltVoiceConfig { get; set; }
     }
 }

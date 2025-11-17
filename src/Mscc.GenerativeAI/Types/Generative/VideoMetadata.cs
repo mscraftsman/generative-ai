@@ -3,7 +3,8 @@ using System.Diagnostics;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Metadata describes the input video content.
+    /// Provides metadata for a video, including the start and end offsets for clipping and the frame
+    /// rate.
     /// </summary>
     [DebuggerDisplay("{StartOffset} - {EndOffset} (FPS: {Fps})")]
     public class VideoMetadata : IPart
@@ -18,7 +19,7 @@ namespace Mscc.GenerativeAI
         public string? EndOffset { get; set; }
         /// <summary>
         /// Optional. The frame rate of the video sent to the model.
-        /// If not specified, the default value will be 1.0. The fps range is (0.0, 24.0].
+        /// If not specified, the default value is 1.0. The valid range is (0.0, 24.0].
         /// </summary>
         public double? Fps { get; set; }
     }

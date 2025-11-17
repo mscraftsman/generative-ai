@@ -3,22 +3,34 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Safety setting, affecting the safety-blocking behavior.
+    /// A safety setting that affects the safety-blocking behavior. A SafetySetting consists of a harm
+    /// category and a threshold for that category.
+    /// </summary>
+    /// <remarks>
     /// Represents a safety setting that can be used to control the model's behavior.
     /// It instructs the model to avoid certain responses given safety measurements based on category.
     /// Ref: https://ai.google.dev/api/rest/v1beta/SafetySetting
-    /// </summary>
+    /// </remarks>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
     public class SafetySetting
     {
         /// <summary>
-        /// Required. The category for this setting.
+        /// The harm category to be blocked.
         /// </summary>
-        public HarmCategory Category { get; set; }
+        public HarmCategory? Category { get; set; }
         /// <summary>
-        /// Required. Controls the probability threshold at which harm is blocked.
+        /// Optional. The method for blocking content. If not specified, the default behavior is to use
+        /// the probability score.
         /// </summary>
-        public HarmBlockThreshold Threshold { get; set; }
+        /// <remarks>
+        /// This field is not supported in Gemini API.
+        /// </remarks>
+        public HarmBlockMethod? Method { get; set; }
+        /// <summary>
+        /// The threshold for blocking content. If the harm probability exceeds this threshold, the
+        /// content will be blocked.
+        /// </summary>
+        public HarmBlockThreshold? Threshold { get; set; }
 
         private string GetDebuggerDisplay()
         {

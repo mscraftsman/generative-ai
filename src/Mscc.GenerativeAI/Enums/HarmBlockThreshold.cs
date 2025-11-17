@@ -3,36 +3,40 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// Block at and beyond a specified harm probability.
+    /// The threshold for blocking content. If the harm probability exceeds this threshold, the
+    /// content will be blocked.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmBlockThreshold>))]
 
     public enum HarmBlockThreshold
     {
         /// <summary>
-        /// Threshold is unspecified.
+        /// The harm block threshold is unspecified.
         /// </summary>
         HarmBlockThresholdUnspecified = 0,
         /// <summary>
-        /// Content with NEGLIGIBLE will be allowed.
+        /// Block content with a low harm probability or higher.
         /// </summary>
-        BlockLowAndAbove = 1,
+        BlockLowAndAbove,
         /// <summary>
-        /// Content with NEGLIGIBLE and LOW will be allowed.
+        /// Block content with a medium harm probability or higher.
         /// </summary>
-        BlockMediumAndAbove = 2,
+        BlockMediumAndAbove,
         /// <summary>
-        /// Content with NEGLIGIBLE, LOW, and MEDIUM will be allowed.
+        /// Block content with a high harm probability.
         /// </summary>
-        BlockOnlyHigh = 3,
+        BlockOnlyHigh,
         /// <summary>
-        /// All content will be allowed.
+        /// Do not block any content, regardless of its harm probability.
         /// </summary>
-        BlockNone = 4,
+        BlockNone,
+        // /// <summary>
+        // /// Do not block any content, regardless of its harm probability.
+        // /// </summary>
+        // None,
         /// <summary>
-        /// Turn off the safety filter.
+        /// Turn off the safety filter entirely.
         /// </summary>
-        None,
         Off
     }
 }

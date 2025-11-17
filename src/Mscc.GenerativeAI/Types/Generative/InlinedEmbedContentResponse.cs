@@ -10,7 +10,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. The responses to the requests in the batch.
         /// </summary>
-        public List<InlinedEmbedContentResponse> InlineResponses { get; set; }
+        public List<InlinedEmbedContentResponse>? InlinedResponses { get; set; }
     }
     
     /// <summary>
@@ -21,14 +21,14 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Output only. The response to the request.
         /// </summary>
-        public EmbedContentResponse Response { get; set; }
+        public EmbedContentResponse? Response { get; set; }
         /// <summary>
         /// Output only. The error encountered while processing the request.
         /// </summary>
-        public Status Error { get; set; }
+        public Status? Error { get; set; }
         /// <summary>
         /// Optional. The metadata associated with the request.
         /// </summary>
-        public object? Metadata { get; set; }
+        public Dictionary<string, object>? Metadata { get; set; }
     }
 }

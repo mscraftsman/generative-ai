@@ -4,55 +4,55 @@ using System.Text.Json.Serialization;
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The category of a rating.
+    /// The harm category to be blocked.
     /// Ref: https://ai.google.dev/api/rest/v1beta/HarmCategory
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmCategory>))]
     public enum HarmCategory
     {
         /// <summary>
-        /// HarmCategoryUnspecified means the harm category is unspecified.
+        /// Default value. This value is unused.
         /// </summary>
         HarmCategoryUnspecified = 0,
         /// <summary>
-        /// HarmCategoryHateSpeech means the harm category is hate speech.
+        /// Content that promotes violence or incites hatred against individuals or groups based on
         /// </summary>
         HarmCategoryHateSpeech,
         /// <summary>
-        /// HarmCategoryDangerousContent means the harm category is dangerous content.
+        /// Content that promotes, facilitates, or enables dangerous activities.
         /// </summary>
         HarmCategoryDangerousContent,
         /// <summary>
-        /// HarmCategoryHarassment means the harm category is harassment.
+        /// Abusive, threatening, or content intended to bully, torment, or ridicule.
         /// </summary>
         HarmCategoryHarassment,
         /// <summary>
-        /// HarmCategorySexuallyExplicit means the harm category is sexually explicit content.
+        /// Content that contains sexually explicit material.
         /// </summary>
         HarmCategorySexuallyExplicit,
         /// <summary>
-        /// Content that may be used to harm civic integrity.
+        /// Deprecated: Election filter is not longer supported. The harm category is civic integrity.
         /// </summary>
         [Obsolete("Use EnableEnhancedCivicAnswers instead.")]
         HarmCategoryCivicIntegrity,
         /// <summary>
-        /// The harm category is for jailbreak prompts.
+        /// Prompts designed to bypass safety filters. This enum value is not supported in Gemini API.
         /// </summary>
         HarmCategoryJailbreak,
         /// <summary>
-        /// The harm category is image hate.
+        /// Images that contain hate speech. This enum value is not supported in Gemini API.
         /// </summary>
         HarmCategoryImageHate,
         /// <summary>
-        /// The harm category is image dangerous content.
+        /// Images that contain dangerous content. This enum value is not supported in Gemini API.
         /// </summary>
         HarmCategoryImageDangerousContent,
         /// <summary>
-        /// The harm category is image harassment.
+        /// Images that contain harassment. This enum value is not supported in Gemini API.
         /// </summary>
         HarmCategoryImageHarassment,
         /// <summary>
-        /// The harm category is image sexually explicit content.
+        /// Images that contain sexually explicit content. This enum value is not supported in Gemini
         /// </summary>
         HarmCategoryImageSexuallyExplicit,
         

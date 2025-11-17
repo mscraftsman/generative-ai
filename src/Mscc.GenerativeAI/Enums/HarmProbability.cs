@@ -3,30 +3,30 @@
 namespace Mscc.GenerativeAI
 {
     /// <summary>
-    /// The probability that a piece of content is harmful.
+    /// Output only. The probability of harm for this category.
     /// </summary>
     [JsonConverter(typeof(JsonStringEnumConverter<HarmProbability>))]
     public enum HarmProbability
     {
         /// <summary>
-        /// Unspecified means harm probability unspecified.
+        /// The harm probability is unspecified.
         /// </summary>
         HarmProbabilityUnspecified = 0,
         /// <summary>
-        /// Negligible means negligible level of harm.
+        /// The harm probability is negligible.
         /// </summary>
-        Negligible = 1,
+        Negligible,
         /// <summary>
-        /// Low means low level of harm.
+        /// The harm probability is low.
         /// </summary>
-        Low = 2,
+        Low,
         /// <summary>
-        /// Medium means medium level of harm.
+        /// The harm probability is medium.
         /// </summary>
-        Medium = 3,
+        Medium,
         /// <summary>
-        /// High means high level of harm.
+        /// The harm probability is high.
         /// </summary>
-        High = 4
+        High
     }
 }

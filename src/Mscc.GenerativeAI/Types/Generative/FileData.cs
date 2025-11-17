@@ -10,6 +10,7 @@ namespace Mscc.GenerativeAI
     public class FileData : IPart
     {
         /// <summary>
+        /// The URI of the file in Google Cloud Storage.
         /// URI of the file of the image or video to include in the prompt.
         /// </summary>
         /// <remarks>
@@ -17,7 +18,7 @@ namespace Mscc.GenerativeAI
         /// Size limit: 20MB
         /// </remarks>
         // [JsonPropertyName("file_uri")]
-        public string FileUri { get; set; } = string.Empty;
+        public string? FileUri { get; set; }
         /// <summary>
         /// The IANA standard MIME type of the source data.
         /// </summary>
@@ -37,6 +38,6 @@ namespace Mscc.GenerativeAI
         /// Maximum video length: 2 minutes. No limit on image resolution. 
         ///</remarks>
         // [JsonPropertyName("mime_type")]
-        public string MimeType { get; set; } = string.Empty;
+        public string? MimeType { get; set; }
     }
 }
