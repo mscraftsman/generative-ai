@@ -115,5 +115,11 @@ namespace Mscc.GenerativeAI
             this ILogger logger,
             int index,
             string message);
+
+        [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Error deserializing JSON: {message}\n\n{json}")]
+        public static partial void LogJsonDeserialization(
+            this ILogger logger,
+            string message,
+            string json);
     }
 }
