@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.2
+
+### Changed
+
+- update data types from discovery doc (2c547cb)
+- bump version
+
 ## 2.9.1
 
 ### Added
