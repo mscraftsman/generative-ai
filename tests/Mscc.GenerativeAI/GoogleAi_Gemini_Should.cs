@@ -1,17 +1,17 @@
 ﻿using FluentAssertions;
+using Json.Schema.Generation;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -1729,8 +1729,8 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Candidates?[0]?.Content?.Parts[0]?.FunctionCall?.Args?.ToString());
         }
 
-        [Description("Toggles the current between dark and light.")]
-        string ToggleDarkMode([Description("Flag indicating whether dark mode is on or not.")]bool isOn)
+        [System.ComponentModel.Description("Toggles the current between dark and light.")]
+        string ToggleDarkMode([System.ComponentModel.Description("Flag indicating whether dark mode is on or not.")]bool isOn)
         {
             return $"Dark mode is set to: {isOn}";
         }
@@ -1932,10 +1932,10 @@ namespace Test.Mscc.GenerativeAI
             // Method body
         }
 
-        [Description("Provide undefined information along with details.")]
+        [System.ComponentModel.Description("Provide undefined information along with details.")]
         public void TestNullable(
-            [Description("Expected temperature of the day")] double? numberNullable, 
-            [Description("Mood of the day")] string? stringNullable) { }
+            [System.ComponentModel.Description("Expected temperature of the day")] double? numberNullable, 
+            [System.ComponentModel.Description("Mood of the day")] string? stringNullable) { }
 
         [Fact]
         public async Task Function_Calling_Constructor_Format()
@@ -2570,7 +2570,7 @@ namespace Test.Mscc.GenerativeAI
         class Recipe
         {
             public string Name { get; set; }
-#if NET9_0
+#if NET9_0_OR_GREATER
             public required string RecipeName { get; set; }
 #endif
             public List<string> Ingredients { get; set; }
@@ -2610,17 +2610,17 @@ namespace Test.Mscc.GenerativeAI
             /// Flight time
             /// </summary>
             [Json.Schema.Generation.Description("Time of the flight")]
-#if NET9_0
+#if NET9_0_OR_GREATER
             public TimeOnly TimeOnly { get; set; }
 #else
-            [Json.Schema.Generation.MaxLength(5)]
-            [Json.Schema.Generation.Pattern("[0-9]{2}:[0-9]{2}")]
+            [MaxLength(5)]
+            [Pattern("[0-9]{2}:[0-9]{2}")]
             public string Time { get; set; }
 #endif
             /// <summary>
             /// Flight destination
             /// </summary>
-            [Json.Schema.Generation.Description("Destination of the flight")]
+            [Description("Destination of the flight")]
             public string Destination { get; set; }
         }
 
@@ -2661,11 +2661,11 @@ namespace Test.Mscc.GenerativeAI
 
         class CalendarEvent
         {
-            [Description("Event name")]
+            [System.ComponentModel.Description("Event name")]
             public string Name { get; set; }
-            [Description("Event date and time")]
+            [System.ComponentModel.Description("Event date and time")]
             public DateTime Date { get; set; }
-            [Description("List of participants during the event")]
+            [System.ComponentModel.Description("List of participants during the event")]
             public List<string> Participants { get; set; }
         }
         
@@ -2700,14 +2700,15 @@ namespace Test.Mscc.GenerativeAI
         /// <summary>
         /// A list of instruments played in an orchestra.
         /// </summary>
-        [Json.Schema.Generation.Description("A list of instruments played in an orchestra.")]
+        [Description("A list of instruments played in an orchestra.")]
+        [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter<Instrument>))]
         public enum Instrument
         {
-            [EnumMember(Value = "Percussion"), Json.Schema.Generation.Description("Drums and cymbals")] Percussion,
-            [EnumMember(Value = "String")] String,
-            [EnumMember(Value = "Woodwind")] Woodwind,
-            [EnumMember(Value = "Brass")] Brass,
-            [EnumMember(Value = "Keyboard")] Keyboard
+            [Description("Drums and cymbals")] Percussion,
+            String,
+            Woodwind,
+            Brass,
+            Keyboard
         }
 
         [Theory]
@@ -2939,9 +2940,9 @@ namespace Test.Mscc.GenerativeAI
             _output.WriteLine(response?.Text);
         }
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         public record Root(
-            [Description("A list of menus, each representing a specific day.")]
+            [System.ComponentModel.Description("A list of menus, each representing a specific day.")]
             List<Menu> Menus);
 
         public record Menu(DateOnly Date, List<Meal> Meals);
