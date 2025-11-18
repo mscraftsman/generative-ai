@@ -31,7 +31,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="Mscc.GenerativeAI" Version="2.9.2" />
+    <PackageVersion Include="Mscc.GenerativeAI" Version="2.9.3" />
     <PackageVersion Include="Neovolve.Logging.Xunit" Version="6.3.0" />
     <PackageVersion Include="OpenAI" Version="2.6.0" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
