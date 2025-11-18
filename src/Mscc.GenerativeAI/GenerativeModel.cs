@@ -1843,6 +1843,16 @@ namespace Mscc.GenerativeAI
             return await EmbedContent(request, requestOptions: requestOptions, cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// Counts the number of tokens for the given content.
+        /// </summary>
+        /// <param name="model">The name of the GenAI model to use for token counting.</param>
+        /// <param name="contents">A <see cref="List{Content}"/> to compute tokens for.</param>
+        /// <param name="config">A <see cref="CountTokensConfig"/> instance that specifies the optional configurations.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>A <see cref="Task{CountTokensResponse}"/> that represents the asynchronous operation. The task result contains a <see
+        /// cref="CountTokensResponse"/> instance with token information.</returns>
         public async Task<CountTokensResponse> CountTokens(string model,
             List<Content> contents,
             CountTokensConfig? config = null,
@@ -1866,7 +1876,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Runs a model's tokenizer on input `Content` and returns the token count.
+        /// Counts the number of tokens for the given content.
         /// </summary>
         /// <remarks>
         /// Refer to the [tokens guide](https://ai.google.dev/gemini-api/docs/tokens) to learn more about tokens.
@@ -1874,7 +1884,8 @@ namespace Mscc.GenerativeAI
         /// <param name="request"></param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Number of tokens.</returns>
+        /// <returns>A <see cref="Task{CountTokensResponse}"/> that represents the asynchronous operation. The task result contains a <see
+        /// cref="CountTokensResponse"/> instance with token information.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
         public async Task<CountTokensResponse> CountTokens(GenerateContentRequest request,
             RequestOptions? requestOptions = null,
@@ -1940,10 +1951,57 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request, requestOptions, cancellationToken: cancellationToken);
         }
 
+        /// <summary>
+        /// Computes the number of tokens for the given content.
+        /// </summary>
+        /// <param name="model">The name of the GenAI model to use for token computation.</param>
+        /// <param name="contents">A <see cref="List{Content}"/> to compute tokens for.</param>
+        /// <param name="config">A <see cref="ComputeTokensConfig"/> instance that specifies the optional configurations.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>A <see cref="Task{ComputeTokensResponse}"/> that represents the asynchronous operation. The task result contains a <see
+        /// cref="ComputeTokensResponse"/> instance with token information.</returns>
+        /// <exception cref="NotSupportedException">Thrown when called with a non-Vertex AI client.</exception>
+        public async Task<ComputeTokensResponse> ComputeTokens(string model,
+            List<Content> contents,
+            ComputeTokensConfig? config = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (!_useVertexAi) throw new NotSupportedException("This method is only supported in the Vertex AI client.");
+            
+            var request = new ComputeTokensRequest()
+            {
+                Model = model ?? _model, 
+                Contents = contents, 
+                Config = config
+            };
+            if (config?.HttpOptions != null)
+            {
+                requestOptions ??= new RequestOptions(config?.HttpOptions);
+            }
+
+            var method = GenerativeAI.Method.ComputeTokens;
+            var url = ParseUrl(Url, method);
+            return await PostAsync<ComputeTokensRequest, ComputeTokensResponse>(request, Url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+        }
+
+        /// <summary>
+        /// Computes the number of tokens for the given content.
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>A <see cref="Task{ComputeTokensResponse}"/> that represents the asynchronous operation. The task result contains a <see
+        /// cref="ComputeTokensResponse"/> instance with token information.</returns>
+        /// <exception cref="NotSupportedException">Thrown when called with a non-Vertex AI client.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
         public async Task<ComputeTokensResponse> ComputeTokens(ComputeTokensRequest request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {
+            if (!_useVertexAi) throw new NotSupportedException("This method is only supported in the Vertex AI client.");
+            
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var method = GenerativeAI.Method.CountTokens;

@@ -24,5 +24,9 @@ namespace Mscc.GenerativeAI
         /// Schema is identical to the prediction schema of the text model, even for the non-text models, like chat models, or Codey models.
         /// </remarks>
         public IEnumerable<object>? Instances { get; set; }
+        /// <summary>
+        /// Optional parameters for the request.
+        /// </summary>
+        public ComputeTokensConfig? Config { get; set; }
     }
 }
