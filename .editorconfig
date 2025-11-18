@@ -5,6 +5,8 @@ root = true
 [*.cs]
 
 # Compiler
+dotnet_diagnostic.IDE0005.severity = none
+dotnet_diagnostic.IDE0055.severity = none
 dotnet_diagnostic.CS1998.severity = suggestion      # CS1998: Missing awaits
 
 # Code Analysis
@@ -24,7 +26,7 @@ dotnet_diagnostic.CS1998.severity = suggestion      # CS1998: Missing awaits
 
 # Indentation and spacing
 indent_size = 4
-indent_style = space
+indent_style = tab
 tab_width = 4
 
 # New line preferences
