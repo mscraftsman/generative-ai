@@ -113,6 +113,11 @@ namespace Mscc.GenerativeAI
         /// For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams.
         /// </summary>
         public Dictionary<string, object>? PartMetadata { get; set; }
+        
+        /// <summary>
+        /// Media resolution for the input media.
+        /// </summary>
+        public PartMediaResolution? MediaResolution { get; set; }
 
         /// <summary>
         /// The ETag of the item.
