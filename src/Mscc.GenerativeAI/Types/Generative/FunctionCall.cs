@@ -29,5 +29,21 @@ namespace Mscc.GenerativeAI
         /// If populated, the client to execute the `function_call` and return the response with the matching `id`.
         /// </summary>
         public string? Id { get; set; }
+        /// <summary>
+        /// Optional. The partial argument value of the function call. If provided, represents the
+        /// arguments/fields that are streamed incrementally.
+        /// </summary>
+        /// <remarks>
+        /// This field is not supported in Gemini API.
+        /// </remarks>
+        public List<PartialArg>? PartialArgs { get; set; }
+        /// <summary>
+        /// Optional. Whether this is the last part of the FunctionCall. If true, another partial
+        /// message for the current FunctionCall is expected to follow.
+        /// </summary>
+        /// <remarks>
+        /// This field is not supported in Gemini API.
+        /// </remarks>
+        public bool? WillContinue { get; set; }
     }
 }
