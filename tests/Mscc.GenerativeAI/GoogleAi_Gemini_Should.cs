@@ -26,13 +26,15 @@ namespace Test.Mscc.GenerativeAI
         private readonly ITestOutputHelper _output;
         private readonly ConfigurationFixture _fixture;
         private readonly GoogleAI _googleAi;
+        private readonly VertexAI _vertexAi;
 
         public GoogleAiGeminiShould(ITestOutputHelper output, ConfigurationFixture fixture)
             : base(output, LogLevel.Trace)
         {
             _output = output;
             _fixture = fixture;
-            _googleAi = new(apiKey: fixture.ApiKey, logger: Logger);
+            _googleAi = new(apiKey: _fixture.ApiKey, logger: Logger);
+            _vertexAi = new (projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
         }
 
         [Fact]
@@ -2405,8 +2407,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Create_Tuned_Model()
         {
             // Arrange
-            var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = googleAI.GenerativeModel(model: Model.GeminiPro);
+            var model = _vertexAi.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
             var request = new CreateTunedModelRequest()
             {
@@ -2453,8 +2454,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Create_Tuned_Model_Simply()
         {
             // Arrange
-            var googleAI = new GoogleAI(accessToken: _fixture.AccessToken);
-            var model = googleAI.GenerativeModel(model: Model.GeminiPro);
+            var model = _vertexAi.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
             var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
@@ -3747,13 +3747,12 @@ Use speaker A, speaker B, etc. to identify the speakers.
             _output.WriteLine(response?.Text);
         }
 
-        [Fact(Skip = "Bad Request due to FileData part")]
+        [Fact]
         public async Task Describe_Image_From_StorageBucket()
         {
             // Arrange
             var prompt = "Describe the image with a creative description";
-            var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _vertexAi.GenerativeModel(model: _model);
             var generationConfig = new GenerateContentConfig
             {
                 Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 2048
@@ -4134,8 +4133,8 @@ Answer:";
         {
             // Arrange
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", filename);
-            var model = _googleAi.FileSearchStoresModel(Logger);
-            var operations = _googleAi.OperationsModel(Logger);
+            var model = _googleAi.FileSearchStoresModel();
+            var operations = _googleAi.OperationsModel();
             var store = model.List().Result.FileSearchStores.FirstOrDefault();
 
             // Act
@@ -4158,8 +4157,8 @@ Answer:";
             // Arrange
             var files = await _googleAi.ListFiles();
             var file = files.Files.FirstOrDefault(x => x.MimeType.StartsWith("text/"));
-            var model = _googleAi.FileSearchStoresModel(Logger);
-            var operations = _googleAi.OperationsModel(Logger);
+            var model = _googleAi.FileSearchStoresModel();
+            var operations = _googleAi.OperationsModel();
             var store = model.List().Result.FileSearchStores.FirstOrDefault();
 
             // Act
@@ -4180,7 +4179,7 @@ Answer:";
         public async Task FileSearchStore_Documents_List()
         {
             // Arrange
-            var model = _googleAi.FileSearchStoresModel(Logger);
+            var model = _googleAi.FileSearchStoresModel();
             var store = model.List().Result.FileSearchStores.FirstOrDefault(s => 
                 s.ActiveDocumentsCount > 0);
             
@@ -4208,7 +4207,7 @@ Answer:";
             var model = _googleAi.GenerativeModel(model: _model);
             if (string.IsNullOrEmpty(storeName))
             {
-                var fileSearchStoresModel = _googleAi.FileSearchStoresModel(Logger);
+                var fileSearchStoresModel = _googleAi.FileSearchStoresModel();
                 var store = fileSearchStoresModel.List().Result.FileSearchStores
                     .FirstOrDefault(s => s.ActiveDocumentsCount > 0);
                 storeName = store.Name;
