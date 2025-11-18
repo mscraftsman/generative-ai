@@ -2703,7 +2703,7 @@ namespace Test.Mscc.GenerativeAI
         [Json.Schema.Generation.Description("A list of instruments played in an orchestra.")]
         public enum Instrument
         {
-            [EnumMember(Value = "Percussion")] Percussion,
+            [EnumMember(Value = "Percussion"), Json.Schema.Generation.Description("Drums and cymbals")] Percussion,
             [EnumMember(Value = "String")] String,
             [EnumMember(Value = "Woodwind")] Woodwind,
             [EnumMember(Value = "Brass")] Brass,
