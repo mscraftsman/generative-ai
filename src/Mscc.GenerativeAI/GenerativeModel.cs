@@ -1843,6 +1843,28 @@ namespace Mscc.GenerativeAI
             return await EmbedContent(request, requestOptions: requestOptions, cancellationToken: cancellationToken);
         }
 
+        public async Task<CountTokensResponse> CountTokens(string model,
+            List<Content> contents,
+            CountTokensConfig? config = null,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            var request = new CountTokensRequest()
+                {
+                    Model = model ?? _model, 
+                    Contents = contents, 
+                    Config = config
+                };
+            if (config?.HttpOptions != null)
+            {
+                requestOptions ??= new RequestOptions(config?.HttpOptions);
+            }
+
+            var method = GenerativeAI.Method.CountTokens;
+            var url = ParseUrl(Url, method);
+            return await PostAsync<CountTokensRequest, CountTokensResponse>(request, Url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+        }
+
         /// <summary>
         /// Runs a model's tokenizer on input `Content` and returns the token count.
         /// </summary>

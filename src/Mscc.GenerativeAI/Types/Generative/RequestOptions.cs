@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net;
 using System.Net.Http.Headers;
@@ -44,7 +45,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Gets or sets the headers to use for the request.
         /// </summary>
-        public HttpRequestHeaders Headers => _headers ?? (_headers = new HttpRequestMessage().Headers);
+        public HttpRequestHeaders Headers => _headers ??= new HttpRequestMessage().Headers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestOptions"/> class
@@ -75,6 +76,24 @@ namespace Mscc.GenerativeAI
             BaseUrl = baseUrl;
             ApiVersion = apiVersion;
             Proxy = proxy;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestOptions"/> class
+        /// </summary>
+        /// <param name="httpOptions"></param>
+        public RequestOptions(HttpOptions httpOptions) : this()
+        {
+            if (httpOptions == null) throw new ArgumentNullException(nameof(httpOptions));
+
+            ApiVersion = httpOptions.ApiVersion;
+            BaseUrl = httpOptions.BaseUrl;
+            Timeout = TimeSpan.FromMilliseconds(httpOptions.Timeout);
+
+            foreach (var header in httpOptions.Headers)
+            {
+                Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
         }
     }
 
