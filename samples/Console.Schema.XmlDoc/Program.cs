@@ -71,10 +71,29 @@ public class ReviewAnalysisOutputModel
     /// <summary>
     /// The sentiment of the review (e.g., Positive, Negative, Neutral).
     /// </summary>
-    public string? Sentiment { get; set; }
+    public Sentiment? Sentiment { get; set; }
 
     /// <summary>
     /// The language of the review (e.g., en, es, fr).
     /// </summary>
     public string? Language { get; set; }
+}
+
+/// <summary>
+/// Sentiment classification.
+/// </summary>
+public enum Sentiment 
+{
+	/// <summary>
+	/// No harm observed.
+	/// </summary>
+    Neutral,
+	/// <summary>
+	/// Encouraging.
+	/// </summary>
+    Positive,
+	/// <summary>
+	/// Stay away!
+	/// </summary>
+    Negative
 }
