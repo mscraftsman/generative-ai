@@ -99,6 +99,7 @@ namespace Mscc.GenerativeAI
             {
                 Type = ParameterType.String,
                 Format = "enum",
+                Description = GetTypeDescription(enumType),
                 Enum = [..System.Enum.GetNames(enumType)],
                 Nullable = nullable ? true : null,
             };
@@ -136,6 +137,32 @@ namespace Mscc.GenerativeAI
 
             elementType = null;
             return false;
+        }
+
+        private static string? GetTypeDescription(Type type)
+        {
+	        var attribute = type.GetCustomAttribute<DescriptionAttribute>();
+	        return attribute?.Description;
+        }
+        
+        private static string? GetMemberDescription(Type enumType)
+        {
+	        string? description = null;
+	        try
+	        {
+				MemberInfo[] memberInfo = enumType.GetMember(enumType.Name);
+				if (memberInfo.Length > 0)
+				{
+					var attributes = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+					if (attributes.Length > 0)
+					{
+						description = ((DescriptionAttribute)attributes[0]).Description;
+					}
+				}
+	        }
+	        catch (Exception e) { }
+
+	        return description;
         }
 
         /// <summary>
