@@ -8,7 +8,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// The tokenization quality used for given media.
         /// </summary>
-        public PartMediaResolutionLevel? Level { get; set; }
+        public MediaResolution? Level { get; set; }
         
         /// <summary>
         /// Specifies the required sequence length for media tokenization.
