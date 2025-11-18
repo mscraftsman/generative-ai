@@ -23,7 +23,7 @@ namespace Mscc.GenerativeAI
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <exception cref="ArgumentNullException">Thrown when required parameters are null.</exception>
         /// <returns>Generative model instance.</returns>
-        public GenerativeModel GenerativeModel(string model = Model.Gemini25Pro,
+        GenerativeModel GenerativeModel(string model = Model.Gemini25Pro,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
@@ -38,7 +38,7 @@ namespace Mscc.GenerativeAI
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns>Generative model instance.</returns>
-        public GenerativeModel GenerativeModel(CachedContent cachedContent,
+        GenerativeModel GenerativeModel(CachedContent cachedContent,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             ILogger? logger = null);
@@ -52,7 +52,7 @@ namespace Mscc.GenerativeAI
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">Thrown when model parameter is null.</exception>
         /// <exception cref="NotSupportedException">Thrown when the backend does not support this method or the model.</exception>
-        public Task<ModelResponse> GetModel(string model, 
+        Task<ModelResponse> GetModel(string model, 
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default);
 
@@ -61,7 +61,19 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="model">Model to use (default: "imagegeneration")</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public ImageGenerationModel ImageGenerationModel(string model,
+        ImageGenerationModel ImageGenerationModel(string model,
             ILogger? logger = null);
+
+        /// <summary>
+        /// Returns an instance of <see cref="FileSearchStoresModel"/>.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        FileSearchStoresModel FileSearchStoresModel();
+        
+        /// <summary>
+        /// Returns an instance of <see cref="OperationsModel"/>.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        OperationsModel OperationsModel();
     }
 }

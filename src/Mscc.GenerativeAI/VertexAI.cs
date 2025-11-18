@@ -24,9 +24,15 @@ namespace Mscc.GenerativeAI
         private readonly bool _isExpressMode;
         private readonly IHttpClientFactory? _httpClientFactory;
         private readonly RequestOptions? _requestOptions;
+        private GenerativeModel? _generativeModel;
+        private FileSearchStoresModel? _fileSearchStoresModel;
+        private OperationsModel? _operationsModel;
+        private ImageGenerationModel? _imageGenerationModel;
+        private BatchesModel? _batchesModel;
+        private SupervisedTuningJobModel? _supervisedTuningJobModel;
 
         private string _endpointId = string.Empty;
-        
+
         public string EndpointId
         {
             get => _endpointId;
@@ -136,7 +142,7 @@ namespace Mscc.GenerativeAI
 
             if (_isExpressMode)
             {
-                return new GenerativeModel(_apiKey,
+                _generativeModel ??= new GenerativeModel(_apiKey,
                     model,
                     generationConfig,
                     safetySettings,
@@ -151,7 +157,7 @@ namespace Mscc.GenerativeAI
                 };
             }
 
-            return new GenerativeModel(_projectId,
+            _generativeModel ??= new GenerativeModel(_projectId,
                 _region,
                 model,
                 _accessToken,
@@ -167,6 +173,7 @@ namespace Mscc.GenerativeAI
                 Version = _version,
                 RequestOptions = _requestOptions
             };
+            return _generativeModel;
         }
 
         /// <summary>
@@ -187,7 +194,7 @@ namespace Mscc.GenerativeAI
             if (cachedContent == null) throw new ArgumentNullException(nameof(cachedContent));
             Guard();
 
-            return new GenerativeModel(cachedContent,
+            _generativeModel ??= new GenerativeModel(cachedContent,
                 generationConfig,
                 safetySettings,
                 httpClientFactory: _httpClientFactory,
@@ -199,6 +206,7 @@ namespace Mscc.GenerativeAI
                 Version = _version,
                 RequestOptions = _requestOptions
             };
+            return _generativeModel;
         }
 
         /// <summary>
@@ -219,7 +227,7 @@ namespace Mscc.GenerativeAI
             if (tuningJob == null) throw new ArgumentNullException(nameof(tuningJob));
             Guard();
 
-            return new GenerativeModel(tuningJob,
+            _generativeModel ??= new GenerativeModel(tuningJob,
                 generationConfig,
                 safetySettings,
                 httpClientFactory: _httpClientFactory,
@@ -231,6 +239,7 @@ namespace Mscc.GenerativeAI
                 Version = _version,
                 RequestOptions = _requestOptions
             };
+            return _generativeModel;
         }
 
         /// <inheritdoc cref="IGenerativeAI"/>
@@ -253,12 +262,13 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            return new SupervisedTuningJobModel(_projectId,
+            _supervisedTuningJobModel ??= new SupervisedTuningJobModel(_projectId,
 	            _region,
 	            _accessToken,
 	            model,
 	            _httpClientFactory,
 	            logger: logger);
+            return _supervisedTuningJobModel;
         }
 
         /// <summary>
@@ -272,13 +282,37 @@ namespace Mscc.GenerativeAI
             ILogger? logger = null)
         {
             Guard();
-
-            return new ImageGenerationModel(_projectId,
+            _imageGenerationModel ??= new ImageGenerationModel(_projectId,
                 _region,
                 _accessToken,
                 model,
                 _httpClientFactory,
                 logger: logger);
+            return _imageGenerationModel;
+        }
+
+        public FileSearchStoresModel FileSearchStoresModel()
+        {
+            Guard();
+            _fileSearchStoresModel ??= new FileSearchStoresModel(_httpClientFactory, Logger)
+            {
+                ProjectId = _projectId,
+                Region = _region,
+                RequestOptions = _requestOptions
+            };
+            return _fileSearchStoresModel;
+        }
+
+        public OperationsModel OperationsModel()
+        {
+            Guard();
+            _operationsModel ??= new OperationsModel(_httpClientFactory, Logger)
+            {
+                ProjectId = _projectId,
+                Region = _region,
+                RequestOptions = _requestOptions
+            };
+            return _operationsModel;
         }
 
         /// <summary>

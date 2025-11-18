@@ -12,6 +12,8 @@ namespace Mscc.GenerativeAI.Web
         /// Gets the default generative model instance.
         /// </summary>
         GenerativeModel Model { get; }
+        FileSearchStoresModel FileSearchStores { get; }
+        OperationsModel Operations { get; }
         
         /// <summary>
         /// Creates a new instance of the default generative model.
@@ -34,6 +36,13 @@ namespace Mscc.GenerativeAI.Web
     {
         private readonly IGenerativeAI _generativeAi;
         private readonly GenerativeModel _model;
+        
+        /// <summary>
+        /// Default instance of the model.
+        /// </summary>
+        public GenerativeModel Model => _model;
+        public FileSearchStoresModel FileSearchStores => _generativeAi.FileSearchStoresModel();
+        public OperationsModel Operations => _generativeAi.OperationsModel();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModelService"/> class.
@@ -78,11 +87,6 @@ namespace Mscc.GenerativeAI.Web
             }
             _model = _generativeAi.GenerativeModel(model: model);
         }
-        
-        /// <summary>
-        /// Default instance of the model.
-        /// </summary>
-        public GenerativeModel Model => _model;
         
         /// <summary>
         /// Creates a new instance of the current model.
