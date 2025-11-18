@@ -218,7 +218,7 @@ namespace Mscc.GenerativeAI
         /// <param name="customMetadata">Custom metadata to be associated with the file.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns></returns>
+        /// <returns>An operation of the imported file.</returns>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is <see langword="null"/> or empty.</exception>
         /// <exception cref="ArgumentException">Thrown when the <paramref name="filename"/> is <see langword="null"/> or empty.</exception>
         public async Task<Operation> ImportFile(string name,
@@ -306,6 +306,72 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Uploads data to a <see cref="FileSearchStore"/>, preprocesses and chunks before storing it in a <see cref="FileSearchStore"/> Document.
+        /// </summary>
+        /// <param name="name">Name of the File Search Store.</param>
+        /// <param name="stream">Stream to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="mimeType">The MIME type of the stream content.</param>
+        /// <param name="config">Configuration settings for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An operation of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
+        public async Task<CustomLongRunningOperation> Upload(string name,
+            Stream stream,
+            string displayName,
+            string mimeType,
+            UploadToFileSearchStoreRequest? config = null,
+            bool resumable = false,
+            RequestOptions? requestOptions = null, 
+            CancellationToken cancellationToken = default)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(stream));
+            if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
+            if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType);
+
+            var totalBytes = stream.Length;
+            var request = config ?? new UploadToFileSearchStoreRequest();
+            request.DisplayName ??= displayName;
+            request.MimeType ??= mimeType;
+
+            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+            var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
+            if (resumable)
+            { 
+                url = $"{baseUri}/resumable/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
+            }
+            url = ParseUrl(url).AddQueryString(new Dictionary<string, string?>()
+            {
+                ["alt"] = "json", 
+                ["uploadType"] = "multipart"
+            });
+            var json = Serialize(request);
+
+            var multipartContent = new MultipartContent("related");
+            multipartContent.Add(new StringContent(json, Encoding.UTF8, Constants.MediaType));
+            multipartContent.Add(new StreamContent(stream, (int)Constants.ChunkSize)
+            {
+                Headers = { 
+                    ContentType = new MediaTypeHeaderValue(mimeType), 
+                    ContentLength = totalBytes 
+                }
+            });
+            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            httpRequest.Content = multipartContent;
+            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
+            await response.EnsureSuccessAsync(cancellationToken);
+            return await Deserialize<CustomLongRunningOperation>(response);
+        }
+
+        /// <summary>
         /// Compatibility method with Google SDK. Use <see cref="Upload"/> for convenience.
         /// </summary>
         /// <param name="fileSearchStoreName">Name of the File Search Store.</param>
@@ -314,7 +380,7 @@ namespace Mscc.GenerativeAI
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns></returns>
+        /// <returns>An operation of the uploaded file.</returns>
         public async Task<CustomLongRunningOperation> UploadToFileSearchStore(
             string fileSearchStoreName,
             string file,
@@ -326,6 +392,42 @@ namespace Mscc.GenerativeAI
             return await Upload(fileSearchStoreName,
                 file,
                 null,
+                config,
+                resumable,
+                requestOptions,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Compatibility method with Google SDK. Use <see cref="Upload"/> for convenience.
+        /// </summary>
+        /// <param name="fileSearchStoreName">Name of the File Search Store.</param>
+        /// <param name="stream">Stream to upload.</param>
+        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="mimeType">The MIME type of the stream content.</param>
+        /// <param name="config">Configuration settings for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An operation of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is null or empty.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the <paramref name="stream"/> size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the <paramref name="stream"/> upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the <paramref name="mimeType"/> is not supported by the API.</exception>
+        public async Task<CustomLongRunningOperation> UploadToFileSearchStore(string fileSearchStoreName,
+            Stream stream,
+            string displayName,
+            string mimeType,
+            UploadToFileSearchStoreRequest? config = null,
+            bool resumable = false,
+            RequestOptions? requestOptions = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await Upload(fileSearchStoreName,
+                stream,
+                displayName,
+                mimeType,
                 config,
                 resumable,
                 requestOptions,
