@@ -544,7 +544,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt =
                 "Hi, can you create a 3d rendered image of a pig with wings and a top hat flying over a happy futuristic scifi city with lots of greenery?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.Gemini20FlashImageGeneration);
+            var model = _googleAi.GenerativeModel(model: Model.NanoBanana);
             var request = new GenerateContentRequest(prompt,
                 generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
 
@@ -574,7 +574,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Show me how to bake a macaron with images.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: Model.Gemini20FlashImageGeneration);
+            var model = _googleAi.GenerativeModel(model: Model.NanoBanana);
             var request = new GenerateContentRequest(prompt,
                 generationConfig: new() { ResponseModalities = [ResponseModality.Text, ResponseModality.Image] });
 
@@ -2924,7 +2924,7 @@ namespace Test.Mscc.GenerativeAI
             var generationConfig = new GenerateContentConfig()
             {
                 ResponseSchema =
-                    Schema.FromString("""{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}}}"""),
+                    Schema.FromString("""{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","properties":{"type":{"type":"string"},"topic":{"type":["string","null"]},"iptc":{"type":"object","properties":"type":{"type":"string"},"additionalProperties":{"type":"number","minimum":0.0,"maximum":1.0}}}}"""),
                 ResponseMimeType = "application/json"
             };
 
