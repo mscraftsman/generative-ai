@@ -2697,6 +2697,10 @@ namespace Test.Mscc.GenerativeAI
         }
         
         // Define the Instrument enum
+        /// <summary>
+        /// A list of instruments played in an orchestra.
+        /// </summary>
+        [Json.Schema.Generation.Description("A list of instruments played in an orchestra.")]
         public enum Instrument
         {
             [EnumMember(Value = "Percussion")] Percussion,
