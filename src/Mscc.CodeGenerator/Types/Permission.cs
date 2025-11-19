@@ -36,6 +36,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Required. The role granted by this permission.
 		/// </summary>
-		public Role? Role { get; set; }
+		public PermissionRole? Role { get; set; }
     }
 }
