@@ -86,6 +86,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Model called too many tools consecutively, thus the system exited execution.
         /// </summary>
-        TooManyToolCalls
+        TooManyToolCalls,
+        /// <summary>
+        /// Request has at least one thought signature missing.
+        /// </summary>
+        MissingThoughtSignature
     }
 }
