@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -68,6 +67,7 @@ namespace Mscc.CodeGenerator
                 sb.AppendLine("{");
                 GenerateType(sb, schema, outputDirectory);
                 sb.AppendLine("}");
+                PrefixOutput(sb);
                 File.WriteAllText(Path.Combine(outputDirectory, $"{schema.Name}.cs"), sb.ToString());
             }
         }
@@ -127,10 +127,14 @@ namespace Mscc.CodeGenerator
                         if (!_generatedEnums.ContainsKey(enumName))
                         {
                             var enumSb = new StringBuilder();
+                            enumSb.AppendLine($"namespace {_namespace}");
+                            enumSb.AppendLine("{");
                             var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc) ? desc.EnumerateArray().Select(x => x.GetString()).ToList() : new List<string?>();
                             GenerateEnum(enumSb, enumName, enumElement, enumDescriptions);
+                            enumSb.AppendLine("}");
                             _generatedEnums.Add(enumName, enumSb.ToString());
-                            File.WriteAllText(Path.Combine("Types", $"{enumName}.cs"), $"namespace {_namespace}\n{{\n{enumSb.ToString()}}}");
+                            PrefixOutput(enumSb);
+                            File.WriteAllText(Path.Combine("Types", $"{enumName}.cs"), enumSb.ToString());
                         }
                     }
 
@@ -251,6 +255,24 @@ namespace Mscc.CodeGenerator
         private static void PrefixOutput(StringBuilder stringBuilder)
         {
 	        var prefix = new StringBuilder();
+	        prefix.AppendLine("""
+	                      /*
+	                       * Copyright 2024-2025 Jochen Kirstätter
+	                       *
+	                       * Licensed under the Apache License, Version 2.0 (the "License");
+	                       * you may not use this file except in compliance with the License.
+	                       * You may obtain a copy of the License at
+	                       *
+	                       *      https://www.apache.org/licenses/LICENSE-2.0
+	                       *
+	                       * Unless required by applicable law or agreed to in writing, software
+	                       * distributed under the License is distributed on an "AS IS" BASIS,
+	                       * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	                       * See the License for the specific language governing permissions and
+	                       * limitations under the License.
+	                       */
+	                      """);
+
 	        var content = stringBuilder.ToString();
 	        if (content.Contains("List<"))
 	        {
@@ -260,6 +282,9 @@ namespace Mscc.CodeGenerator
 	        {
 		        prefix.AppendLine("using System.Text.Json.Serialization;");
 	        }
+	        prefix.AppendLine("");
+	        
+	        stringBuilder.Insert(0, prefix.ToString());
         }
 
         private string ToPascalCase(string s, string? containingClassName = null)
