@@ -8,17 +8,6 @@ namespace Mscc.GenerativeAI
     public class RetrievedContext
     {
         /// <summary>
-        /// Output only. The full document name for the referenced Vertex AI Search document. This is
-        /// used to identify the specific document that was retrieved. The format is
-        /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/branches/{branch}/documents/{document}`.
-        /// </summary>
-        public string? DocumentName { get; set; }
-        /// <summary>
-        /// Additional context for a Retrieval-Augmented Generation (RAG) retrieval result. This is
-        /// populated only when the RAG retrieval tool is used.
-        /// </summary>
-        public RagChunk? RagChunk { get; set; }
-        /// <summary>
         /// The content of the retrieved data source.
         /// </summary>
         public string? Text { get; set; }
@@ -31,8 +20,8 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public string? Uri { get; set; }
         /// <summary>
-        /// Optional. Name of the `RagStore` containing the document. Example: `ragStores/123`
+        /// Optional. Name of the <see cref="FileSearchStore"/> containing the document. Example: `fileSearchStores/123`
         /// </summary>
-        public string? RagStore { get; set; }
+        public string? FileSearchStore { get; set; }
     }
 }
