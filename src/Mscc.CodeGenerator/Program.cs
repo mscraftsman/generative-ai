@@ -274,6 +274,10 @@ namespace Mscc.CodeGenerator
 	                      """);
 
 	        var content = stringBuilder.ToString();
+	        if (content.Contains("DateTime"))
+	        {
+		        prefix.AppendLine("using System;");
+	        }
 	        if (content.Contains("List<"))
 	        {
 		        prefix.AppendLine("using System.Collections.Generic;");
