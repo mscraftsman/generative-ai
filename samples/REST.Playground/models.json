@@ -32,25 +32,6 @@
       "version": "2.5-preview-03-25"
     },
     {
-      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 05-20",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-preview-05-20",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-05-20"
-    },
-    {
       "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
       "displayName": "Gemini 2.5 Flash",
       "inputTokenLimit": 1048576,
@@ -68,25 +49,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "001"
-    },
-    {
-      "description": "Preview release (June 11th, 2025) of Gemini 2.5 Flash-Lite",
-      "displayName": "Gemini 2.5 Flash-Lite Preview 06-17",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-lite-preview-06-17",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-06-17"
     },
     {
       "description": "Preview release (May 6th, 2025) of Gemini 2.5 Pro",
@@ -248,23 +210,6 @@
       ],
       "temperature": 1,
       "topK": 40,
-      "topP": 0.95,
-      "version": "2.0"
-    },
-    {
-      "description": "Gemini 2.0 Flash Preview Image Generation",
-      "displayName": "Gemini 2.0 Flash Preview Image Generation",
-      "inputTokenLimit": 32768,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-preview-image-generation",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 64,
       "topP": 0.95,
       "version": "2.0"
     },
@@ -699,6 +644,25 @@
       "version": "2.5-preview-09-25"
     },
     {
+      "description": "Gemini 3 Pro Preview",
+      "displayName": "Gemini 3 Pro Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-3-pro-preview",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3-pro-preview-11-2025"
+    },
+    {
       "description": "Gemini Robotics-ER 1.5 Preview",
       "displayName": "Gemini Robotics-ER 1.5 Preview",
       "inputTokenLimit": 1048576,
@@ -809,17 +773,6 @@
       "version": "001"
     },
     {
-      "description": "Vertex served Imagen 3.0 002 model",
-      "displayName": "Imagen 3.0",
-      "inputTokenLimit": 480,
-      "name": "models/imagen-3.0-generate-002",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "predict"
-      ],
-      "version": "002"
-    },
-    {
       "description": "Vertex served Imagen 4.0 model",
       "displayName": "Imagen 4 (Preview)",
       "inputTokenLimit": 480,
@@ -884,28 +837,6 @@
         "predictLongRunning"
       ],
       "version": "2.0"
-    },
-    {
-      "description": "Veo 3 preview.",
-      "displayName": "Veo 3",
-      "inputTokenLimit": 480,
-      "name": "models/veo-3.0-generate-preview",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "predictLongRunning"
-      ],
-      "version": "3.0"
-    },
-    {
-      "description": "Veo 3 fast preview.",
-      "displayName": "Veo 3 fast",
-      "inputTokenLimit": 480,
-      "name": "models/veo-3.0-fast-generate-preview",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "predictLongRunning"
-      ],
-      "version": "3.0"
     },
     {
       "description": "Veo 3",

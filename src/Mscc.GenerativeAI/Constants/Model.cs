@@ -36,9 +36,6 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashLive = Gemini20FlashLive001;
         public const string Gemini20FlashLive001 = "gemini-2.0-flash-live-001";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
-        public const string Gemini20FlashImageGeneration = Gemini20FlashImageGenerationPreview;
-        public const string Gemini20FlashPreviewImageGeneration = "gemini-2.0-flash-preview-image-generation";
-        public const string Gemini20FlashImageGenerationPreview = "gemini-2.0-flash-preview-image-generation";
         public const string Gemini20FlashImageGenerationExperimental = "gemini-2.0-flash-exp-image-generation";
         public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
         public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
@@ -60,11 +57,9 @@ namespace Mscc.GenerativeAI
         public const string GeminiProLatest = "gemini-pro-latest";
         public const string Gemini25Flash = "gemini-2.5-flash";
         public const string Gemini25FlashPreview = Gemini25FlashPreview092025;
-        public const string Gemini25FlashPreview0520 = "gemini-2.5-flash-preview-05-20";
         public const string Gemini25FlashPreview092025 = "gemini-2.5-flash-preview-09-2025";
         public const string Gemini25FlashLite = "gemini-2.5-flash-lite";
         public const string Gemini25FlashLitePreview = Gemini25FlashLitePreview092025;
-        public const string Gemini25FlashLitePreview0617 = "gemini-2.5-flash-lite-preview-06-17";
         public const string Gemini25FlashLitePreview092025 = "gemini-2.5-flash-lite-preview-09-2025";
         public const string Gemini25FlashPreviewTts = "gemini-2.5-flash-preview-tts";
         public const string Gemini25FlashPreviewNativeAudioDialog = "gemini-2.5-flash-preview-native-audio-dialog-rai-v3";
@@ -91,6 +86,10 @@ namespace Mscc.GenerativeAI
         public const string Gemini25ComputerUsePreview = Gemini25ComputerUsePreview102025;
         public const string Gemini25ComputerUsePreview102025 = "gemini-2.5-computer-use-preview-10-2025";
 
+        // Deprecated
+        public const string Gemini25FlashPreview0520 = "gemini-2.5-flash-preview-05-20";
+        public const string Gemini25FlashLitePreview0617 = "gemini-2.5-flash-lite-preview-06-17";
+        
         // Gemini 3
         public const string Gemini3Pro = Gemini3ProPreview;
         public const string Gemini3ProPreview = "gemini-3-pro-preview";
@@ -167,19 +166,13 @@ namespace Mscc.GenerativeAI
         public const string Imagen4 = Imagen4Generate001;
         public const string Imagen4Generate001 = "imagen-4.0-generate-001";
         public const string Imagen4Preview = Imagen4Preview0606;
-        public const string Imagen4Preview0520 = "imagen-4.0-generate-preview-05-20";
         public const string Imagen4Preview0606 = "imagen-4.0-generate-preview-06-06";
         public const string Imagen4Fast = Imagen4FastGenerate001;
         public const string Imagen4FastGenerate001 = "imagen-4.0-fast-generate-001";
         public const string Imagen4Ultra = Imagen4UltraGenerate001;
         public const string Imagen4UltraGenerate001 = "imagen-4.0-ultra-generate-001";
-        public const string Imagen4UltraPreview = Imagen4UltraPreview0606;
-        public const string Imagen4UltraPreview0520 = "imagen-4.0-ultra-generate-exp-05-20";
-        public const string Imagen4UltraPreview0606 = "imagen-4.0-ultra-generate-preview-06-06";
         public const string Imagen3 = Imagen3Generate002;
-        public const string Imagen3Generate001 = "imagen-3.0-generate-001";
         public const string Imagen3Generate002 = "imagen-3.0-generate-002";
-        public const string Imagen3Experimental = "imagen-3.0-generate-002-exp";
         public const string Imagen3Fast = Imagen3GenerateFast001;
         public const string Imagen3GenerateFast = Imagen3GenerateFast001;
         public const string Imagen3GenerateFast001 = "imagen-3.0-fast-generate-001";
@@ -199,10 +192,7 @@ namespace Mscc.GenerativeAI
         public const string ImageText = "imagetext";
 
         // Veo
-        public const string Veo = Veo2Generate;
-        public const string Veo2 = Veo2Generate;
-        public const string Veo2Generate = Veo2Generate001;
-        public const string Veo2Generate001 = "veo-2.0-generate-001";
+        public const string Veo = Veo3Generate;
         public const string Veo3 = Veo3Generate;
         public const string Veo3Generate = Veo3Generate001;
         public const string Veo3Generate001 = "veo-3.0-generate-001";
@@ -210,7 +200,6 @@ namespace Mscc.GenerativeAI
         public const string Veo3Fast = Veo3FastGenerate;
         public const string Veo3FastGenerate = Veo3FastGenerate001;
         public const string Veo3FastGenerate001 = "veo-3.0-fast-generate-001";
-        public const string Veo3FastPreview = "veo-3.0-fast-generate-preview";
         public const string Veo31 = Veo31Generate;
         public const string Veo31Generate = Veo31GeneratePreview;
         public const string Veo31GeneratePreview = "veo-3.1-generate-preview";
@@ -219,8 +208,7 @@ namespace Mscc.GenerativeAI
         public const string Veo31FastGeneratePreview = "veo-3.1-fast-generate-preview";
 
         // Lyria
-        public const string Lyria = LyriaBase001;
-        public const string LyriaBase001 = "lyria-base-001";
+        public const string Lyria = Lyria2;
         public const string Lyria2 = "lyria-002";
         public const string LyriaRealtime = LyriaRealtimeExperimental;
         public const string LyriaRealtimeExperimental = "lyria-realtime-exp";
