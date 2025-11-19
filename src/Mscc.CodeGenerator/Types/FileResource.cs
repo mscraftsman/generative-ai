@@ -20,7 +20,7 @@ namespace Mscc.GenerativeAI.Types
 	/// <summary>
 	/// A file uploaded to the API. Next ID: 15
 	/// </summary>
-	public partial class File
+	public partial class FileResource
 	{
 		/// <summary>
 		/// Output only. The timestamp of when the <see cref="File"/> was created.

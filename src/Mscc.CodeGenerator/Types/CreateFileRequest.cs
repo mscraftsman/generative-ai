@@ -24,6 +24,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Optional. Metadata for the file to create.
 		/// </summary>
-		public File? File { get; set; }
+		public FileResource? File { get; set; }
     }
 }
