@@ -29,6 +29,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// The returned Models.
 		/// </summary>
-		public List<TunedModel>? TunedModels { get; set; }
+		public List<ModelResponse>? TunedModels { get; set; }
     }
 }
