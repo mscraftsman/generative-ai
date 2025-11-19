@@ -109,6 +109,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Required. Data type.
 		/// </summary>
-		public Type? Type { get; set; }
+		public ParameterType? Type { get; set; }
     }
 }

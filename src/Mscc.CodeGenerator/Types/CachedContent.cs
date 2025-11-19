@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Optional. Input only. Immutable. A list of <see cref="Tools"/> the model may use to generate the next response
 		/// </summary>
-		public List<Tool>? Tools { get; set; }
+		public Tools? Tools { get; set; }
 		/// <summary>
 		/// Input only. New TTL for this resource, input only.
 		/// </summary>
