@@ -197,7 +197,7 @@
               "type": "string"
             },
             "returnPartialSuccess": {
-              "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+              "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
               "location": "query",
               "type": "boolean"
             }
@@ -561,7 +561,7 @@
               ],
               "parameters": {
                 "name": {
-                  "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"ragStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
+                  "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"fileSearchStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c`",
                   "location": "path",
                   "pattern": "^corpora/[^/]+/documents/[^/]+$",
                   "required": true,
@@ -1142,31 +1142,6 @@
       "resources": {
         "documents": {
           "methods": {
-            "create": {
-              "description": "Creates an empty `Document`.",
-              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents",
-              "httpMethod": "POST",
-              "id": "generativelanguage.fileSearchStores.documents.create",
-              "parameterOrder": [
-                "parent"
-              ],
-              "parameters": {
-                "parent": {
-                  "description": "Required. The name of the `RagStore` where this `Document` will be created. Example: `ragStores/my-rag-store-123`",
-                  "location": "path",
-                  "pattern": "^fileSearchStores/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+parent}/documents",
-              "request": {
-                "$ref": "Document"
-              },
-              "response": {
-                "$ref": "Document"
-              }
-            },
             "delete": {
               "description": "Deletes a `Document`.",
               "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents/{documentsId}",
@@ -1182,7 +1157,7 @@
                   "type": "boolean"
                 },
                 "name": {
-                  "description": "Required. The resource name of the `Document` to delete. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "description": "Required. The resource name of the `Document` to delete. Example: `fileSearchStores/my-file-search-store-123/documents/the-doc-abc`",
                   "location": "path",
                   "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
                   "required": true,
@@ -1204,7 +1179,7 @@
               ],
               "parameters": {
                 "name": {
-                  "description": "Required. The name of the `Document` to retrieve. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "description": "Required. The name of the `Document` to retrieve. Example: `fileSearchStores/my-file-search-store-123/documents/the-doc-abc`",
                   "location": "path",
                   "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
                   "required": true,
@@ -1237,7 +1212,7 @@
                   "type": "string"
                 },
                 "parent": {
-                  "description": "Required. The name of the `RagStore` containing `Document`s. Example: `ragStores/my-rag-store-123`",
+                  "description": "Required. The name of the `FileSearchStore` containing `Document`s. Example: `fileSearchStores/my-file-search-store-123`",
                   "location": "path",
                   "pattern": "^fileSearchStores/[^/]+$",
                   "required": true,
@@ -1259,7 +1234,7 @@
               ],
               "parameters": {
                 "name": {
-                  "description": "Required. The name of the `Document` to query. Example: `ragStores/my-rag-store-123/documents/the-doc-abc`",
+                  "description": "Required. The name of the `Document` to query. Example: `fileSearchStores/my-file-search-store-123/documents/the-doc-abc`",
                   "location": "path",
                   "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
                   "required": true,
@@ -2057,7 +2032,7 @@
                   "type": "string"
                 },
                 "returnPartialSuccess": {
-                  "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+                  "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
                   "location": "query",
                   "type": "boolean"
                 }
@@ -2067,135 +2042,6 @@
                 "$ref": "ListOperationsResponse"
               }
             }
-          }
-        }
-      }
-    },
-    "ragStores": {
-      "methods": {
-        "create": {
-          "description": "Creates an empty `RagStore`.",
-          "flatPath": "v1beta/ragStores",
-          "httpMethod": "POST",
-          "id": "generativelanguage.ragStores.create",
-          "parameterOrder": [
-
-          ],
-          "parameters": {
-
-          },
-          "path": "v1beta/ragStores",
-          "request": {
-            "$ref": "RagStore"
-          },
-          "response": {
-            "$ref": "RagStore"
-          }
-        },
-        "delete": {
-          "description": "Deletes a `RagStore`.",
-          "flatPath": "v1beta/ragStores/{ragStoresId}",
-          "httpMethod": "DELETE",
-          "id": "generativelanguage.ragStores.delete",
-          "parameterOrder": [
-            "name"
-          ],
-          "parameters": {
-            "force": {
-              "description": "Optional. If set to true, any `Document`s and objects related to this `RagStore` will also be deleted. If false (the default), a `FAILED_PRECONDITION` error will be returned if `RagStore` contains any `Document`s.",
-              "location": "query",
-              "type": "boolean"
-            },
-            "name": {
-              "description": "Required. The resource name of the `RagStore`. Example: `ragStores/my-rag-store-123`",
-              "location": "path",
-              "pattern": "^ragStores/[^/]+$",
-              "required": true,
-              "type": "string"
-            }
-          },
-          "path": "v1beta/{+name}",
-          "response": {
-            "$ref": "Empty"
-          }
-        },
-        "get": {
-          "description": "Gets information about a specific `RagStore`.",
-          "flatPath": "v1beta/ragStores/{ragStoresId}",
-          "httpMethod": "GET",
-          "id": "generativelanguage.ragStores.get",
-          "parameterOrder": [
-            "name"
-          ],
-          "parameters": {
-            "name": {
-              "description": "Required. The name of the `RagStore`. Example: `ragStores/my-rag-store-123`",
-              "location": "path",
-              "pattern": "^ragStores/[^/]+$",
-              "required": true,
-              "type": "string"
-            }
-          },
-          "path": "v1beta/{+name}",
-          "response": {
-            "$ref": "RagStore"
-          }
-        },
-        "list": {
-          "description": "Lists all `RagStores` owned by the user.",
-          "flatPath": "v1beta/ragStores",
-          "httpMethod": "GET",
-          "id": "generativelanguage.ragStores.list",
-          "parameterOrder": [
-
-          ],
-          "parameters": {
-            "pageSize": {
-              "description": "Optional. The maximum number of `RagStores` to return (per page). The service may return fewer `RagStores`. If unspecified, at most 10 `RagStores` will be returned. The maximum size limit is 20 `RagStores` per page.",
-              "format": "int32",
-              "location": "query",
-              "type": "integer"
-            },
-            "pageToken": {
-              "description": "Optional. A page token, received from a previous `ListRagStores` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListRagStores` must match the call that provided the page token.",
-              "location": "query",
-              "type": "string"
-            }
-          },
-          "path": "v1beta/ragStores",
-          "response": {
-            "$ref": "ListRagStoresResponse"
-          }
-        },
-        "patch": {
-          "description": "Updates a `RagStore`.",
-          "flatPath": "v1beta/ragStores/{ragStoresId}",
-          "httpMethod": "PATCH",
-          "id": "generativelanguage.ragStores.patch",
-          "parameterOrder": [
-            "name"
-          ],
-          "parameters": {
-            "name": {
-              "description": "Output only. Immutable. Identifier. The `RagStore` resource name. It is an ID (name excluding the \"ragStores/\" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/my-awesome-rag-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated.",
-              "location": "path",
-              "pattern": "^ragStores/[^/]+$",
-              "required": true,
-              "type": "string"
-            },
-            "updateMask": {
-              "description": "Required. The list of fields to update. Currently, this only supports updating `display_name`.",
-              "format": "google-fieldmask",
-              "location": "query",
-              "type": "string"
-            }
-          },
-          "path": "v1beta/{+name}",
-          "request": {
-            "$ref": "RagStore"
-          },
-          "response": {
-            "$ref": "RagStore"
           }
         }
       }
@@ -2540,7 +2386,7 @@
                   "type": "string"
                 },
                 "returnPartialSuccess": {
-                  "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the [ListOperationsResponse.unreachable] field. This can only be `true` when reading across collections e.g. when `parent` is set to `\"projects/example/locations/-\"`. This field is not by default supported and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
+                  "description": "When set to `true`, operations that are reachable are returned as normal, and those that are unreachable are returned in the ListOperationsResponse.unreachable field. This can only be `true` when reading across collections. For example, when `parent` is set to `\"projects/example/locations/-\"`. This field is not supported by default and will result in an `UNIMPLEMENTED` error if set unless explicitly documented otherwise in service or product specific documentation.",
                   "location": "query",
                   "type": "boolean"
                 }
@@ -2692,7 +2538,7 @@
       }
     }
   },
-  "revision": "20251106",
+  "revision": "20251117",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -3040,7 +2886,8 @@
             "NO_IMAGE",
             "IMAGE_RECITATION",
             "UNEXPECTED_TOOL_CALL",
-            "TOO_MANY_TOOL_CALLS"
+            "TOO_MANY_TOOL_CALLS",
+            "MISSING_THOUGHT_SIGNATURE"
           ],
           "enumDescriptions": [
             "Default value. This value is unused.",
@@ -3060,7 +2907,8 @@
             "The model was expected to generate an image, but none was generated.",
             "Image generation stopped due to recitation.",
             "Model generated a tool call but no tools were enabled in the request.",
-            "Model called too many tools consecutively, thus the system exited execution."
+            "Model called too many tools consecutively, thus the system exited execution.",
+            "Request has at least one thought signature missing."
           ],
           "readOnly": true,
           "type": "string"
@@ -3546,7 +3394,6 @@
       "type": "object"
     },
     "CustomLongRunningOperation": {
-      "description": "This is a copy of google.longrunning.Operation. We need to copy it because for interacting with scotty, we need to add a scotty specific field that can't be added in the top level Operation proto.",
       "id": "CustomLongRunningOperation",
       "properties": {
         "done": {
@@ -3653,7 +3500,7 @@
           "type": "string"
         },
         "name": {
-          "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"ragStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/{corpus_id}/documents/my-awesome-doc-123a456b789c`",
+          "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"fileSearchStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c`",
           "type": "string"
         },
         "sizeBytes": {
@@ -5563,7 +5410,7 @@
           "type": "array"
         },
         "unreachable": {
-          "description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections e.g. when attempting to list all resources across all supported locations.",
+          "description": "Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.",
           "items": {
             "type": "string"
           },
@@ -5584,24 +5431,6 @@
           "description": "Returned permissions.",
           "items": {
             "$ref": "Permission"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "ListRagStoresResponse": {
-      "description": "Response from `ListRagStores` containing a paginated list of `RagStores`. The results are sorted by ascending `rag_store.create_time`.",
-      "id": "ListRagStoresResponse",
-      "properties": {
-        "nextPageToken": {
-          "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no more pages.",
-          "type": "string"
-        },
-        "ragStores": {
-          "description": "The returned rag_stores.",
-          "items": {
-            "$ref": "RagStore"
           },
           "type": "array"
         }
@@ -6199,58 +6028,6 @@
       },
       "type": "object"
     },
-    "RagStore": {
-      "description": "A `RagStore` is a collection of `Document`s.",
-      "id": "RagStore",
-      "properties": {
-        "activeDocumentsCount": {
-          "description": "Output only. The number of documents in the Ragstore that are active and ready for retrieval.",
-          "format": "int64",
-          "readOnly": true,
-          "type": "string"
-        },
-        "createTime": {
-          "description": "Output only. The Timestamp of when the `RagStore` was created.",
-          "format": "google-datetime",
-          "readOnly": true,
-          "type": "string"
-        },
-        "displayName": {
-          "description": "Optional. The human-readable display name for the `RagStore`. The display name must be no more than 512 characters in length, including spaces. Example: \"Docs on Semantic Retriever\"",
-          "type": "string"
-        },
-        "failedDocumentsCount": {
-          "description": "Output only. The number of documents in the Ragstore that have failed processing.",
-          "format": "int64",
-          "readOnly": true,
-          "type": "string"
-        },
-        "name": {
-          "description": "Output only. Immutable. Identifier. The `RagStore` resource name. It is an ID (name excluding the \"ragStores/\" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `ragStores/my-awesome-rag-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated.",
-          "readOnly": true,
-          "type": "string"
-        },
-        "pendingDocumentsCount": {
-          "description": "Output only. The number of documents in the Ragstore that are being processed.",
-          "format": "int64",
-          "readOnly": true,
-          "type": "string"
-        },
-        "sizeBytes": {
-          "description": "Output only. The size of raw bytes ingested into the Ragstore. This is the total size of all the documents in the Ragstore.",
-          "format": "int64",
-          "readOnly": true,
-          "type": "string"
-        },
-        "updateTime": {
-          "description": "Output only. The Timestamp of when the `RagStore` was last updated.",
-          "format": "google-datetime",
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "RelevantChunk": {
       "description": "The information for a chunk relevant to a query.",
       "id": "RelevantChunk",
@@ -6302,8 +6079,8 @@
       "description": "Chunk from context retrieved by the file search tool.",
       "id": "RetrievedContext",
       "properties": {
-        "ragStore": {
-          "description": "Optional. Name of the `RagStore` containing the document. Example: `ragStores/123`",
+        "fileSearchStore": {
+          "description": "Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`",
           "type": "string"
         },
         "text": {
@@ -6855,9 +6632,23 @@
           "type": "boolean"
         },
         "thinkingBudget": {
-          "description": "Only one of the thinking_budget or thinking_level fields in this message may be set at a time. For backward compatibility, the validation will be done in application logic. The number of thoughts tokens that the model should generate.",
+          "description": "The number of thoughts tokens that the model should generate.",
           "format": "int32",
           "type": "integer"
+        },
+        "thinkingLevel": {
+          "description": "Optional. The level of thoughts tokens that the model should generate.",
+          "enum": [
+            "THINKING_LEVEL_UNSPECIFIED",
+            "LOW",
+            "HIGH"
+          ],
+          "enumDescriptions": [
+            "Default value.",
+            "Low thinking level.",
+            "High thinking level."
+          ],
+          "type": "string"
         }
       },
       "type": "object"
