@@ -66,7 +66,7 @@ namespace Mscc.CodeGenerator
                 sb.AppendLine($"namespace {_namespace}");
                 sb.AppendLine("{");
                 GenerateType(sb, schema, outputDirectory);
-                sb.AppendLine("}");
+                sb.Append("}");
                 PrefixOutput(sb);
                 File.WriteAllText(Path.Combine(outputDirectory, $"{schema.Name}.cs"), sb.ToString());
             }
@@ -131,7 +131,7 @@ namespace Mscc.CodeGenerator
                             enumSb.AppendLine("{");
                             var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc) ? desc.EnumerateArray().Select(x => x.GetString()).ToList() : new List<string?>();
                             GenerateEnum(enumSb, enumName, enumElement, enumDescriptions);
-                            enumSb.AppendLine("}");
+                            enumSb.Append("}");
                             _generatedEnums.Add(enumName, enumSb.ToString());
                             PrefixOutput(enumSb);
                             File.WriteAllText(Path.Combine("Types", $"{enumName}.cs"), enumSb.ToString());
