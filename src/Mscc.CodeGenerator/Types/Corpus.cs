@@ -1,0 +1,25 @@
+namespace Mscc.GenerativeAI.Types
+{
+	/// <summary>
+	/// A <see cref="Corpus"/> is a collection of <see cref="Document"/>s. A project can create up to 10 corpora.
+	/// </summary>
+	public partial class Corpus
+	{
+		/// <summary>
+		/// Output only. The Timestamp of when the <see cref="Corpus"/> was created.
+		/// </summary>
+		public DateTime? CreateTime { get; set; }
+		/// <summary>
+		/// Optional. The human-readable display name for the <see cref="Corpus"/>. The display name must be no more than 512 characters in length, including spaces. Example: "Docs on Semantic Retriever"
+		/// </summary>
+		public string? DisplayName { get; set; }
+		/// <summary>
+		/// Output only. Immutable. Identifier. The <see cref="Corpus"/> resource name. The ID (name excluding the "corpora/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from <see cref="display_name"/> along with a 12 character random suffix. Example: <see cref="corpora/my-awesome-corpora-123a456b789c"/>
+		/// </summary>
+		public string? Name { get; set; }
+		/// <summary>
+		/// Output only. The Timestamp of when the <see cref="Corpus"/> was last updated.
+		/// </summary>
+		public DateTime? UpdateTime { get; set; }
+    }
+}
