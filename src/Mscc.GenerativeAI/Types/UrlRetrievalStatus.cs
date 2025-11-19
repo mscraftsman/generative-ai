@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<UrlRetrievalStatus>))]
+    /// <summary>
+    /// The status of the URL retrieval.
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<UrlRetrievalStatus>))]
     public enum UrlRetrievalStatus
     {
         /// <summary>
@@ -10,20 +13,26 @@ namespace Mscc.GenerativeAI.Types
         /// </summary>
         UrlRetrievalStatusUnspecified,
         /// <summary>
-        /// Url retrieval is successful.
+        /// The URL was retrieved successfully.
         /// </summary>
         UrlRetrievalStatusSuccess,
         /// <summary>
-        /// Url retrieval is failed due to error.
+        /// The URL retrieval failed.
         /// </summary>
         UrlRetrievalStatusError,
         /// <summary>
         /// Url retrieval is failed because the content is behind paywall.
         /// </summary>
+        /// <remarks>
+        /// This data type is not supported in Vertex AI.
+        /// </remarks>
         UrlRetrievalStatusPaywall,
         /// <summary>
         /// Url retrieval is failed because the content is unsafe.
         /// </summary>
-        UrlRetrievalStatusUnsafe,
+        /// <remarks>
+        /// This data type is not supported in Vertex AI.
+        /// </remarks>
+        UrlRetrievalStatusUnsafe
     }
 }

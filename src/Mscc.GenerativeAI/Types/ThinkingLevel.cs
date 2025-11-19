@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<ThinkingLevel>))]
+    /// <summary>
+    /// 
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<ThinkingLevel>))]
     public enum ThinkingLevel
     {
         /// <summary>
@@ -16,6 +19,6 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// High thinking level.
         /// </summary>
-        High,
+        High
     }
 }

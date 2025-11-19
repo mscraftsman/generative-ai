@@ -1,14 +1,24 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<TaskType>))]
+    /// <summary>
+    /// Type of task for which the embedding will be used.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/TaskType
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
     public enum TaskType
     {
         /// <summary>
-        /// Unset value, which will default to one of the other enum values.
+        /// Unset value, which will default to one of the other enum values. This enum value is not
+        /// supported in Vertex AI.
         /// </summary>
-        TaskTypeUnspecified,
+        TaskTypeUnspecified = 0,
+        /// <summary>
+        /// Unset value, which will default to one of the other enum values. This enum value is not
+        /// supported in Gemini API.
+        /// </summary>
+        Unspecified,
         /// <summary>
         /// Specifies the given text is a query in a search/retrieval setting.
         /// </summary>

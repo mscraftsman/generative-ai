@@ -1,25 +1,29 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<State>))]
+    /// <summary>
+    /// The state of the tuned model.
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<State>))]
     public enum State
     {
         /// <summary>
-        /// The default value. This value is used if the state is omitted.
+        /// The default value. This value is unused.
         /// </summary>
-        StateUnspecified,
+        StateUnspecified = 0, 
         /// <summary>
-        /// `Chunk` is being processed (embedding and vector storage).
+        /// The model is being created.
         /// </summary>
-        StatePendingProcessing,
+        Creating = 1,
         /// <summary>
-        /// `Chunk` is processed and available for querying.
+        /// The model is ready to be used.
         /// </summary>
-        StateActive,
+        Active = 2,
         /// <summary>
-        /// `Chunk` failed processing.
+        /// The model failed to be created.
         /// </summary>
-        StateFailed,
+        Failed = 3,
+        Error
     }
 }

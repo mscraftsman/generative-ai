@@ -1,25 +1,28 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<AnswerStyle>))]
+    /// <summary>
+    /// Style for grounded answers.
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<AnswerStyle>))]
     public enum AnswerStyle
     {
         /// <summary>
         /// Unspecified answer style.
         /// </summary>
-        AnswerStyleUnspecified,
+        AnswerStyleUnspecified = 0,
         /// <summary>
         /// Succinct but abstract style.
         /// </summary>
-        Abstractive,
+        Abstractive = 1,
         /// <summary>
         /// Very brief and extractive style.
         /// </summary>
-        Extractive,
+        Extractive = 2,
         /// <summary>
         /// Verbose style including extra details. The response may be formatted as a sentence, paragraph, multiple paragraphs, or bullet points, etc.
         /// </summary>
-        Verbose,
+        Verbose = 3
     }
 }

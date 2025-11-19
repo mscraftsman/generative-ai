@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<MediaResolution>))]
+    /// <summary>
+    /// The media resolution
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<MediaResolution>))]
     public enum MediaResolution
     {
         /// <summary>
@@ -20,6 +23,6 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// Media resolution set to high (zoomed reframing with 256 tokens).
         /// </summary>
-        MediaResolutionHigh,
+        MediaResolutionHigh
     }
 }

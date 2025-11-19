@@ -1,21 +1,41 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<BlockReason>))]
+    /// <summary>
+    /// A list of reasons why content may have been blocked.
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<BlockReason>))]
     public enum BlockReason
     {
         /// <summary>
-        /// Default value. This value is unused.
+        /// BlockedReasonUnspecified means unspecified blocked reason.
         /// </summary>
-        BlockReasonUnspecified,
+        BlockedReasonUnspecified = 0,
         /// <summary>
-        /// Input was blocked due to safety reasons. Inspect `safety_ratings` to understand which safety category blocked it.
+        /// Safety means candidates blocked due to safety.
+        /// You can inspect <see cref="SafetyRating"/>s to understand which safety category blocked it.
         /// </summary>
-        Safety,
+        Safety = 1,
         /// <summary>
-        /// Input was blocked due to other reasons.
+        /// Prompt was blocked due to unknown reasons.
         /// </summary>
-        Other,
+        Other = 2,
+        /// <summary>
+        /// Prompt was blocked due to the terms which are included from the terminology blocklist.
+        /// </summary>
+        Blocklist,
+        /// <summary>
+        /// Prompt was blocked due to prohibited content.
+        /// </summary>
+        ProhibitedContent,
+        /// <summary>
+        /// Candidates blocked due to unsafe image generation content.
+        /// </summary>
+        ImageSafety,
+        /// <summary>
+        /// The prompt was blocked as a jailbreak attempt.
+        /// </summary>
+        Jailbreak
     }
 }

@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -129,7 +130,7 @@ namespace Mscc.CodeGenerator
                             var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc) ? desc.EnumerateArray().Select(x => x.GetString()).ToList() : new List<string?>();
                             GenerateEnum(enumSb, enumName, enumElement, enumDescriptions);
                             _generatedEnums.Add(enumName, enumSb.ToString());
-                            File.WriteAllText(Path.Combine("Types", $"{enumName}.cs"), $"using System.Text.Json.Serialization;\n\nnamespace {_namespace}\n{{\n{enumSb.ToString()}}}");
+                            File.WriteAllText(Path.Combine("Types", $"{enumName}.cs"), $"namespace {_namespace}\n{{\n{enumSb.ToString()}}}");
                         }
                     }
 
@@ -245,6 +246,20 @@ namespace Mscc.CodeGenerator
 	        string replacement = @$"<see cref=""$1""/>";
 	        string result = Regex.Replace(value, pattern, replacement);
 	        return result;
+        }
+
+        private static void PrefixOutput(StringBuilder stringBuilder)
+        {
+	        var prefix = new StringBuilder();
+	        var content = stringBuilder.ToString();
+	        if (content.Contains("List<"))
+	        {
+		        prefix.AppendLine("using System.Collections.Generic;");
+	        }
+	        if (content.Contains("JsonStringEnumConverter<"))
+	        {
+		        prefix.AppendLine("using System.Text.Json.Serialization;");
+	        }
         }
 
         private string ToPascalCase(string s, string? containingClassName = null)

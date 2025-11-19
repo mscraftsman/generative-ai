@@ -1,14 +1,17 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI.Types
+namespace Mscc.GenerativeAI
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<Modality>))]
+    /// <summary>
+    /// The modality associated with a token count.
+    /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter<Modality>))]
     public enum Modality
     {
         /// <summary>
         /// Unspecified modality.
         /// </summary>
-        ModalityUnspecified,
+        ModalityUnspecified = 0,
         /// <summary>
         /// Plain text.
         /// </summary>
@@ -28,6 +31,6 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// Document, e.g. PDF.
         /// </summary>
-        Document,
+        Document
     }
 }
