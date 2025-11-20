@@ -1,29 +1,41 @@
+/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// The state of the tuned model.
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<State>))]
+	[JsonConverter(typeof(JsonStringEnumConverter<State>))]
     public enum State
     {
         /// <summary>
-        /// The default value. This value is unused.
+        /// The default value. This value is used if the state is omitted.
         /// </summary>
-        StateUnspecified = 0, 
+        StateUnspecified,
         /// <summary>
         /// The model is being created.
         /// </summary>
-        Creating = 1,
+        Creating,
         /// <summary>
         /// The model is ready to be used.
         /// </summary>
-        Active = 2,
+        Active,
         /// <summary>
         /// The model failed to be created.
         /// </summary>
-        Failed = 3,
+        Failed,
         Error
     }
 }
