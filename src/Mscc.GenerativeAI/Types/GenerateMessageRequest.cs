@@ -1,57 +1,45 @@
-using System.Collections.Generic;
-using System.Linq;
+/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Generates a response from the model given an input MessagePrompt.
-    /// </summary>
-    public class GenerateMessageRequest
-    {
-        /// <summary>
-        /// Required. The free-form input text given to the model as a prompt.
-        /// Given a prompt, the model will generate a TextCompletion response it predicts as the completion of the input text.
-        /// </summary>
-        public MessagePrompt Prompt { get; set; }
-        /// <summary>
-        /// Optional. Controls the randomness of predictions.
-        /// Temperature controls the degree of randomness in token selection. Lower temperatures are good for prompts that expect a true or correct response, while higher temperatures can lead to more diverse or unexpected results. With a temperature of 0, the highest probability token is always selected. 
-        /// </summary>
-        public float? Temperature { get; set; } = default;
-        /// <summary>
-        /// Optional. If specified, nucleus sampling will be used.
-        /// Top-p changes how the model selects tokens for output. Tokens are selected from most probable to least until the sum of their probabilities equals the top-p value. For example, if tokens A, B and C have a probability of .3, .2 and .1 and the top-p value is .5, then the model will select either A or B as the next token (using temperature).
-        /// </summary>
-        public float? TopP { get; set; } = default;
-        /// <summary>
-        /// Optional. If specified, top-k sampling will be used.
-        /// Top-k changes how the model selects tokens for output. A top-k of 1 means that the selected token is the most probable among all tokens in the model's vocabulary (also called greedy decoding), while a top-k of 3 means that the next token is selected from among the three most probable tokens (using temperature). 
-        /// </summary>
-        public int? TopK { get; set; } = default;
-        /// <summary>
-        /// Optional. Number of generated responses to return.
-        /// This value must be between [1, 8], inclusive. If unset, this will default to 1.
-        /// </summary>
-        public int? CandidateCount { get; set; } = default;
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public GenerateMessageRequest()
-        {
-            Prompt = new MessagePrompt()
-            {
-                Messages = new List<Message>()
-            };
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prompt"></param>
-        public GenerateMessageRequest(string prompt) : this()
-        {
-            Prompt.Messages.Add(new Message() { Content = prompt });
-        }
+	/// <summary>
+	/// Request to generate a message response from the model.
+	/// </summary>
+	public partial class GenerateMessageRequest
+	{
+		/// <summary>
+		/// Optional. The number of generated response messages to return. This value must be between <see cref="[1, 8]"/>, inclusive. If unset, this will default to <see cref="1"/>.
+		/// </summary>
+		public int? CandidateCount { get; set; }
+		/// <summary>
+		/// Required. The structured textual input given to the model as a prompt. Given a prompt, the model will return what it predicts is the next message in the discussion.
+		/// </summary>
+		public MessagePrompt? Prompt { get; set; }
+		/// <summary>
+		/// Optional. Controls the randomness of the output. Values can range over <see cref="[0.0,1.0]"/>, inclusive. A value closer to <see cref="1.0"/> will produce responses that are more varied, while a value closer to <see cref="0.0"/> will typically result in less surprising responses from the model.
+		/// </summary>
+		public double? Temperature { get; set; }
+		/// <summary>
+		/// Optional. The maximum number of tokens to consider when sampling. The model uses combined Top-k and nucleus sampling. Top-k sampling considers the set of <see cref="top_k"/> most probable tokens.
+		/// </summary>
+		public int? TopK { get; set; }
+		/// <summary>
+		/// Optional. The maximum cumulative probability of tokens to consider when sampling. The model uses combined Top-k and nucleus sampling. Nucleus sampling considers the smallest set of tokens whose probability sum is at least <see cref="top_p"/>.
+		/// </summary>
+		public double? TopP { get; set; }
     }
 }

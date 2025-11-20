@@ -1,31 +1,29 @@
-using System.Diagnostics;
+/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Optional. For video input, the start and end offset of the video in Duration format.
-    /// </summary>
-    /// <remarks>
-    /// For example, to specify a 10 second clip starting at 1:00,
-    /// set "start_offset": { "seconds": 60 } and "end_offset": { "seconds": 70 }.
-    /// </remarks>
-    [DebuggerDisplay("{StartOffset.Seconds} - {EndOffset.Seconds}")]
-    public class VideoFileMetadata
-    {
-        /// <summary>
-        /// Duration of the video.
-        /// </summary>
-        /// <remarks>
-        /// A duration in seconds with up to nine fractional digits, ending with 's'. Example: "3.5s".
-        /// </remarks>
-        public string? VideoDuration { get; set; }
-        /// <summary>
-        /// Starting offset of a video.
-        /// </summary>
-        public Duration StartOffset { get; set; }
-        /// <summary>
-        /// Ending offset of a video. Should be larger than the <see cref="StartOffset"/>.
-        /// </summary>
-        public Duration EndOffset { get; set; }
+	/// <summary>
+	/// Metadata for a video <see cref="File"/>.
+	/// </summary>
+	public partial class VideoFileMetadata
+	{
+		/// <summary>
+		/// Duration of the video.
+		/// </summary>
+		public string? VideoDuration { get; set; }
     }
 }

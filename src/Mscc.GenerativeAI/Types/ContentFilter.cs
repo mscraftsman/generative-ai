@@ -28,6 +28,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// The reason content was blocked during request processing.
 		/// </summary>
-		public Reason? Reason { get; set; }
+		public BlockReason? Reason { get; set; }
     }
 }

@@ -1,44 +1,56 @@
-﻿using System.Text.Json.Serialization;
+﻿/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Type contains the list of OpenAPI data types as defined by https://spec.openapis.org/oas/v3.0.3#data-types
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
+	[JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
     public enum ParameterType
     {
         /// <summary>
-        /// Unspecified means not specified, should not be used.
+        /// Not specified, should not be used.
         /// </summary>
-        TypeUnspecified = 0,
+        TypeUnspecified,
         /// <summary>
-        /// String means openAPI string type
+        /// String type.
         /// </summary>
         String,
         /// <summary>
-        /// Number means openAPI number type
+        /// Number type.
         /// </summary>
         Number,
         /// <summary>
-        /// Integer means openAPI integer type
+        /// Integer type.
         /// </summary>
         Integer,
         /// <summary>
-        /// Boolean means openAPI boolean type
+        /// Boolean type.
         /// </summary>
         Boolean,
         /// <summary>
-        /// Array means openAPI array type
+        /// Array type.
         /// </summary>
         Array,
         /// <summary>
-        /// Object means openAPI object type
+        /// Object type.
         /// </summary>
         Object,
         /// <summary>
         /// Null type.
         /// </summary>
-        Null
+        Null,
     }
 }

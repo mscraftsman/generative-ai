@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Raw media bytes sent directly in the request. 
@@ -12,7 +11,7 @@ namespace Mscc.GenerativeAI
     /// You can specify at most 1 image with inlineData. To specify up to 16 images, use fileData.
     /// </remarks>
     [DebuggerDisplay("{MimeType}")]
-    public class InlineData : IPart     // Blob
+    public partial class InlineData : IPart     // Blob
     {
         /// <summary>
         /// The base64 encoding of the image, PDF, or video to include inline in the prompt.

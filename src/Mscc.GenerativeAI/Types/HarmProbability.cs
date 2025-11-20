@@ -1,32 +1,44 @@
-﻿using System.Text.Json.Serialization;
+﻿/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Output only. The probability of harm for this category.
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<HarmProbability>))]
+	[JsonConverter(typeof(JsonStringEnumConverter<HarmProbability>))]
     public enum HarmProbability
     {
         /// <summary>
-        /// The harm probability is unspecified.
+        /// Probability is unspecified.
         /// </summary>
-        HarmProbabilityUnspecified = 0,
+        HarmProbabilityUnspecified,
         /// <summary>
-        /// The harm probability is negligible.
+        /// Content has a negligible chance of being unsafe.
         /// </summary>
         Negligible,
         /// <summary>
-        /// The harm probability is low.
+        /// Content has a low chance of being unsafe.
         /// </summary>
         Low,
         /// <summary>
-        /// The harm probability is medium.
+        /// Content has a medium chance of being unsafe.
         /// </summary>
         Medium,
         /// <summary>
-        /// The harm probability is high.
+        /// Content has a high chance of being unsafe.
         /// </summary>
-        High
+        High,
     }
 }

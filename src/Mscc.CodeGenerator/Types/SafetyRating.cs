@@ -24,14 +24,14 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Was this content blocked because of this rating?
 		/// </summary>
-		public bool? Blocked { get; set; }
+		public bool Blocked { get; set; }
 		/// <summary>
 		/// Required. The category for this rating.
 		/// </summary>
-		public Category? Category { get; set; }
+		public HarmCategory? Category { get; set; }
 		/// <summary>
 		/// Required. The probability of harm for this content.
 		/// </summary>
-		public Probability? Probability { get; set; }
+		public HarmProbability? Probability { get; set; }
     }
 }

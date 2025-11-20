@@ -1,39 +1,73 @@
-﻿using System;
+﻿/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// The harm category to be blocked.
-    /// Ref: https://ai.google.dev/api/rest/v1beta/HarmCategory
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<HarmCategory>))]
+	[JsonConverter(typeof(JsonStringEnumConverter<HarmCategory>))]
     public enum HarmCategory
     {
         /// <summary>
-        /// Default value. This value is unused.
+        /// Category is unspecified.
         /// </summary>
-        HarmCategoryUnspecified = 0,
+        HarmCategoryUnspecified,
         /// <summary>
-        /// Content that promotes violence or incites hatred against individuals or groups based on
+        /// **PaLM** - Negative or harmful comments targeting identity and/or protected attribute.
         /// </summary>
-        HarmCategoryHateSpeech,
+        HarmCategoryDerogatory,
         /// <summary>
-        /// Content that promotes, facilitates, or enables dangerous activities.
+        /// **PaLM** - Content that is rude, disrespectful, or profane.
         /// </summary>
-        HarmCategoryDangerousContent,
+        HarmCategoryToxicity,
         /// <summary>
-        /// Abusive, threatening, or content intended to bully, torment, or ridicule.
+        /// **PaLM** - Describes scenarios depicting violence against an individual or group, or general descriptions of gore.
+        /// </summary>
+        HarmCategoryViolence,
+        /// <summary>
+        /// **PaLM** - Contains references to sexual acts or other lewd content.
+        /// </summary>
+        HarmCategorySexual,
+        /// <summary>
+        /// **PaLM** - Promotes unchecked medical advice.
+        /// </summary>
+        HarmCategoryMedical,
+        /// <summary>
+        /// **PaLM** - Dangerous content that promotes, facilitates, or encourages harmful acts.
+        /// </summary>
+        HarmCategoryDangerous,
+        /// <summary>
+        /// **Gemini** - Harassment content.
         /// </summary>
         HarmCategoryHarassment,
         /// <summary>
-        /// Content that contains sexually explicit material.
+        /// **Gemini** - Hate speech and content.
+        /// </summary>
+        HarmCategoryHateSpeech,
+        /// <summary>
+        /// **Gemini** - Sexually explicit content.
         /// </summary>
         HarmCategorySexuallyExplicit,
         /// <summary>
-        /// Deprecated: Election filter is not longer supported. The harm category is civic integrity.
+        /// **Gemini** - Dangerous content.
         /// </summary>
-        [Obsolete("Use EnableEnhancedCivicAnswers instead.")]
+        HarmCategoryDangerousContent,
+        /// <summary>
+        /// **Gemini** - Content that may be used to harm civic integrity. DEPRECATED: use enable_enhanced_civic_answers instead.
+        /// </summary>
         HarmCategoryCivicIntegrity,
         /// <summary>
         /// Prompts designed to bypass safety filters. This enum value is not supported in Gemini API.
@@ -55,40 +89,5 @@ namespace Mscc.GenerativeAI
         /// Images that contain sexually explicit content. This enum value is not supported in Gemini
         /// </summary>
         HarmCategoryImageSexuallyExplicit,
-        
-        #region "PaLM 2" safety settings
-        
-        /// <summary>
-        /// Negative or harmful comments targeting identity and/or protected attribute.
-        /// </summary>
-        [Obsolete("This value is related to PaLM 2 models and features.")]
-        HarmCategoryDerogatory = 101,
-        /// <summary>
-        /// Content that is rude, disrespectful, or profane.
-        /// </summary>
-        [Obsolete("This value is related to PaLM 2 models and features.")]
-        HarmCategoryToxicity,
-        /// <summary>
-        /// Describes scenarios depicting violence against an individual or group, or general descriptions of gore.
-        /// </summary>
-        [Obsolete("This value is related to PaLM 2 models and features.")]
-        HarmCategoryViolence,
-        /// <summary>
-        /// Contains references to sexual acts or other lewd content.
-        /// </summary>
-        [Obsolete("This value is related to PaLM 2 models and features.")]
-        HarmCategorySexual,
-        /// <summary>
-        /// Promotes unchecked medical advice.
-        /// </summary>
-        [Obsolete("This value is related to PaLM 2 models and features.")]
-        HarmCategoryMedical,
-        /// <summary>
-        /// Dangerous content that promotes, facilitates, or encourages harmful acts.
-        /// </summary>
-        [Obsolete("This value is related to PaLM 2 models and features.")]
-        HarmCategoryDangerous
-        
-        #endregion
     }
 }

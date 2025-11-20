@@ -1,182 +1,78 @@
-﻿using System;
+﻿/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 using System.Collections.Generic;
-using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Response from ListModels method containing a paginated list of Models.
-    /// </summary>
-    internal class ListModelsResponse
-    {
-        /// <summary>
-        /// The list of Models.
-        /// </summary>
-        public List<ModelResponse>? Models { get; set; }
-        /// <summary>
-        /// A token, which can be sent as pageToken to retrieve the next page.
-        /// If this field is omitted, there are no more pages.
-        /// </summary>
-        public string? NextPageToken { get; set; }
-    }
-
-    /// <summary>
-    /// Information about a Generative Language Model.
-    /// Ref: https://ai.google.dev/api/rest/v1beta/models
-    /// </summary>
-    [DebuggerDisplay("{DisplayName} ({Name})")]
-    public class ModelResponse
-    {
-        /// <summary>
-        /// Required. The resource name of the Model.
-        /// </summary>
-        public string? Name { get; set; } = default;
-        /// <summary>
-        /// The name of the base model, pass this to the generation request.
-        /// </summary>
-        public string? BaseModelId { get; set; } = default;
-        /// <summary>
-        /// The version number of the model (Google AI).
-        /// </summary>
-        public string? Version { get; set; } = default;
-        /// <summary>
-        /// The version Id of the model (Vertex AI).
-        /// </summary>
-        public string? VersionId
-        {
-            get => Version;
-            set => Version = value;
-        }
-        /// <summary>
-        /// User provided version aliases so that a model version can be referenced via
-        /// alias (i.e. projects/{project}/locations/{location}/models/{model_id}@{version_alias}
-        /// instead of auto-generated version id (i.e. projects/{project}/locations/{location}/models/{model_id}@{version_id}).
-        /// </summary>
-        /// <remarks>
-        /// The format is a-z{0,126}[a-z0-9] to distinguish from version_id.
-        /// A default version alias will be created for the first version of the model,
-        /// and there must be exactly one default version alias for a model.
-        /// </remarks>
-        public List<string>? VersionAliases { get; set; }
-        /// <summary>
-        /// The human-readable name of the model. E.g. "Chat Bison".
-        /// The name can be up to 128 characters long and can consist of any UTF-8 characters.
-        /// </summary>
-        public string? DisplayName { get; set; } = default;
-        /// <summary>
-        /// A short description of the model.
-        /// </summary>
-        public string? Description { get; set; } = default;
-        /// <summary>
-        /// Maximum number of input tokens allowed for this model.
-        /// </summary>
-        public int? InputTokenLimit { get; set; } = default;
-        /// <summary>
-        /// Maximum number of output tokens available for this model.
-        /// </summary>
-        public int? OutputTokenLimit { get; set; } = default;
-        /// <summary>
-        /// The model's supported generation methods.
-        /// The method names are defined as Pascal case strings, such as generateMessage which correspond to API methods.
-        /// </summary>
-        public List<string>? SupportedGenerationMethods { get; set; }
-        /// <summary>
-        /// Controls the randomness of the output.
-        /// Values can range over [0.0,1.0], inclusive. A value closer to 1.0 will produce responses that are more varied, while a value closer to 0.0 will typically result in less surprising responses from the model. This value specifies default to be used by the backend while making the call to the model.
-        /// </summary>
-        public float? Temperature { get; set; } = default;
-        /// <summary>
-        /// The maximum temperature this model can use.
-        /// </summary>
-        public float? MaxTemperature { get; set; } = default;
-        /// <summary>
-        /// For Nucleus sampling.
-        /// Nucleus sampling considers the smallest set of tokens whose probability sum is at least topP. This value specifies default to be used by the backend while making the call to the model.
-        /// </summary>
-        public float? TopP { get; set; } = default;
-        /// <summary>
-        /// For Top-k sampling.
-        /// Top-k sampling considers the set of topK most probable tokens. This value specifies default to be used by the backend while making the call to the model.
-        /// </summary>
-        public int? TopK { get; set; } = default;
-        
-        // Properties related to tunedModels.
-        /// <summary>
-        /// Output only. The state of the tuned model.
-        /// </summary>
-        public State? State { get; set; }
-        /// <summary>
-        /// Output only. The timestamp when this model was created.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
-        /// </summary>
-        public DateTime? CreateTime { get; set; }
-        /// <summary>
-        /// Output only. The timestamp when this model was updated.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
-        /// </summary>
-        public DateTime? UpdateTime { get; set; }
-        /// <summary>
-        /// Required. The tuning task that creates the tuned model.
-        /// </summary>
-        public TuningTask? TuningTask { get; set; }
-        /// <summary>
-        /// Optional. TunedModel to use as the starting point for training the new model.
-        /// </summary>
-        public TunedModelSource? TunedModelSource { get; set; }
-        /// <summary>
-        /// The name of the base model, pass this to the generation request.
-        /// </summary>
-        public string? BaseModel { get; set; }
-        /// <summary>
-        /// The ETag of the item.
-        /// </summary>
-        public virtual string? ETag { get; set; }
-        /// <summary>
-        /// Optional. The labels with user-defined metadata for the request.
-        /// </summary>
-        /// <remarks>
-        /// It is used for billing and reporting only.
-        /// Label keys and values can be no longer than 63 characters (Unicode codepoints) and
-        /// can only contain lowercase letters, numeric characters, underscores, and dashes.
-        /// International characters are allowed. Label values are optional. Label keys must start with a letter.
-        /// </remarks>
-        public virtual IDictionary<string, string>? Labels { get; set; }
-        /// <summary>
-        /// Output only. The timestamp when this model was created.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
-        /// </summary>
-        public DateTime? VersionCreateTime { get; set; }
-        /// <summary>
-        /// Output only. The timestamp when this model was updated.
-        /// A timestamp in RFC3339 UTC "Zulu" format, with nanosecond resolution and up to nine fractional digits. Examples: "2014-10-02T15:01:23Z" and "2014-10-02T15:01:23.045123456Z".
-        /// </summary>
-        public DateTime? VersionUpdateTime { get; set; }
-        /// <summary>
-        /// "sourceType": "GENIE"
-        /// </summary>
-        public dynamic? ModelSourceInfo { get; set; }
-        /// <summary>
-        /// "genieSource": {}
-        /// </summary>
-        public dynamic? BaseModelSource { get; set; }
-        /// <summary>
-        /// Whether the model supports thinking.
-        /// </summary>
-        public bool? Thinking { get; set; }
-    }
-    
-    /// <summary>
-    /// Tuned model as a source for training a new model.
-    /// </summary>
-    public class TunedModelSource
-    {
-        /// <summary>
-        /// Immutable. The name of the TunedModel to use as the starting point for training the new model. Example: tunedModels/my-tuned-model
-        /// </summary>
-        public string TunedModel { get; set; }
-        /// <summary>
-        /// Output only. The name of the base Model this TunedModel was tuned from. Example: models/text-bison-001
-        /// </summary>
-        public string BaseModel { get; set; }
+	/// <summary>
+	/// Information about a Generative Language Model.
+	/// </summary>
+	public partial class ModelResponse
+	{
+		/// <summary>
+		/// Required. The name of the base model, pass this to the generation request. Examples: * <see cref="gemini-1.5-flash"/>
+		/// </summary>
+		public string? BaseModelId { get; set; }
+		/// <summary>
+		/// A short description of the model.
+		/// </summary>
+		public string? Description { get; set; }
+		/// <summary>
+		/// The human-readable name of the model. E.g. "Gemini 1.5 Flash". The name can be up to 128 characters long and can consist of any UTF-8 characters.
+		/// </summary>
+		public string? DisplayName { get; set; }
+		/// <summary>
+		/// Maximum number of input tokens allowed for this model.
+		/// </summary>
+		public int? InputTokenLimit { get; set; }
+		/// <summary>
+		/// The maximum temperature this model can use.
+		/// </summary>
+		public double? MaxTemperature { get; set; }
+		/// <summary>
+		/// Required. The resource name of the <see cref="Model"/>. Refer to [Model variants](https://ai.google.dev/gemini-api/docs/models/gemini#model-variations) for all allowed values. Format: <see cref="models/{model}"/> with a <see cref="{model}"/> naming convention of: * "{base_model_id}-{version}" Examples: * <see cref="models/gemini-1.5-flash-001"/>
+		/// </summary>
+		public string? Name { get; set; }
+		/// <summary>
+		/// Maximum number of output tokens available for this model.
+		/// </summary>
+		public int? OutputTokenLimit { get; set; }
+		/// <summary>
+		/// The model's supported generation methods. The corresponding API method names are defined as Pascal case strings, such as <see cref="generateMessage"/> and <see cref="generateContent"/>.
+		/// </summary>
+		public List<string>? SupportedGenerationMethods { get; set; }
+		/// <summary>
+		/// Controls the randomness of the output. Values can range over <see cref="[0.0,max_temperature]"/>, inclusive. A higher value will produce responses that are more varied, while a value closer to <see cref="0.0"/> will typically result in less surprising responses from the model. This value specifies default to be used by the backend while making the call to the model.
+		/// </summary>
+		public double? Temperature { get; set; }
+		/// <summary>
+		/// Whether the model supports thinking.
+		/// </summary>
+		public bool? Thinking { get; set; }
+		/// <summary>
+		/// For Top-k sampling. Top-k sampling considers the set of <see cref="top_k"/> most probable tokens. This value specifies default to be used by the backend while making the call to the model. If empty, indicates the model doesn't use top-k sampling, and <see cref="top_k"/> isn't allowed as a generation parameter.
+		/// </summary>
+		public int? TopK { get; set; }
+		/// <summary>
+		/// For [Nucleus sampling](https://ai.google.dev/gemini-api/docs/prompting-strategies#top-p). Nucleus sampling considers the smallest set of tokens whose probability sum is at least <see cref="top_p"/>. This value specifies default to be used by the backend while making the call to the model.
+		/// </summary>
+		public double? TopP { get; set; }
+		/// <summary>
+		/// Required. The version number of the model. This represents the major version (<see cref="1.0"/> or <see cref="1.5"/>)
+		/// </summary>
+		public string? Version { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Required. Operator applied to the given key-value pair to trigger the condition.
 		/// </summary>
-		public Operation? Operation { get; set; }
+		public Operator? Operation { get; set; }
 		/// <summary>
 		/// The string value to filter the metadata on.
 		/// </summary>
