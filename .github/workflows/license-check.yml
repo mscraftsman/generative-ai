@@ -1,0 +1,55 @@
+name: 📜 License Header Check
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  check-license:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to commit changes back
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Add/Check License Headers
+        id: license_check
+        uses: google/add-license-header@v1
+        with:
+          # Points to the text file you created in Step 1
+          LICENSE_FILEPATH: .github/license_header.txt
+          
+          # Define which files to check (optional, defaults to common source files)
+          MATCH_EXTENSIONS: |
+            .cs
+          #   .ts
+          #   .js
+          #   .py
+          
+          # Define files to ignore (optional)
+          IGNORE_PATHS: |
+            artifacts/
+            docs/
+            samples/
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            echo "::warning::Missing license headers detected and added."
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Option A: Commit the changes back automatically
+      - name: Commit and Push Changes
+        if: steps.git-check.outputs.changes_detected == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Add missing license headers"
+          branch: ${{ github.head_ref }}
