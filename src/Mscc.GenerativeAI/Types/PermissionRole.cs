@@ -17,20 +17,24 @@ using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI.Types
 {
-	[JsonConverter(typeof(JsonStringEnumConverter<Reason>))]
-    public enum Reason
+	[JsonConverter(typeof(JsonStringEnumConverter<PermissionRole>))]
+    public enum PermissionRole
     {
         /// <summary>
-        /// A blocked reason was not specified.
+        /// The default value. This value is unused.
         /// </summary>
-        BlockedReasonUnspecified,
+        RoleUnspecified,
         /// <summary>
-        /// Content was blocked by safety settings.
+        /// Owner can use, update, share and delete the resource.
         /// </summary>
-        Safety,
+        Owner,
         /// <summary>
-        /// Content was blocked, but the reason is uncategorized.
+        /// Writer can use, update and share the resource.
         /// </summary>
-        Other,
+        Writer,
+        /// <summary>
+        /// Reader can use the resource.
+        /// </summary>
+        Reader,
     }
 }
