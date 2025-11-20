@@ -47,10 +47,8 @@ namespace Mscc.GenerativeAI
         public const string GeminiEmbedding001 = "gemini-embedding-001";
         public const string GeminiEmbeddingExperimental = "gemini-embedding-exp";
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
-
-        // Gemini 2.5
-        public const string NanoBanana = Gemini25FlashImage;
         
+        // Gemini 2.5
         public const string GeminiPro = Gemini25Pro;
         public const string GeminiFlashLatest = "gemini-flash-latest";
         public const string GeminiFlashLiteLatest = "gemini-flash-lite-latest";
@@ -93,7 +91,14 @@ namespace Mscc.GenerativeAI
         // Gemini 3
         public const string Gemini3Pro = Gemini3ProPreview;
         public const string Gemini3ProPreview = "gemini-3-pro-preview";
+        public const string Gemini3ProImage = Gemini3ProImagePreview;
+        public const string Gemini3ProImagePreview = "gemini-3-pro-image-preview";
         
+        // Nano Banana!
+        public const string NanoBanana = Gemini25FlashImage;
+        public const string NanoBananaPro = NanoBananaProPreview;
+        public const string NanoBananaProPreview = "nano-banana-pro-preview";
+
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
         // public const string Gemma3_270M = "gemma-3-270m-it";

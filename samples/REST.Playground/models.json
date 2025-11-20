@@ -663,6 +663,42 @@
       "version": "3-pro-preview-11-2025"
     },
     {
+      "description": "Gemini 3 Pro Image Preview",
+      "displayName": "Nano Banana Pro",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 1,
+      "name": "models/gemini-3-pro-image-preview",
+      "outputTokenLimit": 32768,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3.0"
+    },
+    {
+      "description": "Gemini 3 Pro Image Preview",
+      "displayName": "Nano Banana Pro",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 1,
+      "name": "models/nano-banana-pro-preview",
+      "outputTokenLimit": 32768,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3.0"
+    },
+    {
       "description": "Gemini Robotics-ER 1.5 Preview",
       "displayName": "Gemini Robotics-ER 1.5 Preview",
       "inputTokenLimit": 1048576,
@@ -963,17 +999,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
-    },
-    {
-      "description": "Lyria Realtime Experimental",
-      "displayName": "Lyria Realtime Experimental",
-      "inputTokenLimit": 1048576,
-      "name": "models/lyria-realtime-exp",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "bidiGenerateMusic"
-      ],
-      "version": "lyria-realtime-exp"
     }
   ]
 }
