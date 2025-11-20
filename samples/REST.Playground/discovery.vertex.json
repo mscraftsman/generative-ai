@@ -677,9 +677,7 @@
           "flatPath": "v1beta1/batchPredictionJobs",
           "httpMethod": "POST",
           "id": "aiplatform.batchPredictionJobs.create",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "parent": {
               "description": "Required. The resource name of the Location to create the BatchPredictionJob in. Format: `projects/{project}/locations/{location}`",
@@ -728,9 +726,7 @@
           "flatPath": "v1beta1/batchPredictionJobs",
           "httpMethod": "GET",
           "id": "aiplatform.batchPredictionJobs.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "filter": {
               "description": "The standard list filter. Supported fields: * `display_name` supports `=`, `!=` comparisons, and `:` wildcard. * `model_display_name` supports `=`, `!=` comparisons. * `state` supports `=`, `!=` comparisons. * `create_time` supports `=`, `!=`,`<`, `<=`,`>`, `>=` comparisons. `create_time` must be in RFC 3339 format. * `labels` supports general map functions that is: `labels.key=value` - key:value equality `labels.key:* - key existence Some examples of using the filter are: * `state=\"JOB_STATE_SUCCEEDED\" AND display_name:\"my_job_*\"` * `state!=\"JOB_STATE_FAILED\" OR display_name=\"my_job\"` * `NOT display_name=\"my_job\"` * `create_time>\"2021-05-18T00:00:00Z\"` * `labels.keyA=valueA` * `labels.keyB:*`",
@@ -1097,9 +1093,7 @@
           "flatPath": "v1beta1/datasets",
           "httpMethod": "POST",
           "id": "aiplatform.datasets.create",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "parent": {
               "description": "Required. The resource name of the Location to create the Dataset in. Format: `projects/{project}/locations/{location}`",
@@ -1179,9 +1173,7 @@
           "flatPath": "v1beta1/datasets",
           "httpMethod": "GET",
           "id": "aiplatform.datasets.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "filter": {
               "description": "An expression for filtering the results of the request. For field names both snake_case and camelCase are supported. * `display_name`: supports = and != * `metadata_schema_uri`: supports = and != * `labels` supports general map functions that is: * `labels.key=value` - key:value equality * `labels.key:* or labels:key - key existence * A key including a space must be quoted. `labels.\"a key\"`. Some examples: * `displayName=\"myDisplayName\"` * `labels.myKey=\"myValue\"`",
@@ -7772,9 +7764,7 @@
           "flatPath": "v1beta1/operations",
           "httpMethod": "GET",
           "id": "aiplatform.operations.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "filter": {
               "description": "The standard list filter.",
@@ -34213,9 +34203,7 @@
           "flatPath": "v1beta1/reasoningEngines",
           "httpMethod": "POST",
           "id": "aiplatform.reasoningEngines.create",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "parent": {
               "description": "Required. The resource name of the Location to create the ReasoningEngine in. Format: `projects/{project}/locations/{location}`",
@@ -34322,9 +34310,7 @@
           "flatPath": "v1beta1/reasoningEngines",
           "httpMethod": "GET",
           "id": "aiplatform.reasoningEngines.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "filter": {
               "description": "Optional. The standard list filter. More detail in [AIP-160](https://google.aip.dev/160).",
@@ -38361,9 +38347,7 @@
     "GoogleCloudAiplatformV1beta1AddContextArtifactsAndExecutionsResponse": {
       "description": "Response message for MetadataService.AddContextArtifactsAndExecutions.",
       "id": "GoogleCloudAiplatformV1beta1AddContextArtifactsAndExecutionsResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1AddContextChildrenRequest": {
@@ -38383,9 +38367,7 @@
     "GoogleCloudAiplatformV1beta1AddContextChildrenResponse": {
       "description": "Response message for MetadataService.AddContextChildren.",
       "id": "GoogleCloudAiplatformV1beta1AddContextChildrenResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1AddExecutionEventsRequest": {
@@ -38405,9 +38387,7 @@
     "GoogleCloudAiplatformV1beta1AddExecutionEventsResponse": {
       "description": "Response message for MetadataService.AddExecutionEvents.",
       "id": "GoogleCloudAiplatformV1beta1AddExecutionEventsResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1AddTrialMeasurementRequest": {
@@ -38609,9 +38589,7 @@
     "GoogleCloudAiplatformV1beta1AppendEventResponse": {
       "description": "Response message for SessionService.AppendEvent.",
       "id": "GoogleCloudAiplatformV1beta1AppendEventResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1Artifact": {
@@ -39837,9 +39815,7 @@
     "GoogleCloudAiplatformV1beta1BatchReadFeatureValuesResponse": {
       "description": "Response message for FeaturestoreService.BatchReadFeatureValues.",
       "id": "GoogleCloudAiplatformV1beta1BatchReadFeatureValuesResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1BatchReadTensorboardTimeSeriesDataResponse": {
@@ -40177,73 +40153,55 @@
     "GoogleCloudAiplatformV1beta1CancelBatchPredictionJobRequest": {
       "description": "Request message for JobService.CancelBatchPredictionJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelBatchPredictionJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelCustomJobRequest": {
       "description": "Request message for JobService.CancelCustomJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelCustomJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelDataLabelingJobRequest": {
       "description": "Request message for JobService.CancelDataLabelingJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelDataLabelingJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelEvaluationRunRequest": {
       "description": "Request message for EvaluationManagementService.CancelEvaluationRun.",
       "id": "GoogleCloudAiplatformV1beta1CancelEvaluationRunRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelHyperparameterTuningJobRequest": {
       "description": "Request message for JobService.CancelHyperparameterTuningJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelHyperparameterTuningJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelNasJobRequest": {
       "description": "Request message for JobService.CancelNasJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelNasJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelPipelineJobRequest": {
       "description": "Request message for PipelineService.CancelPipelineJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelPipelineJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelTrainingPipelineRequest": {
       "description": "Request message for PipelineService.CancelTrainingPipeline.",
       "id": "GoogleCloudAiplatformV1beta1CancelTrainingPipelineRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CancelTuningJobRequest": {
       "description": "Request message for GenAiTuningService.CancelTuningJob.",
       "id": "GoogleCloudAiplatformV1beta1CancelTuningJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1Candidate": {
@@ -40440,9 +40398,7 @@
     "GoogleCloudAiplatformV1beta1CheckTrialEarlyStoppingStateRequest": {
       "description": "Request message for VizierService.CheckTrialEarlyStoppingState.",
       "id": "GoogleCloudAiplatformV1beta1CheckTrialEarlyStoppingStateRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1CheckTrialEarlyStoppingStateResponse": {
@@ -43307,9 +43263,7 @@
     "GoogleCloudAiplatformV1beta1DirectUploadSource": {
       "description": "The input content is encapsulated and uploaded in the request.",
       "id": "GoogleCloudAiplatformV1beta1DirectUploadSource",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1DiskSpec": {
@@ -45367,9 +45321,7 @@
     "GoogleCloudAiplatformV1beta1ExactMatchSpec": {
       "description": "Spec for exact match metric - returns 1 if prediction and reference exactly matches, otherwise 0.",
       "id": "GoogleCloudAiplatformV1beta1ExactMatchSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1Example": {
@@ -46362,9 +46314,7 @@
     "GoogleCloudAiplatformV1beta1ExportFeatureValuesResponse": {
       "description": "Response message for FeaturestoreService.ExportFeatureValues.",
       "id": "GoogleCloudAiplatformV1beta1ExportFeatureValuesResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ExportFractionSplit": {
@@ -46455,9 +46405,7 @@
     "GoogleCloudAiplatformV1beta1ExportModelResponse": {
       "description": "Response message of ModelService.ExportModel operation.",
       "id": "GoogleCloudAiplatformV1beta1ExportModelResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ExportPublisherModelOperationMetadata": {
@@ -46741,9 +46689,7 @@
     "GoogleCloudAiplatformV1beta1ExternalApiSimpleSearchParams": {
       "description": "The search parameters to use for SIMPLE_SEARCH spec.",
       "id": "GoogleCloudAiplatformV1beta1ExternalApiSimpleSearchParams",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1Fact": {
@@ -47378,9 +47324,7 @@
     "GoogleCloudAiplatformV1beta1FeatureOnlineStoreOptimized": {
       "description": "Optimized storage type",
       "id": "GoogleCloudAiplatformV1beta1FeatureOnlineStoreOptimized",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1FeatureSelectionConfig": {
@@ -47953,9 +47897,7 @@
     "GoogleCloudAiplatformV1beta1FeatureViewIndexConfigBruteForceConfig": {
       "description": "Configuration options for using brute force search.",
       "id": "GoogleCloudAiplatformV1beta1FeatureViewIndexConfigBruteForceConfig",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1FeatureViewIndexConfigTreeAHConfig": {
@@ -48116,9 +48058,7 @@
     },
     "GoogleCloudAiplatformV1beta1FeatureViewVectorSearchConfigBruteForceConfig": {
       "id": "GoogleCloudAiplatformV1beta1FeatureViewVectorSearchConfigBruteForceConfig",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1FeatureViewVectorSearchConfigTreeAHConfig": {
@@ -49514,9 +49454,7 @@
     "GoogleCloudAiplatformV1beta1GenerateFetchAccessTokenRequest": {
       "description": "Request message for FeatureOnlineStoreService.GenerateFetchAccessToken.",
       "id": "GoogleCloudAiplatformV1beta1GenerateFetchAccessTokenRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1GenerateFetchAccessTokenResponse": {
@@ -50685,9 +50623,7 @@
     "GoogleCloudAiplatformV1beta1ImportDataResponse": {
       "description": "Response message for DatasetService.ImportData.",
       "id": "GoogleCloudAiplatformV1beta1ImportDataResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ImportExtensionOperationMetadata": {
@@ -52616,9 +52552,7 @@
     "GoogleCloudAiplatformV1beta1ListOptimalTrialsRequest": {
       "description": "Request message for VizierService.ListOptimalTrials.",
       "id": "GoogleCloudAiplatformV1beta1ListOptimalTrialsRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ListOptimalTrialsResponse": {
@@ -57084,9 +57018,7 @@
     "GoogleCloudAiplatformV1beta1NotebookExecutionJobWorkbenchRuntime": {
       "description": "Configuration for a Workbench Instances-based environment.",
       "id": "GoogleCloudAiplatformV1beta1NotebookExecutionJobWorkbenchRuntime",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1NotebookIdleShutdownConfig": {
@@ -58030,17 +57962,13 @@
     "GoogleCloudAiplatformV1beta1PauseModelDeploymentMonitoringJobRequest": {
       "description": "Request message for JobService.PauseModelDeploymentMonitoringJob.",
       "id": "GoogleCloudAiplatformV1beta1PauseModelDeploymentMonitoringJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1PauseScheduleRequest": {
       "description": "Request message for ScheduleService.PauseSchedule.",
       "id": "GoogleCloudAiplatformV1beta1PauseScheduleRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1PersistentDiskSpec": {
@@ -58959,9 +58887,7 @@
     "GoogleCloudAiplatformV1beta1PredictLongRunningMetadata": {
       "description": "Metadata for PredictLongRunning long running operations.",
       "id": "GoogleCloudAiplatformV1beta1PredictLongRunningMetadata",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1PredictLongRunningRequest": {
@@ -60716,9 +60642,7 @@
     "GoogleCloudAiplatformV1beta1RagCorpusCorpusTypeConfigDocumentCorpus": {
       "description": "Config for the document corpus.",
       "id": "GoogleCloudAiplatformV1beta1RagCorpusCorpusTypeConfigDocumentCorpus",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RagCorpusCorpusTypeConfigMemoryCorpus": {
@@ -61110,34 +61034,26 @@
     "GoogleCloudAiplatformV1beta1RagManagedDbConfigBasic": {
       "description": "Basic tier is a cost-effective and low compute tier suitable for the following cases: * Experimenting with RagManagedDb. * Small data size. * Latency insensitive workload. * Only using RAG Engine with external vector DBs. NOTE: This is the default tier if not explicitly chosen.",
       "id": "GoogleCloudAiplatformV1beta1RagManagedDbConfigBasic",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RagManagedDbConfigEnterprise": {
       "deprecated": true,
       "description": "Enterprise tier offers production grade performance along with autoscaling functionality. It is suitable for customers with large amounts of data or performance sensitive workloads.",
       "id": "GoogleCloudAiplatformV1beta1RagManagedDbConfigEnterprise",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RagManagedDbConfigScaled": {
       "description": "Scaled tier offers production grade performance along with autoscaling functionality. It is suitable for customers with large amounts of data or performance sensitive workloads.",
       "id": "GoogleCloudAiplatformV1beta1RagManagedDbConfigScaled",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RagManagedDbConfigUnprovisioned": {
       "description": "Disables the RAG Engine service and deletes all your data held within this service. This will halt the billing of the service. NOTE: Once deleted the data cannot be recovered. To start using RAG Engine again, you will need to update the tier by calling the UpdateRagEngineConfig API.",
       "id": "GoogleCloudAiplatformV1beta1RagManagedDbConfigUnprovisioned",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RagQuery": {
@@ -61357,9 +61273,7 @@
     "GoogleCloudAiplatformV1beta1RagVectorDbConfigRagManagedDbKNN": {
       "description": "Config for KNN search.",
       "id": "GoogleCloudAiplatformV1beta1RagVectorDbConfigRagManagedDbKNN",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RagVectorDbConfigRagManagedVertexVectorSearch": {
@@ -62139,9 +62053,7 @@
     "GoogleCloudAiplatformV1beta1RebootPersistentResourceRequest": {
       "description": "Request message for PersistentResourceService.RebootPersistentResource.",
       "id": "GoogleCloudAiplatformV1beta1RebootPersistentResourceRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RecommendSpecRequest": {
@@ -62256,9 +62168,7 @@
     "GoogleCloudAiplatformV1beta1RemoveContextChildrenResponse": {
       "description": "Response message for MetadataService.RemoveContextChildren.",
       "id": "GoogleCloudAiplatformV1beta1RemoveContextChildrenResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RemoveDatapointsRequest": {
@@ -62278,9 +62188,7 @@
     "GoogleCloudAiplatformV1beta1RemoveDatapointsResponse": {
       "description": "Response message for IndexService.RemoveDatapoints",
       "id": "GoogleCloudAiplatformV1beta1RemoveDatapointsResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RemoveExamplesRequest": {
@@ -62365,9 +62273,7 @@
     "GoogleCloudAiplatformV1beta1ReportExecutionEventResponse": {
       "description": "Response message for NotebookInternalService.ReportExecutionEvent.",
       "id": "GoogleCloudAiplatformV1beta1ReportExecutionEventResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ReportRuntimeEventRequest": {
@@ -62576,9 +62482,7 @@
     "GoogleCloudAiplatformV1beta1ResumeModelDeploymentMonitoringJobRequest": {
       "description": "Request message for JobService.ResumeModelDeploymentMonitoringJob.",
       "id": "GoogleCloudAiplatformV1beta1ResumeModelDeploymentMonitoringJobRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ResumeScheduleRequest": {
@@ -63021,9 +62925,7 @@
     "GoogleCloudAiplatformV1beta1RubricBasedInstructionFollowingSpec": {
       "description": "Spec for RubricBasedInstructionFollowing metric - returns rubrics and verdicts corresponding to rubrics along with overall score.",
       "id": "GoogleCloudAiplatformV1beta1RubricBasedInstructionFollowingSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1RubricContent": {
@@ -63715,9 +63617,7 @@
     "GoogleCloudAiplatformV1beta1SandboxEnvironmentSpecComputerUseEnvironment": {
       "description": "The computer use environment with customized settings.",
       "id": "GoogleCloudAiplatformV1beta1SandboxEnvironmentSpecComputerUseEnvironment",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1SavedQuery": {
@@ -67348,9 +67248,7 @@
     },
     "GoogleCloudAiplatformV1beta1SchemaTrainingjobDefinitionAutoMlTextExtractionInputs": {
       "id": "GoogleCloudAiplatformV1beta1SchemaTrainingjobDefinitionAutoMlTextExtractionInputs",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1SchemaTrainingjobDefinitionAutoMlTextSentiment": {
@@ -68278,9 +68176,7 @@
     },
     "GoogleCloudAiplatformV1beta1SchemaVisualInspectionMaskSavedQueryMetadata": {
       "id": "GoogleCloudAiplatformV1beta1SchemaVisualInspectionMaskSavedQueryMetadata",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1SearchDataItemsResponse": {
@@ -69135,25 +69031,19 @@
     "GoogleCloudAiplatformV1beta1StartNotebookRuntimeRequest": {
       "description": "Request message for NotebookService.StartNotebookRuntime.",
       "id": "GoogleCloudAiplatformV1beta1StartNotebookRuntimeRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1StopNotebookRuntimeRequest": {
       "description": "Request message for NotebookService.StopNotebookRuntime.",
       "id": "GoogleCloudAiplatformV1beta1StopNotebookRuntimeRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1StopTrialRequest": {
       "description": "Request message for VizierService.StopTrial.",
       "id": "GoogleCloudAiplatformV1beta1StopTrialRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1StoredContentsExample": {
@@ -69244,9 +69134,7 @@
     "GoogleCloudAiplatformV1beta1StoredContentsExampleSearchKeyGenerationMethodLastEntry": {
       "description": "Configuration for using only the last entry of the conversation history as the search key.",
       "id": "GoogleCloudAiplatformV1beta1StoredContentsExampleSearchKeyGenerationMethodLastEntry",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1StratifiedSplit": {
@@ -70596,9 +70484,7 @@
     "GoogleCloudAiplatformV1beta1SyncFeatureViewRequest": {
       "description": "Request message for FeatureOnlineStoreAdminService.SyncFeatureView.",
       "id": "GoogleCloudAiplatformV1beta1SyncFeatureViewRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1SyncFeatureViewResponse": {
@@ -71356,17 +71242,13 @@
     "GoogleCloudAiplatformV1beta1ToolCallValidSpec": {
       "description": "Spec for tool call valid metric.",
       "id": "GoogleCloudAiplatformV1beta1ToolCallValidSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ToolCodeExecution": {
       "description": "Tool that executes code generated by the model, and automatically returns the result to the model. See also [ExecutableCode]and [CodeExecutionResult] which are input and output to this tool.",
       "id": "GoogleCloudAiplatformV1beta1ToolCodeExecution",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ToolComputerUse": {
@@ -71510,9 +71392,7 @@
     "GoogleCloudAiplatformV1beta1ToolNameMatchSpec": {
       "description": "Spec for tool name match metric.",
       "id": "GoogleCloudAiplatformV1beta1ToolNameMatchSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ToolParameterKVMatchInput": {
@@ -71651,9 +71531,7 @@
     "GoogleCloudAiplatformV1beta1ToolParameterKeyMatchSpec": {
       "description": "Spec for tool parameter key match metric.",
       "id": "GoogleCloudAiplatformV1beta1ToolParameterKeyMatchSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1ToolUseExample": {
@@ -71916,9 +71794,7 @@
     "GoogleCloudAiplatformV1beta1TrajectoryAnyOrderMatchSpec": {
       "description": "Spec for TrajectoryAnyOrderMatch metric - returns 1 if all tool calls in the reference trajectory appear in the predicted trajectory in any order, else 0.",
       "id": "GoogleCloudAiplatformV1beta1TrajectoryAnyOrderMatchSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1TrajectoryExactMatchInput": {
@@ -71985,9 +71861,7 @@
     "GoogleCloudAiplatformV1beta1TrajectoryExactMatchSpec": {
       "description": "Spec for TrajectoryExactMatch metric - returns 1 if tool calls in the reference trajectory exactly match the predicted trajectory, else 0.",
       "id": "GoogleCloudAiplatformV1beta1TrajectoryExactMatchSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1TrajectoryInOrderMatchInput": {
@@ -72054,9 +71928,7 @@
     "GoogleCloudAiplatformV1beta1TrajectoryInOrderMatchSpec": {
       "description": "Spec for TrajectoryInOrderMatch metric - returns 1 if tool calls in the reference trajectory appear in the predicted trajectory in the same order, else 0.",
       "id": "GoogleCloudAiplatformV1beta1TrajectoryInOrderMatchSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1TrajectoryPrecisionInput": {
@@ -72123,9 +71995,7 @@
     "GoogleCloudAiplatformV1beta1TrajectoryPrecisionSpec": {
       "description": "Spec for TrajectoryPrecision metric - returns a float score based on average precision of individual tool calls.",
       "id": "GoogleCloudAiplatformV1beta1TrajectoryPrecisionSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1TrajectoryRecallInput": {
@@ -72192,9 +72062,7 @@
     "GoogleCloudAiplatformV1beta1TrajectoryRecallSpec": {
       "description": "Spec for TrajectoryRecall metric - returns a float score based on average recall of individual tool calls.",
       "id": "GoogleCloudAiplatformV1beta1TrajectoryRecallSpec",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1TrajectorySingleToolUseInput": {
@@ -72705,9 +72573,7 @@
     "GoogleCloudAiplatformV1beta1UndeployIndexResponse": {
       "description": "Response message for IndexEndpointService.UndeployIndex.",
       "id": "GoogleCloudAiplatformV1beta1UndeployIndexResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1UndeployModelOperationMetadata": {
@@ -72743,9 +72609,7 @@
     "GoogleCloudAiplatformV1beta1UndeployModelResponse": {
       "description": "Response message for EndpointService.UndeployModel.",
       "id": "GoogleCloudAiplatformV1beta1UndeployModelResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1UndeploySolverOperationMetadata": {
@@ -72825,9 +72689,7 @@
     "GoogleCloudAiplatformV1beta1UpdateExplanationDatasetResponse": {
       "description": "Response message of ModelService.UpdateExplanationDataset operation.",
       "id": "GoogleCloudAiplatformV1beta1UpdateExplanationDatasetResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1UpdateFeatureGroupOperationMetadata": {
@@ -72982,9 +72844,7 @@
     "GoogleCloudAiplatformV1beta1UpgradeNotebookRuntimeRequest": {
       "description": "Request message for NotebookService.UpgradeNotebookRuntime.",
       "id": "GoogleCloudAiplatformV1beta1UpgradeNotebookRuntimeRequest",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1UploadModelOperationMetadata": {
@@ -73113,9 +72973,7 @@
     "GoogleCloudAiplatformV1beta1UpsertDatapointsResponse": {
       "description": "Response message for IndexService.UpsertDatapoints",
       "id": "GoogleCloudAiplatformV1beta1UpsertDatapointsResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1UpsertExamplesRequest": {
@@ -73168,9 +73026,7 @@
     "GoogleCloudAiplatformV1beta1UrlContext": {
       "description": "Tool to support URL context.",
       "id": "GoogleCloudAiplatformV1beta1UrlContext",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1UrlContextMetadata": {
@@ -73623,9 +73479,7 @@
     "GoogleCloudAiplatformV1beta1WriteFeatureValuesResponse": {
       "description": "Response message for FeaturestoreOnlineServingService.WriteFeatureValues.",
       "id": "GoogleCloudAiplatformV1beta1WriteFeatureValuesResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1WriteTensorboardExperimentDataRequest": {
@@ -73645,9 +73499,7 @@
     "GoogleCloudAiplatformV1beta1WriteTensorboardExperimentDataResponse": {
       "description": "Response message for TensorboardService.WriteTensorboardExperimentData.",
       "id": "GoogleCloudAiplatformV1beta1WriteTensorboardExperimentDataResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1WriteTensorboardRunDataRequest": {
@@ -73671,9 +73523,7 @@
     "GoogleCloudAiplatformV1beta1WriteTensorboardRunDataResponse": {
       "description": "Response message for TensorboardService.WriteTensorboardRunData.",
       "id": "GoogleCloudAiplatformV1beta1WriteTensorboardRunDataResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleCloudAiplatformV1beta1XraiAttribution": {
@@ -75477,9 +75327,7 @@
     "GoogleProtobufEmpty": {
       "description": "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }",
       "id": "GoogleProtobufEmpty",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "GoogleRpcStatus": {

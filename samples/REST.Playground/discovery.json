@@ -278,12 +278,8 @@
           "flatPath": "v1beta/cachedContents",
           "httpMethod": "POST",
           "id": "generativelanguage.cachedContents.create",
-          "parameterOrder": [
-
-          ],
-          "parameters": {
-
-          },
+          "parameterOrder": [],
+          "parameters": {},
           "path": "v1beta/cachedContents",
           "request": {
             "$ref": "CachedContent"
@@ -341,9 +337,7 @@
           "flatPath": "v1beta/cachedContents",
           "httpMethod": "GET",
           "id": "generativelanguage.cachedContents.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "pageSize": {
               "description": "Optional. The maximum number of cached contents to return. The service may return fewer than this value. If unspecified, some default (under maximum) number of items will be returned. The maximum value is 1000; values above 1000 will be coerced to 1000.",
@@ -402,12 +396,8 @@
           "flatPath": "v1beta/corpora",
           "httpMethod": "POST",
           "id": "generativelanguage.corpora.create",
-          "parameterOrder": [
-
-          ],
-          "parameters": {
-
-          },
+          "parameterOrder": [],
+          "parameters": {},
           "path": "v1beta/corpora",
           "request": {
             "$ref": "Corpus"
@@ -470,9 +460,7 @@
           "flatPath": "v1beta/corpora",
           "httpMethod": "GET",
           "id": "generativelanguage.corpora.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "pageSize": {
               "description": "Optional. The maximum number of `Corpora` to return (per page). The service may return fewer `Corpora`. If unspecified, at most 10 `Corpora` will be returned. The maximum size limit is 20 `Corpora` per page.",
@@ -719,12 +707,8 @@
           "flatPath": "v1beta/fileSearchStores",
           "httpMethod": "POST",
           "id": "generativelanguage.fileSearchStores.create",
-          "parameterOrder": [
-
-          ],
-          "parameters": {
-
-          },
+          "parameterOrder": [],
+          "parameters": {},
           "path": "v1beta/fileSearchStores",
           "request": {
             "$ref": "FileSearchStore"
@@ -812,9 +796,7 @@
           "flatPath": "v1beta/fileSearchStores",
           "httpMethod": "GET",
           "id": "generativelanguage.fileSearchStores.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "pageSize": {
               "description": "Optional. The maximum number of `FileSearchStores` to return (per page). The service may return fewer `FileSearchStores`. If unspecified, at most 10 `FileSearchStores` will be returned. The maximum size limit is 20 `FileSearchStores` per page.",
@@ -1030,9 +1012,7 @@
           "flatPath": "v1beta/files",
           "httpMethod": "GET",
           "id": "generativelanguage.files.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "pageSize": {
               "description": "Optional. Maximum number of `File`s to return per page. If unspecified, defaults to 10. Maximum `page_size` is 100.",
@@ -1060,9 +1040,7 @@
           "flatPath": "v1beta/generatedFiles",
           "httpMethod": "GET",
           "id": "generativelanguage.generatedFiles.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "pageSize": {
               "description": "Optional. Maximum number of `GeneratedFile`s to return per page. If unspecified, defaults to 10. Maximum `page_size` is 50.",
@@ -1134,12 +1112,8 @@
               }
             }
           },
-          "parameterOrder": [
-
-          ],
-          "parameters": {
-
-          },
+          "parameterOrder": [],
+          "parameters": {},
           "path": "v1beta/files",
           "request": {
             "$ref": "CreateFileRequest"
@@ -1547,9 +1521,7 @@
           "flatPath": "v1beta/models",
           "httpMethod": "GET",
           "id": "generativelanguage.models.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "pageSize": {
               "description": "The maximum number of `Models` to return (per page). If unspecified, 50 models will be returned per page. This method returns at most 1000 models per page, even if you pass a larger page_size.",
@@ -1773,9 +1745,7 @@
           "flatPath": "v1beta/tunedModels",
           "httpMethod": "POST",
           "id": "generativelanguage.tunedModels.create",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "tunedModelId": {
               "description": "Optional. The unique id for the tuned model if specified. This value should be up to 40 characters, the first character must be a letter, the last could be a letter or a number. The id must match the regular expression: `[a-z]([a-z0-9-]{0,38}[a-z0-9])?`.",
@@ -1890,9 +1860,7 @@
           "flatPath": "v1beta/tunedModels",
           "httpMethod": "GET",
           "id": "generativelanguage.tunedModels.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "filter": {
               "description": "Optional. A filter is a full text search over the tuned model's description and display name. By default, results will not include tuned models shared with everyone. Additional operators: - owner:me - writers:me - readers:me - readers:everyone Examples: \"owner:me\" returns all tuned models to which caller has owner role \"readers:me\" returns all tuned models to which caller has reader role \"readers:everyone\" returns all tuned models that are shared with everyone",
@@ -2611,9 +2579,7 @@
     "CodeExecution": {
       "description": "Tool that executes code generated by the model, and automatically returns the result to the model. See also `ExecutableCode` and `CodeExecutionResult` which are only generated when using this tool.",
       "id": "CodeExecution",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "CodeExecutionResult": {
@@ -3058,9 +3024,7 @@
     "DownloadFileResponse": {
       "description": "Response for `DownloadFile`.",
       "id": "DownloadFileResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "DynamicRetrievalConfig": {
@@ -3322,9 +3286,7 @@
     "Empty": {
       "description": "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }",
       "id": "Empty",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "Example": {
@@ -6146,9 +6108,7 @@
     "TransferOwnershipResponse": {
       "description": "Response from `TransferOwnership`.",
       "id": "TransferOwnershipResponse",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "TunedModel": {
@@ -6375,9 +6335,7 @@
     "UrlContext": {
       "description": "Tool to support URL context retrieval.",
       "id": "UrlContext",
-      "properties": {
-
-      },
+      "properties": {},
       "type": "object"
     },
     "UrlContextMetadata": {
