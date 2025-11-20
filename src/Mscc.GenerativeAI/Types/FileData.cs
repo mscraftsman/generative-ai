@@ -1,43 +1,33 @@
-﻿using System.Diagnostics;
-using System.Text.Json.Serialization;
+﻿/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// URI based data.
-    /// </summary>
-    [DebuggerDisplay("{MimeType} - {FileUri}")]
-    public class FileData : IPart
-    {
-        /// <summary>
-        /// The URI of the file in Google Cloud Storage.
-        /// URI of the file of the image or video to include in the prompt.
-        /// </summary>
-        /// <remarks>
-        /// The bucket that stores the file must be in the same Google Cloud project that's sending the request. You must also specify MIMETYPE.
-        /// Size limit: 20MB
-        /// </remarks>
-        // [JsonPropertyName("file_uri")]
-        public string? FileUri { get; set; }
-        /// <summary>
-        /// The IANA standard MIME type of the source data.
-        /// </summary>
-        /// <remarks>
-        /// The media type of the image, PDF, or video specified in the data or fileUri fields.
-        /// Acceptable values include the following: 
-        /// "image/png", "image/jpeg", "image/heic", "image/heif", "image/webp".
-        /// application/pdf
-        /// video/mov
-        /// video/mpeg
-        /// video/mp4
-        /// video/mpg
-        /// video/avi
-        /// video/wmv
-        /// video/mpegps
-        /// video/flv
-        /// Maximum video length: 2 minutes. No limit on image resolution. 
-        ///</remarks>
-        // [JsonPropertyName("mime_type")]
-        public string? MimeType { get; set; }
+	/// <summary>
+	/// URI based data.
+	/// </summary>
+	public partial class FileData
+	{
+		/// <summary>
+		/// Required. URI.
+		/// </summary>
+		public string? FileUri { get; set; }
+		/// <summary>
+		/// Optional. The IANA standard MIME type of the source data.
+		/// </summary>
+		public string? MimeType { get; set; }
     }
 }

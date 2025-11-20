@@ -1,63 +1,55 @@
+/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Response from `ListDocuments` containing a paginated list of <see cref="Document"/>s.
-    /// The <see cref="Document"/>s are sorted by ascending `document.create_time`.
-    /// </summary>
-    public class ListDocumentsResponse
-    {
-        /// <summary>
-        /// The returned <see cref="Document"/>s.
-        /// </summary>
-        public List<Document> Documents { get; set; }
-        /// <summary>
-        /// A token, which can be sent as `page_token` to retrieve the next page.
-        /// If this field is omitted, there are no more pages.
-        /// </summary>
-        public string? NextPageToken { get; set; }
-    }
-
-    /// <summary>
-    /// A `Document` is a collection of `Chunk`s.
-    /// </summary>
-    [DebuggerDisplay("{DisplayName,nq} ({MimeType,nq}, {State}) - '{Name,nq}'")]
-    public class Document
-    {
-        /// <summary>
-        /// Immutable. Identifier. The `Document` resource name. The ID (name excluding the "corpora/*/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/{corpus_id}/documents/my-awesome-doc-123a456b789c`
-        /// </summary>
-        public string Name { get; set; }
-        /// <summary>
-        /// Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation"
-        /// </summary>
-        public string? DisplayName { get; set; }
-        /// <summary>
-        /// Output only. The Timestamp of when the `Document` was created.
-        /// </summary>
-        public DateTime CreateTime { get; set; }
-        /// <summary>
-        /// Output only. The Timestamp of when the `Document` was last updated.
-        /// </summary>
-        public DateTime UpdateTime { get; set; }
-        /// <summary>
-        /// Optional. User provided custom metadata stored as key-value pairs used for querying. A `Document` can have a maximum of 20 `CustomMetadata`.
-        /// </summary>
-        public List<CustomMetadata> CustomMetadata { get; set; }
-        /// <summary>
-        /// Output only. The size in bytes of the Ragstore. This is the total size of all the documents in the Ragstore.
-        /// </summary>
-        public int? SizeBytes { get; set; }
-        /// <summary>
-        /// Optional. MIME type of the data. If not provided, it will be inferred from the uploaded content.
-        /// </summary>
-        public string? MimeType { get; set; }
-        /// <summary>
-        /// Output only. Current state of the `Document`.
-        /// </summary>
-        public StateDocument? State { get; set; }
+	/// <summary>
+	/// A <see cref="Document"/> is a collection of <see cref="Chunk"/>s.
+	/// </summary>
+	public partial class Document
+	{
+		/// <summary>
+		/// Output only. The Timestamp of when the <see cref="Document"/> was created.
+		/// </summary>
+		public DateTime? CreateTime { get; set; }
+		/// <summary>
+		/// Optional. User provided custom metadata stored as key-value pairs used for querying. A <see cref="Document"/> can have a maximum of 20 <see cref="CustomMetadata"/>.
+		/// </summary>
+		public List<CustomMetadata>? CustomMetadata { get; set; }
+		/// <summary>
+		/// Optional. The human-readable display name for the <see cref="Document"/>. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation"
+		/// </summary>
+		public string? DisplayName { get; set; }
+		/// <summary>
+		/// Output only. The mime type of the Document.
+		/// </summary>
+		public string? MimeType { get; set; }
+		/// <summary>
+		/// Immutable. Identifier. The <see cref="Document"/> resource name. The ID (name excluding the "fileSearchStores/*/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from <see cref="display_name"/> along with a 12 character random suffix. Example: <see cref="fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c"/>
+		/// </summary>
+		public string? Name { get; set; }
+		/// <summary>
+		/// Output only. The size of raw bytes ingested into the Document.
+		/// </summary>
+		public long? SizeBytes { get; set; }
+		/// <summary>
+		/// Output only. The Timestamp of when the <see cref="Document"/> was last updated.
+		/// </summary>
+		public DateTime? UpdateTime { get; set; }
     }
 }

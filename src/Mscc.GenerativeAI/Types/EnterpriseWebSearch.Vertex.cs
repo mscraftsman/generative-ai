@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Tool to search public web data, powered by Vertex AI Search and Sec4 compliance.
     /// </summary>
-    public class EnterpriseWebSearch : ITool
+    public partial class EnterpriseWebSearch : ITool
     {
         /// <summary>
         /// Optional. List of domains to be excluded from the search results.

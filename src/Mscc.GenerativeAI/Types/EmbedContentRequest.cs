@@ -1,77 +1,41 @@
-using System.Text.Json.Serialization;
-using System.Collections.Generic;
+/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Request containing the <see cref="Content"/> for the model to embed.
-    /// </summary>
-    public class EmbedContentRequest
-    {
-        /// <summary>
-        /// Required. The model's resource name. This serves as an ID for the Model to use. This name should match a model name returned by the `ListModels` method. Format: `models/{model}`
-        /// </summary>
-        public string? Model { get; set; }
-        /// <summary>
-        /// Required. The content to embed. Only the `parts.text` fields will be counted.
-        /// </summary>
-        public ContentResponse? Content { get; set; }
-        /// <summary>
-        /// Optional. Task type for which the embeddings will be used.
-        /// </summary>
-        /// <remarks>
-        /// Not supported on earlier models (`models/embedding-001`).
-        /// </remarks>
-        public TaskType? TaskType { get; set; }
-        /// <summary>
-        /// Optional. An optional title for the text.
-        /// </summary>
-        /// <remarks>
-        /// Only applicable when TaskType is `RETRIEVAL_DOCUMENT`.
-        /// Note: Specifying a `title` for `RETRIEVAL_DOCUMENT` provides better quality embeddings for retrieval.
-        /// </remarks>
-        public string? Title { get; set; }
-        /// <summary>
-        /// Optional. Optional reduced dimension for the output embedding.
-        /// </summary>
-        /// <remarks>
-        /// If set, excessive values in the output embedding are truncated from the end.
-        /// Supported by newer models since 2024, and the earlier model (`models/embedding-001`) cannot specify this value.
-        /// </remarks>
-        public int? OutputDimensionality { get; set; }
-        /// <summary>
-        /// Optional. Whether to silently truncate the input content if it's longer than the maximum sequence length.
-        /// </summary>
-        public bool? AutoTruncate { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public EmbedContentRequest() { }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prompt"></param>
-        public EmbedContentRequest(string prompt)
-        {
-            Content = new() { Text = prompt, Role = GenerativeAI.Role.User};
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="prompts"></param>
-        public EmbedContentRequest(List<string> prompts)
-        {
-            Content = new();
-            foreach (var prompt in prompts)
-            {
-                Content.Parts.Add(new()
-                {
-                    Text = prompt
-                });
-            }
-        }
+	/// <summary>
+	/// Request containing the <see cref="Content"/> for the model to embed.
+	/// </summary>
+	public partial class EmbedContentRequest
+	{
+		/// <summary>
+		/// Required. The model's resource name. This serves as an ID for the Model to use. This name should match a model name returned by the <see cref="ListModels"/> method. Format: <see cref="models/{model}"/>
+		/// </summary>
+		public string? Model { get; set; }
+		/// <summary>
+		/// Optional. Optional reduced dimension for the output embedding. If set, excessive values in the output embedding are truncated from the end. Supported by newer models since 2024 only. You cannot set this value if using the earlier model (<see cref="models/embedding-001"/>).
+		/// </summary>
+		public int? OutputDimensionality { get; set; }
+		/// <summary>
+		/// Optional. Optional task type for which the embeddings will be used. Not supported on earlier models (<see cref="models/embedding-001"/>).
+		/// </summary>
+		public TaskType? TaskType { get; set; }
+		/// <summary>
+		/// Optional. An optional title for the text. Only applicable when TaskType is <see cref="RETRIEVAL_DOCUMENT"/>. Note: Specifying a <see cref="title"/> for <see cref="RETRIEVAL_DOCUMENT"/> provides better quality embeddings for retrieval.
+		/// </summary>
+		public string? Title { get; set; }
     }
 }
