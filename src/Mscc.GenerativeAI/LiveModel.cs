@@ -1,25 +1,28 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
-using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-#endif
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
     public class LiveModel : BaseModel
     {
-        public LiveModel() : this(httpClientFactory: null, logger: null) { }
-        public LiveModel(IHttpClientFactory apiClient) : this(httpClientFactory: apiClient, logger: null) { }
+	    public LiveModel() : this(httpClientFactory: null, logger: null) { }
+	    public LiveModel(IHttpClientFactory apiClient) : this(httpClientFactory: apiClient, logger: null) { }
 
-        public LiveModel(IHttpClientFactory httpClientFactory, ILogger logger) : base(httpClientFactory, logger)
-        {
-            Logger.LogLiveModelInvoking();
-        }
+	    public LiveModel(IHttpClientFactory httpClientFactory, ILogger logger) : base(httpClientFactory, logger)
+	    {
+		    Logger.LogLiveModelInvoking();
+	    }
 
+#if false
         /// <summary>
         /// Establishes a websocket connection to the specified model with the given configuration.
         /// </summary>
@@ -158,5 +161,6 @@ namespace Mscc.GenerativeAI
             body?.AsObject().Remove("config");
             return JsonSerializer.Serialize(body, JsonConfig.JsonSerializerOptions);
         }
+#endif
     }
 }

@@ -7,7 +7,7 @@ using Json.Schema;
 using Json.Schema.Generation;
 using System.Reflection;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     public partial class Schema
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
-using System.Globalization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     public partial class Schema
     {
@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI
                 (ParameterType parameterType, bool isNullable) = ParseParameterType(typeElement);
                 schema.Type = parameterType;
 
-                // Set nullable if "null" was found in type array, but don't override explicit nullable property
+                // Set nullable if "null" was found in a type array, but don't override explicit nullable property
                 if (isNullable && !jsonElement.TryGetProperty("nullable", out _))
                 {
                     schema.Nullable = true;
@@ -94,8 +94,8 @@ namespace Mscc.GenerativeAI
             {
                 schema.MaxLength = maxLengthElement.ValueKind switch
                 {
-                    JsonValueKind.Number => Convert.ToString(maxLengthElement.GetInt32(), CultureInfo.InvariantCulture),
-                    _ => maxLengthElement.GetString()
+                    JsonValueKind.Number => maxLengthElement.GetInt64(),
+                    _ => Convert.ToInt64(maxLengthElement.GetString(), NumberFormatInfo.InvariantInfo)
                 };
             }
 
@@ -103,8 +103,8 @@ namespace Mscc.GenerativeAI
             {
                 schema.MinLength = minLengthElement.ValueKind switch
                 {
-                    JsonValueKind.Number => Convert.ToString(minLengthElement.GetInt32(), CultureInfo.InvariantCulture),
-                    _ => minLengthElement.GetString()
+                    JsonValueKind.Number => minLengthElement.GetInt64(),
+	                    _ => Convert.ToInt64(minLengthElement.GetString(), NumberFormatInfo.InvariantInfo)
                 };
             }
 
@@ -144,8 +144,8 @@ namespace Mscc.GenerativeAI
             {
                 schema.MaxProperties = maxPropertiesElement.ValueKind switch
                 {
-                    JsonValueKind.Number => Convert.ToString(maxPropertiesElement.GetInt32(), CultureInfo.InvariantCulture),
-                    _ => maxPropertiesElement.GetString()
+                    JsonValueKind.Number => maxPropertiesElement.GetInt64(),
+	                    _ => Convert.ToInt64(maxPropertiesElement.GetString(), NumberFormatInfo.InvariantInfo)
                 };
             }
 
@@ -153,8 +153,8 @@ namespace Mscc.GenerativeAI
             {
                 schema.MinProperties = minPropertiesElement.ValueKind switch
                 {
-                    JsonValueKind.Number => Convert.ToString(minPropertiesElement.GetInt32(), CultureInfo.InvariantCulture),
-                    _ => minPropertiesElement.GetString()
+                    JsonValueKind.Number => minPropertiesElement.GetInt64(),
+	                    _ => Convert.ToInt64(minPropertiesElement.GetString(), NumberFormatInfo.InvariantInfo)
                 };
             }
 

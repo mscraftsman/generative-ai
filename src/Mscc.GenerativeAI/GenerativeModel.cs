@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -118,65 +119,65 @@ namespace Mscc.GenerativeAI
 #if NET472_OR_GREATER || NETSTANDARD2_0
                 switch (model)
                 {
-                    case GenerativeAI.Model.BisonChat:
-                        return GenerativeAI.Method.GenerateMessage;
-                    case GenerativeAI.Model.BisonText:
-                        return GenerativeAI.Method.GenerateText;
-                    case GenerativeAI.Model.GeckoEmbedding:
-                        return GenerativeAI.Method.EmbedText;
-                    case GenerativeAI.Model.Embedding:
-                        return GenerativeAI.Method.EmbedContent;
-                    case GenerativeAI.Model.GeminiEmbedding:
-                        return GenerativeAI.Method.EmbedContent;
-                    case GenerativeAI.Model.TextEmbedding:
-                        return GenerativeAI.Method.EmbedContent;
-                    case GenerativeAI.Model.Imagen3:
-                        return GenerativeAI.Method.Predict;
-                    case GenerativeAI.Model.Imagen3Fast:
-                        return GenerativeAI.Method.Predict;
-                    case GenerativeAI.Model.Veo3:
-                        return GenerativeAI.Method.PredictLongRunning;
-                    case GenerativeAI.Model.AttributedQuestionAnswering:
-                        return GenerativeAI.Method.GenerateAnswer;
-                    case GenerativeAI.Model.Gemini20Flash:
+                    case GenerativeAI.Types.Model.BisonChat:
+                        return GenerativeAI.Types.Method.GenerateMessage;
+                    case GenerativeAI.Types.Model.BisonText:
+                        return GenerativeAI.Types.Method.GenerateText;
+                    case GenerativeAI.Types.Model.GeckoEmbedding:
+                        return GenerativeAI.Types.Method.EmbedText;
+                    case GenerativeAI.Types.Model.Embedding:
+                        return GenerativeAI.Types.Method.EmbedContent;
+                    case GenerativeAI.Types.Model.GeminiEmbedding:
+                        return GenerativeAI.Types.Method.EmbedContent;
+                    case GenerativeAI.Types.Model.TextEmbedding:
+                        return GenerativeAI.Types.Method.EmbedContent;
+                    case GenerativeAI.Types.Model.Imagen3:
+                        return GenerativeAI.Types.Method.Predict;
+                    case GenerativeAI.Types.Model.Imagen3Fast:
+                        return GenerativeAI.Types.Method.Predict;
+                    case GenerativeAI.Types.Model.Veo3:
+                        return GenerativeAI.Types.Method.PredictLongRunning;
+                    case GenerativeAI.Types.Model.AttributedQuestionAnswering:
+                        return GenerativeAI.Types.Method.GenerateAnswer;
+                    case GenerativeAI.Types.Model.Gemini20Flash:
                         return UseRealtime
-                            ? GenerativeAI.Method.BidirectionalGenerateContent
-                            : GenerativeAI.Method.GenerateContent;
+                            ? GenerativeAI.Types.Method.BidirectionalGenerateContent
+                            : GenerativeAI.Types.Method.GenerateContent;
                 }
                 if (_useVertexAi)
                 {
                     if (!string.IsNullOrEmpty(_endpointId))
-                        return GenerativeAI.Method.GenerateContent;
+                        return GenerativeAI.Types.Method.GenerateContent;
                     if (_useVertexAiExpress)
-                        return GenerativeAI.Method.GenerateContent;
+                        return GenerativeAI.Types.Method.GenerateContent;
                     
-                    return GenerativeAI.Method.StreamGenerateContent;
+                    return GenerativeAI.Types.Method.StreamGenerateContent;
                 }
 
-                return GenerativeAI.Method.GenerateContent;
+                return GenerativeAI.Types.Method.GenerateContent;
 #else
                 return model switch
                 {
-                    GenerativeAI.Model.BisonChat => GenerativeAI.Method.GenerateMessage,
-                    GenerativeAI.Model.BisonText => GenerativeAI.Method.GenerateText,
-                    GenerativeAI.Model.GeckoEmbedding => GenerativeAI.Method.EmbedText,
-                    GenerativeAI.Model.Embedding => GenerativeAI.Method.EmbedContent,
-                    GenerativeAI.Model.GeminiEmbedding => GenerativeAI.Method.EmbedContent,
-                    GenerativeAI.Model.TextEmbedding => GenerativeAI.Method.EmbedContent,
-                    GenerativeAI.Model.Imagen3 => GenerativeAI.Method.Predict,
-                    GenerativeAI.Model.Imagen3Fast => GenerativeAI.Method.Predict,
-                    GenerativeAI.Model.Veo3 => GenerativeAI.Method.PredictLongRunning,
-                    GenerativeAI.Model.AttributedQuestionAnswering => GenerativeAI.Method.GenerateAnswer,
-                    GenerativeAI.Model.Gemini20Flash => UseRealtime
-                        ? GenerativeAI.Method.BidirectionalGenerateContent
-                        : GenerativeAI.Method.GenerateContent,
+                    GenerativeAI.Types.Model.BisonChat => GenerativeAI.Types.Method.GenerateMessage,
+                    GenerativeAI.Types.Model.BisonText => GenerativeAI.Types.Method.GenerateText,
+                    GenerativeAI.Types.Model.GeckoEmbedding => GenerativeAI.Types.Method.EmbedText,
+                    GenerativeAI.Types.Model.Embedding => GenerativeAI.Types.Method.EmbedContent,
+                    GenerativeAI.Types.Model.GeminiEmbedding => GenerativeAI.Types.Method.EmbedContent,
+                    GenerativeAI.Types.Model.TextEmbedding => GenerativeAI.Types.Method.EmbedContent,
+                    GenerativeAI.Types.Model.Imagen3 => GenerativeAI.Types.Method.Predict,
+                    GenerativeAI.Types.Model.Imagen3Fast => GenerativeAI.Types.Method.Predict,
+                    GenerativeAI.Types.Model.Veo3 => GenerativeAI.Types.Method.PredictLongRunning,
+                    GenerativeAI.Types.Model.AttributedQuestionAnswering => GenerativeAI.Types.Method.GenerateAnswer,
+                    GenerativeAI.Types.Model.Gemini20Flash => UseRealtime
+                        ? GenerativeAI.Types.Method.BidirectionalGenerateContent
+                        : GenerativeAI.Types.Method.GenerateContent,
                     _ => _useVertexAi
                         ? (!string.IsNullOrEmpty(_endpointId)
-                            ? GenerativeAI.Method.GenerateContent
+                            ? GenerativeAI.Types.Method.GenerateContent
                             : (_useVertexAiExpress)
-                                ? GenerativeAI.Method.GenerateContent
-                                : GenerativeAI.Method.StreamGenerateContent)
-                        : GenerativeAI.Method.GenerateContent
+                                ? GenerativeAI.Types.Method.GenerateContent
+                                : GenerativeAI.Types.Method.StreamGenerateContent)
+                        : GenerativeAI.Types.Method.GenerateContent
                 };
 #endif
             }
@@ -384,7 +385,7 @@ namespace Mscc.GenerativeAI
             _apiVersion = ApiVersion.V1Beta;
             Logger.LogGenerativeModelInvoking();
             // Default model for tests, can be overridden by test setup
-            Model = GenerativeAI.Model.Gemini25Pro;
+            Model = GenerativeAI.Types.Model.Gemini25Pro;
         }
 
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
@@ -430,7 +431,7 @@ namespace Mscc.GenerativeAI
             using var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
             var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
             await response.EnsureSuccessAsync(cancellationToken);
-            var models = await Deserialize<ListTunedModelResponse>(response);
+            var models = await Deserialize<ListTunedModelsResponse>(response);
             return models?.TunedModels!;
         }
 
@@ -522,7 +523,7 @@ namespace Mscc.GenerativeAI
             var url = "{BaseUrlVertexAi}/models:{method}";
             return await PostAsync<CopyModelRequest, CopyModelResponse>(request,
                 url,
-                GenerativeAI.Method.Copy,
+                GenerativeAI.Types.Method.Copy,
                 requestOptions,
                 HttpCompletionOption.ResponseContentRead,
                 cancellationToken);
@@ -545,7 +546,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var method = GenerativeAI.Method.TunedModels;
+            var method = GenerativeAI.Types.Method.TunedModels;
             // var method = "createTunedModel";
             // if (_model is (string)Model.BisonText001)
             //     method = "createTunedTextModel";
@@ -666,7 +667,7 @@ namespace Mscc.GenerativeAI
                 throw new NotSupportedException("Accessing tuned models via API key is not provided. Setup OAuth for your project.");
             }
 
-            var method = GenerativeAI.Method.TransferOwnership;
+            var method = GenerativeAI.Types.Method.TransferOwnership;
             var url = ParseUrl(Url, method);
             var json = Serialize(new { EmailAddress = emailAddress });   // TransferOwnershipRequest
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -1339,8 +1340,8 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
             ThrowIfUnsupportedRequest(request);
 
-            var url = ParseUrl(Url, GenerativeAI.Method.AsyncBatchEmbedContent);
-            return await PostAsync<AsyncBatchEmbedContentRequest, Operation>(request, url, GenerativeAI.Method.AsyncBatchEmbedContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            var url = ParseUrl(Url, GenerativeAI.Types.Method.AsyncBatchEmbedContent);
+            return await PostAsync<AsyncBatchEmbedContentRequest, Operation>(request, url, GenerativeAI.Types.Method.AsyncBatchEmbedContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -1365,8 +1366,8 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
             ThrowIfUnsupportedRequest(request);
 
-            var url = ParseUrl(Url, GenerativeAI.Method.BatchGenerateContent);
-            return await PostAsync<BatchGenerateContentRequest, Operation<GenerateContentBatchOutput>>(request, url, GenerativeAI.Method.BatchGenerateContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            var url = ParseUrl(Url, GenerativeAI.Types.Method.BatchGenerateContent);
+            return await PostAsync<BatchGenerateContentRequest, Operation<GenerateContentBatchOutput>>(request, url, GenerativeAI.Types.Method.BatchGenerateContent, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         // ToDo: Implement methode
@@ -1489,7 +1490,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (!IsVertexAI) throw new NotSupportedException($"This method is only supported in the Vertex AI client.");
 
-            return await PostAsync<EditImageRequest, EditImageResponse>(request, Url, GenerativeAI.Method.Predict, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<EditImageRequest, EditImageResponse>(request, Url, GenerativeAI.Types.Method.Predict, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -1542,7 +1543,7 @@ namespace Mscc.GenerativeAI
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (!IsVertexAI) throw new NotSupportedException($"This method is only supported in the Vertex AI client.");
             
-            return await PostAsync<UpscaleImageRequest, UpscaleImageResponse>(request, Url, GenerativeAI.Method.Predict, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<UpscaleImageRequest, UpscaleImageResponse>(request, Url, GenerativeAI.Types.Method.Predict, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -1760,7 +1761,7 @@ namespace Mscc.GenerativeAI
             if (requests == null) throw new ArgumentNullException(nameof(requests));
             if (!string.IsNullOrEmpty(title) && taskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
 
-            var method = GenerativeAI.Method.BatchEmbedContents;
+            var method = GenerativeAI.Types.Method.BatchEmbedContents;
             var url = ParseUrl(Url, method);
             return await PostAsync<List<EmbedContentRequest>, EmbedContentResponse>(requests, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -1905,7 +1906,7 @@ namespace Mscc.GenerativeAI
                 requestOptions ??= new RequestOptions(config?.HttpOptions);
             }
 
-            var method = GenerativeAI.Method.CountTokens;
+            var method = GenerativeAI.Types.Method.CountTokens;
             var url = ParseUrl(Url, method);
             return await PostAsync<CountTokensRequest, CountTokensResponse>(request, Url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -1928,7 +1929,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.CountTokens;
+            var method = GenerativeAI.Types.Method.CountTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -1950,13 +1951,13 @@ namespace Mscc.GenerativeAI
             var model = _model.SanitizeModelName().Split(['/'], 2, StringSplitOptions.RemoveEmptyEntries).Last();
             switch (model)
             {
-                case GenerativeAI.Model.BisonChat:
+                case GenerativeAI.Types.Model.BisonChat:
                     var chatRequest = new GenerateMessageRequest(prompt);
                     return await CountTokens(chatRequest, requestOptions, cancellationToken);
-                case GenerativeAI.Model.BisonText:
+                case GenerativeAI.Types.Model.BisonText:
                     var textRequest = new GenerateTextRequest(prompt);
                     return await CountTokens(textRequest, requestOptions, cancellationToken);
-                case GenerativeAI.Model.GeckoEmbedding:
+                case GenerativeAI.Types.Model.GeckoEmbedding:
                     var embeddingRequest = new GenerateTextRequest(prompt);
                     return await CountTokens(embeddingRequest, requestOptions, cancellationToken);
                 default:
@@ -2019,7 +2020,7 @@ namespace Mscc.GenerativeAI
                 requestOptions ??= new RequestOptions(config?.HttpOptions);
             }
 
-            var method = GenerativeAI.Method.ComputeTokens;
+            var method = GenerativeAI.Types.Method.ComputeTokens;
             var url = ParseUrl(Url, method);
             return await PostAsync<ComputeTokensRequest, ComputeTokensResponse>(request, Url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -2042,7 +2043,7 @@ namespace Mscc.GenerativeAI
             
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.CountTokens;
+            var method = GenerativeAI.Types.Method.CountTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -2099,7 +2100,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.Predict;
+            var method = GenerativeAI.Types.Method.Predict;
             var url = ParseUrl(Url, method);
             return await PostAsync<PredictRequest, PredictResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -2119,7 +2120,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.PredictLongRunning;
+            var method = GenerativeAI.Types.Method.PredictLongRunning;
             var url = ParseUrl(Url, method);
             return await PostAsync<PredictLongRunningRequest, Operation>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -2169,7 +2170,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.CountTextTokens;
+            var method = GenerativeAI.Types.Method.CountTextTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -2224,7 +2225,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.CountMessageTokens;
+            var method = GenerativeAI.Types.Method.CountMessageTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -2282,7 +2283,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Method.CountMessageTokens;
+            var method = GenerativeAI.Types.Method.CountMessageTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
@@ -2311,7 +2312,7 @@ namespace Mscc.GenerativeAI
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var url = ParseUrl(Url, GenerativeAI.Method.BatchEmbedText);
+            var url = ParseUrl(Url, GenerativeAI.Types.Method.BatchEmbedText);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
             using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
