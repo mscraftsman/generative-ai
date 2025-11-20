@@ -17,17 +17,22 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Request to get a text embedding from the model.
+	/// Request to generate a text completion response from the model.
 	/// </summary>
-	public partial class EmbedTextRequest
+	public partial class GenerateTextRequest
 	{
 		/// <summary>
-		/// Required. The model name to use with the format model=models/{model}.
+		/// Default constructor.
 		/// </summary>
-		public string? Model { get; set; }
+		public GenerateTextRequest() { }
+
 		/// <summary>
-		/// Optional. The free-form input text that the model will turn into an embedding.
+		/// 
 		/// </summary>
-		public string? Text { get; set; }
-    }
+		/// <param name="prompt"></param>
+		public GenerateTextRequest(string prompt) : this()
+		{
+			Prompt = new TextPrompt() { Text = prompt };
+		}
+	}
 }
