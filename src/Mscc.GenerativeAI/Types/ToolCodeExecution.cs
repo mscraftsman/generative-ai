@@ -1,3 +1,5 @@
+using Mscc.GenerativeAI.Types;
+
 namespace Mscc.GenerativeAI
 {
     /// <summary>

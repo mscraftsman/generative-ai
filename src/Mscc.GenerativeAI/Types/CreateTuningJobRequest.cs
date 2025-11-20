@@ -1,6 +1,7 @@
+using Mscc.GenerativeAI.Types;
 using System;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
@@ -45,7 +46,7 @@ namespace Mscc.GenerativeAI
             string datasetUri,
             string? validationUri = null, 
             string? displayName = null,
-            HyperParameters? parameters = null) : this()
+            Hyperparameters? parameters = null) : this()
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentException("Value cannot be null or empty.", nameof(model));
             if (string.IsNullOrEmpty(datasetUri)) throw new ArgumentException("Value cannot be null or empty.", nameof(datasetUri));

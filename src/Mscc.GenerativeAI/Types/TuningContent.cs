@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// The structured datatype containing multi-part content of an example message. This is a subset of the Content proto used during model inference with limited type support. A `Content` includes a `role` field designating the producer of the `Content` and a `parts` field containing multi-part data that contains the content of the message turn.
@@ -66,7 +66,7 @@ namespace Mscc.GenerativeAI
         /// <param name="file">File to process.</param>
         public TuningContent(FileData file) : this()
         {
-            Role = GenerativeAI.Role.User;
+            Role = GenerativeAI.Types.Role.User;
             Parts?.Add(new FileData { FileUri = file.FileUri, MimeType = file.MimeType });
         }
 

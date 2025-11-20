@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response from `QueryCorpus` containing a list of relevant chunks.

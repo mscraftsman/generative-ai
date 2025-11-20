@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System.Net.Http.Headers;
 using System.Text;
 using ArgumentNullException = System.ArgumentNullException;
@@ -380,7 +381,7 @@ namespace Mscc.GenerativeAI
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
-            var method = GenerativeAI.Method.RetrieveContexts;
+            var method = GenerativeAI.Types.Method.RetrieveContexts;
             var url = "{BaseUrlVertexAi}:{method}";
             return await PostAsync<RagRetrievalQueryRequest, RagQueryResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }

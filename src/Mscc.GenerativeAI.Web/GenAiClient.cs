@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Mscc.GenerativeAI.Types;
 using System.Net.Http;
 
 namespace Mscc.GenerativeAI.Web
@@ -34,7 +35,7 @@ namespace Mscc.GenerativeAI.Web
             this.httpClientFactory = httpClientFactory;
             this.logger = logger;
 
-            _model = options?.Value?.Model ?? GenerativeAI.Model.Gemini25Pro;
+            _model = options?.Value?.Model ?? Model.Gemini25Pro;
             if (!string.IsNullOrEmpty(options?.Value.ProjectId))
             {
                 _generativeAi = new VertexAI(projectId: options?.Value.ProjectId,

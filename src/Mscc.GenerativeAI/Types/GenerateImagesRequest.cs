@@ -1,4 +1,6 @@
-namespace Mscc.GenerativeAI
+using System;
+
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Request for image generation.

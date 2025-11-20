@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

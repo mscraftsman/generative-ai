@@ -1,16 +1,14 @@
-#if NET472_OR_GREATER || NETSTANDARD2_0
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-#endif
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json.Nodes;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     public class AsyncSession(WebSocket webSocket, IHttpClientFactory apiClient) : IAsyncDisposable
     {

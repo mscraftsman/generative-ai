@@ -67,7 +67,7 @@
         /// </summary>
         public string? Model
         {
-            get => !string.IsNullOrEmpty(model) ? model : GenerativeAI.Model.Gemini25Pro;
+            get => !string.IsNullOrEmpty(model) ? model : GenerativeAI.Types.Model.Gemini25Pro;
             set => model = value;
         }
     }

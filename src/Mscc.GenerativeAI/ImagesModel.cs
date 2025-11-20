@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System.Text;
 
 namespace Mscc.GenerativeAI
@@ -14,7 +15,7 @@ namespace Mscc.GenerativeAI
     {
         internal override string Version => ApiVersion.V1Beta;
                 
-        private string Method => GenerativeAI.Method.Generate;
+        private string Method => GenerativeAI.Types.Method.Generate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImagesModel"/> class.

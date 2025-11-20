@@ -51,7 +51,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public ToolConfig? ToolConfig { get; set; }
 		/// <summary>
-		/// Optional. A list of <see cref="Tools"/> the <see cref="Model"/> may use to generate the next response. A <see cref="Tool"/> is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the <see cref="Model"/>. Supported <see cref="Tool"/>s are <see cref="Function"/> and <see cref="code_execution"/>. Refer to the [Function calling](https://ai.google.dev/gemini-api/docs/function-calling) and the [Code execution](https://ai.google.dev/gemini-api/docs/code-execution) guides to learn more.
+		/// Optional. A list of <see cref="Tools"/> the <see cref="Model"/> may use to generate the next response. A <see cref="Tool"/> is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the <see cref="Model"/>. Supported <see cref="Tool"/>s are <see cref="JSType.Function"/> and <see cref="code_execution"/>. Refer to the [Function calling](https://ai.google.dev/gemini-api/docs/function-calling) and the [Code execution](https://ai.google.dev/gemini-api/docs/code-execution) guides to learn more.
 		/// </summary>
 		public Tools? Tools { get; set; }
     }

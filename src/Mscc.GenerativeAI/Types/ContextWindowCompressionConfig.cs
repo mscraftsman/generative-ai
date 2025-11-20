@@ -1,4 +1,4 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Enables context window compression — a mechanism for managing the model's context window so that it does not exceed a given length.

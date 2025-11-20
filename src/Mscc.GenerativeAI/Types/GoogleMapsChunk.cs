@@ -1,4 +1,4 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A `Maps` chunk is a piece of evidence that comes from Google Maps. It contains information

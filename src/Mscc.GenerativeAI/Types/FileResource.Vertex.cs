@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
+
+using System.Diagnostics;
 
 namespace Mscc.GenerativeAI.Types
 {
-	/// <summary>
-	/// A list of floats representing the embedding.
-	/// </summary>
-	public partial class Embedding
-	{
-		/// <summary>
-		/// The embedding values.
-		/// </summary>
-		public List<float>? Value { get; set; }
+    /// <summary>
+    /// A file resource of the File API.
+    /// </summary>
+    [DebuggerDisplay("{Name} ({MimeType})")]
+    public partial class FileResource
+    {
     }
 }

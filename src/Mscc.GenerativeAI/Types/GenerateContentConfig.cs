@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Optional model configuration parameters.
@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Configuration for model router requests.
         /// </summary>
-        public GenerationConfigRoutingConfig? RoutingConfig { get; set; }
+        public RoutingConfig? RoutingConfig { get; set; }
         /// <summary>
         /// Safety settings in the request to block unsafe content in the response.
         /// </summary>

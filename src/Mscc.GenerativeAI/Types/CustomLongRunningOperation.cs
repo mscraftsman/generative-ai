@@ -35,7 +35,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public string? Name { get; set; }
 		/// <summary>
-		/// The normal, successful response of the operation. If the original method returns no data on success, such as <see cref="Delete"/>, the response is <see cref="google.protobuf.Empty"/>. If the original method is standard <see cref="Get"/>/<see cref="Create"/>/<see cref="Update"/>, the response should be the resource. For other methods, the response should have the type <see cref="XxxResponse"/>, where <see cref="Xxx"/> is the original method name. For example, if the original method name is <see cref="TakeSnapshot()"/>, the inferred response type is <see cref="TakeSnapshotResponse"/>.
+		/// The normal, successful response of the operation. If the original method returns no data on success, such as <see cref="Delete"/>, the response is <see cref="Empty"/>. If the original method is standard <see cref="Get"/>/<see cref="Create"/>/<see cref="Update"/>, the response should be the resource. For other methods, the response should have the type <see cref="XxxResponse"/>, where <see cref="Xxx"/> is the original method name. For example, if the original method name is <see cref="TakeSnapshot()"/>, the inferred response type is <see cref="TakeSnapshotResponse"/>.
 		/// </summary>
 		public object? Response { get; set; }
     }

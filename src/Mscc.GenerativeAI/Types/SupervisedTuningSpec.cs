@@ -1,4 +1,6 @@
-namespace Mscc.GenerativeAI
+using Mscc.GenerativeAI.Types;
+
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
@@ -20,6 +22,6 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Immutable. Hyperparameters controlling the tuning process. If not provided, default values will be used.
         /// </summary>
-        public HyperParameters? HyperParameters { get; set; }
+        public Hyperparameters? HyperParameters { get; set; }
     }
 }

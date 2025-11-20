@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
@@ -22,5 +22,5 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// 
     /// </summary>
-    public sealed class TextPrompt : AbstractText { }
+    public partial class TextPrompt : AbstractText { }
 }

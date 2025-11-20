@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System.Net.Http;
 
 namespace Mscc.GenerativeAI
@@ -60,6 +61,7 @@ namespace Mscc.GenerativeAI
                 httpOptions = new RequestOptions() { BaseUrl = baseUrl };
             }
             
+#if false
             _apiClient = GetApiClient(vertexai,
                 apiKey,
                 credentials,
@@ -67,8 +69,10 @@ namespace Mscc.GenerativeAI
                 location,
                 _debugConfig,
                 httpOptions);
+#endif
         }
 
+#if false
         private IHttpClientFactory GetApiClient(bool? vertexai,
             string? apiKey,
             Credentials? credentials,
@@ -87,7 +91,8 @@ namespace Mscc.GenerativeAI
                 location,
                 httpOptions);
         }
-
+#endif
+	    
         private string GetBaseUrl(bool vertexai, RequestOptions httpOptions)
         {
             if (!string.IsNullOrEmpty(httpOptions?.BaseUrl)) return httpOptions.BaseUrl;

@@ -182,7 +182,7 @@ builder.Services.AddGenerativeAI(options =>
 {
     // User defined option values
     options.ProjectId = string.Empty;
-    options.Model = GenerativeAI.Model.GeminiProVision;
+    options.Model = GenerativeAI.Types.Model.GeminiProVision;
     options.Credentials.ApiKey = "YOUR_API_KEY";
 });
 

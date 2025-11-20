@@ -1,9 +1,11 @@
+using Mscc.GenerativeAI.Types;
 using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
     public class InteractionsModel
     {
+#if false
         public async Task<InteractionResource> Create(string model,
             string input,
             string? systemInstruction = null,
@@ -23,5 +25,6 @@ namespace Mscc.GenerativeAI
         {
             
         }
+#endif
     }
 }

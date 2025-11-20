@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Request to create a tuned model.
@@ -48,7 +48,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException"></exception>
         public CreateTunedModelRequest(string model, string name, 
             List<TuningExample>? dataset = null,
-            HyperParameters? parameters = null) : this()
+            Hyperparameters? parameters = null) : this()
         {
             if (model is null) throw new ArgumentNullException(nameof(model));
             if (name is null) throw new ArgumentNullException(nameof(name));

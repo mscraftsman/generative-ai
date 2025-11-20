@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Provides options for individual API requests.

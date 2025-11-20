@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Request message for ComputeTokens RPC call.
     /// </summary>
-    public class ComputeTokensRequest
+    public partial class ComputeTokensRequest
     {
         /// <summary>
         /// Optional. The name of the publisher model requested to serve the prediction.
