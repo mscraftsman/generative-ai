@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Shouldly;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -1218,7 +1219,7 @@ namespace Test.Mscc.GenerativeAI
             var googleAI = new GoogleAI(accessToken: fixture.AccessToken);
             var model = googleAI.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = fixture.ProjectId;
-            var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
+            var parameters = new Hyperparameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
             {    
                 new() { TextInput = "1", Output = "2" },

@@ -2,6 +2,7 @@
 using Json.Schema.Generation;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
 using System;
 using System.Collections;
@@ -2504,7 +2505,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = _vertexAi.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
-            var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
+            var parameters = new Hyperparameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
             {
                 new() { TextInput = "1", Output = "2" },

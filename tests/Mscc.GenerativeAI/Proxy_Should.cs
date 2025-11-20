@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Moq;
 using Moq.Protected;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
 using Xunit;
 using Xunit.Abstractions;

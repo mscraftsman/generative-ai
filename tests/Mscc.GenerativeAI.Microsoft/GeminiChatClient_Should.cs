@@ -3,6 +3,7 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
+using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Shouldly;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;

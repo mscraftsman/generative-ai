@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Shouldly;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -100,7 +101,7 @@ namespace Test.Mscc.GenerativeAI
                 datasetUri: "gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_train_data.jsonl",
                 validationUri: "gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_validation_data.jsonl",
                 displayName: "tuned_gemini_1_5_pro",
-                new HyperParameters() { 
+                new Hyperparameters() { 
                     EpochCount = 4, 
                     AdapterSize = AdapterSize.AdapterSizeFour, 
                     LearningRateMultiplier = 1.0f
