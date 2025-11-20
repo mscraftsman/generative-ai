@@ -1,4 +1,14 @@
-#!/bin/bash
+SKIP_DOWNLOAD=false
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -s|--skip-download) SKIP_DOWNLOAD=true ;;
+        -h|--help) echo "Usage: $0 [-s|--skip-download]"; exit 0 ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
 
 if [ -f .env ]; then
   # 1. Turn on "allexport" -> any variable defined in the next step is automatically exported
@@ -12,16 +22,21 @@ fi
 mkdir -p ./Types
 rm -f ./Types/*
 
-curl "https://generativelanguage.googleapis.com/\$discovery/rest?version=v1beta&key=$GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -o generativelanguage.json
+if [ "$SKIP_DOWNLOAD" = false ]; then
+  curl "https://generativelanguage.googleapis.com/\$discovery/rest?version=v1beta&key=$GEMINI_API_KEY" \
+    -H "Content-Type: application/json" \
+    -o generativelanguage.json
 
-curl "https://aiplatform.googleapis.com/\$discovery/rest?version=v1beta1" \
-  -H "Content-Type: application/json" \
-  -o aiplatform.json
+  curl "https://aiplatform.googleapis.com/\$discovery/rest?version=v1beta1" \
+    -H "Content-Type: application/json" \
+    -o aiplatform.json
 
-jq --sort-keys . generativelanguage.json > $SOURCE/discovery.json
-jq --sort-keys . aiplatform.json > $SOURCE/discovery.vertex.json
+  jq --sort-keys . generativelanguage.json > $SOURCE/discovery.json
+  jq --sort-keys . aiplatform.json > $SOURCE/discovery.vertex.json
+
+  rm generativelanguage.json
+  rm aiplatform.json
+fi
 
 # Generate C# types...
 dotnet run --project ./Mscc.CodeGenerator.csproj $SOURCE/discovery.json ./Types
