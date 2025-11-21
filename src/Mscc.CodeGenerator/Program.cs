@@ -119,11 +119,8 @@ namespace Mscc.CodeGenerator
 			"GeneratedFile.State",
 			"ImageConfig.AspectRatio",
 			"ImageConfig.ImageSize",
-			"InlinedResponses.InlinedResponses",
 			"Part.InlineData",
 			"Part.Text",
-			"RawOutput.RawOutput",
-			"SharePointSources.SharePointSources",
 			"TunedModelResponse.State",
 			"TuningJob.State"
 		};
@@ -248,7 +245,36 @@ namespace Mscc.CodeGenerator
 			return text;
 		}
 
-		private void GenerateClass(StringBuilder sb, string className, JsonElement schema, string outputDirectory)
+	/// <summary>
+	/// Extracts the last word from a PascalCase property name.
+	/// E.g., "SharePointSources" -> "Sources", "RawOutput" -> "Output"
+	/// </summary>
+	private string ExtractLastWord(string propertyName)
+	{
+		// Find uppercase letters to split the word
+		var matches = Regex.Matches(propertyName, @"[A-Z][a-z]*");
+		if (matches.Count > 1)
+		{
+			// Return the last word
+			return matches[matches.Count - 1].Value;
+		}
+		// If only one word or no pattern found, return as-is
+		return propertyName;
+	}
+
+	/// <summary>
+	/// Converts a PascalCase string to camelCase.
+	/// E.g., "SharePointSources" -> "sharePointSources"
+	/// </summary>
+	private string ToCamelCase(string pascalCase)
+	{
+		if (string.IsNullOrEmpty(pascalCase))
+			return pascalCase;
+		
+		return char.ToLowerInvariant(pascalCase[0]) + pascalCase.Substring(1);
+	}
+
+	private void GenerateClass(StringBuilder sb, string className, JsonElement schema, string outputDirectory)
 		{
 			if (schema.TryGetProperty("description", out JsonElement classDescription))
 			{
@@ -315,26 +341,44 @@ namespace Mscc.CodeGenerator
 							PrefixOutput(enumSb);
 							
 							File.WriteAllText(filePath, enumSb.ToString());
-						}
-					}
-
-					string propertyType = ReplaceTypeName(GetCSharpType(propertyValue, className, propertyName));
-
-					if (propertyValue.TryGetProperty("description", out JsonElement propertyDescription))
-					{
-						sb.AppendLine($"\t\t/// <summary>");
-						sb.AppendLine($"\t\t/// {GetTypeReference(propertyDescription.GetString())}");
-						sb.AppendLine($"\t\t/// </summary>");
-					}
-
-					var optional = propertyType == "bool" ? "" : "?";
-					sb.AppendLine($"\t\tpublic {propertyType}{optional} {propertyName} {{ get; set; }}");
-					existingProperties.Add(propertyName);
-				}
 			}
-
-			sb.AppendLine("    }");
 		}
+
+		string propertyType = ReplaceTypeName(GetCSharpType(propertyValue, className, propertyName));
+
+		// Check if property name conflicts with class name
+		string actualPropertyName = propertyName;
+		string? jsonPropertyName = null;
+		
+		if (propertyName.Equals(className, StringComparison.Ordinal))
+		{
+			// Extract the last word to use as the shortened property name
+			actualPropertyName = ExtractLastWord(propertyName);
+			// Store the original name in camelCase for JsonPropertyName attribute
+			jsonPropertyName = ToCamelCase(propertyName);
+		}
+
+		if (propertyValue.TryGetProperty("description", out JsonElement propertyDescription))
+		{
+			sb.AppendLine($"\t\t/// <summary>");
+			sb.AppendLine($"\t\t/// {GetTypeReference(propertyDescription.GetString())}");
+			sb.AppendLine($"\t\t/// </summary>");
+		}
+
+		// Add JsonPropertyName attribute if there's a naming conflict
+		if (jsonPropertyName != null)
+		{
+			sb.AppendLine($"\t\t[JsonPropertyName(\"{jsonPropertyName}\")]");
+		}
+
+		var optional = propertyType == "bool" ? "" : "?";
+		sb.AppendLine($"\t\tpublic {propertyType}{optional} {actualPropertyName} {{ get; set; }}");
+		existingProperties.Add(actualPropertyName);
+	}
+}
+
+	sb.AppendLine("    }");
+}
 
 		private void GenerateEnum(StringBuilder sb, string enumName, List<(string Name, string? Description)> members)
 		{
@@ -615,11 +659,9 @@ namespace Mscc.CodeGenerator
 			{
 				files.Add(mainFile);
 			}
-			
-			Console.WriteLine($"DEBUG: Checking for existing properties of {className} in {outputDirectory}. Found {files.Count} files.");
+
 			foreach (var file in files)
 			{
-				Console.WriteLine($"DEBUG: Reading file {file}");
 				var content = File.ReadAllText(file);
 				var matches = Regex.Matches(content, @"public\s+[\w\?<>\[\]]+\s+(\w+)\s*\{\s*get;\s*set;\s*\}");
 				foreach (Match match in matches)
@@ -627,7 +669,6 @@ namespace Mscc.CodeGenerator
 					if (match.Success && match.Groups.Count > 1)
 					{
 						var prop = match.Groups[1].Value;
-						Console.WriteLine($"DEBUG: Found existing property {prop}");
 						existingProperties.Add(prop);
 					}
 				}
