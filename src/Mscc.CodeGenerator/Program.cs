@@ -77,6 +77,7 @@ namespace Mscc.CodeGenerator
 			{ "Category", "HarmCategory" },
 			{ "Environment", "ComputerUseEnvironment" },
 			{ "File", "FileResource" },
+			{ "Method", "HarmBlockMethod" },
 			{ "Model", "ModelResponse" },
 			{ "Probability", "HarmProbability" },
 			{ "ResponseModalities", "ResponseModality" },
@@ -89,6 +90,42 @@ namespace Mscc.CodeGenerator
 			{ "List<ResponseModalities>", "List<ResponseModality>" },	// List<Modality>
 			{ "List<Tool>", "Tools" },
 			{ "List<TunedModel>", "List<ModelResponse>" }
+		};
+
+		private readonly List<string> _ignoredMembers = new List<string>
+		{
+			"CachedContent.Model",
+			"CachedContent.Name",
+			"CachedContent.Ttl",
+			"Candidate.Content",
+			"Chunk.Data",
+			"Condition.Operation",
+			"Content.Parts",
+			"Content.Role",
+			"ContentEmbedding.Values",
+			"ContentFilter.Reason",
+			"CountTokensResponse.CachedContentTokenCount",
+			"CountTokensResponse.TotalTokens",
+			"Document.State",
+			"DynamicRetrievalConfig.Mode",
+			"EmbedContentBatch.State",
+			"EmbedContentRequest.Content",
+			"Embedding.Value",
+			"FileResource.State",
+			"FunctionCallingConfig.Mode",
+			"FunctionResponsePart.InlineData",
+			"GenerateContentBatch.State",
+			"GenerateContentRequest.Labels",
+			"GeneratedFile.State",
+			"ImageConfig.AspectRatio",
+			"ImageConfig.ImageSize",
+			"InlinedResponses.InlinedResponses",
+			"Part.InlineData",
+			"Part.Text",
+			"RawOutput.RawOutput",
+			"SharePointSources.SharePointSources",
+			"TunedModelResponse.State",
+			"TuningJob.State"
 		};
 
 		public CSharpCodeGenerator(string ns, JsonElement schemas, string? name = null, string? version = null, string? revision = null)
@@ -229,7 +266,8 @@ namespace Mscc.CodeGenerator
 				foreach (var property in properties.EnumerateObject())
 				{
 					string propertyName = ToPascalCase(property.Name);
-					if (existingProperties.Contains(propertyName))
+					if (existingProperties.Contains(propertyName) || 
+					    _ignoredMembers.Contains($"{className}.{propertyName}"))
 					{
 						continue;
 					}
@@ -333,7 +371,7 @@ namespace Mscc.CodeGenerator
 					{
 						description = enumDescriptions[i];
 					}
-					members.Add((ToPascalCase(value), description));
+					members.Add((ToPascalCase(value, enumMember:true), description));
 				}
 				i++;
 			}
@@ -423,7 +461,7 @@ namespace Mscc.CodeGenerator
 			var prefix = new StringBuilder();
 			prefix.AppendLine("""
 			                  /*
-			                   * Copyright 2024-2025 Jochen Kirstätter
+			                   * Copyleft 2024-2025 Jochen Kirstätter and contributors
 			                   *
 			                   * Licensed under the Apache License, Version 2.0 (the "License");
 			                   * you may not use this file except in compliance with the License.
@@ -450,7 +488,8 @@ namespace Mscc.CodeGenerator
 				prefix.AppendLine("using System.Collections.Generic;");
 			}
 
-			if (content.Contains("JsonStringEnumConverter<"))
+			if (content.Contains("JsonStringEnumConverter<")
+				|| content.Contains("[Json"))
 			{
 				prefix.AppendLine("using System.Text.Json.Serialization;");
 			}
@@ -458,20 +497,19 @@ namespace Mscc.CodeGenerator
 			prefix.AppendLine("");
 			
 			// Add auto-generation warning
-			prefix.AppendLine("/*");
-			prefix.AppendLine(" * AUTO-GENERATED FILE - DO NOT EDIT MANUALLY");
-			if (!string.IsNullOrEmpty(_revision))
-			{
-				prefix.AppendLine($" * Generated from schema {_name} - revision: {_revision}");
-			}
-			prefix.AppendLine($" * Generated on: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
-			prefix.AppendLine(" */");
+			prefix.AppendLine("// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //");
+			// if (!string.IsNullOrEmpty(_revision))
+			// { 
+			// 	prefix.AppendLine($" * Generated from schema {_name} - revision: {_revision}");
+			// }
+			// prefix.AppendLine($" * Generated on: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
+			// prefix.AppendLine(" */");
 			prefix.AppendLine("");
 
 			stringBuilder.Insert(0, prefix.ToString());
 		}
 
-		private string ToPascalCase(string s, string? containingClassName = null)
+		private string ToPascalCase(string s, string? containingClassName = null, bool enumMember = false)
 		{
 			if (string.IsNullOrEmpty(s))
 				return s;
@@ -490,7 +528,7 @@ namespace Mscc.CodeGenerator
 				return s.ToUpper();
 
 			var pascalCase = s.Substring(0, 1).ToUpper() + s.Substring(1);
-			if (containingClassName == null)
+			if (containingClassName == null && enumMember)
 				pascalCase = s.Substring(0, 1).ToUpper() + s.Substring(1).ToLower();
 			if (s.IndexOfAny(['_', '-']) != -1)
 			{
@@ -571,16 +609,26 @@ namespace Mscc.CodeGenerator
 				return existingProperties;
 			}
 
-			var files = Directory.GetFiles(outputDirectory, $"{className}.*.cs");
+			var files = Directory.GetFiles(outputDirectory, $"{className}.*.cs").ToList();
+			var mainFile = Path.Combine(outputDirectory, $"{className}.cs");
+			if (File.Exists(mainFile))
+			{
+				files.Add(mainFile);
+			}
+			
+			Console.WriteLine($"DEBUG: Checking for existing properties of {className} in {outputDirectory}. Found {files.Count} files.");
 			foreach (var file in files)
 			{
+				Console.WriteLine($"DEBUG: Reading file {file}");
 				var content = File.ReadAllText(file);
 				var matches = Regex.Matches(content, @"public\s+[\w\?<>\[\]]+\s+(\w+)\s*\{\s*get;\s*set;\s*\}");
 				foreach (Match match in matches)
 				{
 					if (match.Success && match.Groups.Count > 1)
 					{
-						existingProperties.Add(match.Groups[1].Value);
+						var prop = match.Groups[1].Value;
+						Console.WriteLine($"DEBUG: Found existing property {prop}");
+						existingProperties.Add(prop);
 					}
 				}
 			}
