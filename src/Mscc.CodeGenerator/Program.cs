@@ -106,23 +106,16 @@ namespace Mscc.CodeGenerator
 			"ContentFilter.Reason",
 			"CountTokensResponse.CachedContentTokenCount",
 			"CountTokensResponse.TotalTokens",
-			"Document.State",
-			"DynamicRetrievalConfig.Mode",
-			"EmbedContentBatch.State",
 			"EmbedContentRequest.Content",
 			"Embedding.Value",
-			"FileResource.State",
-			"FunctionCallingConfig.Mode",
 			"FunctionResponsePart.InlineData",
-			"GenerateContentBatch.State",
 			"GenerateContentRequest.Labels",
-			"GeneratedFile.State",
 			"ImageConfig.AspectRatio",
 			"ImageConfig.ImageSize",
+			"ModelResponse.Labels",
+			"ModelResponse.VersionId",
 			"Part.InlineData",
-			"Part.Text",
-			"TunedModelResponse.State",
-			"TuningJob.State"
+			"Part.Text"
 		};
 
 		public CSharpCodeGenerator(string ns, JsonElement schemas, string? name = null, string? version = null, string? revision = null)
@@ -226,11 +219,7 @@ namespace Mscc.CodeGenerator
 
 		private string ReplaceTypeName(string typeName)
 		{
-			// 2. Use Regex.Replace with a MatchEvaluator
-			// This executes the replacement logic in a single pass.
-			var text = Regex.Replace(typeName, _pattern, match => _typeReplacements[match.Value]);
-
-			if (string.IsNullOrEmpty(text)) return text;
+			var text = typeName;
 
 			if (!string.IsNullOrEmpty(_name))
 			{
@@ -241,6 +230,10 @@ namespace Mscc.CodeGenerator
 				text = text.Replace(_version, "", StringComparison.InvariantCultureIgnoreCase);
 			}
 			text = text.Replace("GoogleCloud", "", StringComparison.InvariantCultureIgnoreCase);
+
+			// 2. Use Regex.Replace with a MatchEvaluator
+			// This executes the replacement logic in a single pass.
+			text = Regex.Replace(text, _pattern, match => _typeReplacements[match.Value]);
 
 			return text;
 		}
@@ -307,42 +300,52 @@ namespace Mscc.CodeGenerator
 					}
 
 					if (enumValue.TryGetProperty("enum", out JsonElement enumElement))
+			{
+				string enumName = $"{ReplaceTypeName(propertyName)}";
+				
+				// Always process and merge enum values
+				var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc)
+					? desc.EnumerateArray().Select(x => x.GetString()).ToList()
+					: new List<string?>();
+				
+				var newMembers = GetEnumMembers(enumElement, enumDescriptions);
+				var filename = $"{enumName}";
+				var filePath = Path.Combine(outputDirectory, $"{filename}.cs");
+
+				// Merge with existing enum values if file exists
+				if (TypeExists(outputDirectory, enumName))
+				{
+					var existingMembers = GetExistingEnumMembers(filePath);
+					foreach (var member in newMembers)
 					{
-						string enumName = $"{ReplaceTypeName(propertyName)}";
-						if (!_generatedEnums.ContainsKey(enumName))
+						if (!existingMembers.Any(m => m.Name == member.Name))
 						{
-							var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc)
-								? desc.EnumerateArray().Select(x => x.GetString()).ToList()
-								: new List<string?>();
-							
-							var newMembers = GetEnumMembers(enumElement, enumDescriptions);
-							var filename = $"{enumName}";
-							var filePath = Path.Combine(outputDirectory, $"{filename}.cs");
+							existingMembers.Add(member);
+						}
+					}
+					newMembers = existingMembers;
+				}
 
-							if (TypeExists(outputDirectory, enumName))
-							{
-								var existingMembers = GetExistingEnumMembers(filePath);
-								foreach (var member in newMembers)
-								{
-									if (!existingMembers.Any(m => m.Name == member.Name))
-									{
-										existingMembers.Add(member);
-									}
-								}
-								newMembers = existingMembers;
-							}
-
-							var enumSb = new StringBuilder();
-							enumSb.AppendLine($"namespace {_namespace}");
-							enumSb.AppendLine("{");
-							GenerateEnum(enumSb, enumName, newMembers);
-							enumSb.Append("}");
-							_generatedEnums.Add(enumName, enumSb.ToString());
-							PrefixOutput(enumSb);
-							
-							File.WriteAllText(filePath, enumSb.ToString());
+				// Generate or update the enum file
+				var enumSb = new StringBuilder();
+				enumSb.AppendLine($"namespace {_namespace}");
+				enumSb.AppendLine("{");
+				GenerateEnum(enumSb, enumName, newMembers);
+				enumSb.Append("}");
+				
+				// Update the generated enums dictionary
+				if (_generatedEnums.ContainsKey(enumName))
+				{
+					_generatedEnums[enumName] = enumSb.ToString();
+				}
+				else
+				{
+					_generatedEnums.Add(enumName, enumSb.ToString());
+				}
+				
+				PrefixOutput(enumSb);
+				File.WriteAllText(filePath, enumSb.ToString());
 			}
-		}
 
 		string propertyType = ReplaceTypeName(GetCSharpType(propertyValue, className, propertyName));
 
