@@ -2695,6 +2695,26 @@ namespace Test.Mscc.GenerativeAI
                 .HaveCountGreaterThanOrEqualTo(1);
             _output.WriteLine(response?.Text);
         }
+
+        [Fact]
+        public async Task AddMedia_With_GCS_URI()
+        {
+            // Arrange
+            var request = new GenerateContentRequest();
+            var uri = "gs://bucket/object";
+
+            // Act
+            await request.AddMedia(uri);
+
+            // Assert
+            request.Contents.Should().HaveCount(1);
+            request.Contents[0].Parts.Should().HaveCount(1);
+            var part = request.Contents[0].Parts[0];
+            part.Should().BeOfType<FileData>();
+            var fileData = part as FileData;
+            fileData.FileUri.Should().Be(uri);
+            fileData.MimeType.Should().Be("application/octet-stream");
+        }
         
         // Define the Instrument enum
         /// <summary>
