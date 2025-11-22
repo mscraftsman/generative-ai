@@ -620,7 +620,7 @@ namespace Mscc.GenerativeAI
                     lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
                     if (!statusCodes.Contains((int)lastResponse.StatusCode))
                     {
-                        return lastResponse;
+                        return await lastResponse.EnsureSuccessAsync(cancellationToken);
                     }
                     
                     var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
@@ -638,6 +638,13 @@ namespace Mscc.GenerativeAI
                         }
 
                         throw new GeminiApiException("The request was not successful.", e);
+                    }
+                }
+                catch (Exceptions.HttpException e)
+                {
+                    if ((int)e.StatusCode == 429 && e.RetryInfo != null)
+                    {
+                        delay = (int)e.RetryInfo.RetryDelay.TotalSeconds;
                     }
                 }
 
