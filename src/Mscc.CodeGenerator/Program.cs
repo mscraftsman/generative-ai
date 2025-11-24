@@ -75,57 +75,6 @@ namespace Mscc.CodeGenerator
 		private static string? _namespace;
 		private static string _pattern;
 
-		private readonly HashSet<string> _globalEnums = new HashSet<string>
-		{
-			"AdapterSize",
-			"AnswerStyle",
-			"BlockingConfidence",
-			"BlockReason",
-			"ComputerUseEnvironment",
-			"DynamicRetrievalConfig.Mode",
-			"EmbedContentRequest.TaskType",
-			"FinishReason",
-			"FunctionCallingConfig.Mode",
-			"HarmCategory",
-			"HarmBlockMethod",
-			"HarmBlockThreshold",
-			"HarmProbability",
-			"HarmSeverity",
-			"HttpElementLocation",
-			"MediaResolution",
-			"Outcome",
-			"ParameterType",
-			"PermissionRole",
-			"Reason",
-			"ResponseModality",
-			"Schema.Type",
-			"TaskType",
-			"UrlRetrievalStatus"
-		};
-
-		private readonly Dictionary<string, string> _typeReplacements = new Dictionary<string, string>
-		{
-			{ "Behavior", "BehaviorType" },
-			{ "Category", "HarmCategory" },
-			{ "EmbedContentRequest.TaskType", "TaskType" },
-			{ "Environment", "ComputerUseEnvironment" },
-			{ "File", "FileResource" },
-			{ "Method", "HarmBlockMethod" },
-			{ "Model", "ModelResponse" },
-			{ "Probability", "HarmProbability" },
-			{ "ResponseModalities", "ResponseModality" },
-			{ "Role", "PermissionRole" },
-			{ "Schema.Type", "ParameterType" },
-			{ "Severity", "HarmSeverity" },
-			{ "Threshold", "HarmBlockThreshold" },
-			{ "TunedModel", "TunedModelResponse" },
-			{ "List<File>", "List<FileResource>" },
-			{ "List<Model>", "List<ModelResponse>" },
-			{ "List<ResponseModalities>", "List<ResponseModality>" }, // List<Modality>
-			{ "List<Tool>", "Tools" },
-			{ "List<TunedModel>", "List<ModelResponse>" }
-		};
-
 		private readonly List<string> _ignoredMembers = new List<string>
 		{
 			"CachedContent.Model",
@@ -153,6 +102,59 @@ namespace Mscc.CodeGenerator
 			"Part.InlineData",
 			"Part.Text",
 			"PartMediaResolution.Level"
+		};
+
+		private readonly Dictionary<string, string> _typeReplacements = new Dictionary<string, string>
+		{
+			{ "Behavior", "BehaviorType" },
+			{ "Category", "HarmCategory" },
+			{ "EmbedContentRequest.TaskType", "TaskType" },
+			{ "Environment", "ComputerUseEnvironment" },
+			{ "File", "FileResource" },
+			{ "Method", "HarmBlockMethod" },
+			{ "Model", "ModelResponse" },
+			{ "Probability", "HarmProbability" },
+			{ "ResponseModalities", "ResponseModality" },
+			{ "Role", "PermissionRole" },
+			{ "Schema.Type", "ParameterType" },
+			{ "Severity", "HarmSeverity" },
+			{ "SupervisedTuningSpec.TuningModeType", "TuningMode" },
+			{ "Threshold", "HarmBlockThreshold" },
+			{ "TunedModel", "TunedModelResponse" },
+			{ "List<File>", "List<FileResource>" },
+			{ "List<Model>", "List<ModelResponse>" },
+			{ "List<ResponseModalities>", "List<ResponseModality>" }, // List<Modality>
+			{ "List<Tool>", "Tools" },
+			{ "List<TunedModel>", "List<ModelResponse>" }
+		};
+
+		private readonly HashSet<string> _globalEnums = new HashSet<string>
+		{
+			"AdapterSize",
+			"AnswerStyle",
+			"BlockingConfidence",
+			"BlockReason",
+			"ComputerUseEnvironment",
+			"DynamicRetrievalConfig.Mode",
+			"EmbedContentRequest.TaskType",
+			"FinishReason",
+			"FunctionCallingConfig.Mode",
+			"HarmCategory",
+			"HarmBlockMethod",
+			"HarmBlockThreshold",
+			"HarmProbability",
+			"HarmSeverity",
+			"HttpElementLocation",
+			"MediaResolution",
+			"Outcome",
+			"ParameterType",
+			"PermissionRole",
+			"Reason",
+			"ResponseModality",
+			"Schema.Type",
+			"TaskType",
+			"TuningMode",
+			"UrlRetrievalStatus"
 		};
 
 		public CSharpCodeGenerator(string ns, JsonElement schemas, string? name = null, string? version = null,
