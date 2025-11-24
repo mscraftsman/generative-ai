@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Stats about the batch.
+	/// Function calling config.
 	/// </summary>
-	public partial class BatchStats
+	public partial class FunctionCallingConfig
 	{
+
 		/// <summary>
-		/// Output only. The number of requests that failed to be processed.
+		/// Optional. When set to true, arguments of a single function call will be streamed out in multiple parts/contents/responses. Partial parameter results will be returned in the [FunctionCall.partial_args] field.
 		/// </summary>
-		public long? FailedRequestCount { get; set; }
-		/// <summary>
-		/// Output only. The number of requests that are still pending processing.
-		/// </summary>
-		public long? PendingRequestCount { get; set; }
-		/// <summary>
-		/// Output only. The number of requests in the batch.
-		/// </summary>
-		public long? RequestCount { get; set; }
-		/// <summary>
-		/// Output only. The number of requests that were successfully processed.
-		/// </summary>
-		public long? SuccessfulRequestCount { get; set; }
+		public bool? StreamFunctionCallArguments { get; set; }
     }
 }

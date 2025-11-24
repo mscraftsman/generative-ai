@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2024-2025 Jochen Kirstätter
+/*
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using System;
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
@@ -24,12 +24,20 @@ namespace Mscc.GenerativeAI.Types
 	public partial class CitationSource
 	{
 		/// <summary>
-		/// Output only. The title of the source of the citation.
+		/// Optional. End of the attributed segment, exclusive.
 		/// </summary>
-		public string? Title { get; internal set; }
+		public int? EndIndex { get; set; }
 		/// <summary>
-		/// Output only. The publication date of the source of the citation.
+		/// Optional. License for the GitHub project that is attributed as a source for segment. License info is required for code citations.
 		/// </summary>
-		public DateTimeOffset? PublicationDate { get; internal set; }
-	}
+		public string? License { get; set; }
+		/// <summary>
+		/// Optional. Start of segment of the response that is attributed to this source. Index indicates the start of the segment, measured in bytes.
+		/// </summary>
+		public int? StartIndex { get; set; }
+		/// <summary>
+		/// Optional. URI that is attributed as a source for a portion of the text.
+		/// </summary>
+		public string? Uri { get; set; }
+    }
 }

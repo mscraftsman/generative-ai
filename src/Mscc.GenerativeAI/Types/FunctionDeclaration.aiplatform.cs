@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
-	public partial class CustomLongRunningOperation : IOperation
+	/// <summary>
+	/// Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a <c>Tool</c> by the model and executed by the client.
+	/// </summary>
+	public partial class FunctionDeclaration
 	{
-		/// <summary>
-		/// If the value is <c>false</c>, it means the operation is still in progress. If <c>true</c>, the operation is completed, and either <c>error</c> or <c>response</c> is available.
-		/// </summary>
-		public bool Done { get; set; }
-	}
+
+    }
 }

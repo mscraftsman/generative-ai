@@ -13,54 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Metadata on the generation request's token usage.
+	/// Usage metadata about the content generation request and response. This message provides a
+	/// detailed breakdown of token usage and other relevant metrics. This data type is not supported
+	/// in Gemini API.
 	/// </summary>
 	public partial class UsageMetadata
 	{
 		/// <summary>
-		/// Output only. List of modalities of the cached content in the request input.
+		/// Number of text characters.
 		/// </summary>
-		public List<ModalityTokenCount>? CacheTokensDetails { get; set; }
+		public int? TextCount { get; set; }
 		/// <summary>
-		/// Number of tokens in the cached part of the prompt (the cached content)
+		/// Number of images.
 		/// </summary>
-		public int? CachedContentTokenCount { get; set; }
+		public int? ImageCount { get; set; }
 		/// <summary>
-		/// Total number of tokens across all the generated response candidates.
+		/// Duration of video in seconds.
 		/// </summary>
-		public int? CandidatesTokenCount { get; set; }
+		public int? VideoDurationSeconds { get; set; }
 		/// <summary>
-		/// Output only. List of modalities that were returned in the response.
+		/// Duration of audio in seconds.
 		/// </summary>
-		public List<ModalityTokenCount>? CandidatesTokensDetails { get; set; }
-		/// <summary>
-		/// Number of tokens in the prompt. When <see cref="cached_content"/> is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content.
-		/// </summary>
-		public int? PromptTokenCount { get; set; }
-		/// <summary>
-		/// Output only. List of modalities that were processed in the request input.
-		/// </summary>
-		public List<ModalityTokenCount>? PromptTokensDetails { get; set; }
-		/// <summary>
-		/// Output only. Number of tokens of thoughts for thinking models.
-		/// </summary>
-		public int? ThoughtsTokenCount { get; set; }
-		/// <summary>
-		/// Output only. Number of tokens present in tool-use prompt(s).
-		/// </summary>
-		public int? ToolUsePromptTokenCount { get; set; }
-		/// <summary>
-		/// Output only. List of modalities that were processed for tool-use request inputs.
-		/// </summary>
-		public List<ModalityTokenCount>? ToolUsePromptTokensDetails { get; set; }
-		/// <summary>
-		/// Total token count for the generation request (prompt + response candidates).
-		/// </summary>
-		public int? TotalTokenCount { get; set; }
-    }
+		public int? AudioDurationSeconds { get; set; }
+	}
 }

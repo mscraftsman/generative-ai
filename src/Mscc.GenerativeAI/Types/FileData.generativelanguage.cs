@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,22 @@
  * limitations under the License.
  */
 
-using System;
-using System.Linq;
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Response from the model for a grounded answer.
+	/// URI based data.
 	/// </summary>
-	public partial class GenerateAnswerResponse
+	public partial class FileData
 	{
 		/// <summary>
-		/// Responded text information of first candidate.
+		/// Required. URI.
 		/// </summary>
-		public string? Text
-		{
-			get
-			{
-				if (Answer?.FinishReason == FinishReason.Safety)
-					return string.Empty;
-				return Answer?.Content?.Parts?.FirstOrDefault()?.Text;
-			}
-		}
-
+		public string? FileUri { get; set; }
 		/// <summary>
-		/// A convenience overload to easily access the responded text.
+		/// Optional. The IANA standard MIME type of the source data.
 		/// </summary>
-		/// <returns>The responded text information of first candidate.</returns>
-		public override string ToString()
-		{
-			return Text ?? String.Empty;
-		}
-	}
+		public string? MimeType { get; set; }
+    }
 }

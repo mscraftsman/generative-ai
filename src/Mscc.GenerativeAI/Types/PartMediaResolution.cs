@@ -19,7 +19,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Media resolution for the input media.
     /// </summary>
-    public class PartMediaResolution : IPart
+    public partial class PartMediaResolution : IPart
     {
         /// <summary>
         /// The tokenization quality used for given media.

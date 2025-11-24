@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
+
+using System;
+using System.Linq;
 
 namespace Mscc.GenerativeAI.Types
 {
@@ -23,16 +25,20 @@ namespace Mscc.GenerativeAI.Types
 	public partial class GenerateTextResponse
 	{
 		/// <summary>
-		/// Candidate responses from the model.
+		/// Responded text information of first candidate.
 		/// </summary>
-		public List<TextCompletion>? Candidates { get; set; }
+		public string? Text =>
+			// if (SafetyFeedback?.FirstOrDefault()?.Output?.Rating?.Blocked!)
+			//     return string.Empty;
+			Candidates?.FirstOrDefault()?.Output;
+
 		/// <summary>
-		/// A set of content filtering metadata for the prompt and response text. This indicates which <see cref="SafetyCategory"/>(s) blocked a candidate from this response, the lowest <see cref="HarmProbability"/> that triggered a block, and the HarmThreshold setting for that category. This indicates the smallest change to the <see cref="SafetySettings"/> that would be necessary to unblock at least 1 response. The blocking is configured by the <see cref="SafetySettings"/> in the request (or the default <see cref="SafetySettings"/> of the API).
+		/// A convenience overload to easily access the responded text.
 		/// </summary>
-		public List<ContentFilter>? Filters { get; set; }
-		/// <summary>
-		/// Returns any safety feedback related to content filtering.
-		/// </summary>
-		public List<SafetyFeedback>? SafetyFeedback { get; set; }
-    }
+		/// <returns>The responded text information of first candidate.</returns>
+		public override string ToString()
+		{
+			return Text ?? String.Empty;
+		}
+	}
 }

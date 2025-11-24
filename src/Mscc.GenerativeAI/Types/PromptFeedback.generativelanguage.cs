@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,37 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Collections.Generic;
 
-using System;
-using System.Linq;
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Response from the model for a grounded answer.
+	/// A set of the feedback metadata the prompt specified in <c>GenerateContentRequest.content</c>.
 	/// </summary>
-	public partial class GenerateAnswerResponse
+	public partial class PromptFeedback
 	{
 		/// <summary>
-		/// Responded text information of first candidate.
+		/// Optional. If set, the prompt was blocked and no candidates are returned. Rephrase the prompt.
 		/// </summary>
-		public string? Text
-		{
-			get
-			{
-				if (Answer?.FinishReason == FinishReason.Safety)
-					return string.Empty;
-				return Answer?.Content?.Parts?.FirstOrDefault()?.Text;
-			}
-		}
-
+		public BlockReason? BlockReason { get; set; }
 		/// <summary>
-		/// A convenience overload to easily access the responded text.
+		/// Ratings for safety of the prompt. There is at most one rating per category.
 		/// </summary>
-		/// <returns>The responded text information of first candidate.</returns>
-		public override string ToString()
-		{
-			return Text ?? String.Empty;
-		}
-	}
+		public List<SafetyRating>? SafetyRatings { get; set; }
+    }
 }

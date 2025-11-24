@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Request for a <see cref="BatchGenerateContent"/> operation.
+	/// Config for image generation features.
 	/// </summary>
-	public partial class BatchGenerateContentRequest
+	public partial class ImageConfig
 	{
-		/// <summary>
-		/// Required. The batch to create.
-		/// </summary>
-		public GenerateContentBatch? Batch { get; set; }
     }
 }

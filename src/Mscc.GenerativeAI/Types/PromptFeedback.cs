@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 namespace Mscc.GenerativeAI.Types
 {
@@ -23,12 +22,8 @@ namespace Mscc.GenerativeAI.Types
 	public partial class PromptFeedback
 	{
 		/// <summary>
-		/// Optional. If set, the prompt was blocked and no candidates are returned. Rephrase the prompt.
+		/// Output only. A readable block reason message.
 		/// </summary>
-		public BlockReason? BlockReason { get; set; }
-		/// <summary>
-		/// Ratings for safety of the prompt. There is at most one rating per category.
-		/// </summary>
-		public List<SafetyRating>? SafetyRatings { get; set; }
-    }
+		public string BlockReasonMessage { get; set; } = "";
+	}
 }

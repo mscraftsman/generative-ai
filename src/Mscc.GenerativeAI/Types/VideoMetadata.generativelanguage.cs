@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Stats about the batch.
+	/// Metadata describes the input video content.
 	/// </summary>
-	public partial class EmbedContentBatchStats
+	public partial class VideoMetadata
 	{
 		/// <summary>
-		/// Output only. The number of requests that failed to be processed.
+		/// Optional. The end offset of the video.
 		/// </summary>
-		public long? FailedRequestCount { get; set; }
+		public string? EndOffset { get; set; }
 		/// <summary>
-		/// Output only. The number of requests that are still pending processing.
+		/// Optional. The frame rate of the video sent to the model. If not specified, the default value will be 1.0. The fps range is (0.0, 24.0].
 		/// </summary>
-		public long? PendingRequestCount { get; set; }
+		public double? Fps { get; set; }
 		/// <summary>
-		/// Output only. The number of requests in the batch.
+		/// Optional. The start offset of the video.
 		/// </summary>
-		public long? RequestCount { get; set; }
-		/// <summary>
-		/// Output only. The number of requests that were successfully processed.
-		/// </summary>
-		public long? SuccessfulRequestCount { get; set; }
+		public string? StartOffset { get; set; }
     }
 }

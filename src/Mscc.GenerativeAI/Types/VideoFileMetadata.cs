@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
+using System.Diagnostics;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
 	/// Metadata for a video <see cref="File"/>.
 	/// </summary>
+	[DebuggerDisplay("{StartOffset.Seconds} - {EndOffset.Seconds}")]
 	public partial class VideoFileMetadata
 	{
 		/// <summary>
-		/// Duration of the video.
+		/// Starting offset of a video.
 		/// </summary>
-		public string? VideoDuration { get; set; }
-    }
+		public Duration? StartOffset { get; set; }
+		/// <summary>
+		/// Ending offset of a video. Should be larger than the <see cref="StartOffset"/>.
+		/// </summary>
+		public Duration? EndOffset { get; set; }
+	}
 }

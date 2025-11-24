@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,30 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Grounding chunk.
+	/// A query to retrieve relevant contexts.
 	/// </summary>
-	public partial class GroundingChunk
+	public partial class RagQuery
 	{
 		/// <summary>
-		/// Optional. Grounding chunk from Google Maps.
+		/// Optional. The retrieval config for the query.
 		/// </summary>
-		public GoogleMapsChunk? Maps { get; set; }
+		public RagRetrievalConfig? RagRetrievalConfig { get; set; }
 		/// <summary>
-		/// Grounding chunk from the web.
+		/// Optional. Configurations for hybrid search results ranking.
 		/// </summary>
-		public WebChunk? Web { get; set; }
+		public RagQueryRanking? Ranking { get; set; }
+		/// <summary>
+		/// Optional. The number of contexts to retrieve.
+		/// </summary>
+		public int? SimilarityTopK { get; set; }
+		/// <summary>
+		/// Optional. The query in text format to get relevant contexts.
+		/// </summary>
+		public string? Text { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-using System.Diagnostics;
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A <see cref="Corpus"/> is a collection of <see cref="Document"/>s. A project can create up to 10 corpora.
+	/// per part media resolution. Media resolution for the input media.
 	/// </summary>
-    [DebuggerDisplay("{DisplayName} ({Name})")]
-	public partial class Corpus
+	public partial class PartMediaResolution
 	{
     }
 }
