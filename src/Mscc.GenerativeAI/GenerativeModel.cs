@@ -1691,7 +1691,7 @@ namespace Mscc.GenerativeAI
 
         /// <remarks/>
         public async Task<GenerateAnswerResponse> GenerateAnswer(string? prompt,
-            AnswerStyle? answerStyle = null,
+	        AnswerStyle? answerStyle = null,
             List<SafetySetting>? safetySettings = null,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
