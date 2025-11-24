@@ -2,13 +2,13 @@
 
 namespace Mscc.GenerativeAI.Types
 {
-    public class BlockedError
+    public partial class BlockedError
     {
         public Candidate? Candidate { get; set; }
         public PromptFeedback? PromptFeedback { get; set; }
     }
 
-    public class ResponseBlockedError
+    public partial class ResponseBlockedError
     {
         public string Message { get; set; }
         public List<Content> RequestContents { get; set; }
