@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class ChatCompletionsResponse
+    public partial class ChatCompletionsResponse
     {
         public string Object { get; set; }
         public int Created { get; set; }
@@ -8,14 +8,14 @@ namespace Mscc.GenerativeAI
         public Choices[] Choices { get; set; }
     }
 
-    public class Choices
+    public partial class Choices
     {
         public int Index { get; set; }
         public ChatMessage Message { get; set; }
         public string FinishReason { get; set; }
     }
 
-    public class ChatMessage
+    public partial class ChatMessage
     {
         public string Content { get; set; }
         public string Role { get; set; }

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Configuration for a Mask reference image.
     /// </summary>
-    public class MaskImageConfig
+    public partial class MaskImageConfig
     {
         /// <summary>
         /// Prompts the model to generate a mask instead of you needing to provide

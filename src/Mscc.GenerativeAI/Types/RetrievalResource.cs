@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// The semantic retrieval resource to retrieve from.
     /// </summary>
-    public class RetrievalResource
+    public partial class RetrievalResource
     {
         /// <summary>
         /// Required. The name of the semantic retrieval resource to retrieve from. Example: `ragStores/my-rag-store-123`

@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Edit config object for model versions 006 and greater. All editConfig subfields are optional. If not specified, the default editing mode is inpainting.
     /// </summary>
-    public class EditImageConfig : ImageGenerationParameters
+    public partial class EditImageConfig : ImageGenerationParameters
     {
         /// <summary>
         /// Optional. Describes the editing mode for the request. One editing mode per request.

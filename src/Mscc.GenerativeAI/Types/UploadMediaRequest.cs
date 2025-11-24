@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Instance to upload a local file to create a File resource.
     /// </summary>
-    public class UploadMediaRequest
+    public partial class UploadMediaRequest
     {
         /// <summary>
         /// Optional. Metadata for the file to create.

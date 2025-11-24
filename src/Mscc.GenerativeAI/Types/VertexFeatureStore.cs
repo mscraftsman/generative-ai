@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class VertexFeatureStore
+    public partial class VertexFeatureStore
     {
         /// <summary>
         /// The Vertex AI Feature Store FeatureView that the RAG corpus maps to.

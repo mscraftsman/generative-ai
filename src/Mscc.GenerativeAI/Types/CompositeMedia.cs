@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A sequence of media data references representing composite data. Introduced to support Bigstore composite objects. For details, visit http://go/bigstore-composites.
     /// </summary>
-    public class CompositeMedia
+    public partial class CompositeMedia
     {
         /// <summary>
         /// Media data, set if reference_type is INLINE

@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request for `UploadToRagStore`.
     /// </summary>
-    public class UploadToRagStoreRequest
+    public partial class UploadToRagStoreRequest
     {
         /// <summary>
         /// Optional. Config for telling the service how to chunk the data.

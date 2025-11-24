@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Response for <see cref="DownloadFile"/>.
+	/// The SharePointSources to pass to ImportRagFiles.
 	/// </summary>
-	public partial class DownloadFileResponse
+	public partial class SharePointSources
 	{
+		/// <summary>
+		/// The SharePoint sources.
+		/// </summary>
+		[JsonPropertyName("sharePointSources")]
+		public List<SharePointSourcesSharePointSource>? Sources { get; set; }
     }
 }

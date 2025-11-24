@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,29 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<ResponseModality>))]
-    public enum ResponseModality
-    {
-        /// <summary>
-        /// Default value.
-        /// </summary>
-        ModalityUnspecified,
-        /// <summary>
-        /// Indicates the model should return text.
-        /// </summary>
-        Text,
-        /// <summary>
-        /// Indicates the model should return images.
-        /// </summary>
-        Image,
-        /// <summary>
-        /// Indicates the model should return audio.
-        /// </summary>
-        Audio,
-    }
+	public enum ResponseModality
+	{
+		/// <summary>
+		/// Default value.
+		/// </summary>
+		ModalityUnspecified,
+		/// <summary>
+		/// Indicates the model should return text.
+		/// </summary>
+		Text,
+		/// <summary>
+		/// Indicates the model should return images.
+		/// </summary>
+		Image,
+		/// <summary>
+		/// Indicates the model should return audio.
+		/// </summary>
+		Audio,
+	}
 }

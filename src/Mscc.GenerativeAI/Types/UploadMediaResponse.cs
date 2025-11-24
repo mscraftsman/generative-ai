@@ -4,7 +4,7 @@ namespace Mscc.GenerativeAI.Types
     /// Information about an uploaded file via FIle API
     /// Ref: https://ai.google.dev/api/rest/v1beta/files
     /// </summary>
-    public class UploadMediaResponse
+    public partial class UploadMediaResponse
     {
         /// <summary>
         /// Metadata for the created file.

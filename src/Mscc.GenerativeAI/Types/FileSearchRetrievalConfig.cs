@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Semantic retrieval configuration.
     /// </summary>
-    public class FileSearchRetrievalConfig
+    public partial class FileSearchRetrievalConfig
     {
         /// <summary>
         /// Optional. Metadata filter to apply to the semantic retrieval documents and chunks.

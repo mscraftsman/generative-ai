@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,43 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using System.Text.Json.Serialization;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// The state of the tuning job.
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<StateTuningJob>))]
-    public enum StateTuningJob
+	[JsonConverter(typeof(JsonStringEnumConverter<TuningJobState>))]
+    public enum TuningJobState
     {
         /// <summary>
-        /// The default value. This value is unused.
+        /// Default tuning job state.
         /// </summary>
-        StateUnspecified,
+        TuningJobStateUnspecified,
         /// <summary>
-        /// The tuning job is running.
+        /// Tuning job is waiting for job quota.
         /// </summary>
-        JobStateRunning,
+        TuningJobStateWaitingForQuota,
         /// <summary>
-        /// The tuning job is pending.
+        /// Tuning job is validating the dataset.
         /// </summary>
-        JobStatePending,
+        TuningJobStateProcessingDataset,
         /// <summary>
-        /// The tuning job failed.
+        /// Tuning job is waiting for hardware capacity.
         /// </summary>
-        JobStateFailed,
+        TuningJobStateWaitingForCapacity,
         /// <summary>
-        /// The tuning job has been cancelled.
+        /// Tuning job is running.
         /// </summary>
-        JobStateCancelled,
-        JobStateCancelling,
-        JobStateExpired,
-        JobStatePartiallySucceeded,
-        JobStatePaused,
-        JobStateQueued,
-        JobStateSucceeded,
-        JobStateUpdating
+        TuningJobStateTuning,
+        /// <summary>
+        /// Tuning job is doing some post processing steps.
+        /// </summary>
+        TuningJobStatePostProcessing,
     }
 }

@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Config for optional parameters.
     /// </summary>
-    public class ListBatchJobsConfig : BaseConfig
+    public partial class ListBatchJobsConfig : BaseConfig
     {
         /// <summary>
         /// 

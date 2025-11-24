@@ -19,7 +19,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class GroundingAttributionWeb
+    public partial class GroundingAttributionWeb
     {
         /// <summary>
         /// 

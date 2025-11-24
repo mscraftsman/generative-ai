@@ -1,18 +1,18 @@
 using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response of a newly created tuned model.
     /// </summary>
-    public class CreateTunedModelResponse
+    public partial class CreateTunedModelResponse
     {
         public string Name { get; set; }
         public CreateTunedModelMetadata Metadata { get; set; }
     }
 
     [DebuggerDisplay("{TunedModel})")]
-    public class CreateTunedModelMetadata
+    public partial class CreateTunedModelMetadata
     {
         public string Type { get; set; }
         public int TotalSteps { get; set; }

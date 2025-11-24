@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Backend response for a Diff get checksums response. For details on the Scotty Diff protocol, visit http://go/scotty-diff-protocol.
     /// </summary>
-    public class DiffChecksumsResponse
+    public partial class DiffChecksumsResponse
     {
         /// <summary>
         /// The object version of the object the checksums are being returned for.

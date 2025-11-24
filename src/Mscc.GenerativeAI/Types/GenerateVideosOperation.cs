@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A video generation operation.\n\nUse the following code to refresh the operation:\n\n```\noperation = client.operations.get(operation)\n```
     /// </summary>
-    public class GenerateVideosOperation
+    public partial class GenerateVideosOperation
     {
         /// <summary>
         /// The server-assigned name, which is only unique within the same service that originally returns it. If you use the default HTTP mapping, the `name` should be a resource name ending with `operations/{unique_id}`.

@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A Diff upload request. For details on the Scotty Diff protocol, visit http://go/scotty-diff-protocol.
     /// </summary>
-    public class DiffUploadRequest
+    public partial class DiffUploadRequest
     {
         /// <summary>
         /// The object version of the object that is the base version the

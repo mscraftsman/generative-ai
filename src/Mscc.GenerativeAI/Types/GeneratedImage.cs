@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// An output image.
     /// </summary>
-    public class GeneratedImage
+    public partial class GeneratedImage
     {
         /// <summary>
         /// The output image data.

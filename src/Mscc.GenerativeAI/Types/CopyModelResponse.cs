@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// The copied model.
     /// </summary>
-    public class CopyModelResponse
+    public partial class CopyModelResponse
     {
         /// <summary>
         /// 

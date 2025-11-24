@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Configuration for a Subject reference image.
     /// </summary>
-    public class SubjectImageConfig
+    public partial class SubjectImageConfig
     {
         /// <summary>
         /// The subject type of a subject reference image.

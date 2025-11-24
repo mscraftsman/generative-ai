@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class ModelSelectionConfig
+    public partial class ModelSelectionConfig
     {
         
     }

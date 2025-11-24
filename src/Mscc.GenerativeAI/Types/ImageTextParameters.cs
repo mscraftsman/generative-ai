@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class ImageTextParameters
+    public partial class ImageTextParameters
     {
         /// <summary>
         /// The number of generated images.

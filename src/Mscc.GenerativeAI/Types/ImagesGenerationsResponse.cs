@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class ImagesGenerationsResponse
+    public partial class ImagesGenerationsResponse
     {
         /// <summary>
         /// 

@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Schema for the response.
     /// </summary>
-    public class ResponseFormatSchema
+    public partial class ResponseFormatSchema
     {
         /// <summary>
         /// Required. Name of the object type represented by the schema.

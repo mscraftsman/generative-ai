@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	[JsonConverter(typeof(JsonStringEnumConverter<Language>))]
@@ -25,12 +27,8 @@ namespace Mscc.GenerativeAI.Types
         /// </summary>
         LanguageUnspecified,
         /// <summary>
-        /// Python >= 3.10, with numpy and simpy available. Python is the default language.
+        /// Python &gt;= 3.10, with numpy and simpy available. Python is the default language.
         /// </summary>
         Python,
-        /// <summary>
-        /// Bash. Only available for Gemini 3.0 model or above.
-        /// </summary>
-        Bash
     }
 }

@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Configures automatic detection of activity.
     /// </summary>
-    public class AutomaticActivityDetection
+    public partial class AutomaticActivityDetection
     {
         /// <summary>
         /// Optional. If enabled (the default), detected voice and text input count as activity. If disabled, the client must send activity signals.

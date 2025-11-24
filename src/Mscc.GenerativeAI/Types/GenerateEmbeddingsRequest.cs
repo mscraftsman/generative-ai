@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request for embedding generation.
     /// </summary>
-    public class GenerateEmbeddingsRequest
+    public partial class GenerateEmbeddingsRequest
     {
         private string _model;
 

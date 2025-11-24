@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,29 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<PermissionRole>))]
-    public enum PermissionRole
-    {
-        /// <summary>
-        /// The default value. This value is unused.
-        /// </summary>
-        RoleUnspecified,
-        /// <summary>
-        /// Owner can use, update, share and delete the resource.
-        /// </summary>
-        Owner,
-        /// <summary>
-        /// Writer can use, update and share the resource.
-        /// </summary>
-        Writer,
-        /// <summary>
-        /// Reader can use the resource.
-        /// </summary>
-        Reader,
-    }
+	public enum PermissionRole
+	{
+		/// <summary>
+		/// The default value. This value is unused.
+		/// </summary>
+		RoleUnspecified,
+		/// <summary>
+		/// Owner can use, update, share and delete the resource.
+		/// </summary>
+		Owner,
+		/// <summary>
+		/// Writer can use, update and share the resource.
+		/// </summary>
+		Writer,
+		/// <summary>
+		/// Reader can use the resource.
+		/// </summary>
+		Reader,
+	}
 }

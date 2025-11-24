@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class FileRequest
+    public partial class FileRequest
     {
         /// <summary>
         /// Optional. The human-readable display name for the File. The display name must be no more than 512 characters in length, including spaces. Example: "Welcome Image"

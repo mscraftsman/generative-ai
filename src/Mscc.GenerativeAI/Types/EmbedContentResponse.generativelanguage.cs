@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Logprobs Result
+	/// The response to an <c>EmbedContentRequest</c>.
 	/// </summary>
-	public partial class LogprobsResult
+	public partial class EmbedContentResponse
 	{
 		/// <summary>
-		/// Length = total number of decoding steps.
+		/// Output only. The embedding generated from the input content.
 		/// </summary>
-		public List<LogprobsResultTopCandidates>? TopCandidates { get; set; }
+		public ContentEmbedding? Embedding { get; set; }
     }
 }

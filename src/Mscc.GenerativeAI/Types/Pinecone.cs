@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Specifies your Pinecone instance.
     /// </summary>
-    public class Pinecone
+    public partial class Pinecone
     {
         /// <summary>
         /// This is the name used to create the Pinecone index that's used with the RAG corpus.

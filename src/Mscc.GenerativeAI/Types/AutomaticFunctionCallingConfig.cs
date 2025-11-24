@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// The configuration for automatic function calling.
     /// </summary>
-    public class AutomaticFunctionCallingConfig
+    public partial class AutomaticFunctionCallingConfig
     {
         /// <summary>
         /// Whether to disable automatic function calling.

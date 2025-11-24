@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Request for chat completions.
     /// </summary>
-    public class ChatCompletionsRequest
+    public partial class ChatCompletionsRequest
     {
         /// <summary>
         /// Required. The name of the `Model` to use for generating the completion.

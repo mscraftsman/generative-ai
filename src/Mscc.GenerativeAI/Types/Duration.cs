@@ -1,4 +1,4 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A Duration represents a signed, fixed-length span of time represented as a count of seconds and fractions of seconds at nanosecond resolution.
@@ -9,7 +9,7 @@ namespace Mscc.GenerativeAI
     /// it can be added or subtracted from a Timestamp. Range is approximately +-10,000 years.
     /// <seealso href="https://protobuf.dev/reference/protobuf/google.protobuf/#duration"/>
     /// </remarks>
-    public class Duration
+    public partial class Duration
     {
         /// <summary>
         /// Seconds of a duration.

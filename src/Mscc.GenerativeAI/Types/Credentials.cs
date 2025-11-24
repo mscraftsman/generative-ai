@@ -1,4 +1,4 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Represents the credentials used to authenticate with the API.
@@ -58,7 +58,7 @@ namespace Mscc.GenerativeAI
     /// Represents the content of a client_secret.json file used in Google Cloud Platform
     /// to authenticate a user or service account.
     /// </summary>
-    public class ClientSecrets
+    public partial class ClientSecrets
     {
         /// <summary>
         /// Client ID

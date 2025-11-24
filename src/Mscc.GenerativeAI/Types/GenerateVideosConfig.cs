@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class GenerateVideosConfig
+    public partial class GenerateVideosConfig
     {
         /// <summary>
         /// Number of output videos.

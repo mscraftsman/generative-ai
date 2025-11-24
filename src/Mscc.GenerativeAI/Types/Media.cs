@@ -1,12 +1,12 @@
 using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A reference to data stored on the filesystem, on GFS or in blobstore.
     /// </summary>
     [DebuggerDisplay("{Filename})")]
-    public class Media
+    public partial class Media
     {
         /// <summary>
         /// Original file name.

@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class OutputOptions
+    public partial class OutputOptions
     {
         /// <summary>
         /// Optional. The IANA standard MIME type of the image.

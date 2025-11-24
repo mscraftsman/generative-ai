@@ -8,7 +8,7 @@ namespace Mscc.GenerativeAI.Types
     /// The structured datatype containing multi-part content of an example message. This is a subset of the Content proto used during model inference with limited type support. A `Content` includes a `role` field designating the producer of the `Content` and a `parts` field containing multi-part data that contains the content of the message turn.
     /// </summary>
     [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-    public class TuningContent
+    public partial class TuningContent
     {
         // 
         private List<TuningPart>? _partTypes;

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Specifies how the response should be scheduled in the conversation.

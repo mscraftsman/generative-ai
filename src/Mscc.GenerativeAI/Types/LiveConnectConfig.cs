@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Session config for the API connection.
     /// </summary>
-    public class LiveConnectConfig
+    public partial class LiveConnectConfig
     {
         /// <summary>
         /// The generation configuration for the session.

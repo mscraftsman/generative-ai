@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class VertexPredictionEndpoint
+    public partial class VertexPredictionEndpoint
     {
         /// <summary>
         /// The embedding model to use for the RAG corpus.

@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request to create a tuned model.
     /// </summary>
-    public class CreateTunedModelRequest
+    public partial class CreateTunedModelRequest
     {
         /// <summary>
         /// The name to display for this model in user interfaces. The display name must be up to 40 characters including spaces.

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A list of reasons why content may have been blocked.

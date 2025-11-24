@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Represents the result from a vision generative model.
     /// </summary>
-    public class VisionGenerativeModelResult : Image
+    public partial class VisionGenerativeModelResult : Image
     {
     }
 }

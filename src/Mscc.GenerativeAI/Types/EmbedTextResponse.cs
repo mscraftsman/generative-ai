@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
@@ -22,8 +24,8 @@ namespace Mscc.GenerativeAI.Types
 	public partial class EmbedTextResponse
 	{
 		/// <summary>
-		/// Output only. The embedding generated from the input text.
+		/// Output only. The embeddings generated from the input text.
 		/// </summary>
-		public Embedding? Embedding { get; set; }
-    }
+		public List<Embedding>? Embeddings { get; set; }
+	}
 }

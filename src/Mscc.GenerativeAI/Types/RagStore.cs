@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response from `ListRagStores` containing a paginated list of `RagStores`.
     /// The results are sorted by ascending `rag_store.create_time`.
     /// </summary>
-    public class ListRagStoresResponse
+    public partial class ListRagStoresResponse
     {
         /// <summary>
         /// The returned rag_stores.
@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI
     /// A `RagStore` is a collection of `Document`s.
     /// </summary>
     [DebuggerDisplay("{DisplayName} ({Name})")]
-    public class RagStore
+    public partial class RagStore
     {
         /// <summary>
         /// Output only. Immutable. Identifier. The `RagStore` resource name.

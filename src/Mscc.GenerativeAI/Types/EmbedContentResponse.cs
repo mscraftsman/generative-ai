@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
@@ -22,8 +24,12 @@ namespace Mscc.GenerativeAI.Types
 	public partial class EmbedContentResponse
 	{
 		/// <summary>
-		/// Output only. The embedding generated from the input content.
+		/// Output only. Generated candidates.
 		/// </summary>
-		public ContentEmbedding? Embedding { get; set; }
-    }
+		public List<Candidate>? Candidates { get; set; }
+		/// <summary>
+		/// Output only. The embeddings for each request, in the same order as provided in the batch request.
+		/// </summary>
+		public List<ContentEmbedding>? Embeddings { get; set; }
+	}
 }

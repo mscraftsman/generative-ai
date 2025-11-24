@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class Filter
+    public partial class Filter
     {
         /// <summary>
         /// Optional. String for metadata filtering.

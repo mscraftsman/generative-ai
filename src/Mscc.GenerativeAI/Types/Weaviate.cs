@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Specifies your Weaviate instance.
     /// </summary>
-    public class Weaviate
+    public partial class Weaviate
     {
         /// <summary>
         /// The Weaviate instance's HTTP endpoint.

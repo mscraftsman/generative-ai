@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI.Types
     /// which model is used for the generation, either automatically or by specifying a model name.
     /// This data type is not supported in Gemini API.
     /// </summary>
-    public class RoutingConfig
+    public partial class RoutingConfig
     {
         /// <summary>
         /// In this mode, the model is selected automatically based on the content of the request.

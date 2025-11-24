@@ -18,17 +18,38 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A response from <see cref="CountTokens"/>. It returns the model's <see cref="token_count"/> for the <see cref="prompt"/>.
+	/// A response from `CountTokens`. It returns the model's `token_count` for the `prompt`.
 	/// </summary>
 	public partial class CountTokensResponse
 	{
+		private int _totalTokens;
+		private int _totalCachedTokens;
+
 		/// <summary>
-		/// Output only. List of modalities that were processed in the cached content.
+		/// The number of tokens that the <see cref="Model"/> tokenizes the <see cref="prompt"/> into. Always non-negative.
 		/// </summary>
-		public List<ModalityTokenCount>? CacheTokensDetails { get; set; }
+		public int TotalTokens
+		{
+			get => _totalTokens;
+			set => _totalTokens = value < 0 ? 0 : value < int.MaxValue ? value : int.MaxValue;
+		}
+
 		/// <summary>
-		/// Output only. List of modalities that were processed in the request input.
+		/// The total number of tokens counted across all instances from the request.
 		/// </summary>
-		public List<ModalityTokenCount>? PromptTokensDetails { get; set; }
-    }
+		public int TokenCount
+		{
+			get => _totalTokens;
+			set => _totalTokens = value < 0 ? 0 : value < int.MaxValue ? value : int.MaxValue;
+		}
+		
+		/// <summary>
+		/// Number of tokens in the cached part of the prompt (the cached content).
+		/// </summary>
+		public int CachedContentTokenCount
+		{
+			get => _totalCachedTokens;
+			set => _totalCachedTokens = value < 0 ? 0 : value < int.MaxValue ? value : int.MaxValue;
+		}
+	}
 }

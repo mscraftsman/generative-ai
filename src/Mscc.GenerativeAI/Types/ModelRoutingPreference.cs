@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,32 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 using System.Text.Json.Serialization;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Mode of function calling to define the execution behavior for function calling.
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<ModelRoutingPreference>))]
+	[JsonConverter(typeof(JsonStringEnumConverter<ModelRoutingPreference>))]
     public enum ModelRoutingPreference
     {
-	    /// <summary>
-	    /// 
-	    /// </summary>
+        /// <summary>
+        /// Unspecified model routing preference.
+        /// </summary>
         Unknown,
-	    /// <summary>
-	    /// 
-	    /// </summary>
+        /// <summary>
+        /// The model will be selected to prioritize the quality of the response.
+        /// </summary>
         PrioritizeQuality,
-	    /// <summary>
-	    /// 
-	    /// </summary>
+        /// <summary>
+        /// The model will be selected to balance quality and cost.
+        /// </summary>
         Balanced,
-	    /// <summary>
-	    /// 
-	    /// </summary>
-        PrioritizeCost
+        /// <summary>
+        /// The model will be selected to prioritize the cost of the request.
+        /// </summary>
+        PrioritizeCost,
     }
 }

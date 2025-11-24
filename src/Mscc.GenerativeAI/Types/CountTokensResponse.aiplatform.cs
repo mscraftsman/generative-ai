@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// The response to an <see cref="EmbedContentRequest"/>.
+	/// Response message for PredictionService.CountTokens.
 	/// </summary>
-	public partial class EmbedContentResponse
+	public partial class CountTokensResponse
 	{
+
 		/// <summary>
-		/// Output only. Generated candidates.
+		/// The total number of billable characters counted across all instances from the request.
 		/// </summary>
-		public List<Candidate>? Candidates { get; set; }
-		/// <summary>
-		/// Output only. The embeddings for each request, in the same order as provided in the batch request.
-		/// </summary>
-		public List<ContentEmbedding>? Embeddings { get; set; }
+		public int? TotalBillableCharacters { get; set; }
     }
 }

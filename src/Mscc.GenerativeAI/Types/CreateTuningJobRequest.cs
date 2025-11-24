@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class CreateTuningJobRequest
+    public partial class CreateTuningJobRequest
     {
         /// <summary>
         /// Optional. Name of the foundation model to tune.
@@ -46,7 +46,7 @@ namespace Mscc.GenerativeAI.Types
             string datasetUri,
             string? validationUri = null, 
             string? displayName = null,
-            Hyperparameters? parameters = null) : this()
+            SupervisedHyperParameters? parameters = null) : this()
         {
             if (string.IsNullOrEmpty(model)) throw new ArgumentException("Value cannot be null or empty.", nameof(model));
             if (string.IsNullOrEmpty(datasetUri)) throw new ArgumentException("Value cannot be null or empty.", nameof(datasetUri));

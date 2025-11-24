@@ -1,9 +1,11 @@
-namespace Mscc.GenerativeAI
+using Mscc.GenerativeAI.Types;
+
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Config for authentication with API key.
     /// </summary>
-    public class ApiKeyConfig
+    public partial class ApiKeyConfig
     {
         /// <summary>
         /// Optional. The parameter name of the API key.

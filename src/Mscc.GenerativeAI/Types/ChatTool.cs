@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A tool that the model can generate calls for.
     /// </summary>
-    public class ChatTool
+    public partial class ChatTool
     {
         /// <summary>
         /// Required. The name of the tool.

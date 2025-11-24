@@ -42,7 +42,7 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Output only. Current state of the <see cref="Chunk"/>.
 		/// </summary>
-		public StateChunk? State { get; set; }
+		public State? State { get; set; }
 		/// <summary>
 		/// Output only. The Timestamp of when the <see cref="Chunk"/> was last updated.
 		/// </summary>

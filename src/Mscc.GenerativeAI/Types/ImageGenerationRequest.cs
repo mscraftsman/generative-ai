@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class ImageGenerationRequest
+    public partial class ImageGenerationRequest
     {
         /// <summary>
         /// An array that contains the object with image details to get information about.

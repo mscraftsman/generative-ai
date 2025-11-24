@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response for embedding generation.
     /// </summary>
-    public class GenerateEmbeddingsResponse
+    public partial class GenerateEmbeddingsResponse
     {
         /// <summary>
         /// Output only. Model used to generate the embeddings.

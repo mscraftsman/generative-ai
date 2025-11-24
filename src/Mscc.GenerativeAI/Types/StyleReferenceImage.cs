@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class StyleReferenceImage : ReferenceImage
+    public partial class StyleReferenceImage : ReferenceImage
     {
         public override ImageReferenceType ReferenceType => ImageReferenceType.ReferenceTypeStyle;
     }

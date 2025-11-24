@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Collections.Generic;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// User provided metadata stored as key-value pairs.
+	/// Tool to search public web data, powered by Vertex AI Search and Sec4 compliance.
 	/// </summary>
-	public partial class CustomMetadata
+	public partial class EnterpriseWebSearch
 	{
 		/// <summary>
-		/// Required. The key of the metadata to store.
+		/// Optional. Sites with confidence level chosen &amp; above this value will be blocked from the search results.
 		/// </summary>
-		public string? Key { get; set; }
+		public BlockingConfidence? BlockingConfidence { get; set; }
 		/// <summary>
-		/// The numeric value of the metadata to store.
+		/// Optional. List of domains to be excluded from the search results. The default limit is 2000 domains.
 		/// </summary>
-		public double? NumericValue { get; set; }
-		/// <summary>
-		/// The StringList value of the metadata to store.
-		/// </summary>
-		public StringList? StringListValue { get; set; }
-		/// <summary>
-		/// The string value of the metadata to store.
-		/// </summary>
-		public string? StringValue { get; set; }
+		public List<string>? ExcludeDomains { get; set; }
     }
 }

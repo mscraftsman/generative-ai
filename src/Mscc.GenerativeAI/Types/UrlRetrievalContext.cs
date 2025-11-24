@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Context of the a single url retrieval.
     /// </summary>
-    public class UrlRetrievalContext
+    public partial class UrlRetrievalContext
     {
         /// <summary>
         /// Retrieved url by the tool.

@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class UploadFileConfig
+    public partial class UploadFileConfig
     {
         /// <summary>
         /// 

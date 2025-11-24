@@ -16,7 +16,7 @@
 
 namespace Mscc.GenerativeAI.Types
 {
-    public class GroundingAttributionSegment
+    public partial class GroundingAttributionSegment
     {
         /// <summary>
         /// Output only. Start index into the content.

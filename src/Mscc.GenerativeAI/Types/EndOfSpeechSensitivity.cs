@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Determines how likely detected speech is ended.

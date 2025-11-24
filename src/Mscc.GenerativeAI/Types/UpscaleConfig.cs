@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class UpscaleConfig
+    public partial class UpscaleConfig
     {
         /// <summary>
         /// Optional. When upscaling, the factor to which the image will be upscaled.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Segment of the content.
+	/// The tuning data statistic values for TuningJob.
 	/// </summary>
-	public partial class Segment
+	public partial class TuningDataStats
 	{
 		/// <summary>
-		/// Output only. End index in the given Part, measured in bytes. Offset from the start of the Part, exclusive, starting at zero.
+		/// Output only. Statistics for distillation prompt dataset. These statistics do not include the responses sampled from the teacher model.
 		/// </summary>
-		public int? EndIndex { get; set; }
+		public DistillationDataStats? DistillationDataStats { get; set; }
 		/// <summary>
-		/// Output only. The index of a Part object within its parent Content object.
+		/// Output only. Statistics for preference optimization.
 		/// </summary>
-		public int? PartIndex { get; set; }
+		public PreferenceOptimizationDataStats? PreferenceOptimizationDataStats { get; set; }
 		/// <summary>
-		/// Output only. Start index in the given Part, measured in bytes. Offset from the start of the Part, inclusive, starting at zero.
+		/// The SFT Tuning data stats.
 		/// </summary>
-		public int? StartIndex { get; set; }
-		/// <summary>
-		/// Output only. The text corresponding to the segment from the response.
-		/// </summary>
-		public string? Text { get; set; }
+		public SupervisedTuningDataStats? SupervisedTuningDataStats { get; set; }
     }
 }

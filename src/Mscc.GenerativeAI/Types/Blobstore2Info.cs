@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Information to read/write to blobstore2.
     /// </summary>
-    public class Blobstore2Info
+    public partial class Blobstore2Info
     {
         /// <summary>
         /// The blob id, e.g., /blobstore/prod/playground/scotty

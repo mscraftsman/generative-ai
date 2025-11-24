@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request for recontextualizing an image.
     /// </summary>
-    public class RecontextImageRequest
+    public partial class RecontextImageRequest
     {
         /// <summary>
         /// ID of the model to use. For a list of models, see Google models

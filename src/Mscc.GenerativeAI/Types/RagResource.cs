@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// The definition of the Rag resource.
     /// </summary>
-    public class RagResource
+    public partial class RagResource
     {
         /// <summary>
         /// Optional. RagCorpora resource name.

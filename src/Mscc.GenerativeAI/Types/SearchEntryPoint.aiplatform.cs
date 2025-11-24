@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Identifier for the source contributing to this attribution.
+	/// An entry point for displaying Google Search results. A <c>SearchEntryPoint</c> is populated when the grounding source for a model&apos;s response is Google Search. It provides information that you can use to display the search results in your application.
 	/// </summary>
-	public partial class AttributionSourceId
+	public partial class SearchEntryPoint
 	{
-		/// <summary>
-		/// Identifier for an inline passage.
-		/// </summary>
-		public GroundingPassageId? GroundingPassage { get; set; }
-		/// <summary>
-		/// Identifier for a <see cref="Chunk"/> fetched via Semantic Retriever.
-		/// </summary>
-		public SemanticRetrieverChunk? SemanticRetrieverChunk { get; set; }
+
     }
 }

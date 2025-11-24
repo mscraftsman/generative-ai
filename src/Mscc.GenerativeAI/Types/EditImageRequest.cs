@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request for image editing.
     /// </summary>
-    public class EditImageRequest : ImageGenerationRequest
+    public partial class EditImageRequest : ImageGenerationRequest
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditImageRequest"/> class.

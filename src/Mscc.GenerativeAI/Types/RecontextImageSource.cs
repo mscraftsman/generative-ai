@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A set of source input(s) for image recontextualization.
     /// </summary>
-    public class RecontextImageSource
+    public partial class RecontextImageSource
     {
         /// <summary>
         ///  A text prompt for guiding the model during image recontextualization. Not supported for

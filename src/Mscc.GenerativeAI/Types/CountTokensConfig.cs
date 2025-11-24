@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Config for the count_tokens method.
     /// </summary>
-    public class CountTokensConfig : BaseConfig
+    public partial class CountTokensConfig : BaseConfig
     {
         /// <summary>
         /// Configuration that the model uses to generate the response. Not supported by the Gemini Developer API.

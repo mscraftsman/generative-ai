@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Detailed Content-Type information from Scotty. The Content-Type of the media will typically be filled in by the header or Scotty's best_guess, but this extended information provides the backend with more information so that it can make a better decision if needed. This is only used on media upload requests from Scotty.
     /// </summary>
-    public class ContentTypeInfo
+    public partial class ContentTypeInfo
     {
         /// <summary>
         /// The content type of the file derived by looking at specific bytes (i.e. \"magic bytes\") of the actual file.

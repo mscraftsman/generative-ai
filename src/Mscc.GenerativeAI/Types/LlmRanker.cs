@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class LlmRanker
+    public partial class LlmRanker
     {
         public string ModelName { get; set; }
     }

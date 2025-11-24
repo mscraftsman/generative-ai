@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Configuration options that change client network behavior when testing.
     /// </summary>
-    public class DebugConfig
+    public partial class DebugConfig
     {
         /// <summary>
         /// 

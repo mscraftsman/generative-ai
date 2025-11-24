@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Defines which input is included in the user's turn.

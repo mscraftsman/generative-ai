@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class ImageGenerationParameters : BaseConfig
+    public partial class ImageGenerationParameters : BaseConfig
     {
         /// <summary>
         /// The number of generated images.

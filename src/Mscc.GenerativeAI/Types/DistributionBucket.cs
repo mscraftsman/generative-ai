@@ -1,12 +1,12 @@
 using System.Diagnostics;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [DebuggerDisplay("Count: {Count,nq} (Left: {Left,nq}, Right: {Right,nq})")]
-    public class DistributionBucket
+    public partial class DistributionBucket
     {
         /// <summary>
         /// 

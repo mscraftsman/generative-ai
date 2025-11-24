@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class MaskMode
+    public partial class MaskMode
     {
         /// <summary>
         /// Optional. Prompts the model to generate a mask instead of you needing to provide one. Consequently, when you provide this parameter you can omit a mask object.

@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class ImageOutputOptions
+    public partial class ImageOutputOptions
     {
         /// <summary>
         /// Optional. The compression quality of the output image.

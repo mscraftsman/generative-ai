@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// HTTP options to be used in each of the requests.
     /// </summary>
-    public class HttpOptions
+    public partial class HttpOptions
     {
         /// <summary>
         /// Specifies the version of the API to use.

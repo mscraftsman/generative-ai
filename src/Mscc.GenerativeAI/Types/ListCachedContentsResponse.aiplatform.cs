@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Batch request to get a text embedding from the model.
+	/// Response with a list of CachedContents.
 	/// </summary>
-	public partial class BatchEmbedTextRequest
+	public partial class ListCachedContentsResponse
 	{
-		/// <summary>
-		/// Optional. Embed requests for the batch. Only one of <see cref="texts"/> or <see cref="requests"/> can be set.
-		/// </summary>
-		public List<EmbedTextRequest>? Requests { get; set; }
-		/// <summary>
-		/// Optional. The free-form input texts that the model will turn into an embedding. The current limit is 100 texts, over which an error will be thrown.
-		/// </summary>
-		public List<string>? Texts { get; set; }
+
     }
 }

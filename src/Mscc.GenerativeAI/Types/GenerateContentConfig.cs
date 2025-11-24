@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Optional model configuration parameters.
     /// </summary>
-    public class GenerateContentConfig : GenerationConfig
+    public partial class GenerateContentConfig : GenerationConfig
     {
         /// <summary>
         /// If enabled, audio timestamp will be included in the request to the model.

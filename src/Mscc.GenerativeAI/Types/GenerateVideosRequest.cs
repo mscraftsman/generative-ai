@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class GenerateVideosRequest
+    public partial class GenerateVideosRequest
     {
         /// <summary>
         /// An array that contains the object with video details to get information about.

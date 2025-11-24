@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class MaskReferenceImage : ReferenceImage
+    public partial class MaskReferenceImage : ReferenceImage
     {
         public override ImageReferenceType ReferenceType => ImageReferenceType.ReferenceTypeMask;
     }

@@ -1,4 +1,4 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A `Web` chunk is a piece of evidence that comes from a web page. It contains the URI of the

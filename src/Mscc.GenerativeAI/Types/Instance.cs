@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// An instance of an image with additional metadata.
     /// </summary>
-    public class Instance
+    public partial class Instance
     {
         /// <summary>
         /// Required. The text prompt for the image.

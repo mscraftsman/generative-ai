@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// OpenAI image generation request 
     /// </summary>
-    public class ImagesGenerationsRequest
+    public partial class ImagesGenerationsRequest
     {
         /// <summary>
         /// A text description of the desired image(s).

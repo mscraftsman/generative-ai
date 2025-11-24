@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class Distribution
+    public partial class Distribution
     {
         public string Sum { get; set; }
         public int Min { get; set; }

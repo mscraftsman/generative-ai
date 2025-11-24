@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// 
     /// </summary>
-    public class ImageTextRequest
+    public partial class ImageTextRequest
     {
         /// <summary>
         /// 

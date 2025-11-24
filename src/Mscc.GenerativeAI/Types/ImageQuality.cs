@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// The quality of the image that will be generated.

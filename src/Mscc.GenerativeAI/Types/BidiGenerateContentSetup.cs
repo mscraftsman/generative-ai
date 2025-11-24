@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Message to be sent in the first (and only in the first) `BidiGenerateContentClientMessage`. Contains configuration that will apply for the duration of the streaming RPC. Clients should wait for a `BidiGenerateContentSetupComplete` message before sending any additional messages.
     /// </summary>
-    public class BidiGenerateContentSetup
+    public partial class BidiGenerateContentSetup
     {
         /// <summary>
         /// Required. The model's resource name. This serves as an ID for the Model to use. Format: `models/{model}`

@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class InteractionResource
+    public partial class InteractionResource
     {
         public int Created { get; set; }
         public string Id { get; set; }
@@ -15,7 +15,7 @@ namespace Mscc.GenerativeAI
     }
 }
 
-public class Output
+public partial class Output
 {
     public string Thought { get; set; }
     public string ThoughtSignature { get; set; }
@@ -23,7 +23,7 @@ public class Output
     public string Text { get; set; }
 }
 
-public class Usage
+public partial class Usage
 {
     public int CachedTokens { get; set; }
     public int InputTokens { get; set; }

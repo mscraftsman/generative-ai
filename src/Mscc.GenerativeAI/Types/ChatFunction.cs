@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A function that the model can generate calls for.
     /// </summary>
-    public class ChatFunction
+    public partial class ChatFunction
     {
         /// <summary>
         /// Required. The name of the function.

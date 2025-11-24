@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Configuration for a Style reference image.
     /// </summary>
-    public class StyleImageConfig
+    public partial class StyleImageConfig
     {
         /// <summary>
         /// A text description of the style to use for the generated image.

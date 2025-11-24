@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Options for audio generation.
     /// </summary>
-    public class AudioOptions
+    public partial class AudioOptions
     {
         /// <summary>
         /// Optional. The format of the audio response.

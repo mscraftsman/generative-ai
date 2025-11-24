@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request for image generation.
     /// </summary>
-    public class GenerateImagesRequest : ImageGenerationRequest
+    public partial class GenerateImagesRequest : ImageGenerationRequest
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateImagesRequest"/> class.

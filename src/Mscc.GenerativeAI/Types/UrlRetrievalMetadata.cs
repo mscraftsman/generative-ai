@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Metadata related to url context retrieval tool.
     /// </summary>
-    public class UrlRetrievalMetadata
+    public partial class UrlRetrievalMetadata
     {
         /// <summary>
         /// List of url retrieval contexts.

@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Optional parameters for the embed_content method.
     /// </summary>
-    public class EmbedContentConfig : BaseConfig
+    public partial class EmbedContentConfig : BaseConfig
     {
         /// <summary>
         /// Vertex API only. Whether to silently truncate inputs longer than the max sequence length. If this option is set to false, oversized inputs will lead to an INVALID_ARGUMENT error, similar to other text APIs.

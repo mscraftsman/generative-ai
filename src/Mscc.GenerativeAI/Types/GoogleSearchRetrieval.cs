@@ -22,8 +22,29 @@ namespace Mscc.GenerativeAI.Types
 	public partial class GoogleSearchRetrieval : ITool
 	{
 		/// <summary>
-		/// Specifies the dynamic retrieval configuration for the given source.
+		/// Optional. Disable using the result from this tool in detecting grounding attribution.
 		/// </summary>
-		public DynamicRetrievalConfig? DynamicRetrievalConfig { get; set; }
-    }
+		/// <remarks>This does not affect how the result is given to the model for generation.</remarks>
+		public bool? DisableAttribution { get; set; }
+
+		/// <summary>
+		/// Creates an instance of <see cref="GoogleSearchRetrieval"/>
+		/// </summary>
+		public GoogleSearchRetrieval() 
+			: this(DynamicRetrievalConfig.ModeType.ModeDynamic, 0.3f) { }
+        
+		/// <summary>
+		/// Creates an instance of <see cref="GoogleSearchRetrieval"/> with Mode and DynamicThreshold.
+		/// </summary>
+		/// <param name="mode">The mode of the predictor to be used in dynamic retrieval.</param>
+		/// <param name="dynamicThreshold">The threshold to be used in dynamic retrieval. If not set, a system default value is used.</param>
+		public GoogleSearchRetrieval(DynamicRetrievalConfig.ModeType mode, float dynamicThreshold)
+		{
+			DynamicRetrievalConfig = new DynamicRetrievalConfig
+			{
+				Mode = mode, 
+				DynamicThreshold = dynamicThreshold
+			};
+		}
+	}
 }

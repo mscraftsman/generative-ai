@@ -6,7 +6,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// A tuning example with multiturn input.
     /// </summary>
-    public class TuningMultiturnExample
+    public partial class TuningMultiturnExample
     {
         /// <summary>
         /// Each Content represents a turn in the conversation.

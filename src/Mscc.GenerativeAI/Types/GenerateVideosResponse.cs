@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response with generated videos.
     /// </summary>
-    public class GenerateVideosResponse
+    public partial class GenerateVideosResponse
     {
         /// <summary>
         /// List of the generated videos

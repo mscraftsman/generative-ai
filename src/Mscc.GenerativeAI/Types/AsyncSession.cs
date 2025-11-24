@@ -10,7 +10,7 @@ using System.Text.Json.Nodes;
 
 namespace Mscc.GenerativeAI.Types
 {
-    public class AsyncSession(WebSocket webSocket, IHttpClientFactory apiClient) : IAsyncDisposable
+    public partial class AsyncSession(WebSocket webSocket, IHttpClientFactory apiClient) : IAsyncDisposable
     {
     private int _isDisposed = 0; // 0 = false, 1 = true. Used with Interlocked.
 #if false        

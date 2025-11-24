@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Collections.Generic;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Request for <see cref="CreateFile"/>.
+	/// Response message for VertexRagDataService.ListRagFiles.
 	/// </summary>
-	public partial class CreateFileRequest
+	public partial class ListRagFilesResponse
 	{
 		/// <summary>
-		/// Optional. Metadata for the file to create.
+		/// A token to retrieve the next page of results. Pass to ListRagFilesRequest.page_token to obtain that page.
 		/// </summary>
-		public FileResource? File { get; set; }
+		public string? NextPageToken { get; set; }
+		/// <summary>
+		/// List of RagFiles in the requested page.
+		/// </summary>
+		public List<RagFile>? RagFiles { get; set; }
     }
 }

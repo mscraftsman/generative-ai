@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Defines the format of the response.
     /// </summary>
-    public class ResponseFormat
+    public partial class ResponseFormat
     {
         /// <summary>
         /// Required. Type of the response.

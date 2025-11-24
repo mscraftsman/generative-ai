@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response for image generation.
     /// </summary>
-    public class GenerateImagesResponse : ImageGenerationResponse
+    public partial class GenerateImagesResponse : ImageGenerationResponse
     {
         /// <summary>
         /// Output only. A list of the generated images.

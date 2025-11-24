@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Request for image upscaling.
     /// </summary>
-    public class UpscaleImageRequest : ImageGenerationRequest
+    public partial class UpscaleImageRequest : ImageGenerationRequest
     {
         /// <summary>
         /// Configuration for image upscaling.

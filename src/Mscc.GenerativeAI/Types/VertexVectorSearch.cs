@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Vertex Vector Search instance.
     /// </summary>
-    public class VertexVectorSearch
+    public partial class VertexVectorSearch
     {
         /// <summary>
         /// This is the resource name of the Vector Search index that's used with the RAG corpus.

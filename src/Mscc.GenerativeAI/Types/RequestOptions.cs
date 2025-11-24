@@ -8,7 +8,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Provides options for individual API requests.
     /// </summary>
-    public class RequestOptions
+    public partial class RequestOptions
     {
         private HttpRequestHeaders _headers;
 

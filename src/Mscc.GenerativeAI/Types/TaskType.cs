@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	[JsonConverter(typeof(JsonStringEnumConverter<TaskType>))]
@@ -24,11 +26,6 @@ namespace Mscc.GenerativeAI.Types
         /// Unset value, which will default to one of the other enum values.
         /// </summary>
         TaskTypeUnspecified,
-        /// <summary>
-        /// Unset value, which will default to one of the other enum values. This enum value is not
-        /// supported in Gemini API.
-        /// </summary>
-        Unspecified,
         /// <summary>
         /// Specifies the given text is a query in a search/retrieval setting.
         /// </summary>

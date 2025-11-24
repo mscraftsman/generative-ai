@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Diagnostics;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Raw media bytes. Text should not be sent as raw bytes, use the 'text' field.
+	/// A list of floats representing the embedding.
 	/// </summary>
-    [DebuggerDisplay("{MimeType}")]
-	public partial class Blob : IPart
+	public partial class Embedding
 	{
-		/// <summary>
-		/// Optional. Display name of the blob. Used to provide a label or filename to distinguish
-		/// </summary>
-		public string? DisplayName { get; set; }
     }
 }

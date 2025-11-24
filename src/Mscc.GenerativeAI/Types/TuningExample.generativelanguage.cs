@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// URI based data.
+	/// A single example for tuning.
 	/// </summary>
-	public partial class FileData : IPart
+	public partial class TuningExample
 	{
+		/// <summary>
+		/// Required. The expected model output.
+		/// </summary>
+		public string? Output { get; set; }
+		/// <summary>
+		/// Optional. Text model input.
+		/// </summary>
+		public string? TextInput { get; set; }
     }
 }

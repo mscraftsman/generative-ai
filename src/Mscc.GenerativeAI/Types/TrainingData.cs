@@ -3,8 +3,8 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Dataset for training or validation.
     /// </summary>
-    // public class Dataset 
-    public class TrainingData
+    // public partial class Dataset 
+    public partial class TrainingData
     {
         /// <summary>
         /// Optional. Inline examples.

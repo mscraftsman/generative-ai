@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Response for list models.
     /// </summary>
-    public class SdkListModelsResponse
+    public partial class SdkListModelsResponse
     {
         /// <summary>
         /// Output only. A list of the requested embeddings.

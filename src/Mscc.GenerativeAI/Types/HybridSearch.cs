@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class HybridSearch
+    public partial class HybridSearch
     {
         public float Alpha { get; set; }
     }

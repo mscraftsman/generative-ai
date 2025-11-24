@@ -1,6 +1,6 @@
 namespace Mscc.GenerativeAI.Types
 {
-    public class TransformationConfig
+    public partial class TransformationConfig
     {
         /// <summary>
         /// Optional. Config for telling the service how to chunk the data.

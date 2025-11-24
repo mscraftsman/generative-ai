@@ -76,7 +76,7 @@ namespace Mscc.GenerativeAI.Types
                 {
                     Type = ParameterType.Array,
                     Items = BuildEnumSchema(elementType, false),
-                    Nullable = isNullable ? true : null,
+                    Nullable = isNullable,
                 };
             }
 
@@ -101,7 +101,7 @@ namespace Mscc.GenerativeAI.Types
                 Format = "enum",
                 Description = GetTypeDescription(enumType),
                 Enum = [..System.Enum.GetNames(enumType)],
-                Nullable = nullable ? true : null,
+                Nullable = nullable,
             };
         }
 

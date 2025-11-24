@@ -1,11 +1,11 @@
 using System;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class GenericMetadata
+    public partial class GenericMetadata
     {
         /// <summary>
         /// 

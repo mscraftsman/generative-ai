@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Contains an ongoing conversation with the model.

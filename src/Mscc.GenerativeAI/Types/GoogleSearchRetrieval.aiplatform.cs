@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// The request to be processed in the batch.
+	/// Tool to retrieve public web data for grounding, powered by Google.
 	/// </summary>
-	public partial class InlinedEmbedContentRequest
+	public partial class GoogleSearchRetrieval
 	{
-		/// <summary>
-		/// Optional. The metadata to be associated with the request.
-		/// </summary>
-        public Dictionary<string, object>? Metadata { get; set; }
+
     }
 }

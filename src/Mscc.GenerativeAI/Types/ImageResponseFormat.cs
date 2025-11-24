@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using System.Runtime.Serialization;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     [JsonConverter(typeof(JsonStringEnumConverter<ImageResponseFormat>))]
     public enum ImageResponseFormat

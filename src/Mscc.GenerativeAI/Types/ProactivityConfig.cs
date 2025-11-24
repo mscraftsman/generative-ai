@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI.Types
     /// <summary>
     /// Config for proactivity features.
     /// </summary>
-    public class ProactivityConfig
+    public partial class ProactivityConfig
     {
         /// <summary>
         /// Optional. If enabled, the model can reject responding to the last prompt.

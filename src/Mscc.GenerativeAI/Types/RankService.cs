@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class RankService
+    public partial class RankService
     {
         public string ModelName { get; set; }
     }

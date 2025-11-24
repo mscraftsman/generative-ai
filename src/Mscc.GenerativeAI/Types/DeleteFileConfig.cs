@@ -1,6 +1,6 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
-    public class DeleteFileConfig
+    public partial class DeleteFileConfig
     {
     }
 }

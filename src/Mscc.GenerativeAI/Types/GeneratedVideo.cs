@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// A generated video.
     /// </summary>
-    public class GeneratedVideo
+    public partial class GeneratedVideo
     {
         /// <summary>
         /// The output video

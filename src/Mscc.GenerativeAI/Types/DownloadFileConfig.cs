@@ -1,6 +1,6 @@
 namespace Mscc.GenerativeAI.Types
 {
-    public class DownloadFileConfig : BaseConfig
+    public partial class DownloadFileConfig : BaseConfig
     {
     }
 }

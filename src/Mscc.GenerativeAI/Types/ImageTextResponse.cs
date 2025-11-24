@@ -1,9 +1,9 @@
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class ImageTextResponse
+    public partial class ImageTextResponse
     {
         /// <summary>
         /// List of text strings representing captions, sorted by confidence.

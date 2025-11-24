@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Describes the options to customize dynamic retrieval.
+	/// Parameters for telling the service how to chunk the file. inspired by google3/cloud/ai/platform/extension/lib/retrieval/config/chunker_config.proto
 	/// </summary>
-	public partial class DynamicRetrievalConfig
+	public partial class ChunkingConfig
 	{
 		/// <summary>
-		/// The threshold to be used in dynamic retrieval. If not set, a system default value is used.
+		/// White space chunking configuration.
 		/// </summary>
-		public double? DynamicThreshold { get; set; }
-		/// <summary>
-		/// The mode of the predictor to be used in dynamic retrieval.
-		/// </summary>
-		public DynamicRetrievalConfigMode? Mode { get; set; }
+		public WhiteSpaceConfig? WhiteSpaceConfig { get; set; }
     }
 }
