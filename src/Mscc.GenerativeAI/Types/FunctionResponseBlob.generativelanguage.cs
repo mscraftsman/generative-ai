@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Raw media bytes for function response. Text should not be sent as raw bytes, use the 'FunctionResponse.response' field.
+	/// Raw media bytes for function response. Text should not be sent as raw bytes, use the &apos;FunctionResponse.response&apos; field.
 	/// </summary>
 	public partial class FunctionResponseBlob
 	{
