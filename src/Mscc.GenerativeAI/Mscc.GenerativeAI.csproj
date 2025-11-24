@@ -47,6 +47,7 @@
 	<ItemGroup>
 		<None Include="..\..\MsccGenerativeAi-icon-nuget.png" Pack="True" PackagePath="" />
 		<None Include="..\..\README.md" Pack="True" PackagePath="" />
+		<Compile Remove="Types\Model.aiplatform.cs" />
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
