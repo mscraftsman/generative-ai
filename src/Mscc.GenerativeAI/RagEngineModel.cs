@@ -401,7 +401,7 @@ namespace Mscc.GenerativeAI
             string text,
             RagRetrievalConfig? ragRetrievalConfig,
             float? vectorDistanceThreshold,
-            float? similarityTopK,
+            int? similarityTopK,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
