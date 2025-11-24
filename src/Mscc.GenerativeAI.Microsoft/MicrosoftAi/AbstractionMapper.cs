@@ -1,3 +1,4 @@
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -779,7 +780,7 @@ namespace Mscc.GenerativeAI.Microsoft
 			if (response.UsageMetadata.AudioDurationSeconds != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.AudioDurationSeconds)] =
-					response.UsageMetadata.AudioDurationSeconds;
+					response.UsageMetadata.AudioDurationSeconds ?? 0;
 			}
 
 			if (response.UsageMetadata.CachedContentTokenCount != 0)
@@ -803,7 +804,7 @@ namespace Mscc.GenerativeAI.Microsoft
 			if (response.UsageMetadata.VideoDurationSeconds != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.VideoDurationSeconds)] =
-					response.UsageMetadata.VideoDurationSeconds;
+					response.UsageMetadata.VideoDurationSeconds ?? 0;
 			}
 
 			return details;
