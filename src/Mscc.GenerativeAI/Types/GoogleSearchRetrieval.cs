@@ -31,14 +31,14 @@ namespace Mscc.GenerativeAI.Types
 		/// Creates an instance of <see cref="GoogleSearchRetrieval"/>
 		/// </summary>
 		public GoogleSearchRetrieval() 
-			: this(DynamicRetrievalConfig.ModeType.ModeDynamic, 0.3f) { }
+			: this(DynamicRetrievalConfigMode.ModeDynamic, 0.3f) { }
         
 		/// <summary>
 		/// Creates an instance of <see cref="GoogleSearchRetrieval"/> with Mode and DynamicThreshold.
 		/// </summary>
 		/// <param name="mode">The mode of the predictor to be used in dynamic retrieval.</param>
 		/// <param name="dynamicThreshold">The threshold to be used in dynamic retrieval. If not set, a system default value is used.</param>
-		public GoogleSearchRetrieval(DynamicRetrievalConfig.ModeType mode, float dynamicThreshold)
+		public GoogleSearchRetrieval(DynamicRetrievalConfigMode mode, float dynamicThreshold)
 		{
 			DynamicRetrievalConfig = new DynamicRetrievalConfig
 			{

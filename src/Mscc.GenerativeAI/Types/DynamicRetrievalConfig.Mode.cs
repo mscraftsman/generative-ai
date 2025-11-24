@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+using System.Text.Json.Serialization;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
-	/// <summary>
-	/// Describes the options to customize dynamic retrieval.
-	/// </summary>
-	public partial class DynamicRetrievalConfig
+
+	[JsonConverter(typeof(JsonStringEnumConverter<DynamicRetrievalConfigMode>))]
+	public enum DynamicRetrievalConfigMode
 	{
 		/// <summary>
-		/// The threshold to be used in dynamic retrieval. If not set, a system default value is used.
+		/// Always trigger retrieval.
 		/// </summary>
-		public double? DynamicThreshold { get; set; }
+		ModeUnspecified,
 		/// <summary>
-		/// The mode of the predictor to be used in dynamic retrieval.
+		/// Run retrieval only when system decides it is necessary.
 		/// </summary>
-		public DynamicRetrievalConfigMode? Mode { get; set; }
-    }
+		ModeDynamic,
+	}
 }

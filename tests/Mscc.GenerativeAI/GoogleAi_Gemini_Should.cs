@@ -1449,7 +1449,7 @@ namespace Test.Mscc.GenerativeAI
                     new Tool
                     {
                         GoogleSearchRetrieval =
-                            new(DynamicRetrievalConfig.ModeType.ModeUnspecified, 0.06f)
+                            new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f)
                     }
                 ]);
             model.UseGrounding = true;
@@ -1953,7 +1953,7 @@ namespace Test.Mscc.GenerativeAI
                 {
                     FunctionCallingConfig = new FunctionCallingConfig()
                     {
-                        Mode = FunctionCallingConfig.ModeType.Any,
+                        Mode = FunctionCallingConfigMode.Any,
                         AllowedFunctionNames = [nameof(GetCurrentWeather)]
                     }
                 });
