@@ -19,20 +19,21 @@ using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<TuningMode>))]
-    public enum TuningMode
-    {
-        /// <summary>
-        /// Tuning mode is unspecified.
-        /// </summary>
-        TuningModeUnspecified,
-        /// <summary>
-        /// Full fine-tuning mode.
-        /// </summary>
-        TuningModeFull,
-        /// <summary>
-        /// PEFT adapter tuning mode.
-        /// </summary>
-        TuningModePeftAdapter,
-    }
+	public enum TuningMode
+	{
+		/// <summary>
+		/// Tuning mode is unspecified.
+		/// </summary>
+		TuningModeUnspecified,
+		/// <summary>
+		/// Full fine-tuning mode.
+		/// </summary>
+		TuningModeFull,
+		/// <summary>
+		/// PEFT adapter tuning mode.
+		/// </summary>
+		TuningModePeftAdapter,
+	}
 }

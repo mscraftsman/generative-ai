@@ -119,7 +119,7 @@ namespace Mscc.CodeGenerator
 			{ "Role", "PermissionRole" },
 			{ "Schema.Type", "ParameterType" },
 			{ "Severity", "HarmSeverity" },
-			{ "SupervisedTuningSpec.TuningModeType", "TuningMode" },
+			{ "SupervisedTuningSpec.TuningMode", "TuningMode" },
 			{ "Threshold", "HarmBlockThreshold" },
 			{ "TunedModel", "TunedModelResponse" },
 			{ "List<File>", "List<FileResource>" },

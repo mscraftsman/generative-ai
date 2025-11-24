@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Text.Json.Serialization;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
@@ -43,27 +42,10 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Tuning mode.
 		/// </summary>
-		public TuningModeType? TuningMode { get; set; }
+		public TuningMode? TuningMode { get; set; }
 		/// <summary>
 		/// Optional. Validation dataset used for tuning. The dataset can be specified as either a Cloud Storage path to a JSONL file or as the resource name of a Vertex Multimodal Dataset.
 		/// </summary>
 		public string? ValidationDatasetUri { get; set; }
-
-		[JsonConverter(typeof(JsonStringEnumConverter<TuningModeType>))]
-		public enum TuningModeType
-		{
-			/// <summary>
-			/// Tuning mode is unspecified.
-			/// </summary>
-			TuningModeUnspecified,
-			/// <summary>
-			/// Full fine-tuning mode.
-			/// </summary>
-			TuningModeFull,
-			/// <summary>
-			/// PEFT adapter tuning mode.
-			/// </summary>
-			TuningModePeftAdapter,
-		}
     }
 }
