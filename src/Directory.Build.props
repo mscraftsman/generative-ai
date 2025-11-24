@@ -41,6 +41,7 @@
         <NoWarn>$(NoWarn);
             CA1002; <!-- Do not expose generic lists -->
             CA1054; <!-- Change the type to System.Uri -->
+            CA1303; <!-- Main(string[] args) passes a literal string as parameter -->
             CA1510; <!-- ArgumentNullException.ThrowIfNull -->
             CA1712; <!-- Do not prefix enum values with the name of the enum type-->
             CA1724; <!-- Type names should not match namespaces -->
