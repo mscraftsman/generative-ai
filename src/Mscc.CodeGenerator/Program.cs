@@ -1,10 +1,11 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Mscc.CodeGenerator
 {
-	class Program
+	sealed class Program
 	{
 		private const string GeneratedNamespace = "Mscc.GenerativeAI.Types";
 
@@ -61,15 +62,39 @@ namespace Mscc.CodeGenerator
 		}
 	}
 
-	public class CSharpCodeGenerator
+	internal sealed class CSharpCodeGenerator
 	{
 		private readonly JsonElement _schemas;
-		private readonly string? _name;
-		private readonly string? _version;
-		private readonly string? _revision;
-		private readonly string _namespace;
-		private readonly string _pattern;
-		private readonly Dictionary<string, string> _generatedEnums = new Dictionary<string, string>();
+		private static string? _name;
+		private static string? _version;
+		private static string? _revision;
+		private static string? _namespace;
+		private static string _pattern;
+
+		private readonly HashSet<string> _globalEnums = new HashSet<string>
+		{
+			"AdapterSize",
+			"AnswerStyle",
+			"BlockingConfidence",
+			"BlockReason",
+			"ComputerUseEnvironment",
+			"FinishReason",
+			"HarmCategory",
+			"HarmBlockMethod",
+			"HarmBlockThreshold",
+			"HarmProbability",
+			"HarmSeverity",
+			"HttpElementLocation",
+			"ManagedMemoryTopic",
+			"MediaResolution",
+			"Outcome",
+			"ParameterType",
+			"PermissionRole",
+			"Reason",
+			"ResponseModality",
+			"Schema.Type",
+			"UrlRetrievalStatus"
+		};
 
 		private readonly Dictionary<string, string> _typeReplacements = new Dictionary<string, string>
 		{
@@ -82,9 +107,10 @@ namespace Mscc.CodeGenerator
 			{ "Probability", "HarmProbability" },
 			{ "ResponseModalities", "ResponseModality" },
 			{ "Role", "PermissionRole" },
+			{ "Schema.Type", "ParameterType" },
+			{ "Severity", "HarmSeverity" },
 			{ "Threshold", "HarmBlockThreshold" },
 			{ "TunedModel", "TunedModelResponse" },
-			{ "Type", "ParameterType" },
 			{ "List<File>", "List<FileResource>" },
 			{ "List<Model>", "List<ModelResponse>" },
 			{ "List<ResponseModalities>", "List<ResponseModality>" },	// List<Modality>
@@ -103,19 +129,22 @@ namespace Mscc.CodeGenerator
 			"Content.Parts",
 			"Content.Role",
 			"ContentEmbedding.Values",
-			"ContentFilter.Reason",
 			"CountTokensResponse.CachedContentTokenCount",
 			"CountTokensResponse.TotalTokens",
+			"CustomLongRunningOperation.Done",
 			"EmbedContentRequest.Content",
 			"Embedding.Value",
 			"FunctionResponsePart.InlineData",
 			"GenerateContentRequest.Labels",
 			"ImageConfig.AspectRatio",
 			"ImageConfig.ImageSize",
+			"ModelResponse.Etag",
 			"ModelResponse.Labels",
 			"ModelResponse.VersionId",
+			"Operation.Done",
 			"Part.InlineData",
-			"Part.Text"
+			"Part.Text",
+			"PartMediaResolution.Level"
 		};
 
 		public CSharpCodeGenerator(string ns, JsonElement schemas, string? name = null, string? version = null, string? revision = null)
@@ -146,13 +175,15 @@ namespace Mscc.CodeGenerator
 				JsonElement schemaValue = schema.Value;
 
 				var sb = new StringBuilder();
-				sb.AppendLine($"namespace {_namespace}");
+				sb.AppendLine(CultureInfo.InvariantCulture, $"namespace {_namespace}");
 				sb.AppendLine("{");
 				GenerateType(sb, schema, outputDirectory);
-				sb.Append("}");
+				sb.Append('}');
 				PrefixOutput(sb);
 				var filename = $"{name}";
-				bool isEnum = sb.ToString().Contains($"public enum {name}");
+				bool isEnum = schemaValue.TryGetProperty("type", out var typeProp) && 
+				              typeProp.GetString() == "string" && 
+				              schemaValue.TryGetProperty("enum", out _);
 
 				if (!isEnum && !string.IsNullOrEmpty(_name))
 				{
@@ -164,10 +195,15 @@ namespace Mscc.CodeGenerator
 				{
 					var filePath = Path.Combine(outputDirectory, $"{filename}.cs");
 					var existingMembers = GetExistingEnumMembers(filePath);
+					var enumDeprecated = schemaValue.TryGetProperty("enumDeprecated", out var dep)
+						? dep.EnumerateArray().Select(x => x.GetBoolean()).ToList()
+						: new List<bool>();
+
 					var newMembers = GetEnumMembers(schemaValue.GetProperty("enum"), 
 						schemaValue.TryGetProperty("enumDescriptions", out var desc) 
 							? desc.EnumerateArray().Select(x => x.GetString()).ToList() 
-							: new List<string?>());
+							: new List<string?>(),
+						enumDeprecated);
 					
 					foreach (var member in newMembers)
 					{
@@ -178,10 +214,10 @@ namespace Mscc.CodeGenerator
 					}
 					
 					sb.Clear();
-					sb.AppendLine($"namespace {_namespace}");
+					sb.AppendLine(CultureInfo.InvariantCulture, $"namespace {_namespace}");
 					sb.AppendLine("{");
 					GenerateEnum(sb, name, existingMembers);
-					sb.Append("}");
+					sb.Append('}');
 					PrefixOutput(sb);
 				}
 
@@ -209,7 +245,11 @@ namespace Mscc.CodeGenerator
 							var enumDescriptions = schemaValue.TryGetProperty("enumDescriptions", out var desc)
 								? desc.EnumerateArray().Select(x => x.GetString()).ToList()
 								: new List<string?>();
-							GenerateEnum(sb, typeName, GetEnumMembers(enumElement, enumDescriptions));
+							var enumDeprecated = schemaValue.TryGetProperty("enumDeprecated", out var dep)
+								? dep.EnumerateArray().Select(x => x.GetBoolean()).ToList()
+								: new List<bool>();
+
+							GenerateEnum(sb, typeName, GetEnumMembers(enumElement, enumDescriptions, enumDeprecated));
 						}
 
 						break;
@@ -242,7 +282,7 @@ namespace Mscc.CodeGenerator
 	/// Extracts the last word from a PascalCase property name.
 	/// E.g., "SharePointSources" -> "Sources", "RawOutput" -> "Output"
 	/// </summary>
-	private string ExtractLastWord(string propertyName)
+	private static string ExtractLastWord(string propertyName)
 	{
 		// Find uppercase letters to split the word
 		var matches = Regex.Matches(propertyName, @"[A-Z][a-z]*");
@@ -259,7 +299,7 @@ namespace Mscc.CodeGenerator
 	/// Converts a PascalCase string to camelCase.
 	/// E.g., "SharePointSources" -> "sharePointSources"
 	/// </summary>
-	private string ToCamelCase(string pascalCase)
+	private static string ToCamelCase(string pascalCase)
 	{
 		if (string.IsNullOrEmpty(pascalCase))
 			return pascalCase;
@@ -271,142 +311,173 @@ namespace Mscc.CodeGenerator
 		{
 			if (schema.TryGetProperty("description", out JsonElement classDescription))
 			{
-				sb.AppendLine($"\t/// <summary>");
-				sb.AppendLine($"\t/// {GetTypeReference(classDescription.GetString())}");
-				sb.AppendLine($"\t/// </summary>");
+				sb.AppendLine(CultureInfo.InvariantCulture, $"\t/// <summary>");
+				sb.AppendLine(CultureInfo.InvariantCulture, $"\t/// {GetTypeReference(classDescription.GetString()!)}");
+				sb.AppendLine(CultureInfo.InvariantCulture, $"\t/// </summary>");
 			}
 
-			sb.AppendLine($"\tpublic partial class {className}");
+			sb.AppendLine(CultureInfo.InvariantCulture, $"\tpublic partial class {className}");
 			sb.AppendLine("	{");
 
 			var existingProperties = GetExistingProperties(outputDirectory, className);
+			var nestedEnums = new List<(string Name, List<(string Name, string? Description, bool IsDeprecated)> Members)>();
+
 			if (schema.TryGetProperty("properties", out JsonElement properties))
 			{
-				foreach (var property in properties.EnumerateObject())
+				if (properties.ValueKind == JsonValueKind.Object)
 				{
-					string propertyName = ToPascalCase(property.Name);
-					if (existingProperties.Contains(propertyName) || 
-					    _ignoredMembers.Contains($"{className}.{propertyName}"))
+					if (existingProperties.Count > 0)
 					{
-						continue;
+						sb.AppendLine();
 					}
 
-					JsonElement propertyValue = property.Value;
-					JsonElement enumValue = propertyValue;
-
-					if (propertyValue.TryGetProperty("items", out JsonElement itensElement))
+					foreach (var property in properties.EnumerateObject())
 					{
-						enumValue = itensElement;
-					}
-
-					if (enumValue.TryGetProperty("enum", out JsonElement enumElement))
-			{
-				string enumName = $"{ReplaceTypeName(propertyName)}";
-				
-				// Always process and merge enum values
-				var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc)
-					? desc.EnumerateArray().Select(x => x.GetString()).ToList()
-					: new List<string?>();
-				
-				var newMembers = GetEnumMembers(enumElement, enumDescriptions);
-				var filename = $"{enumName}";
-				var filePath = Path.Combine(outputDirectory, $"{filename}.cs");
-
-				// Merge with existing enum values if file exists
-				if (TypeExists(outputDirectory, enumName))
-				{
-					var existingMembers = GetExistingEnumMembers(filePath);
-					foreach (var member in newMembers)
-					{
-						if (!existingMembers.Any(m => m.Name == member.Name))
+						string propertyName = ToPascalCase(property.Name);
+						if (existingProperties.Contains(propertyName) || 
+						    _ignoredMembers.Contains($"{className}.{propertyName}"))
 						{
-							existingMembers.Add(member);
+							continue;
 						}
-					}
-					newMembers = existingMembers;
-				}
 
-				// Generate or update the enum file
-				var enumSb = new StringBuilder();
-				enumSb.AppendLine($"namespace {_namespace}");
-				enumSb.AppendLine("{");
-				GenerateEnum(enumSb, enumName, newMembers);
-				enumSb.Append("}");
-				
-				// Update the generated enums dictionary
-				if (_generatedEnums.ContainsKey(enumName))
-				{
-					_generatedEnums[enumName] = enumSb.ToString();
+						JsonElement propertyValue = property.Value;
+						JsonElement enumValue = propertyValue;
+
+						if (propertyValue.TryGetProperty("items", out JsonElement itensElement))
+						{
+							enumValue = itensElement;
+						}
+
+						string propertyType = ReplaceTypeName(GetCSharpType(propertyValue, className, propertyName));
+
+						if (enumValue.TryGetProperty("enum", out JsonElement enumElement))
+						{
+							var enumDescriptions = enumValue.TryGetProperty("enumDescriptions", out var desc)
+								? desc.EnumerateArray().Select(x => x.GetString()).ToList()
+								: new List<string?>();
+							
+							var enumDeprecated = enumValue.TryGetProperty("enumDeprecated", out var dep)
+								? dep.EnumerateArray().Select(x => x.GetBoolean()).ToList()
+								: new List<bool>();
+
+							var newMembers = GetEnumMembers(enumElement, enumDescriptions, enumDeprecated);
+
+							// Special handling for "Type" property to avoid "TypeType"
+							// Use className + propertyName instead (e.g., Schema.Type → SchemaType)
+							string baseEnumName = propertyName.EndsWith("Type", StringComparison.Ordinal)
+								? $"{className}.{propertyName}"
+								: propertyName;
+							
+							baseEnumName = ReplaceTypeName(baseEnumName);
+
+							if (_globalEnums.Contains(baseEnumName))
+							{
+								GenerateGlobalEnumFile(outputDirectory, baseEnumName, newMembers);
+								propertyType = baseEnumName.Replace(".", "", StringComparison.OrdinalIgnoreCase);
+							}
+							else
+							{
+								// Avoid "TypeType" by checking if baseEnumName already ends with "Type"
+								string nestedEnumName = baseEnumName.EndsWith("Type", StringComparison.Ordinal)
+									? $"{baseEnumName}"
+									: $"{baseEnumName}Type";
+								propertyType = nestedEnumName.Replace(".", "", StringComparison.OrdinalIgnoreCase);
+								// Defer nested enum generation
+								nestedEnums.Add((nestedEnumName, newMembers));
+							}
+							
+							// Update property type logic
+							if (propertyValue.TryGetProperty("items", out _))
+							{
+								propertyType = $"List<{propertyType}>";
+							}
+						}
+
+						// Check if property name conflicts with class name
+						string actualPropertyName = propertyName;
+						string? jsonPropertyName = null;
+						
+						if (propertyName.Equals(className, StringComparison.Ordinal))
+						{
+							// Extract the last word to use as the shortened property name
+							actualPropertyName = ExtractLastWord(propertyName);
+							// Store the original name in camelCase for JsonPropertyName attribute
+							jsonPropertyName = ToCamelCase(propertyName);
+						}
+
+						if (propertyValue.TryGetProperty("description", out JsonElement propertyDescription))
+						{
+							sb.AppendLine(CultureInfo.InvariantCulture, $"\t\t/// <summary>");
+							sb.AppendLine(CultureInfo.InvariantCulture, $"\t\t/// {GetTypeReference(propertyDescription.GetString()!)}");
+							sb.AppendLine(CultureInfo.InvariantCulture, $"\t\t/// </summary>");
+						}
+
+						// Add JsonPropertyName attribute if there's a naming conflict
+						if (jsonPropertyName != null)
+						{
+							sb.AppendLine(CultureInfo.InvariantCulture, $"\t\t[JsonPropertyName(\"{jsonPropertyName}\")]");
+						}
+
+						// ToDo: Check JSON serialization for default / non-null values.
+						var optional = "?";		// propertyType == "bool" ? "" : "?";
+						sb.AppendLine(CultureInfo.InvariantCulture, $"\t\tpublic {propertyType}{optional} {actualPropertyName} {{ get; set; }}");
+						existingProperties.Add(actualPropertyName);
+					}
 				}
-				else
-				{
-					_generatedEnums.Add(enumName, enumSb.ToString());
-				}
-				
-				PrefixOutput(enumSb);
-				File.WriteAllText(filePath, enumSb.ToString());
 			}
 
-		string propertyType = ReplaceTypeName(GetCSharpType(propertyValue, className, propertyName));
-
-		// Check if property name conflicts with class name
-		string actualPropertyName = propertyName;
-		string? jsonPropertyName = null;
-		
-		if (propertyName.Equals(className, StringComparison.Ordinal))
-		{
-			// Extract the last word to use as the shortened property name
-			actualPropertyName = ExtractLastWord(propertyName);
-			// Store the original name in camelCase for JsonPropertyName attribute
-			jsonPropertyName = ToCamelCase(propertyName);
-		}
-
-		if (propertyValue.TryGetProperty("description", out JsonElement propertyDescription))
-		{
-			sb.AppendLine($"\t\t/// <summary>");
-			sb.AppendLine($"\t\t/// {GetTypeReference(propertyDescription.GetString())}");
-			sb.AppendLine($"\t\t/// </summary>");
-		}
-
-		// Add JsonPropertyName attribute if there's a naming conflict
-		if (jsonPropertyName != null)
-		{
-			sb.AppendLine($"\t\t[JsonPropertyName(\"{jsonPropertyName}\")]");
-		}
-
-		var optional = propertyType == "bool" ? "" : "?";
-		sb.AppendLine($"\t\tpublic {propertyType}{optional} {actualPropertyName} {{ get; set; }}");
-		existingProperties.Add(actualPropertyName);
-	}
-}
-
-	sb.AppendLine("    }");
-}
-
-		private void GenerateEnum(StringBuilder sb, string enumName, List<(string Name, string? Description)> members)
-		{
-			sb.AppendLine($"	[JsonConverter(typeof(JsonStringEnumConverter<{enumName}>))]");
-			sb.AppendLine($"    public enum {enumName}");
-			sb.AppendLine("    {");
-
-			foreach (var member in members)
+			foreach (var nestedEnum in nestedEnums)
 			{
-				if (!string.IsNullOrEmpty(member.Description))
-				{
-					sb.AppendLine("        /// <summary>");
-					sb.AppendLine($"        /// {EscapeXml(member.Description)}");
-					sb.AppendLine("        /// </summary>");
-				}
-
-				sb.AppendLine($"        {member.Name},");
+				GenerateEnum(sb, nestedEnum.Name, nestedEnum.Members, "\t\t");
 			}
 
 			sb.AppendLine("    }");
 		}
 
-		private List<(string Name, string? Description)> GetEnumMembers(JsonElement enumValues, List<string?> enumDescriptions)
+		private static void GenerateGlobalEnumFile(string outputDirectory, string enumName, List<(string Name, string? Description, bool IsDeprecated)> members)
 		{
-			var members = new List<(string Name, string? Description)>();
+			var sb = new StringBuilder();
+			sb.AppendLine(CultureInfo.InvariantCulture, $"namespace {_namespace}");
+			sb.AppendLine("{");
+			
+			GenerateEnum(sb, enumName, members, "\t");
+			
+			sb.Append("}");
+			
+			PrefixOutput(sb);
+			File.WriteAllText(Path.Combine(outputDirectory, $"{enumName}.cs"), sb.ToString());
+		}
+
+		private static void GenerateEnum(StringBuilder sb, string enumName, List<(string Name, string? Description, bool IsDeprecated)> members, string indent = "\t")
+		{
+			enumName = enumName.Replace(".", "", StringComparison.OrdinalIgnoreCase);
+			sb.AppendLine("");
+			sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}[JsonConverter(typeof(JsonStringEnumConverter<{enumName}>))]");
+			sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}public enum {enumName}");
+			sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}{{");
+
+			foreach (var member in members)
+			{
+				if (!string.IsNullOrEmpty(member.Description))
+				{
+					sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}\t/// <summary>");
+					sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}\t/// {EscapeXml(member.Description)}");
+					sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}\t/// </summary>");
+				}
+
+				if (member.IsDeprecated)
+				{
+					sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}\t[Obsolete(\"The member type '{member.Name}' has been marked as deprecated. It might be removed in future versions.\")]");
+				}
+				sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}\t{member.Name},");
+			}
+
+			sb.AppendLine(CultureInfo.InvariantCulture, $"{indent}}}");
+		}
+
+		private static List<(string Name, string? Description, bool IsDeprecated)> GetEnumMembers(JsonElement enumValues, List<string?> enumDescriptions, List<bool> enumDeprecated)
+		{
+			var members = new List<(string Name, string? Description, bool IsDeprecated)>();
 			int i = 0;
 			foreach (var enumValue in enumValues.EnumerateArray())
 			{
@@ -418,14 +489,21 @@ namespace Mscc.CodeGenerator
 					{
 						description = enumDescriptions[i];
 					}
-					members.Add((ToPascalCase(value, enumMember:true), description));
+					
+					bool isDeprecated = false;
+					if (i < enumDeprecated.Count)
+					{
+						isDeprecated = enumDeprecated[i];
+					}
+					
+					members.Add((ToPascalCase(value, enumMember:true), description, isDeprecated));
 				}
 				i++;
 			}
 			return members;
 		}
 
-		private string GetCSharpType(JsonElement property, string? className = null, string? propertyName = null)
+		private static string GetCSharpType(JsonElement property, string? className = null, string? propertyName = null)
 		{
 			if (property.TryGetProperty("$ref", out JsonElement refElement))
 			{
@@ -503,7 +581,7 @@ namespace Mscc.CodeGenerator
 			return result;
 		}
 
-		private void PrefixOutput(StringBuilder stringBuilder)
+		private static void PrefixOutput(StringBuilder stringBuilder)
 		{
 			var prefix = new StringBuilder();
 			prefix.AppendLine("""
@@ -525,20 +603,24 @@ namespace Mscc.CodeGenerator
 			                  """);
 
 			var content = stringBuilder.ToString();
-			if (content.Contains("DateTime"))
+			if (content.Contains("DateTime", StringComparison.OrdinalIgnoreCase))
 			{
 				prefix.AppendLine("using System;");
 			}
 
-			if (content.Contains("List<"))
+			if (content.Contains("List<", StringComparison.OrdinalIgnoreCase))
 			{
 				prefix.AppendLine("using System.Collections.Generic;");
 			}
 
-			if (content.Contains("JsonStringEnumConverter<")
-				|| content.Contains("[Json"))
+			if (content.Contains("JsonStringEnumConverter<", StringComparison.OrdinalIgnoreCase)
+				|| content.Contains("[Json", StringComparison.OrdinalIgnoreCase))
 			{
 				prefix.AppendLine("using System.Text.Json.Serialization;");
+			}
+			if (content.Contains("[Obsolete", StringComparison.OrdinalIgnoreCase))
+			{
+				prefix.AppendLine("using System;");
 			}
 
 			prefix.AppendLine("");
@@ -556,9 +638,12 @@ namespace Mscc.CodeGenerator
 			stringBuilder.Insert(0, prefix.ToString());
 		}
 
-		private string ToPascalCase(string s, string? containingClassName = null, bool enumMember = false)
+		private static string ToPascalCase(string s, string? containingClassName = null, bool enumMember = false)
 		{
 			if (string.IsNullOrEmpty(s))
+				return s;
+
+			if (s.StartsWith('_'))
 				return s;
 
 			if (!string.IsNullOrEmpty(_name))
@@ -572,15 +657,15 @@ namespace Mscc.CodeGenerator
 			s = s.Replace("GoogleCloud", "", StringComparison.InvariantCultureIgnoreCase);
 
 			if (s.Length == 1)
-				return s.ToUpper();
+				return s.ToUpperInvariant();
 
-			var pascalCase = s.Substring(0, 1).ToUpper() + s.Substring(1);
+			var pascalCase = s.Substring(0, 1).ToUpperInvariant() + s.Substring(1);
 			if (containingClassName == null && enumMember)
-				pascalCase = s.Substring(0, 1).ToUpper() + s.Substring(1).ToLower();
+				pascalCase = s.Substring(0, 1).ToUpperInvariant() + s.Substring(1).ToLowerInvariant();
 			if (s.IndexOfAny(['_', '-']) != -1)
 			{
 				pascalCase = string.Concat(s.Split(['_', '-'], StringSplitOptions.RemoveEmptyEntries)
-					.Select(word => word.Substring(0, 1).ToUpper() + word.Substring(1).ToLower()));
+					.Select(word => word.Substring(0, 1).ToUpperInvariant() + word.Substring(1).ToLowerInvariant()));
 			}
 
 			if (pascalCase == containingClassName)
@@ -610,13 +695,14 @@ namespace Mscc.CodeGenerator
 				.Replace("&apos;", "'", StringComparison.InvariantCultureIgnoreCase);
 		}
 
-		private List<(string Name, string? Description)> GetExistingEnumMembers(string filePath)
+		private static List<(string Name, string? Description, bool IsDeprecated)> GetExistingEnumMembers(string filePath)
 		{
-			var members = new List<(string Name, string? Description)>();
+			var members = new List<(string Name, string? Description, bool IsDeprecated)>();
 			if (!File.Exists(filePath)) return members;
 
 			var lines = File.ReadAllLines(filePath);
 			string? currentDescription = null;
+			bool nextMemberIsDeprecated = false;
 			bool inSummary = false;
 
 			foreach (var line in lines)
@@ -637,18 +723,25 @@ namespace Mscc.CodeGenerator
 					currentDescription = UnescapeXml(trimmed.Substring(3).Trim());
 					continue;
 				}
+				if (trimmed.StartsWith("[Obsolete", StringComparison.OrdinalIgnoreCase))
+				{
+					nextMemberIsDeprecated = true;
+					continue;
+				}
 
 				var match = Regex.Match(trimmed, @"^(\w+),");
 				if (match.Success)
 				{
-					members.Add((match.Groups[1].Value, currentDescription));
+					var name = match.Groups[1].Value;
+					members.Add((name, currentDescription, nextMemberIsDeprecated));
 					currentDescription = null;
+					nextMemberIsDeprecated = false;
 				}
 			}
 			return members;
 		}
 
-		private HashSet<string> GetExistingProperties(string outputDirectory, string className)
+		private static HashSet<string> GetExistingProperties(string outputDirectory, string className)
 		{
 			var existingProperties = new HashSet<string>();
 			if (!Directory.Exists(outputDirectory))
@@ -679,10 +772,10 @@ namespace Mscc.CodeGenerator
 			return existingProperties;
 		}
 
-		private bool TypeExists(string outputDirectory, string typeName)
+		private static bool TypeExists(string outputDirectory, string typeName)
 		{
 			if (!Directory.Exists(outputDirectory)) return false;
-			return Directory.GetFiles(outputDirectory, $"{typeName}.*.cs").Any() || 
+			return Directory.GetFiles(outputDirectory, $"{typeName}.*.cs").Length > 0 || 
 			       File.Exists(Path.Combine(outputDirectory, $"{typeName}.cs"));
 		}
 	}
