@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
+using System.Diagnostics;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Safety setting, affecting the safety-blocking behavior. Passing a safety setting for a category changes the allowed probability that content is blocked.
+	/// A safety setting that affects the safety-blocking behavior. A SafetySetting consists of a harm
+	/// category and a threshold for that category.
 	/// </summary>
+	/// <remarks>
+	/// Represents a safety setting that can be used to control the model's behavior.
+	/// It instructs the model to avoid certain responses given safety measurements based on category.
+	/// Ref: https://ai.google.dev/api/rest/v1beta/SafetySetting
+	/// </remarks>
+	[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 	public partial class SafetySetting
 	{
-		/// <summary>
-		/// Required. The category for this setting.
-		/// </summary>
-		public HarmCategory? Category { get; set; }
-		/// <summary>
-		/// Required. Controls the probability threshold at which harm is blocked.
-		/// </summary>
-		public HarmBlockThreshold? Threshold { get; set; }
-    }
+		private string GetDebuggerDisplay()
+		{
+			return $"Category: {Category} - Threshold: {Threshold}";
+		}
+	}
 }

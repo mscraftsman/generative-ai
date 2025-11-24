@@ -22,8 +22,21 @@ namespace Mscc.GenerativeAI.Types
 	public partial class ReviewSnippet
 	{
 		/// <summary>
-		/// Title of the review.
+		/// The ID of the review snippet.
 		/// </summary>
-		public string? Title { get; set; }
-    }
+		//[JsonIgnore]
+		public string? Id
+		{
+			get => ReviewId;
+			set => ReviewId = value;
+		}
+		/// <summary>
+		/// A link that corresponds to the user review on Google Maps.
+		/// </summary>
+		public string? Uri
+		{
+			get => GoogleMapsUri;
+			set => GoogleMapsUri = value;
+		}
+	}
 }

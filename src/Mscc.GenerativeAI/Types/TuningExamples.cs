@@ -23,8 +23,8 @@ namespace Mscc.GenerativeAI.Types
 	public partial class TuningExamples
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// Content examples. For multiturn conversations.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
-    }
+		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+	}
 }

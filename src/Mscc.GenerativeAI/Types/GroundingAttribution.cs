@@ -22,12 +22,16 @@ namespace Mscc.GenerativeAI.Types
 	public partial class GroundingAttribution
 	{
 		/// <summary>
-		/// Grounding source content that makes up this attribution.
+		/// 
 		/// </summary>
-		public Content? Content { get; set; }
+		public int? ConfidenceScore { get; set; }
 		/// <summary>
-		/// Output only. Identifier for the source contributing to this attribution.
+		/// 
 		/// </summary>
-		public AttributionSourceId? SourceId { get; set; }
-    }
+		public GroundingAttributionSegment? Segment { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public GroundingAttributionWeb? Web { get; set; }
+	}
 }

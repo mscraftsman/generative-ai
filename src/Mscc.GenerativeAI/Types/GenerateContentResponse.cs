@@ -13,34 +13,100 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI.Types
 {
-	/// <summary>
-	/// Response from the model supporting multiple candidate responses. Safety ratings and content filtering are reported for both prompt in <see cref="GenerateContentResponse.prompt_feedback"/> and for each candidate in <see cref="finish_reason"/> and in <see cref="safety_ratings"/>. The API: - Returns either all requested candidates or none of them - Returns no candidates at all only if there was something wrong with the prompt (check <see cref="prompt_feedback"/>) - Reports feedback on each candidate in <see cref="finish_reason"/> and <see cref="safety_ratings"/>.
-	/// </summary>
-	public partial class GenerateContentResponse
-	{
-		/// <summary>
-		/// Candidate responses from the model.
-		/// </summary>
-		public List<Candidate>? Candidates { get; set; }
-		/// <summary>
-		/// Output only. The model version used to generate the response.
-		/// </summary>
-		public string? ModelVersion { get; set; }
-		/// <summary>
-		/// Returns the prompt's feedback related to the content filters.
-		/// </summary>
-		public PromptFeedback? PromptFeedback { get; set; }
-		/// <summary>
-		/// Output only. response_id is used to identify each response.
-		/// </summary>
-		public string? ResponseId { get; set; }
-		/// <summary>
-		/// Output only. Metadata on the generation requests' token usage.
-		/// </summary>
-		public UsageMetadata? UsageMetadata { get; set; }
+    /// <summary>
+    /// Response from the model supporting multiple candidates.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/GenerateContentResponse
+    /// </summary>
+    public partial class GenerateContentResponse : BaseLogger
+    {
+        /// <summary>
+        /// A convenience property to get the responded text information of first candidate.
+        /// </summary>
+        [JsonIgnore]
+        public string? Text
+        {
+            get
+            {
+                if (Candidates is null) return string.Empty;
+                if (Candidates?.Count == 0) return string.Empty;
+                if (Candidates?.FirstOrDefault()?.FinishReason is
+                    FinishReason.MaxTokens or
+                    FinishReason.Safety or
+                    FinishReason.Recitation or
+                    FinishReason.Other)
+                    return string.Empty;
+                if (Candidates?.Count > 1) Logger.LogMultipleCandidates(Candidates!.Count);
+
+                return string.Join(Environment.NewLine,
+                    Candidates?.FirstOrDefault()?.Content?.Parts
+                        .Where(p => p.Thought is null or false)
+                        .Select(x => x.Text)
+                        .ToArray()!);
+            }
+        }
+
+        /// <summary>
+        /// A convenience property to get the function calls.
+        /// </summary>
+        [JsonIgnore]
+        public List<FunctionCall>? FunctionCalls => Candidates?.FirstOrDefault()?.Content?.Parts
+            .Where(p => p.FunctionCall is not null)
+            .Select(p => p.FunctionCall)
+            .ToList();
+
+        /// <summary>
+        /// A convenience property to get the responded thinking information of first candidate.
+        /// </summary>
+        [JsonIgnore]
+        public string? Thinking
+        {
+            get
+            {
+                if (Candidates is null) return string.Empty;
+                if (Candidates?.Count == 0) return string.Empty;
+                if (Candidates?.FirstOrDefault()?.FinishReason is
+                    FinishReason.MaxTokens or
+                    FinishReason.Safety or
+                    FinishReason.Recitation or
+                    FinishReason.Other)
+                    return string.Empty;
+                if (Candidates?.Count > 1) Logger.LogMultipleCandidates(Candidates!.Count);
+
+                return string.Join(Environment.NewLine,
+                    Candidates?.FirstOrDefault()?.Content?.Parts
+                        .Where(p => p.Thought == true)
+                        .Select(x => x.Text)
+                        .ToArray()!);
+            }
+        }
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public GenerateContentResponse() { }
+
+        /// <summary>
+        /// Base constructor to set the <see cref="ILogger"/> instance.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        protected GenerateContentResponse(ILogger? logger) : base(logger) { }
+
+        /// <summary>
+        /// A convenience overload to easily access the responded text.
+        /// </summary>
+        /// <returns>The responded text information of first candidate.</returns>
+        public override string ToString()
+        {
+            return Text ?? String.Empty;
+        }
     }
 }

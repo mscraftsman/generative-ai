@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
+using System.Diagnostics;
+
 namespace Mscc.GenerativeAI.Types
 {
-	/// <summary>
-	/// Safety rating for a piece of content. The safety rating contains the category of harm and the harm probability level in that category for a piece of content. Content is classified for safety across a number of harm categories and the probability of the harm classification is included here.
-	/// </summary>
-	public partial class SafetyRating
-	{
-		/// <summary>
-		/// Was this content blocked because of this rating?
-		/// </summary>
-		public bool Blocked { get; set; }
-		/// <summary>
-		/// Required. The category for this rating.
-		/// </summary>
-		public HarmCategory? Category { get; set; }
-		/// <summary>
-		/// Required. The probability of harm for this content.
-		/// </summary>
-		public HarmProbability? Probability { get; set; }
+    /// <summary>
+    /// A safety rating for a piece of content. The safety rating contains the harm category and the
+    /// harm probability level.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/SafetyRating
+    /// </summary>
+    [DebuggerDisplay("{Category}: {Probability} ({Blocked})")]
+    public partial class SafetyRating
+    {
     }
 }

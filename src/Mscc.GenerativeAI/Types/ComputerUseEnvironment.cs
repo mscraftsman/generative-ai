@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,21 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// The environment being operated.
-    /// </summary>
-    [JsonConverter(typeof(JsonStringEnumConverter<ComputerUseEnvironment>))]
-    public enum ComputerUseEnvironment
-    {
-        /// <summary>
-        /// Defaults to browser.
-        /// </summary>
-        EnvironmentUnspecified,
-        /// <summary>
-        /// Operates in a web browser.
-        /// </summary>
-        EnvironmentBrowser,
-    }
+
+	[JsonConverter(typeof(JsonStringEnumConverter<ComputerUseEnvironment>))]
+	public enum ComputerUseEnvironment
+	{
+		/// <summary>
+		/// Defaults to browser.
+		/// </summary>
+		EnvironmentUnspecified,
+		/// <summary>
+		/// Operates in a web browser.
+		/// </summary>
+		EnvironmentBrowser,
+	}
 }
