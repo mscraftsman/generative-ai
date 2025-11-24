@@ -58,7 +58,7 @@ namespace Test.Mscc.GenerativeAI
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", filename);
             var response = await _genAi.GenerativeModel().UploadFile(filePath);
             var file = response.File;
-            while (file.State == StateFileResource.Processing)
+            while (file.State == FileResource.StateType.Processing)
             {
                 output.WriteLine("Waiting for video to be processed");
                 Thread.Sleep(200);

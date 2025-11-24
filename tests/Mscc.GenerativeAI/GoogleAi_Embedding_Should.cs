@@ -143,7 +143,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var response = await model.EmbedContent(content: prompts, 
-                taskType: TaskType.RetrievalDocument,
+                taskType: EmbedContentRequest.EmbedContentRequestTaskType.RetrievalDocument,
                 title: "Embedding of list of strings");
 
             // Assert

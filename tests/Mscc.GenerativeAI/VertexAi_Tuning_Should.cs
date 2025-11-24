@@ -143,7 +143,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             result.ShouldNotBeNull();
             result.Name.ShouldBe(name);
-            output.WriteLine($"Completed: {result.HasEnded} - {Enum.GetName(typeof(StateTuningJob), result.State)}");
+            output.WriteLine($"Completed: {result.HasEnded} - {Enum.GetName(typeof(TuningJob.StateType), result.State)}");
             output.WriteLine($"{result.Name} ({result.CreateTime})");
         }
 

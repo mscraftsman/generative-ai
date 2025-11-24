@@ -1239,7 +1239,7 @@ namespace Test.Mscc.GenerativeAI
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "a11.txt");
             var document = await _googleAi.UploadFile(filePath, "Apollo 11 Flight Report");
             _output.WriteLine(
-                $"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(StateFileResource), document.File.State)})");
+                $"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(FileResource.StateType), document.File.State)})");
 
             var request = new GenerateContentRequest("Hi, could you summarize this transcript?");
             request.AddMedia(document.File);
@@ -1449,7 +1449,7 @@ namespace Test.Mscc.GenerativeAI
                     new Tool
                     {
                         GoogleSearchRetrieval =
-                            new(DynamicRetrievalConfigMode.ModeUnspecified, 0.06f)
+                            new(DynamicRetrievalConfig.ModeType.ModeUnspecified, 0.06f)
                     }
                 ]);
             model.UseGrounding = true;
@@ -1953,7 +1953,7 @@ namespace Test.Mscc.GenerativeAI
                 {
                     FunctionCallingConfig = new FunctionCallingConfig()
                     {
-                        Mode = FunctionCallingConfigMode.Any,
+                        Mode = FunctionCallingConfig.ModeType.Any,
                         AllowedFunctionNames = [nameof(GetCurrentWeather)]
                     }
                 });
@@ -3437,7 +3437,7 @@ namespace Test.Mscc.GenerativeAI
             sut.Files.ForEach(x =>
             {
                 _output.WriteLine(
-                    $"Display Name: {x.DisplayName} ({Enum.GetName(typeof(StateFileResource), x.State)})");
+                    $"Display Name: {x.DisplayName} ({Enum.GetName(typeof(FileResource.StateType), x.State)})");
                 _output.WriteLine(
                     $"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
                 _output.WriteLine($"Uri: {x.Uri}");
