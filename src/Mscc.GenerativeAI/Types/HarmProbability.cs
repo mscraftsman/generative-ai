@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2024-2025 Jochen Kirstätter
+/*
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,30 +15,33 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<HarmProbability>))]
-    public enum HarmProbability
-    {
-        /// <summary>
-        /// Probability is unspecified.
-        /// </summary>
-        HarmProbabilityUnspecified,
-        /// <summary>
-        /// Content has a negligible chance of being unsafe.
-        /// </summary>
-        Negligible,
-        /// <summary>
-        /// Content has a low chance of being unsafe.
-        /// </summary>
-        Low,
-        /// <summary>
-        /// Content has a medium chance of being unsafe.
-        /// </summary>
-        Medium,
-        /// <summary>
-        /// Content has a high chance of being unsafe.
-        /// </summary>
-        High,
-    }
+	public enum HarmProbability
+	{
+		/// <summary>
+		/// Probability is unspecified.
+		/// </summary>
+		HarmProbabilityUnspecified,
+		/// <summary>
+		/// Content has a negligible chance of being unsafe.
+		/// </summary>
+		Negligible,
+		/// <summary>
+		/// Content has a low chance of being unsafe.
+		/// </summary>
+		Low,
+		/// <summary>
+		/// Content has a medium chance of being unsafe.
+		/// </summary>
+		Medium,
+		/// <summary>
+		/// Content has a high chance of being unsafe.
+		/// </summary>
+		High,
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,29 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<MediaResolution>))]
-    public enum MediaResolution
-    {
-        /// <summary>
-        /// Media resolution has not been set.
-        /// </summary>
-        MediaResolutionUnspecified,
-        /// <summary>
-        /// Media resolution set to low (64 tokens).
-        /// </summary>
-        MediaResolutionLow,
-        /// <summary>
-        /// Media resolution set to medium (256 tokens).
-        /// </summary>
-        MediaResolutionMedium,
-        /// <summary>
-        /// Media resolution set to high (zoomed reframing with 256 tokens).
-        /// </summary>
-        MediaResolutionHigh,
-    }
+	public enum MediaResolution
+	{
+		/// <summary>
+		/// Media resolution has not been set.
+		/// </summary>
+		MediaResolutionUnspecified,
+		/// <summary>
+		/// Media resolution set to low (64 tokens).
+		/// </summary>
+		MediaResolutionLow,
+		/// <summary>
+		/// Media resolution set to medium (256 tokens).
+		/// </summary>
+		MediaResolutionMedium,
+		/// <summary>
+		/// Media resolution set to high (zoomed reframing with 256 tokens).
+		/// </summary>
+		MediaResolutionHigh,
+	}
 }

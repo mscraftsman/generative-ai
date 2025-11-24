@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2024-2025 Jochen Kirstätter
+/*
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,37 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<HarmBlockThreshold>))]
-    public enum HarmBlockThreshold
-    {
-        /// <summary>
-        /// Threshold is unspecified.
-        /// </summary>
-        HarmBlockThresholdUnspecified,
-        /// <summary>
-        /// Content with NEGLIGIBLE will be allowed.
-        /// </summary>
-        BlockLowAndAbove,
-        /// <summary>
-        /// Content with NEGLIGIBLE and LOW will be allowed.
-        /// </summary>
-        BlockMediumAndAbove,
-        /// <summary>
-        /// Content with NEGLIGIBLE, LOW, and MEDIUM will be allowed.
-        /// </summary>
-        BlockOnlyHigh,
-        /// <summary>
-        /// All content will be allowed.
-        /// </summary>
-        BlockNone,
-        // /// <summary>
-        // /// Do not block any content, regardless of its harm probability.
-        // /// </summary>
-        // None,
-        /// <summary>
-        /// Turn off the safety filter.
-        /// </summary>
-        Off,
-    }
+	public enum HarmBlockThreshold
+	{
+		/// <summary>
+		/// Threshold is unspecified.
+		/// </summary>
+		HarmBlockThresholdUnspecified,
+		/// <summary>
+		/// Content with NEGLIGIBLE will be allowed.
+		/// </summary>
+		BlockLowAndAbove,
+		/// <summary>
+		/// Content with NEGLIGIBLE and LOW will be allowed.
+		/// </summary>
+		BlockMediumAndAbove,
+		/// <summary>
+		/// Content with NEGLIGIBLE, LOW, and MEDIUM will be allowed.
+		/// </summary>
+		BlockOnlyHigh,
+		/// <summary>
+		/// All content will be allowed.
+		/// </summary>
+		BlockNone,
+		/// <summary>
+		/// Turn off the safety filter.
+		/// </summary>
+		Off,
+	}
 }

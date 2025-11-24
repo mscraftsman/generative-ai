@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,29 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<Outcome>))]
-    public enum Outcome
-    {
-        /// <summary>
-        /// Unspecified status. This value should not be used.
-        /// </summary>
-        OutcomeUnspecified,
-        /// <summary>
-        /// Code execution completed successfully.
-        /// </summary>
-        OutcomeOk,
-        /// <summary>
-        /// Code execution finished but with a failure. `stderr` should contain the reason.
-        /// </summary>
-        OutcomeFailed,
-        /// <summary>
-        /// Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
-        /// </summary>
-        OutcomeDeadlineExceeded,
-    }
+	public enum Outcome
+	{
+		/// <summary>
+		/// Unspecified status. This value should not be used.
+		/// </summary>
+		OutcomeUnspecified,
+		/// <summary>
+		/// Code execution completed successfully.
+		/// </summary>
+		OutcomeOk,
+		/// <summary>
+		/// Code execution finished but with a failure. `stderr` should contain the reason.
+		/// </summary>
+		OutcomeFailed,
+		/// <summary>
+		/// Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
+		/// </summary>
+		OutcomeDeadlineExceeded,
+	}
 }

@@ -1,5 +1,5 @@
-﻿/*
- * Copyright 2024-2025 Jochen Kirstätter
+/*
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,42 +15,45 @@
  */
 using System.Text.Json.Serialization;
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
+
 	[JsonConverter(typeof(JsonStringEnumConverter<ParameterType>))]
-    public enum ParameterType
-    {
-        /// <summary>
-        /// Not specified, should not be used.
-        /// </summary>
-        TypeUnspecified,
-        /// <summary>
-        /// String type.
-        /// </summary>
-        String,
-        /// <summary>
-        /// Number type.
-        /// </summary>
-        Number,
-        /// <summary>
-        /// Integer type.
-        /// </summary>
-        Integer,
-        /// <summary>
-        /// Boolean type.
-        /// </summary>
-        Boolean,
-        /// <summary>
-        /// Array type.
-        /// </summary>
-        Array,
-        /// <summary>
-        /// Object type.
-        /// </summary>
-        Object,
-        /// <summary>
-        /// Null type.
-        /// </summary>
-        Null,
-    }
+	public enum ParameterType
+	{
+		/// <summary>
+		/// Not specified, should not be used.
+		/// </summary>
+		TypeUnspecified,
+		/// <summary>
+		/// String type.
+		/// </summary>
+		String,
+		/// <summary>
+		/// Number type.
+		/// </summary>
+		Number,
+		/// <summary>
+		/// Integer type.
+		/// </summary>
+		Integer,
+		/// <summary>
+		/// Boolean type.
+		/// </summary>
+		Boolean,
+		/// <summary>
+		/// Array type.
+		/// </summary>
+		Array,
+		/// <summary>
+		/// Object type.
+		/// </summary>
+		Object,
+		/// <summary>
+		/// Null type.
+		/// </summary>
+		Null,
+	}
 }
