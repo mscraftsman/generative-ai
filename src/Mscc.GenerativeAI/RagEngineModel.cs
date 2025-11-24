@@ -397,7 +397,7 @@ namespace Mscc.GenerativeAI
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
-        public async Task<RagQueryResponse> RetrievalQuery(RagResource[] ragResources,
+        public async Task<RagQueryResponse> RetrievalQuery(List<VertexRagStoreRagResource> ragResources,
             string text,
             RagRetrievalConfig? ragRetrievalConfig,
             float? vectorDistanceThreshold,
