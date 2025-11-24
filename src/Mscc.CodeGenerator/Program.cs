@@ -85,6 +85,7 @@ namespace Mscc.CodeGenerator
 			"Condition.Operation",
 			"Content.Parts",
 			"Content.Role",
+			"ContentFilter.Reason",
 			"ContentEmbedding.Values",
 			"CountTokensResponse.CachedContentTokenCount",
 			"CountTokensResponse.TotalTokens",

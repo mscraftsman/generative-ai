@@ -24,8 +24,8 @@ namespace Mscc.GenerativeAI.Types
 	public partial class ContentFilter
 	{
 		/// <summary>
-		/// A string that describes the filtering behavior in more detail.
+		/// The reason content was blocked during request processing.
 		/// </summary>
-		public string? Message { get; set; }
+		public BlockReason? Reason { get; set; }
     }
 }
