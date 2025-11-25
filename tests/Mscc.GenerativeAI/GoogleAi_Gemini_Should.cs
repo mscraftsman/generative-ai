@@ -3779,10 +3779,11 @@ Use speaker A, speaker B, etc. to identify the speakers.
                 Temperature = 0.4f, TopP = 1, TopK = 32, MaxOutputTokens = 2048
             };
             // var request = new GenerateContentRequest(prompt, generationConfig);
-            var request = new GenerateContentRequest(prompt);
+            var request = new GenerateContentRequest(prompt, generationConfig);
             await request.AddMedia(
                 "gs://generativeai-downloads/images/scones.jpg",
-                "image/jpeg");
+                "image/jpeg",
+                true);
 
             // Act
             var response = await model.GenerateContent(request);
