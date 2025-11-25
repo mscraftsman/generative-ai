@@ -23,7 +23,7 @@ if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("YOUR_API_KEY"))
 var prompt = $@"Extract all headings from the attached CSV files.";
 
 var genai = new GoogleAI(apiKey);
-var model = genai.GenerativeModel("gemini-1.5-flash");
+var model = genai.GenerativeModel(Model.Gemini25Flash);
 
 var request = new GenerateContentRequest(prompt);
 var target = Path.Combine(Directory.GetCurrentDirectory(), "data");
