@@ -5,7 +5,7 @@ using Mscc.GenerativeAI;
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder
 	.SetMinimumLevel(LogLevel.Debug)
 	.AddConsole());
-ILogger logger = factory.CreateLogger("Program");
+ILogger logger = factory.CreateLogger("Issue 124");
 
 // Get the API key from the configuration
 var configuration = new ConfigurationBuilder()
