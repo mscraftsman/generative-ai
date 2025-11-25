@@ -32,6 +32,8 @@ var genai = new GoogleAI(apiKey, logger: logger);
 var model = genai.GenerativeModel(Model.Gemini25Flash);
 
 var request = new GenerateContentRequest(prompt);
+var options = new RequestOptions { Timeout = TimeSpan.FromSeconds(300) };
+
 var target = Path.Combine(Directory.GetCurrentDirectory(), "data");
 Directory.CreateDirectory(target);
 
@@ -41,5 +43,7 @@ foreach (var file in Directory.GetFiles(target)) {
         await request.AddMedia(fileInfo.FullName);
     }
 }
-var content = await model.GenerateContent(request);
+
+var content = await model.GenerateContent(request, requestOptions: options);
+// var content = await model.GenerateContent(request);
 Console.WriteLine($"Response: {content.Text}");
