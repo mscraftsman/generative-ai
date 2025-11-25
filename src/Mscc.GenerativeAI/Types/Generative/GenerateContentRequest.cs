@@ -236,7 +236,7 @@ namespace Mscc.GenerativeAI
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
-            if (useOnline)
+            if (useOnline || uri.StartsWith("gs://"))
             {
                 mimeType ??= GenerativeAIExtensions.GetMimeType(uri);
                 // Strangely, the MIME type is not checked for FileData but InlineData only.
