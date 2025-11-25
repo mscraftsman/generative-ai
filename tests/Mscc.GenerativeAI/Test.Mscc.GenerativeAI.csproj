@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<NoWarn>$(NoWarn);CS0618;NU1701</NoWarn>
 		<IsPackable>false</IsPackable>
@@ -137,6 +137,10 @@
 		<None Include="token.json" Condition="Exists('token.json')">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Exceptions\" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

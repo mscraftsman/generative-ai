@@ -59,6 +59,19 @@ namespace Test.Mscc.GenerativeAI.Microsoft
                 AccessToken = Configuration["access_token"];
                 if (string.IsNullOrEmpty(AccessToken))
                     AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+                if (string.IsNullOrEmpty(AccessToken))
+                {
+	                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices
+		                    .OSPlatform.Windows))
+	                {
+		                AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token")
+			                .TrimEnd();
+	                }
+	                else
+	                {
+		                AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
+	                }
+                }
             }
 
             ServiceAccount = Configuration["service_account"];
