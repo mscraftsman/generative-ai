@@ -11,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using Mscc.GenerativeAI.Exceptions;
 
 namespace Mscc.GenerativeAI
 {

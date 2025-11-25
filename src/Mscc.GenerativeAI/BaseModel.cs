@@ -620,11 +620,20 @@ namespace Mscc.GenerativeAI
                     lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
                     if (!statusCodes.Contains((int)lastResponse.StatusCode))
                     {
-                        return await lastResponse.EnsureSuccessAsync(cancellationToken);
+                        return lastResponse;
                     }
                     
                     var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
                     Logger.LogRequestNotSuccessful(index, message);
+
+	                if ((int)lastResponse.StatusCode == 429)	// HttpStatusCode.TooManyRequests
+	                {
+		                var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(message, ReadOptions);
+		                if (errorResponse.Error.TryGetDetail<RetryInfo>(out var retryInfo))
+		                {
+			                delay = (int)retryInfo.RetryDelay.TotalSeconds + 1;
+		                }
+	                }
                 }
                 catch (HttpRequestException e)
                 {
@@ -638,13 +647,6 @@ namespace Mscc.GenerativeAI
                         }
 
                         throw new GeminiApiException("The request was not successful.", e);
-                    }
-                }
-                catch (Exceptions.HttpException e)
-                {
-                    if ((int)e.StatusCode == 429 && e.RetryInfo != null)
-                    {
-                        delay = (int)e.RetryInfo.RetryDelay.TotalSeconds;
                     }
                 }
 
