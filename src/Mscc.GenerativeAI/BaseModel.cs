@@ -625,6 +625,15 @@ namespace Mscc.GenerativeAI
                     
                     var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
                     Logger.LogRequestNotSuccessful(index, message);
+
+	                if ((int)lastResponse.StatusCode == 429)	// HttpStatusCode.TooManyRequests
+	                {
+		                var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(message, ReadOptions);
+		                if (errorResponse.Error.TryGetDetail<RetryInfo>(out var retryInfo))
+		                {
+			                delay = (int)retryInfo.RetryDelay.TotalSeconds + 1;
+		                }
+	                }
                 }
                 catch (HttpRequestException e)
                 {
