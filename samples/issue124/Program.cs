@@ -1,5 +1,11 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+
+using ILoggerFactory factory = LoggerFactory.Create(builder => builder
+	.SetMinimumLevel(LogLevel.Debug)
+	.AddConsole());
+ILogger logger = factory.CreateLogger("Program");
 
 // Get the API key from the configuration
 var configuration = new ConfigurationBuilder()
@@ -22,7 +28,7 @@ if (string.IsNullOrEmpty(apiKey) || apiKey.Equals("YOUR_API_KEY"))
 
 var prompt = $@"Extract all headings from the attached CSV files.";
 
-var genai = new GoogleAI(apiKey);
+var genai = new GoogleAI(apiKey, logger: logger);
 var model = genai.GenerativeModel(Model.Gemini25Flash);
 
 var request = new GenerateContentRequest(prompt);
