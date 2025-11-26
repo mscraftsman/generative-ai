@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - implement Automatic Function Call (AFC)
 ### Changed
 ### Fixed
+- fix thinking responses when they don't include a ThoughtSignature.
 
 ## 2.9.3
 
