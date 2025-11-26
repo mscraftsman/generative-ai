@@ -422,13 +422,13 @@ namespace Mscc.GenerativeAI.Microsoft
             {
                 foreach (var part in candidate.Content.Parts)
                 {
-                    if (!string.IsNullOrEmpty(part.Text))
-                        contents.Add(new mea.TextContent(part.Text));
-                    else if (part.Thought is true)
-                        contents.Add(new mea.TextReasoningContent(null)
+                    if (part.Thought is true)
+                        contents.Add(new mea.TextReasoningContent(part.Text)
                         {
                             ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
                         });
+                    else if (!string.IsNullOrEmpty(part.Text))
+	                    contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                         contents.Add(new mea.DataContent(
                             Encoding.UTF8.GetBytes(part.InlineData.Data),
