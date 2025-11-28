@@ -430,9 +430,7 @@ namespace Mscc.GenerativeAI.Microsoft
                     else if (!string.IsNullOrEmpty(part.Text))
 	                    contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
-                        contents.Add(new mea.DataContent(
-                            Encoding.UTF8.GetBytes(part.InlineData.Data),
-                            part.InlineData.MimeType));
+    					contents.Add(new mea.DataContent(Convert.FromBase64String(part.InlineData.Data), part.InlineData.MimeType));
                     else if (!string.IsNullOrEmpty(part.FileData?.FileUri))
                         contents.Add(new mea.DataContent(part.FileData.FileUri,
                             part.FileData.MimeType));
