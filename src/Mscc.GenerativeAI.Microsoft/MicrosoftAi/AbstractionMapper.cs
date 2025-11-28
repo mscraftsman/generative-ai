@@ -61,7 +61,23 @@ namespace Mscc.GenerativeAI.Microsoft
                             break;
 
                         case mea.DataContent dc:
-                            c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
+                            // If the DataContent was originally created from a Part, preserve any ThoughtSignature
+                            if (dc.RawRepresentation is Part originalPart)
+                            {
+                                c.Parts.Add(new Part
+                                {
+                                    InlineData = new InlineData
+                                    {
+                                        Data = dc.Base64Data.ToString(),
+                                        MimeType = dc.MediaType
+                                    },
+                                    ThoughtSignature = originalPart.ThoughtSignature
+                                });
+                            }
+                            else
+                            {
+                                c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
+                            }
                             break;
 
                         case mea.UriContent uc:
@@ -430,12 +446,22 @@ namespace Mscc.GenerativeAI.Microsoft
                     else if (!string.IsNullOrEmpty(part.Text))
 	                    contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
-                        contents.Add(new mea.DataContent(
+                    {
+                        var dataContent = new mea.DataContent(
                             Encoding.UTF8.GetBytes(part.InlineData.Data),
-                            part.InlineData.MimeType));
+                            part.InlineData.MimeType);
+                        // Store the original Part to preserve ThoughtSignature for round-trip
+                        dataContent.RawRepresentation = part;
+                        contents.Add(dataContent);
+                    }
                     else if (!string.IsNullOrEmpty(part.FileData?.FileUri))
-                        contents.Add(new mea.DataContent(part.FileData.FileUri,
-                            part.FileData.MimeType));
+                    {
+                        var dataContent = new mea.DataContent(part.FileData.FileUri,
+                            part.FileData.MimeType);
+                        // Store the original Part to preserve ThoughtSignature for round-trip
+                        dataContent.RawRepresentation = part;
+                        contents.Add(dataContent);
+                    }
                     else if (part.FunctionCall is not null)
                         contents.Add(ToFunctionCallContent(part.FunctionCall));
                     else if (part.FunctionResponse is not null)
