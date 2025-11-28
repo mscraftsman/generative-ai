@@ -15,11 +15,13 @@ namespace Test.Mscc.GenerativeAI.Microsoft
     public class AbstractionMapper_Should
     {
         private static readonly Type MapperType = typeof(GeminiChatClient).Assembly
-            .GetType("Mscc.GenerativeAI.Microsoft.AbstractionMapper")!;
+            .GetType("Mscc.GenerativeAI.Microsoft.AbstractionMapper") 
+            ?? throw new InvalidOperationException("AbstractionMapper type not found");
 
         private static MethodInfo GetMethod(string name)
         {
-            return MapperType.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public)!;
+            return MapperType.GetMethod(name, BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public) 
+                ?? throw new InvalidOperationException($"Method '{name}' not found on AbstractionMapper");
         }
 
         [Fact]
