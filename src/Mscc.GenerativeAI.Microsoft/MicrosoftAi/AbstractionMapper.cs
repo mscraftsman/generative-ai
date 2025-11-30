@@ -472,7 +472,7 @@ namespace Mscc.GenerativeAI.Microsoft
                             ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
                         });
                     else if (!string.IsNullOrEmpty(part.Text))
-						contents.Add(new mea.TextContent(part.Text));
+                        contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                     {
                         var dataContent = new mea.DataContent(
