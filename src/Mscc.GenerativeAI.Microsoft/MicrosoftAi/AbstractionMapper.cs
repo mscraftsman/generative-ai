@@ -53,16 +53,44 @@ namespace Mscc.GenerativeAI.Microsoft
                 Dictionary<string, string> functionNames = new();
 
                 foreach (var content in message.Contents)
-                {
+                {                   
                     switch (content)
                     {
+                        case mea.TextReasoningContent trc:
+                            var thoughtPart = new Part
+                            {
+                                Text = trc.Text,
+                                Thought = true,
+                                ThoughtSignature = !string.IsNullOrEmpty(trc.ProtectedData) 
+                                    ? Convert.FromBase64String(trc.ProtectedData) 
+                                    : null
+                            };
+                            c.Parts.Add(thoughtPart);
+                            break;
+
                         case mea.TextContent tc:
                             c.Parts.Add(new TextData() { Text = tc.Text });
                             break;
 
                         case mea.DataContent dc:
-                            // If the DataContent was originally created from a Part, preserve any ThoughtSignature
-                            if (dc.RawRepresentation is Part originalPart)
+                            byte[]? thoughtSignature = null;
+                            if (dc.AdditionalProperties?.TryGetValue("ThoughtSignature", out var sigObj) == true)
+                            {
+                                // Handle both string (in-memory) and JsonElement (after JSON deserialization)
+                                string? sigBase64 = sigObj switch
+                                {
+                                    string s => s,
+                                    System.Text.Json.JsonElement je when je.ValueKind == System.Text.Json.JsonValueKind.String => je.GetString(),
+                                    _ => null
+                                };
+                                
+                                if (!string.IsNullOrEmpty(sigBase64))
+                                {
+                                    thoughtSignature = Convert.FromBase64String(sigBase64);
+                                }
+                            }
+                            
+                            if (thoughtSignature != null)
                             {
                                 c.Parts.Add(new Part
                                 {
@@ -71,7 +99,7 @@ namespace Mscc.GenerativeAI.Microsoft
                                         Data = dc.Base64Data.ToString(),
                                         MimeType = dc.MediaType
                                     },
-                                    ThoughtSignature = originalPart.ThoughtSignature
+                                    ThoughtSignature = thoughtSignature
                                 });
                             }
                             else
@@ -437,14 +465,14 @@ namespace Mscc.GenerativeAI.Microsoft
             if (candidate?.Content is not null)
             {
                 foreach (var part in candidate.Content.Parts)
-                {
-                    if (part.Thought is true)
+                {                   
+					if (part.Thought is true)
                         contents.Add(new mea.TextReasoningContent(part.Text)
                         {
                             ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
                         });
                     else if (!string.IsNullOrEmpty(part.Text))
-	                    contents.Add(new mea.TextContent(part.Text));
+                        contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                     {
                         var dataContent = new mea.DataContent(
@@ -452,6 +480,14 @@ namespace Mscc.GenerativeAI.Microsoft
                             part.InlineData.MimeType);
                         // Store the original Part to preserve ThoughtSignature for round-trip
                         dataContent.RawRepresentation = part;
+                        
+                        // ALSO store ThoughtSignature in AdditionalProperties for serialization persistence
+                        if (part.ThoughtSignature != null)
+                        {
+                            dataContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
+                            dataContent.AdditionalProperties["ThoughtSignature"] = Convert.ToBase64String(part.ThoughtSignature);
+                        }
+                        
                         contents.Add(dataContent);
                     }
                     else if (!string.IsNullOrEmpty(part.FileData?.FileUri))
@@ -460,6 +496,14 @@ namespace Mscc.GenerativeAI.Microsoft
                             part.FileData.MimeType);
                         // Store the original Part to preserve ThoughtSignature for round-trip
                         dataContent.RawRepresentation = part;
+                        
+                        // ALSO store ThoughtSignature in AdditionalProperties for serialization persistence
+                        if (part.ThoughtSignature != null)
+                        {
+                            dataContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
+                            dataContent.AdditionalProperties["ThoughtSignature"] = Convert.ToBase64String(part.ThoughtSignature);
+                        }
+                        
                         contents.Add(dataContent);
                     }
                     else if (part.FunctionCall is not null)
@@ -476,7 +520,7 @@ namespace Mscc.GenerativeAI.Microsoft
                         Debug.WriteLine($"Part is not a string, inline data, or function call: {part.GetType()}");
                 }
             }
-
+            
             return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
                 contents) 
             {
