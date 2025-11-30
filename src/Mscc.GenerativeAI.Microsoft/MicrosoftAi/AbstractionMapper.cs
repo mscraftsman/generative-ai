@@ -463,10 +463,10 @@ namespace Mscc.GenerativeAI.Microsoft
             var contents = new List<mea.AIContent>();
             Candidate? candidate = response.Candidates?.FirstOrDefault();
             if (candidate?.Content is not null)
-			{
-				foreach (var part in candidate.Content.Parts)
-				{
-					if (part.Thought is true)
+            {
+                foreach (var part in candidate.Content.Parts)
+                {
+                    if (part.Thought is true)
                         contents.Add(new mea.TextReasoningContent(part.Text)
                         {
                             ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
