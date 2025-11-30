@@ -53,7 +53,7 @@ namespace Mscc.GenerativeAI.Microsoft
                 Dictionary<string, string> functionNames = new();
 
                 foreach (var content in message.Contents)
-                {                   
+                {
                     switch (content)
                     {
                         case mea.TextReasoningContent trc:
@@ -463,16 +463,16 @@ namespace Mscc.GenerativeAI.Microsoft
             var contents = new List<mea.AIContent>();
             Candidate? candidate = response.Candidates?.FirstOrDefault();
             if (candidate?.Content is not null)
-            {
-                foreach (var part in candidate.Content.Parts)
-                {                   
+			{
+				foreach (var part in candidate.Content.Parts)
+				{
 					if (part.Thought is true)
                         contents.Add(new mea.TextReasoningContent(part.Text)
                         {
                             ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
                         });
                     else if (!string.IsNullOrEmpty(part.Text))
-                        contents.Add(new mea.TextContent(part.Text));
+						contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                     {
                         var dataContent = new mea.DataContent(
@@ -520,7 +520,7 @@ namespace Mscc.GenerativeAI.Microsoft
                         Debug.WriteLine($"Part is not a string, inline data, or function call: {part.GetType()}");
                 }
             }
-            
+
             return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
                 contents) 
             {

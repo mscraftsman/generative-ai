@@ -97,40 +97,35 @@ namespace Mscc.GenerativeAI
             _partTypes = [];
             foreach (var part in Parts!)
             {
-                if (part is Part p)
-                {
-                    // Add the Part directly to preserve all properties (e.g., ThoughtSignature)
-                    _partTypes.Add(p);
-                }
-                else if (part is TextData text)
+                if (part is TextData text)
                 {
                     _partTypes.Add(new Part { TextData = text });
                 }
-                else if (part is InlineData inline)
+                if (part is InlineData inline)
                 {
                     _partTypes.Add(new Part { InlineData = inline });
                 }
-                else if (part is FileData file)
+                if (part is FileData file)
                 {
                     _partTypes.Add(new Part { FileData = file });
                 }
-                else if (part is FunctionResponse response)
+                if (part is FunctionResponse response)
                 {
                     _partTypes.Add(new Part { FunctionResponse = response });
                 }
-                else if (part is FunctionCall call)
+                if (part is FunctionCall call)
                 {
                     _partTypes.Add(new Part { FunctionCall = call });
                 }
-                else if (part is VideoMetadata video)
+                if (part is VideoMetadata video)
                 {
                     _partTypes.Add(new Part { VideoMetadata = video });
                 }
-                else if (part is ExecutableCode code)
+                if (part is ExecutableCode code)
                 {
                     _partTypes.Add(new Part { ExecutableCode = code });
                 }
-                else if (part is CodeExecutionResult result)
+                if (part is CodeExecutionResult result)
                 {
                     _partTypes.Add(new Part { CodeExecutionResult = result });
                 }
