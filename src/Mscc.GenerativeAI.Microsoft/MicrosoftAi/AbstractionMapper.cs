@@ -476,7 +476,7 @@ namespace Mscc.GenerativeAI.Microsoft
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                     {
                         var dataContent = new mea.DataContent(
-                            Encoding.UTF8.GetBytes(part.InlineData.Data),
+                            Convert.FromBase64String(part.InlineData.Data),
                             part.InlineData.MimeType);
                         // Store the original Part to preserve ThoughtSignature for round-trip
                         dataContent.RawRepresentation = part;
