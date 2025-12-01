@@ -21,7 +21,7 @@ namespace Mscc.GenerativeAI
     /// same `Part` instance is considered invalid.
     /// </remarks>
     [DebuggerDisplay("{Text}")]
-    public class Part
+    public class Part : IPart
     {
         public Part() { }
 
