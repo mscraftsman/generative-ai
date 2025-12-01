@@ -1,0 +1,29 @@
+{
+  "name": "C# (.NET 10)",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:dev-10.0",
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {}
+  },
+  "postCreateCommand": "dotnet restore",
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "ms-dotnettools.csdevkit"
+      ]
+    }
+  },
+  "portsAttributes": {
+    "5000": {
+      "onAutoForward": "notify"
+    },
+    "5001": {
+      "protocol": "https"
+    }
+  },
+  "forwardPorts": [
+    5000,
+    5001
+  ]
+}
