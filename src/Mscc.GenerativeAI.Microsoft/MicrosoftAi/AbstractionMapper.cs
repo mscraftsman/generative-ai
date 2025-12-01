@@ -56,12 +56,56 @@ namespace Mscc.GenerativeAI.Microsoft
                 {
                     switch (content)
                     {
+                        case mea.TextReasoningContent trc:
+                            var thoughtPart = new Part
+                            {
+                                Text = trc.Text,
+                                Thought = true,
+                                ThoughtSignature = !string.IsNullOrEmpty(trc.ProtectedData) 
+                                    ? Convert.FromBase64String(trc.ProtectedData) 
+                                    : null
+                            };
+                            c.Parts.Add(thoughtPart);
+                            break;
+
                         case mea.TextContent tc:
                             c.Parts.Add(new TextData() { Text = tc.Text });
                             break;
 
                         case mea.DataContent dc:
-                            c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
+                            byte[]? thoughtSignature = null;
+                            if (dc.AdditionalProperties?.TryGetValue("ThoughtSignature", out var sigObj) == true)
+                            {
+                                // Handle both string (in-memory) and JsonElement (after JSON deserialization)
+                                string? sigBase64 = sigObj switch
+                                {
+                                    string s => s,
+                                    System.Text.Json.JsonElement je when je.ValueKind == System.Text.Json.JsonValueKind.String => je.GetString(),
+                                    _ => null
+                                };
+                                
+                                if (!string.IsNullOrEmpty(sigBase64))
+                                {
+                                    thoughtSignature = Convert.FromBase64String(sigBase64);
+                                }
+                            }
+                            
+                            if (thoughtSignature != null)
+                            {
+                                c.Parts.Add(new Part
+                                {
+                                    InlineData = new InlineData
+                                    {
+                                        Data = dc.Base64Data.ToString(),
+                                        MimeType = dc.MediaType
+                                    },
+                                    ThoughtSignature = thoughtSignature
+                                });
+                            }
+                            else
+                            {
+                                c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
+                            }
                             break;
 
                         case mea.UriContent uc:
@@ -428,14 +472,40 @@ namespace Mscc.GenerativeAI.Microsoft
                             ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
                         });
                     else if (!string.IsNullOrEmpty(part.Text))
-	                    contents.Add(new mea.TextContent(part.Text));
+                        contents.Add(new mea.TextContent(part.Text));
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
-    					contents.Add(new mea.DataContent(
-							Convert.FromBase64String(part.InlineData.Data),
-							part.InlineData.MimeType));
+                    {
+                        var dataContent = new mea.DataContent(
+                            Encoding.UTF8.GetBytes(part.InlineData.Data),
+                            part.InlineData.MimeType);
+                        // Store the original Part to preserve ThoughtSignature for round-trip
+                        dataContent.RawRepresentation = part;
+                        
+                        // ALSO store ThoughtSignature in AdditionalProperties for serialization persistence
+                        if (part.ThoughtSignature != null)
+                        {
+                            dataContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
+                            dataContent.AdditionalProperties["ThoughtSignature"] = Convert.ToBase64String(part.ThoughtSignature);
+                        }
+                        
+                        contents.Add(dataContent);
+                    }
                     else if (!string.IsNullOrEmpty(part.FileData?.FileUri))
-                        contents.Add(new mea.DataContent(part.FileData.FileUri,
-                            part.FileData.MimeType));
+                    {
+                        var dataContent = new mea.DataContent(part.FileData.FileUri,
+                            part.FileData.MimeType);
+                        // Store the original Part to preserve ThoughtSignature for round-trip
+                        dataContent.RawRepresentation = part;
+                        
+                        // ALSO store ThoughtSignature in AdditionalProperties for serialization persistence
+                        if (part.ThoughtSignature != null)
+                        {
+                            dataContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
+                            dataContent.AdditionalProperties["ThoughtSignature"] = Convert.ToBase64String(part.ThoughtSignature);
+                        }
+                        
+                        contents.Add(dataContent);
+                    }
                     else if (part.FunctionCall is not null)
                         contents.Add(ToFunctionCallContent(part.FunctionCall));
                     else if (part.FunctionResponse is not null)
