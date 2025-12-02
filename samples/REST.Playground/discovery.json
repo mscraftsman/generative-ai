@@ -490,314 +490,9 @@
           "response": {
             "$ref": "ListCorporaResponse"
           }
-        },
-        "patch": {
-          "description": "Updates a `Corpus`.",
-          "flatPath": "v1beta/corpora/{corporaId}",
-          "httpMethod": "PATCH",
-          "id": "generativelanguage.corpora.patch",
-          "parameterOrder": [
-            "name"
-          ],
-          "parameters": {
-            "name": {
-              "description": "Output only. Immutable. Identifier. The `Corpus` resource name. The ID (name excluding the \"corpora/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `corpora/my-awesome-corpora-123a456b789c`",
-              "location": "path",
-              "pattern": "^corpora/[^/]+$",
-              "required": true,
-              "type": "string"
-            },
-            "updateMask": {
-              "description": "Required. The list of fields to update. Currently, this only supports updating `display_name`.",
-              "format": "google-fieldmask",
-              "location": "query",
-              "type": "string"
-            }
-          },
-          "path": "v1beta/{+name}",
-          "request": {
-            "$ref": "Corpus"
-          },
-          "response": {
-            "$ref": "Corpus"
-          }
-        },
-        "query": {
-          "description": "Performs semantic search over a `Corpus`.",
-          "flatPath": "v1beta/corpora/{corporaId}:query",
-          "httpMethod": "POST",
-          "id": "generativelanguage.corpora.query",
-          "parameterOrder": [
-            "name"
-          ],
-          "parameters": {
-            "name": {
-              "description": "Required. The name of the `Corpus` to query. Example: `corpora/my-corpus-123`",
-              "location": "path",
-              "pattern": "^corpora/[^/]+$",
-              "required": true,
-              "type": "string"
-            }
-          },
-          "path": "v1beta/{+name}:query",
-          "request": {
-            "$ref": "QueryCorpusRequest"
-          },
-          "response": {
-            "$ref": "QueryCorpusResponse"
-          }
         }
       },
       "resources": {
-        "documents": {
-          "methods": {
-            "patch": {
-              "description": "Updates a `Document`.",
-              "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}",
-              "httpMethod": "PATCH",
-              "id": "generativelanguage.corpora.documents.patch",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "Immutable. Identifier. The `Document` resource name. The ID (name excluding the \"fileSearchStores/*/documents/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c`",
-                  "location": "path",
-                  "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                },
-                "updateMask": {
-                  "description": "Required. The list of fields to update. Currently, this only supports updating `display_name` and `custom_metadata`.",
-                  "format": "google-fieldmask",
-                  "location": "query",
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}",
-              "request": {
-                "$ref": "Document"
-              },
-              "response": {
-                "$ref": "Document"
-              }
-            }
-          },
-          "resources": {
-            "chunks": {
-              "methods": {
-                "batchCreate": {
-                  "description": "Batch create `Chunk`s.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks:batchCreate",
-                  "httpMethod": "POST",
-                  "id": "generativelanguage.corpora.documents.chunks.batchCreate",
-                  "parameterOrder": [
-                    "parent"
-                  ],
-                  "parameters": {
-                    "parent": {
-                      "description": "Optional. The name of the `Document` where this batch of `Chunk`s will be created. The parent field in every `CreateChunkRequest` must match this value. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+parent}/chunks:batchCreate",
-                  "request": {
-                    "$ref": "BatchCreateChunksRequest"
-                  },
-                  "response": {
-                    "$ref": "BatchCreateChunksResponse"
-                  }
-                },
-                "batchDelete": {
-                  "description": "Batch delete `Chunk`s.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks:batchDelete",
-                  "httpMethod": "POST",
-                  "id": "generativelanguage.corpora.documents.chunks.batchDelete",
-                  "parameterOrder": [
-                    "parent"
-                  ],
-                  "parameters": {
-                    "parent": {
-                      "description": "Optional. The name of the `Document` containing the `Chunk`s to delete. The parent field in every `DeleteChunkRequest` must match this value. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+parent}/chunks:batchDelete",
-                  "request": {
-                    "$ref": "BatchDeleteChunksRequest"
-                  },
-                  "response": {
-                    "$ref": "Empty"
-                  }
-                },
-                "batchUpdate": {
-                  "description": "Batch update `Chunk`s.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks:batchUpdate",
-                  "httpMethod": "POST",
-                  "id": "generativelanguage.corpora.documents.chunks.batchUpdate",
-                  "parameterOrder": [
-                    "parent"
-                  ],
-                  "parameters": {
-                    "parent": {
-                      "description": "Optional. The name of the `Document` containing the `Chunk`s to update. The parent field in every `UpdateChunkRequest` must match this value. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+parent}/chunks:batchUpdate",
-                  "request": {
-                    "$ref": "BatchUpdateChunksRequest"
-                  },
-                  "response": {
-                    "$ref": "BatchUpdateChunksResponse"
-                  }
-                },
-                "create": {
-                  "description": "Creates a `Chunk`.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks",
-                  "httpMethod": "POST",
-                  "id": "generativelanguage.corpora.documents.chunks.create",
-                  "parameterOrder": [
-                    "parent"
-                  ],
-                  "parameters": {
-                    "parent": {
-                      "description": "Required. The name of the `Document` where this `Chunk` will be created. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+parent}/chunks",
-                  "request": {
-                    "$ref": "Chunk"
-                  },
-                  "response": {
-                    "$ref": "Chunk"
-                  }
-                },
-                "delete": {
-                  "description": "Deletes a `Chunk`.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks/{chunksId}",
-                  "httpMethod": "DELETE",
-                  "id": "generativelanguage.corpora.documents.chunks.delete",
-                  "parameterOrder": [
-                    "name"
-                  ],
-                  "parameters": {
-                    "name": {
-                      "description": "Required. The resource name of the `Chunk` to delete. Example: `corpora/my-corpus-123/documents/the-doc-abc/chunks/some-chunk`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+/chunks/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+name}",
-                  "response": {
-                    "$ref": "Empty"
-                  }
-                },
-                "get": {
-                  "description": "Gets information about a specific `Chunk`.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks/{chunksId}",
-                  "httpMethod": "GET",
-                  "id": "generativelanguage.corpora.documents.chunks.get",
-                  "parameterOrder": [
-                    "name"
-                  ],
-                  "parameters": {
-                    "name": {
-                      "description": "Required. The name of the `Chunk` to retrieve. Example: `corpora/my-corpus-123/documents/the-doc-abc/chunks/some-chunk`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+/chunks/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+name}",
-                  "response": {
-                    "$ref": "Chunk"
-                  }
-                },
-                "list": {
-                  "description": "Lists all `Chunk`s in a `Document`.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks",
-                  "httpMethod": "GET",
-                  "id": "generativelanguage.corpora.documents.chunks.list",
-                  "parameterOrder": [
-                    "parent"
-                  ],
-                  "parameters": {
-                    "pageSize": {
-                      "description": "Optional. The maximum number of `Chunk`s to return (per page). The service may return fewer `Chunk`s. If unspecified, at most 10 `Chunk`s will be returned. The maximum size limit is 100 `Chunk`s per page.",
-                      "format": "int32",
-                      "location": "query",
-                      "type": "integer"
-                    },
-                    "pageToken": {
-                      "description": "Optional. A page token, received from a previous `ListChunks` call. Provide the `next_page_token` returned in the response as an argument to the next request to retrieve the next page. When paginating, all other parameters provided to `ListChunks` must match the call that provided the page token.",
-                      "location": "query",
-                      "type": "string"
-                    },
-                    "parent": {
-                      "description": "Required. The name of the `Document` containing `Chunk`s. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+parent}/chunks",
-                  "response": {
-                    "$ref": "ListChunksResponse"
-                  }
-                },
-                "patch": {
-                  "description": "Updates a `Chunk`.",
-                  "flatPath": "v1beta/corpora/{corporaId}/documents/{documentsId}/chunks/{chunksId}",
-                  "httpMethod": "PATCH",
-                  "id": "generativelanguage.corpora.documents.chunks.patch",
-                  "parameterOrder": [
-                    "name"
-                  ],
-                  "parameters": {
-                    "name": {
-                      "description": "Immutable. Identifier. The `Chunk` resource name. The ID (name excluding the \"corpora/*/documents/*/chunks/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a random 12-character unique ID will be generated. Example: `corpora/{corpus_id}/documents/{document_id}/chunks/123a456b789c`",
-                      "location": "path",
-                      "pattern": "^corpora/[^/]+/documents/[^/]+/chunks/[^/]+$",
-                      "required": true,
-                      "type": "string"
-                    },
-                    "updateMask": {
-                      "description": "Required. The list of fields to update. Currently, this only supports updating `custom_metadata` and `data`.",
-                      "format": "google-fieldmask",
-                      "location": "query",
-                      "type": "string"
-                    }
-                  },
-                  "path": "v1beta/{+name}",
-                  "request": {
-                    "$ref": "Chunk"
-                  },
-                  "response": {
-                    "$ref": "Chunk"
-                  }
-                }
-              }
-            }
-          }
-        },
         "operations": {
           "methods": {
             "get": {
@@ -1222,31 +917,6 @@
               "path": "v1beta/{+parent}/documents",
               "response": {
                 "$ref": "ListDocumentsResponse"
-              }
-            },
-            "query": {
-              "description": "Performs semantic search over a `Document`.",
-              "flatPath": "v1beta/fileSearchStores/{fileSearchStoresId}/documents/{documentsId}:query",
-              "httpMethod": "POST",
-              "id": "generativelanguage.fileSearchStores.documents.query",
-              "parameterOrder": [
-                "name"
-              ],
-              "parameters": {
-                "name": {
-                  "description": "Required. The name of the `Document` to query. Example: `fileSearchStores/my-file-search-store-123/documents/the-doc-abc`",
-                  "location": "path",
-                  "pattern": "^fileSearchStores/[^/]+/documents/[^/]+$",
-                  "required": true,
-                  "type": "string"
-                }
-              },
-              "path": "v1beta/{+name}:query",
-              "request": {
-                "$ref": "QueryDocumentRequest"
-              },
-              "response": {
-                "$ref": "QueryDocumentResponse"
               }
             }
           }
@@ -2538,7 +2208,7 @@
       }
     }
   },
-  "revision": "20251117",
+  "revision": "20251201",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2563,48 +2233,6 @@
         "semanticRetrieverChunk": {
           "$ref": "SemanticRetrieverChunk",
           "description": "Identifier for a `Chunk` fetched via Semantic Retriever."
-        }
-      },
-      "type": "object"
-    },
-    "BatchCreateChunksRequest": {
-      "description": "Request to batch create `Chunk`s.",
-      "id": "BatchCreateChunksRequest",
-      "properties": {
-        "requests": {
-          "description": "Required. The request messages specifying the `Chunk`s to create. A maximum of 100 `Chunk`s can be created in a batch.",
-          "items": {
-            "$ref": "CreateChunkRequest"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "BatchCreateChunksResponse": {
-      "description": "Response from `BatchCreateChunks` containing a list of created `Chunk`s.",
-      "id": "BatchCreateChunksResponse",
-      "properties": {
-        "chunks": {
-          "description": "`Chunk`s created.",
-          "items": {
-            "$ref": "Chunk"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "BatchDeleteChunksRequest": {
-      "description": "Request to batch delete `Chunk`s.",
-      "id": "BatchDeleteChunksRequest",
-      "properties": {
-        "requests": {
-          "description": "Required. The request messages specifying the `Chunk`s to delete.",
-          "items": {
-            "$ref": "DeleteChunkRequest"
-          },
-          "type": "array"
         }
       },
       "type": "object"
@@ -2712,34 +2340,6 @@
           "format": "int64",
           "readOnly": true,
           "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "BatchUpdateChunksRequest": {
-      "description": "Request to batch update `Chunk`s.",
-      "id": "BatchUpdateChunksRequest",
-      "properties": {
-        "requests": {
-          "description": "Required. The request messages specifying the `Chunk`s to update. A maximum of 100 `Chunk`s can be updated in a batch.",
-          "items": {
-            "$ref": "UpdateChunkRequest"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "BatchUpdateChunksResponse": {
-      "description": "Response from `BatchUpdateChunks` containing a list of updated `Chunk`s.",
-      "id": "BatchUpdateChunksResponse",
-      "properties": {
-        "chunks": {
-          "description": "`Chunk`s updated.",
-          "items": {
-            "$ref": "Chunk"
-          },
-          "type": "array"
         }
       },
       "type": "object"
@@ -2958,68 +2558,6 @@
       },
       "type": "object"
     },
-    "Chunk": {
-      "description": "A `Chunk` is a subpart of a `Document` that is treated as an independent unit for the purposes of vector representation and storage.",
-      "id": "Chunk",
-      "properties": {
-        "createTime": {
-          "description": "Output only. The Timestamp of when the `Chunk` was created.",
-          "format": "google-datetime",
-          "readOnly": true,
-          "type": "string"
-        },
-        "customMetadata": {
-          "description": "Optional. User provided custom metadata stored as key-value pairs. The maximum number of `CustomMetadata` per chunk is 20.",
-          "items": {
-            "$ref": "CustomMetadata"
-          },
-          "type": "array"
-        },
-        "data": {
-          "$ref": "ChunkData",
-          "description": "Required. The content for the `Chunk`, such as the text string. The maximum number of tokens per chunk is 2043."
-        },
-        "name": {
-          "description": "Immutable. Identifier. The `Chunk` resource name. The ID (name excluding the \"corpora/*/documents/*/chunks/\" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a random 12-character unique ID will be generated. Example: `corpora/{corpus_id}/documents/{document_id}/chunks/123a456b789c`",
-          "type": "string"
-        },
-        "state": {
-          "description": "Output only. Current state of the `Chunk`.",
-          "enum": [
-            "STATE_UNSPECIFIED",
-            "STATE_PENDING_PROCESSING",
-            "STATE_ACTIVE",
-            "STATE_FAILED"
-          ],
-          "enumDescriptions": [
-            "The default value. This value is used if the state is omitted.",
-            "`Chunk` is being processed (embedding and vector storage).",
-            "`Chunk` is processed and available for querying.",
-            "`Chunk` failed processing."
-          ],
-          "readOnly": true,
-          "type": "string"
-        },
-        "updateTime": {
-          "description": "Output only. The Timestamp of when the `Chunk` was last updated.",
-          "format": "google-datetime",
-          "readOnly": true,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "ChunkData": {
-      "description": "Extracted data that represents the `Chunk` content.",
-      "id": "ChunkData",
-      "properties": {
-        "stringValue": {
-          "description": "The `Chunk` content as a string. The maximum number of tokens per chunk is 2043.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "ChunkingConfig": {
       "description": "Parameters for telling the service how to chunk the file. inspired by google3/cloud/ai/platform/extension/lib/retrieval/config/chunker_config.proto",
       "id": "ChunkingConfig",
@@ -3195,8 +2733,16 @@
       "description": "A list of floats representing an embedding.",
       "id": "ContentEmbedding",
       "properties": {
+        "shape": {
+          "description": "This field stores the soft tokens tensor frame shape (e.g. [1, 1, 256, 2048]).",
+          "items": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "type": "array"
+        },
         "values": {
-          "description": "The embedding values.",
+          "description": "The embedding values. This is for 3P users only and will not be populated for 1P calls.",
           "items": {
             "format": "float",
             "type": "number"
@@ -3356,21 +2902,6 @@
       },
       "type": "object"
     },
-    "CreateChunkRequest": {
-      "description": "Request to create a `Chunk`.",
-      "id": "CreateChunkRequest",
-      "properties": {
-        "chunk": {
-          "$ref": "Chunk",
-          "description": "Required. The `Chunk` to create."
-        },
-        "parent": {
-          "description": "Required. The name of the `Document` where this `Chunk` will be created. Example: `corpora/my-corpus-123/documents/the-doc-abc`",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
     "CreateFileRequest": {
       "description": "Request for `CreateFile`.",
       "id": "CreateFileRequest",
@@ -3458,17 +2989,6 @@
         "examples": {
           "$ref": "TuningExamples",
           "description": "Optional. Inline examples with simple input/output text."
-        }
-      },
-      "type": "object"
-    },
-    "DeleteChunkRequest": {
-      "description": "Request to delete a `Chunk`.",
-      "id": "DeleteChunkRequest",
-      "properties": {
-        "name": {
-          "description": "Required. The resource name of the `Chunk` to delete. Example: `corpora/my-corpus-123/documents/the-doc-abc/chunks/some-chunk`",
-          "type": "string"
         }
       },
       "type": "object"
@@ -4984,6 +4504,10 @@
         "aspectRatio": {
           "description": "Optional. The aspect ratio of the image to generate. Supported aspect ratios: 1:1, 2:3, 3:2, 3:4, 4:3, 9:16, 16:9, 21:9. If not specified, the model will choose a default aspect ratio based on any reference images provided.",
           "type": "string"
+        },
+        "imageSize": {
+          "description": "Optional. Specifies the size of generated images. Supported values are `1K`, `2K`, `4K`. If not specified, the model will use default value `1K`.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -5263,24 +4787,6 @@
         },
         "nextPageToken": {
           "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no subsequent pages.",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "ListChunksResponse": {
-      "description": "Response from `ListChunks` containing a paginated list of `Chunk`s. The `Chunk`s are sorted by ascending `chunk.create_time`.",
-      "id": "ListChunksResponse",
-      "properties": {
-        "chunks": {
-          "description": "The returned `Chunk`s.",
-          "items": {
-            "$ref": "Chunk"
-          },
-          "type": "array"
-        },
-        "nextPageToken": {
-          "description": "A token, which can be sent as `page_token` to retrieve the next page. If this field is omitted, there are no more pages.",
           "type": "string"
         }
       },
@@ -5954,100 +5460,6 @@
       },
       "type": "object"
     },
-    "QueryCorpusRequest": {
-      "description": "Request for querying a `Corpus`.",
-      "id": "QueryCorpusRequest",
-      "properties": {
-        "metadataFilters": {
-          "description": "Optional. Filter for `Chunk` and `Document` metadata. Each `MetadataFilter` object should correspond to a unique key. Multiple `MetadataFilter` objects are joined by logical \"AND\"s. Example query at document level: (year >= 2020 OR year < 2010) AND (genre = drama OR genre = action) `MetadataFilter` object list: metadata_filters = [ {key = \"document.custom_metadata.year\" conditions = [{int_value = 2020, operation = GREATER_EQUAL}, {int_value = 2010, operation = LESS}]}, {key = \"document.custom_metadata.year\" conditions = [{int_value = 2020, operation = GREATER_EQUAL}, {int_value = 2010, operation = LESS}]}, {key = \"document.custom_metadata.genre\" conditions = [{string_value = \"drama\", operation = EQUAL}, {string_value = \"action\", operation = EQUAL}]}] Example query at chunk level for a numeric range of values: (year > 2015 AND year <= 2020) `MetadataFilter` object list: metadata_filters = [ {key = \"chunk.custom_metadata.year\" conditions = [{int_value = 2015, operation = GREATER}]}, {key = \"chunk.custom_metadata.year\" conditions = [{int_value = 2020, operation = LESS_EQUAL}]}] Note: \"AND\"s for the same key are only supported for numeric values. String values only support \"OR\"s for the same key.",
-          "items": {
-            "$ref": "MetadataFilter"
-          },
-          "type": "array"
-        },
-        "query": {
-          "description": "Required. Query string to perform semantic search.",
-          "type": "string"
-        },
-        "resultsCount": {
-          "description": "Optional. The maximum number of `Chunk`s to return. The service may return fewer `Chunk`s. If unspecified, at most 10 `Chunk`s will be returned. The maximum specified result count is 100.",
-          "format": "int32",
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "QueryCorpusResponse": {
-      "description": "Response from `QueryCorpus` containing a list of relevant chunks.",
-      "id": "QueryCorpusResponse",
-      "properties": {
-        "relevantChunks": {
-          "description": "The relevant chunks.",
-          "items": {
-            "$ref": "RelevantChunk"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "QueryDocumentRequest": {
-      "description": "Request for querying a `Document`.",
-      "id": "QueryDocumentRequest",
-      "properties": {
-        "metadataFilters": {
-          "description": "Optional. Filter for `Chunk` metadata. Each `MetadataFilter` object should correspond to a unique key. Multiple `MetadataFilter` objects are joined by logical \"AND\"s. Note: `Document`-level filtering is not supported for this request because a `Document` name is already specified. Example query: (year >= 2020 OR year < 2010) AND (genre = drama OR genre = action) `MetadataFilter` object list: metadata_filters = [ {key = \"chunk.custom_metadata.year\" conditions = [{int_value = 2020, operation = GREATER_EQUAL}, {int_value = 2010, operation = LESS}}, {key = \"chunk.custom_metadata.genre\" conditions = [{string_value = \"drama\", operation = EQUAL}, {string_value = \"action\", operation = EQUAL}}] Example query for a numeric range of values: (year > 2015 AND year <= 2020) `MetadataFilter` object list: metadata_filters = [ {key = \"chunk.custom_metadata.year\" conditions = [{int_value = 2015, operation = GREATER}]}, {key = \"chunk.custom_metadata.year\" conditions = [{int_value = 2020, operation = LESS_EQUAL}]}] Note: \"AND\"s for the same key are only supported for numeric values. String values only support \"OR\"s for the same key.",
-          "items": {
-            "$ref": "MetadataFilter"
-          },
-          "type": "array"
-        },
-        "query": {
-          "description": "Required. Query string to perform semantic search.",
-          "type": "string"
-        },
-        "resultsCount": {
-          "description": "Optional. The maximum number of `Chunk`s to return. The service may return fewer `Chunk`s. If unspecified, at most 10 `Chunk`s will be returned. The maximum specified result count is 100.",
-          "format": "int32",
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "QueryDocumentResponse": {
-      "description": "Response from `QueryDocument` containing a list of relevant chunks.",
-      "id": "QueryDocumentResponse",
-      "properties": {
-        "relevantChunks": {
-          "description": "The returned relevant chunks.",
-          "items": {
-            "$ref": "RelevantChunk"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "RelevantChunk": {
-      "description": "The information for a chunk relevant to a query.",
-      "id": "RelevantChunk",
-      "properties": {
-        "chunk": {
-          "$ref": "Chunk",
-          "description": "`Chunk` associated with the query."
-        },
-        "chunkRelevanceScore": {
-          "description": "`Chunk` relevance to the query.",
-          "format": "float",
-          "type": "number"
-        },
-        "document": {
-          "$ref": "Document",
-          "description": "`Document` associated with the chunk."
-        }
-      },
-      "type": "object"
-    },
     "RetrievalConfig": {
       "description": "Retrieval config.",
       "id": "RetrievalConfig",
@@ -6637,7 +6049,7 @@
           "type": "integer"
         },
         "thinkingLevel": {
-          "description": "Optional. The level of thoughts tokens that the model should generate.",
+          "description": "Optional. Controls the maximum depth of the model's internal reasoning process before it produces a response. If not specified, the default is HIGH. Recommended for Gemini 3 or later models. Use with earlier models results in an error.",
           "enum": [
             "THINKING_LEVEL_UNSPECIFIED",
             "LOW",
@@ -6934,22 +6346,6 @@
         "trainingData": {
           "$ref": "Dataset",
           "description": "Required. Input only. Immutable. The model training data."
-        }
-      },
-      "type": "object"
-    },
-    "UpdateChunkRequest": {
-      "description": "Request to update a `Chunk`.",
-      "id": "UpdateChunkRequest",
-      "properties": {
-        "chunk": {
-          "$ref": "Chunk",
-          "description": "Required. The `Chunk` to update."
-        },
-        "updateMask": {
-          "description": "Required. The list of fields to update. Currently, this only supports updating `custom_metadata` and `data`.",
-          "format": "google-fieldmask",
-          "type": "string"
         }
       },
       "type": "object"
