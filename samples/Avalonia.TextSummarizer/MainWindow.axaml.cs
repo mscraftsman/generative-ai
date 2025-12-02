@@ -13,7 +13,9 @@ namespace Avalonia.TextSummarizer
 {
     public partial class MainWindow : Window
     {
-        private string apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? string.Empty;
+        private string apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? 
+                                Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? 
+                                string.Empty;
         private string modelName = Model.GeminiPro; // Use Gemini model
         private GenerativeModel model;
 
