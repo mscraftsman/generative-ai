@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.4
+
+### Changed
+
+- Bump Google.Apis.Auth from 1.72.0 to 1.73.0 (f11aa7d)
+- bump version
+
 ## 2.9.3
 
 ### Changed

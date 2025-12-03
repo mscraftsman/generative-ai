@@ -11,6 +11,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.4
+
+### Added
+
+- Add support for thought_signature in function calls #145 (e0197cd)
+- Merge pull request #143 from xoofx/fix-thought (d03a3e3)
+- Apply PR 146 to current code base (d2886fd)
+- Merge pull request #146 from PederHP/fix_double_encoding (248a25d)
+- Merge pull request #147 from PederHP/thought_issue_rebased (b488013)
+
+### Changed
+
+- Put check of thought before regular response (76be9c3)
+- Refactor DataContent instantiation for readability (22b2d80)
+- Change data encoding to Base64 for InlineData (532ee13)
+- Complete review of Thought signatures #149 (e0197cd)
+- Bump Microsoft.Extensions.AI from 10.0.0 to 10.0.1 (4441a00)
+- Bump Microsoft.Extensions.AI.Abstractions from 10.0.0 to 10.0.1 (b622e5f)
+
+### Fixed
+
+- Fix thinking responses when they don't include a ThoughtSignature. (c8cc181)
+- Fix thought_signature preservation for image parts in MEAI mapping (59f1c9f)
+- Enhance ThoughtSignature handling in AbstractionMapper for improved serialization and preservation (99a8bc4)
+
+### Changed
+
+- bump version
+
 ## 2.9.3
 
 ### Changed
