@@ -141,6 +141,21 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Adds the <see cref="FileSearch"/> tool to the list of tools.
+        /// </summary>
+        /// <param name="stores">List of <see cref="FileSearchStore"/>s to query.</param>
+        public void AddFileSearch(List<string>? stores = null)
+        {
+	        if (!this.Any(t => t.FileSearch is not null))
+	        {
+		        this.Add(new Tool()
+		        {
+			        FileSearch = new FileSearch() { Stores = stores }
+		        });
+	        }
+        }
+
+        /// <summary>
         /// Adds a function to the list of function declarations.
         /// </summary>
         /// <param name="name">The name of the function.</param>
