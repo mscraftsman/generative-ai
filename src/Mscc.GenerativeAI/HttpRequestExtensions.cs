@@ -151,14 +151,28 @@ namespace Mscc.GenerativeAI
 
         internal static async Task<MultipartContent> Clone(this MultipartContent content)
         {
-            var boundary = content.Headers.ContentType.Parameters.First(p => p.Name == "boundary").Value.Trim('"');
-            var newContent = new MultipartContent("related");
-            newContent.Headers.ContentType.Parameters.Clear();
-            newContent.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("boundary", boundary));
+	        var subtype = content.Headers.ContentType?.MediaType?.Replace("multipart/", "") ?? "related";
+            MultipartContent newContent = subtype switch
+            {
+	            "form-data" => new MultipartFormDataContent(),
+	            _ => new MultipartContent(subtype)
+            };
+            // newContent.Headers.ContentType.Parameters.Clear();
+            // var boundary = content.Headers.ContentType.Parameters.First(p => p.Name == "boundary").Value.Trim('"');
+            // newContent.Headers.ContentType.Parameters.Add(new NameValueHeaderValue("boundary", boundary));
 
             foreach (var part in content)
             {
-                var clonedPart = part switch
+	            // IMPORTANT: Force the original stream to be buffered. 
+	            // This allows us to read it now, and allows the 'original' object 
+	            // to be read again later if needed.
+	            // await part.LoadIntoBufferAsync();
+
+	            // Create a completely new content object based on the bytes
+	            // var bytes = await part.ReadAsByteArrayAsync();
+	            // var clonedPart = new ByteArrayContent(bytes);
+	            
+	            var clonedPart = part switch
                 {
                     StringContent stringContent => await stringContent.Clone(),
                     StreamContent streamContent => await streamContent.Clone(),
@@ -168,13 +182,15 @@ namespace Mscc.GenerativeAI
 
                 foreach (var header in part.Headers)
                 {
-                    if (header.Key.Equals("Content-Type", StringComparison.InvariantCultureIgnoreCase)
-                        && clonedPart.Headers.Contains("Content-Type"))
-                    {
-                        continue;
-                    }
-                    clonedPart.Headers.Add(header.Key, header.Value);
+	                // if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)
+	                //     || header.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)
+	                //     || header.Key.Equals("Content-Disposition", StringComparison.OrdinalIgnoreCase))
+	                // {
+		               //  continue;
+	                // }
+                    clonedPart.Headers.TryAddWithoutValidation(header.Key, header.Value);
                 }
+		        // part.CopyHeadersPropertiesOptions(clonedPart);
                 
                 newContent.Add(clonedPart);
             }
@@ -200,6 +216,14 @@ namespace Mscc.GenerativeAI
             {
                 target.Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
+        }
+
+        internal static void CopyHeadersPropertiesOptions(this HttpContent source, HttpContent target)
+        {
+	        foreach (var header in source.Headers)
+	        {
+		        target.Headers.TryAddWithoutValidation(header.Key, header.Value);
+	        }
         }
     }
 }

@@ -55,6 +55,12 @@ namespace Mscc.GenerativeAI
             this ILogger logger,
             string json);
 
+        [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Error deserializing JSON: {message}\n\n{json}")]
+        public static partial void LogJsonDeserialization(
+	        this ILogger logger,
+	        string message,
+	        string json);
+
         /// <summary>
         /// Logs <see cref="GenerativeModel"/>
         /// </summary>
@@ -96,7 +102,7 @@ namespace Mscc.GenerativeAI
             string message);
 
         /// <summary>
-        /// Logs <see cref="BaseModel"/> when exception thrown to run an external application.
+        /// Logs <see cref="BaseModel"/> when exception thrown.
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="index">Nth attempt of request sent.</param>
@@ -106,7 +112,7 @@ namespace Mscc.GenerativeAI
             int index);
 
         /// <summary>
-        /// Logs <see cref="BaseModel"/> when exception thrown to run an external application.
+        /// Logs <see cref="BaseModel"/> when exception thrown.
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="index">Nth attempt of request sent.</param>
@@ -116,10 +122,15 @@ namespace Mscc.GenerativeAI
             int index,
             string message);
 
-        [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Error deserializing JSON: {message}\n\n{json}")]
-        public static partial void LogJsonDeserialization(
-            this ILogger logger,
-            string message,
-            string json);
+        /// <summary>
+        /// Logs <see cref="BaseModel"/> when exception thrown.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="index">Nth attempt of request sent.</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Request #{index} failed. Exception caught: {message}")]
+        public static partial void LogRequestException(
+	        this ILogger logger,
+	        int index,
+	        string message);
     }
 }

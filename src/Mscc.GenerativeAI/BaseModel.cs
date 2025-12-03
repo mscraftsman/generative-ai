@@ -580,17 +580,7 @@ namespace Mscc.GenerativeAI
             var statusCodes = retry.StatusCodes ?? Constants.RetryStatusCodes;
             var delay = retry.Initial;
             var stopwatch = Stopwatch.StartNew();
-            HttpResponseMessage? lastResponse = null;
-            
-            // Buffer the content to make it explicitly reusable
-            if (request.Content != null)
-            {
-#if NET9_0_OR_GREATER
-                await request.Content.LoadIntoBufferAsync(cancellationToken);
-#else
-                await request.Content.LoadIntoBufferAsync();
-#endif
-            }
+            HttpResponseMessage lastResponse = null;
 
             for (var index = 1; index <= retry.Maximum; index++)
             {
@@ -610,23 +600,17 @@ namespace Mscc.GenerativeAI
 
                 try
                 {
-                    // using (var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken))
-                    using var requestMessage = new HttpRequestMessage(request.Method, request.RequestUri)
-                    {
-                        Content = request.Content,
-                        Version = request.Version
-                    };
-                    request.CopyHeadersPropertiesOptions(requestMessage);
-                    lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
-                    if (!statusCodes.Contains((int)lastResponse.StatusCode))
-                    {
-                        return lastResponse;
-                    }
-                    
-                    var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
-                    Logger.LogRequestNotSuccessful(index, message);
+	                using var requestMessage = await CloneHttpRequestMessageAsync(request, cancellationToken);
+	                lastResponse = await Client.SendAsync(requestMessage, completionOption, cancellationToken);
+	                if (!statusCodes.Contains((int)lastResponse.StatusCode))
+	                {
+		                return lastResponse;
+	                }
 
-	                if ((int)lastResponse.StatusCode == 429)	// HttpStatusCode.TooManyRequests
+	                var message = await GetResponseMessageAsync(lastResponse, cancellationToken);
+	                Logger.LogRequestNotSuccessful(index, message);
+
+	                if ((int)lastResponse.StatusCode == 429) // HttpStatusCode.TooManyRequests
 	                {
 		                var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(message, ReadOptions);
 		                if (errorResponse.Error.TryGetDetail<RetryInfo>(out var retryInfo))
@@ -637,17 +621,22 @@ namespace Mscc.GenerativeAI
                 }
                 catch (HttpRequestException e)
                 {
-                    Logger.LogRequestNotSuccessful(index);
-                    if (index == retry.Maximum)
-                    {
-                        if (lastResponse != null)
-                        {
-                            var message = GetResponseMessageAsync(lastResponse, cancellationToken);
-                            throw new GeminiApiException($"The request was not successful. {message}", lastResponse, e);
-                        }
+	                Logger.LogRequestNotSuccessful(index);
+	                if (index == retry.Maximum)
+	                {
+		                if (lastResponse != null)
+		                {
+			                var message = GetResponseMessageAsync(lastResponse, cancellationToken);
+			                throw new GeminiApiException($"The request was not successful. {message}", lastResponse, e);
+		                }
 
-                        throw new GeminiApiException("The request was not successful.", e);
-                    }
+		                throw new GeminiApiException("The request was not successful.", e);
+	                }
+                }
+                catch (Exception e)	// catch all, log and rethrow.
+                {
+	                Logger.LogRequestException(index, e.Message);
+		            throw new GeminiApiException("The request was not successful.", e);
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(delay), cancellationToken);
@@ -671,56 +660,35 @@ namespace Mscc.GenerativeAI
 #endif
         }
 
-        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage req,
+        private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var clone = new HttpRequestMessage(req.Method, req.RequestUri) { Version = req.Version, };
+            var clonedRequest = new HttpRequestMessage(request.Method, request.RequestUri) { Version = request.Version, };
 
-            if (req.Content != null)
+            if (request.Content != null)
             {
-                clone.Content = req.Content switch
+                clonedRequest.Content = request.Content switch
                 {
                     StringContent stringContent => await stringContent.Clone(),
                     StreamContent streamContent => await streamContent.Clone(),
                     MultipartContent multipartContent => await multipartContent.Clone(),
-                    _ => clone.Content
+                    _ => clonedRequest.Content
                 };
 
-                if (req.Content.Headers != null)
+                foreach (var header in request.Content.Headers)
                 {
-                    foreach (var header in req.Content.Headers)
-                    {
-                        if (header.Key.Equals("Content-Type", StringComparison.InvariantCultureIgnoreCase)
-                            || header.Key.Equals("Content-Length", StringComparison.InvariantCultureIgnoreCase)
-                            || header.Key.Equals("Content-Disposition", StringComparison.InvariantCultureIgnoreCase))
-                            // && clone.Headers.Contains("Content-Type"))
-                        {
-                            continue;
-                        }
-                        clone.Content.Headers.Add(header.Key, header.Value);
-                    }
+	                if (header.Key.Equals("Content-Type", StringComparison.OrdinalIgnoreCase)
+	                    || header.Key.Equals("Content-Length", StringComparison.OrdinalIgnoreCase)
+	                    || header.Key.Equals("Content-Disposition", StringComparison.OrdinalIgnoreCase))
+	                {
+		                continue;
+	                }
+	                clonedRequest.Content!.Headers.Add(header.Key, header.Value);
                 }
             }
+	        request.CopyHeadersPropertiesOptions(clonedRequest);
 
-#if NET472_OR_GREATER || NETSTANDARD2_0
-            foreach (var prop in req.Properties)
-            {
-                clone.Properties[prop.Key] = prop.Value;
-            }
-#else
-            clone.VersionPolicy = req.VersionPolicy;
-            foreach (var option in req.Options)
-            {
-                clone.Options.Set(new HttpRequestOptionsKey<object?>(option.Key), option.Value);
-            }
-#endif
-
-            foreach (var header in req.Headers)
-            {
-                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
-            }
-
-            return clone;
+            return clonedRequest;
         }
 
         /// <summary>
