@@ -128,7 +128,7 @@ namespace Mscc.GenerativeAI
         public const string AttributedQuestionAnswering = "aqa";
 
         // Text Embeddings on Vertex AI
-        // Discontinuation date: Nov 18, 2025.
+        // Discontinuation date: Nov 18, 2025 or January 14, 2026.
         public const string TextEmbedding004 = "text-embedding-004";
         public const string TextEmbedding005 = "text-embedding-005";
         public const string TextEmbedding = TextEmbedding004;
