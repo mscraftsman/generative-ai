@@ -1410,5 +1410,54 @@ namespace Mscc.GenerativeAI
 
             return sb.ToString();
         }
+
+        extension(GenerateContentRequest request)
+        {
+	        public void UseJsonMode()
+	        {
+		        request.GenerationConfig ??= new GenerationConfig();
+		        request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
+	        }
+	        
+	        public void UseGoogleSearch()
+	        {
+		        Tools defaultTools = [new Tool { GoogleSearch = new() }];
+		        request.Tools ??= defaultTools;
+		        if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
+		        {
+			        request.Tools.AddRange(defaultTools);
+		        }
+	        }
+
+	        public void UseGoogleMaps(bool? enableWidget = false)
+	        {
+		        Tools defaultTools = [new Tool() { GoogleMaps = new() { EnableWidget = enableWidget } }];
+		        request.Tools ??= defaultTools;
+		        if (request.Tools != null && !request.Tools.Any(t => t.GoogleMaps is not null))
+		        {
+			        request.Tools.AddRange(defaultTools);
+		        }
+	        }
+
+	        public void UseGrounding()
+	        {
+		        Tools defaultTools = [new Tool { GoogleSearchRetrieval = new() }];
+		        request.Tools ??= defaultTools;
+		        if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
+		        {
+			        request.Tools.AddRange(defaultTools);
+		        }
+	        }
+
+	        public void UseCodeExecution()
+	        {
+		        Tools defaultTools = [new Tool { CodeExecution = new() }];
+		        request.Tools ??= defaultTools;
+		        if (request.Tools != null && !request.Tools.Any(t => t.CodeExecution is not null))
+		        {
+			        request.Tools.AddRange(defaultTools);
+		        }
+	        }
+        }
     }
 }
