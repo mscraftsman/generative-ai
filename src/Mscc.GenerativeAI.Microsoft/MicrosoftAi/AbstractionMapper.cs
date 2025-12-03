@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using mea = Microsoft.Extensions.AI;
@@ -36,6 +37,7 @@ namespace Mscc.GenerativeAI.Microsoft
             }
 
             request.Contents ??= [];
+            byte[]? thoughtSignature;
             foreach (var message in messages)
             {
                 if (message.Role == mea.ChatRole.System)
@@ -54,70 +56,56 @@ namespace Mscc.GenerativeAI.Microsoft
 
                 foreach (var content in message.Contents)
                 {
-                    switch (content)
-                    {
-                        case mea.TextReasoningContent trc:
-                            var thoughtPart = new Part
-                            {
-                                Text = trc.Text,
-                                Thought = true,
-                                ThoughtSignature = !string.IsNullOrEmpty(trc.ProtectedData) 
-                                    ? Convert.FromBase64String(trc.ProtectedData) 
-                                    : null
-                            };
-                            c.Parts.Add(thoughtPart);
-                            break;
+	                Part? part = null;
+	                switch (content)
+	                {
+		                case mea.TextReasoningContent trc:
+							part = new Part
+			                {
+				                Text = trc.Text,
+				                Thought = true
+			                };
+			                break;
 
-                        case mea.TextContent tc:
-                            c.Parts.Add(new TextData() { Text = tc.Text });
-                            break;
+		                case mea.TextContent tc:
+			                part = new Part
+			                {
+				                Text = tc.Text
+			                };
+			                break;
 
-                        case mea.DataContent dc:
-                            byte[]? thoughtSignature = null;
-                            if (dc.AdditionalProperties?.TryGetValue("ThoughtSignature", out var sigObj) == true)
-                            {
-                                // Handle both string (in-memory) and JsonElement (after JSON deserialization)
-                                string? sigBase64 = sigObj switch
-                                {
-                                    string s => s,
-                                    System.Text.Json.JsonElement je when je.ValueKind == System.Text.Json.JsonValueKind.String => je.GetString(),
-                                    _ => null
-                                };
-                                
-                                if (!string.IsNullOrEmpty(sigBase64))
-                                {
-                                    thoughtSignature = Convert.FromBase64String(sigBase64);
-                                }
-                            }
-                            
-                            if (thoughtSignature != null)
-                            {
-                                c.Parts.Add(new Part
-                                {
-                                    InlineData = new InlineData
-                                    {
-                                        Data = dc.Base64Data.ToString(),
-                                        MimeType = dc.MediaType
-                                    },
-                                    ThoughtSignature = thoughtSignature
-                                });
-                            }
-                            else
-                            {
-                                c.Parts.Add(new InlineData() { Data = dc.Base64Data.ToString(), MimeType = dc.MediaType });
-                            }
-                            break;
+		                case mea.DataContent dc:
+			                part = new Part
+			                {
+				                InlineData = new InlineData
+				                {
+					                Data = dc.Base64Data.ToString(), MimeType = dc.MediaType
+				                }
+			                };
+			                break;
 
-                        case mea.UriContent uc:
-                            c.Parts.Add(new FileData() { FileUri = uc.Uri.AbsoluteUri, MimeType = uc.MediaType });
-                            break;
+		                case mea.UriContent uc:
+			                part = new Part
+			                {
+				                FileData = new FileData
+				                {
+					                FileUri = uc.Uri.AbsoluteUri, MimeType = uc.MediaType
+				                }
+			                };
+			                break;
 
-                        case mea.FunctionCallContent fcc:
-                            functionNames[fcc.CallId] = fcc.Name;
-                            c.Parts.Add(new FunctionCall() { Id = fcc.CallId, Name = fcc.Name, Args = fcc.Arguments });
-                            break;
+		                case mea.FunctionCallContent fcc:
+			                functionNames[fcc.CallId] = fcc.Name;
+			                part = new Part
+			                {
+				                FunctionCall = new FunctionCall()
+				                {
+					                Id = fcc.CallId, Name = fcc.Name, Args = fcc.Arguments
+				                },
+			                };
+			                break;
 
-                        case mea.FunctionResultContent frc:
+		                case mea.FunctionResultContent frc:
                             var functionName = frc.CallId;
                             if (functionNames.TryGetValue(frc.CallId, out var name))
                             {
@@ -130,12 +118,24 @@ namespace Mscc.GenerativeAI.Microsoft
                                 frc.Result = WrapInObject(frc.Result);
                             }
 
-                            c.Parts.Add(new FunctionResponse()
+                            part = new Part
                             {
-                                Id = frc.CallId, Name = functionName, Response = frc.Result
-                            });
+	                            FunctionResponse = new FunctionResponse
+	                            {
+		                            Id = frc.CallId, Name = functionName, Response = frc.Result
+	                            }
+                            };
                             break;
-                    }
+		                
+		                default:
+			                Debug.WriteLine($"This AIContent type is not supported yet: '{nameof(content)}'");
+			                break;
+	                }
+
+	                thoughtSignature = ToGeminiThoughtSignature(content);
+	                // part.Thought = thoughtSignature is not null ? true : null;
+	                part.ThoughtSignature = thoughtSignature;
+	                c.Parts.Add(part);
                 }
 
                 if (c.Parts.Count > 0)
@@ -293,6 +293,37 @@ namespace Mscc.GenerativeAI.Microsoft
             }
 
             return request;
+        }
+
+        /// <summary>
+        /// Retrieves the ThoughtSignature, if present.
+        /// </summary>
+        /// <param name="content">The <see cref="mea.AIContent"/> containing the ThoughtSignature.</param>
+        /// <returns></returns>
+        private static byte[]? ToGeminiThoughtSignature(mea.AIContent content)
+        {
+	        byte[]? thoughtSignature = null;
+	        if (content is mea.TextReasoningContent trc)
+	        {
+		        return trc.ProtectedData is { } ? Convert.FromBase64String(trc.ProtectedData) : null;
+	        }
+	        if (content.AdditionalProperties?.TryGetValue("ThoughtSignature", out var sigObj) == true)
+	        {
+		        // Handle both string (in-memory) and JsonElement (after JSON deserialization)
+		        string? sigBase64 = sigObj switch
+		        {
+			        string s => s,
+			        JsonElement je when je.ValueKind == JsonValueKind.String => je.GetString(),
+			        _ => null
+		        };
+                                
+		        if (!string.IsNullOrEmpty(sigBase64))
+		        {
+			        thoughtSignature = Convert.FromBase64String(sigBase64);
+		        }
+	        }
+
+	        return thoughtSignature;
         }
 
         /// <summary>
@@ -466,13 +497,17 @@ namespace Mscc.GenerativeAI.Microsoft
             {
                 foreach (var part in candidate.Content.Parts)
                 {
-                    if (part.Thought is true)
-                        contents.Add(new mea.TextReasoningContent(part.Text)
-                        {
-                            ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
-                        });
-                    else if (!string.IsNullOrEmpty(part.Text))
-                        contents.Add(new mea.TextContent(part.Text));
+					if (!string.IsNullOrEmpty(part.Text))
+						if (part.Thought is true || 
+						    part.ThoughtSignature is not null)
+							contents.Add(new mea.TextReasoningContent(part.Text)
+							{
+								ProtectedData = part.ThoughtSignature is not null ? Convert.ToBase64String(part.ThoughtSignature) : null
+							});
+						else
+						{
+							contents.Add(new mea.TextContent(part.Text));
+						}
                     else if (!string.IsNullOrEmpty(part.InlineData?.Data))
                     {
                         var dataContent = new mea.DataContent(
@@ -507,7 +542,17 @@ namespace Mscc.GenerativeAI.Microsoft
                         contents.Add(dataContent);
                     }
                     else if (part.FunctionCall is not null)
-                        contents.Add(ToFunctionCallContent(part.FunctionCall));
+                    {
+	                    var functionCallContent = ToFunctionCallContent(part.FunctionCall);
+		                functionCallContent.RawRepresentation = part;
+
+	                    if (part.ThoughtSignature != null)
+	                    {
+		                    functionCallContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
+		                    functionCallContent.AdditionalProperties["ThoughtSignature"] = Convert.ToBase64String(part.ThoughtSignature);
+	                    }
+                        contents.Add(functionCallContent);
+                    }
                     else if (part.FunctionResponse is not null)
                         contents.Add(ToFunctionResultContent(part.FunctionResponse));
                     else if (part.CodeExecutionResult is not null)
