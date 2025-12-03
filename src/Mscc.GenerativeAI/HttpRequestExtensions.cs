@@ -151,7 +151,11 @@ namespace Mscc.GenerativeAI
 
         internal static async Task<MultipartContent> Clone(this MultipartContent content)
         {
+#if NET472_OR_GREATER || NETSTANDARD2_0
 	        var subtype = content.Headers.ContentType?.MediaType?.Replace("multipart/", "") ?? "related";
+#else
+	        var subtype = content.Headers.ContentType?.MediaType?.Replace("multipart/", "", StringComparison.OrdinalIgnoreCase) ?? "related";
+#endif
             MultipartContent newContent = subtype switch
             {
 	            "form-data" => new MultipartFormDataContent(),
