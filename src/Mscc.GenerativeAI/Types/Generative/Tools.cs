@@ -88,9 +88,8 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Adds the Google Maps tool to the list of tools.
         /// </summary>
-        /// <param name="apiKey">The API key for Google Maps.</param>
         /// <param name="enableWidget">Whether to return a token and enable the Google Maps widget (default is false).</param>
-        public void AddGoogleMaps(string? apiKey = null, bool? enableWidget = false)
+        public void AddGoogleMaps(bool? enableWidget = false)
         {
             if (!this.Any(t => t.GoogleMaps is not null))
             {
