@@ -13,25 +13,6 @@
       "version": "001"
     },
     {
-      "description": "Gemini 2.5 Pro Preview 03-25",
-      "displayName": "Gemini 2.5 Pro Preview 03-25",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-pro-preview-03-25",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-03-25"
-    },
-    {
       "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
       "displayName": "Gemini 2.5 Flash",
       "inputTokenLimit": 1048576,
@@ -49,44 +30,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "001"
-    },
-    {
-      "description": "Preview release (May 6th, 2025) of Gemini 2.5 Pro",
-      "displayName": "Gemini 2.5 Pro Preview 05-06",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-pro-preview-05-06",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-05-06"
-    },
-    {
-      "description": "Preview release (June 5th, 2025) of Gemini 2.5 Pro",
-      "displayName": "Gemini 2.5 Pro Preview",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-pro-preview-06-05",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-06-05"
     },
     {
       "description": "Stable release (June 17th, 2025) of Gemini 2.5 Pro",
@@ -305,63 +248,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "2.5-exp-03-25"
-    },
-    {
-      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 05-20",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-thinking-exp-01-21",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-05-20"
-    },
-    {
-      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 05-20",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-thinking-exp",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-05-20"
-    },
-    {
-      "description": "Preview release (April 17th, 2025) of Gemini 2.5 Flash",
-      "displayName": "Gemini 2.5 Flash Preview 05-20",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-thinking-exp-1219",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-preview-05-20"
     },
     {
       "description": "Gemini 2.5 Flash Preview TTS",

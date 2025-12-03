@@ -12,7 +12,7 @@ namespace Test.Mscc.GenerativeAI
     [Collection(nameof(ConfigurationFixture))]
     public class FunStuffThatShould(ITestOutputHelper output, ConfigurationFixture fixture)
     {
-        private readonly string _model = Model.Gemini20FlashThinkingExperimental;
+        private readonly string _model = Model.Gemini3Pro;
 
         [Theory]
         [InlineData("Tell me a random programming joke")]

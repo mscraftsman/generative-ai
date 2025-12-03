@@ -1294,7 +1294,6 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemma3)]
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini25Flash)]
-        [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
         [InlineData(Model.Gemini25Pro)]
         // Ref: https://ai.google.dev/api/generate-content#code-execution
@@ -3514,7 +3513,6 @@ namespace Test.Mscc.GenerativeAI
         [Theory]
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini20FlashLite)]
-        [InlineData(Model.Gemini20FlashThinking)]
         [InlineData(Model.Gemini20Pro)]
         [InlineData(Model.Gemini25Pro)]
         public async Task Describe_Audio_with_Timestamps(string modelName)

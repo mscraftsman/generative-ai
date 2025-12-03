@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-
 namespace Mscc.GenerativeAI
 {
     /// <summary>
@@ -37,11 +34,6 @@ namespace Mscc.GenerativeAI
         public const string Gemini20FlashLive001 = "gemini-2.0-flash-live-001";
         public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
         public const string Gemini20FlashImageGenerationExperimental = "gemini-2.0-flash-exp-image-generation";
-        public const string Gemini20FlashThinking = Gemini20FlashThinkingExperimental;
-        public const string Gemini20FlashThinkingExperimental = "gemini-2.0-flash-thinking-exp";
-        public const string Gemini20FlashThinkingExperimentalNoThoughts = "gemini-2.0-flash-thinking-exp-no-thoughts";
-        public const string Gemini20FlashThinkingExperimental1219 = "gemini-2.0-flash-thinking-exp-1219";
-        public const string Gemini20FlashThinkingExperimental0121 = "gemini-2.0-flash-thinking-exp-01-21";
 
         public const string GeminiEmbedding = GeminiEmbedding001;
         public const string GeminiEmbedding001 = "gemini-embedding-001";
@@ -70,10 +62,6 @@ namespace Mscc.GenerativeAI
         public const string Gemini25Pro = "gemini-2.5-pro";
         public const string Gemini25ProExperimental = Gemini25ProExperimental0325;
         public const string Gemini25ProExperimental0325 = "gemini-2.5-pro-exp-03-25";
-        public const string Gemini25ProPreview = Gemini25ProPreview0605;
-        public const string Gemini25ProPreview0325 = "gemini-2.5-pro-preview-03-25";
-        public const string Gemini25ProPreview0506 = "gemini-2.5-pro-preview-05-06";
-        public const string Gemini25ProPreview0605 = "gemini-2.5-pro-preview-06-05";
         public const string Gemini25ProPreviewTts = "gemini-2.5-pro-preview-tts";
         public const string Gemini25LiveFlash = Gemini25LiveFlashPreview;
         public const string Gemini25LiveFlashPreview = "gemini-live-2.5-flash-preview";
