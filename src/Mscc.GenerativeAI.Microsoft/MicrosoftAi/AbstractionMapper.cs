@@ -15,6 +15,8 @@ namespace Mscc.GenerativeAI.Microsoft
     /// </summary>
     internal static class AbstractionMapper
     {
+	    internal const int EmbeddingDimensions = 768;
+	    
         /// <summary>
         /// Converts a Microsoft.Extensions.AI messages and options to a <see cref="GenerateContentRequest"/>.
         /// </summary>
@@ -391,6 +393,10 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <summary>
         /// Converts values and options to a <see cref="EmbedContentRequest"/>.
         /// </summary>
+        /// <remarks>
+        /// Currently, all models return 768-dimensional embeddings.
+        /// See https://ai.google.dev/gemini-api/docs/models/gemini?#text-embedding
+        /// </remarks>
         /// <param name="values">The values to get embeddings for</param>
         /// <param name="options">The options for the embeddings</param>
         public static EmbedContentRequest ToGeminiEmbedContentRequest(IEnumerable<string> values,
@@ -398,7 +404,8 @@ namespace Mscc.GenerativeAI.Microsoft
         {
             return new EmbedContentRequest(string.Join(" ", values))
             {
-                Model = options?.ModelId ?? null // will be set GeminiApiClient.SelectedModel, if not set
+                Model = options?.ModelId ?? null, // will be set GeminiApiClient.SelectedModel, if not set
+                OutputDimensionality = options?.Dimensions ?? EmbeddingDimensions
             };
         }
 
