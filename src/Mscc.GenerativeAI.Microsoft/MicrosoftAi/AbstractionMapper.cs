@@ -228,6 +228,14 @@ namespace Mscc.GenerativeAI.Microsoft
                                 request.GenerationConfig.ThinkingConfig.ThinkingBudget = i2;
                             }
                         }
+
+                        if (thinkingConfigDict.TryGetValue("ThinkingLevel", out var thinkingLevel))
+                        {
+	                        if (Enum.TryParse(thinkingLevel.ToString(), out ThinkingLevel level))
+	                        {
+		                        request.GenerationConfig.ThinkingConfig.ThinkingLevel = level;
+	                        }
+                        }
                     }
                 }
 
