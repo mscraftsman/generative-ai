@@ -129,6 +129,11 @@ namespace Mscc.GenerativeAI
                 {
                     _partTypes.Add(new Part { CodeExecutionResult = result });
                 }
+                // Handle Part objects directly (already the correct type)
+                if (part is Part partType)
+                {
+                    _partTypes.Add(partType);
+                }
             }
         }
 
