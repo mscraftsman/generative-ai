@@ -14,6 +14,7 @@
     <PackageVersion Include="Google.Protobuf" Version="3.33.1" />
     <PackageVersion Include="JsonSchema.Net.Generation" Version="5.0.4" />
     <PackageVersion Include="JsonSchema.Net.Generation.DataAnnotations" Version="1.2.0" />
+    <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0-preview.251204.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.AI" Version="10.0.1" />
