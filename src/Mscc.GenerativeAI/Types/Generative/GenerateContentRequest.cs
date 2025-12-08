@@ -276,6 +276,44 @@ namespace Mscc.GenerativeAI
             }
         }
 
+
+        /// <summary>
+        /// Adds a raw binary presentation / byte array to the request.
+        /// </summary>
+        /// <param name="bytes">The raw binary presentation of a media file.</param>
+        /// <param name="mimeType">The IANA standard MIME type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="bytes"/> is <see langword="null"/>.</exception>
+        /// <exception cref="OutOfMemoryException">Thrown when the system runs out of memory.</exception>
+        public void AddMedia(byte[] bytes, string mimeType)
+        {
+	        if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+	        if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException("MIME type cannot be empty", nameof(mimeType));
+
+	        var base64data = Convert.ToBase64String(bytes);
+	        GenerativeAIExtensions.GuardMimeType(mimeType);
+	        AddPart(new InlineData { MimeType = mimeType, Data = base64data });
+        }
+        
+        /// <summary>
+        /// Adds a stream to the request.
+        /// </summary>
+        /// <param name="stream">The stream of the media file.</param>
+        /// <param name="mimeType">The IANA standard MIME type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="stream"/> is <see langword="null"/>.</exception>
+        /// <exception cref="OutOfMemoryException">Thrown when the system runs out of memory.</exception>
+        public async Task AddMedia(Stream stream, string mimeType)
+        {
+	        if (stream is null) throw new ArgumentNullException(nameof(stream));
+	        if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException("MIME type cannot be empty", nameof(mimeType));
+
+	        if (stream.CanSeek) stream.Position = 0;
+
+	        using var memoryStream = new MemoryStream();
+	        await stream.CopyToAsync(memoryStream);
+	        byte[] bytes = memoryStream.ToArray();
+			AddMedia(bytes, mimeType);        
+        }
+
         /// <summary>
         /// Adds a media file resource to the request.
         /// </summary>

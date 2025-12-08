@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
@@ -124,12 +126,33 @@ namespace Mscc.GenerativeAI
         /// </summary>
         public virtual string? ETag { get; set; }
 
-        // ToDo: Overloads for byte[] and Stream.
         public static InlineData FromBytes(string value, string mimeType)
         {
-            if (string.IsNullOrEmpty(value)) return new InlineData();
+	        if (string.IsNullOrEmpty(value)) return new InlineData();
+	        if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException("MIME type cannot be empty", nameof(mimeType));
 
-            return new InlineData() { Data = value, MimeType = mimeType };
+	        return new InlineData() { Data = value, MimeType = mimeType };
+        }
+        
+        public static InlineData FromBytes(byte[] bytes, string mimeType)
+        {
+	        if (bytes is null) throw new ArgumentNullException(nameof(bytes));
+	        if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException("MIME type cannot be empty", nameof(mimeType));
+
+	        return new InlineData() { Data = Convert.ToBase64String(bytes), MimeType = mimeType };
+        }
+
+        public static async Task<InlineData> FromBytes(Stream stream, string mimeType)
+        {
+	        if (stream is null) throw new ArgumentNullException(nameof(stream));
+	        if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException("MIME type cannot be empty", nameof(mimeType));
+
+	        if (stream.CanSeek) stream.Position = 0;
+
+	        using var memoryStream = new MemoryStream();
+	        await stream.CopyToAsync(memoryStream);
+	        byte[] bytes = memoryStream.ToArray();
+	        return new InlineData() { Data = Convert.ToBase64String(bytes), MimeType = mimeType };
         }
 
         public static CodeExecutionResult FromCodeExecutionResult(Outcome outcome, string output)
