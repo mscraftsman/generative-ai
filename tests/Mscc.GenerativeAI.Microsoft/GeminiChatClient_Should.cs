@@ -122,12 +122,21 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         {
 	        // Arrange
 	        var model = "gemini-2.5-flash";
-	        var prompt = "Where is the capital of Kenya?";
+	        var prompt = "What are the best Italian restaurants within a 15-minute drive from here?";
 	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
 	        var maps = new GoogleMaps { EnableWidget = true };
 	        var chatOptions = new ChatOptions
 	        {
-		        Tools = [maps.AsAITool()]
+		        Tools = [maps.AsAITool()],
+		        AdditionalProperties = new AdditionalPropertiesDictionary
+		        {
+			        [nameof(ToolConfig)] = new ToolConfig(){ 
+				        RetrievalConfig = new RetrievalConfig() { 
+					        LatLng = new LatLng() {
+						        Latitude = -20.283700f,
+								Longitude = 57.371529f
+			        }}}
+		        }
 	        };
 
 	        // Act

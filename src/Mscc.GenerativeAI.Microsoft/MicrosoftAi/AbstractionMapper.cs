@@ -195,7 +195,14 @@ namespace Mscc.GenerativeAI.Microsoft
 
 				if (options.AdditionalProperties?.Any() is true)
 				{
-					if (options.AdditionalProperties.TryGetValue("ThinkingConfig", out var thinkingConfig) &&
+					if (options.AdditionalProperties.TryGetValue(nameof(ToolConfig), out var objToolConfig) is true &&
+					    objToolConfig is ToolConfig toolConfig)
+					{
+						request.ToolConfig ??= new();
+						request.ToolConfig.RetrievalConfig = toolConfig.RetrievalConfig;
+					}
+					
+					if (options.AdditionalProperties.TryGetValue(nameof(ThinkingConfig), out var thinkingConfig) &&
 					    thinkingConfig is IReadOnlyDictionary<string, object> thinkingConfigDict)
 					{
 						request.GenerationConfig.ThinkingConfig ??= new ThinkingConfig();
