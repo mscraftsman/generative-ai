@@ -128,7 +128,65 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        var search = new Retrieval {
 		        VertexAiSearch = new VertexAISearch {
 			        Datastore = $"projects/{_fixture.ProjectId}/locations/global/collections/default_collection/dataStores/{dataStoreId}"
-	        }};
+		        }};
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [search.AsAITool()]
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_External_Search_API()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "How can I use this SDK?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var search = new Retrieval
+	        {
+		        ExternalApi = new ExternalApi()
+		        {
+			        ApiSpec = ApiSpec.SimpleSearch,
+			        Endpoint = "",
+			        ApiAuth = new() { ApiKeyConfig = new() { ApiKeyString = "" }},
+			        // SimpleSearchParams = new SimpleSearchParams() { }
+		        }
+	        };
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [search.AsAITool()]
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Elasticsearch()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "How can I use this SDK?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var search = new Retrieval
+	        {
+		        ExternalApi = new ExternalApi()
+		        {
+			        ApiSpec = ApiSpec.ElasticSearch,
+			        Endpoint = "",
+			        ApiAuth = new() { ApiKeyConfig = new() { ApiKeyString = "" }},
+			        ElasticSearchParams = new() { Index = "", SearchTemplate = "", NumHits = 10 }
+		        }
+	        };
 	        var chatOptions = new ChatOptions
 	        {
 		        Tools = [search.AsAITool()]
@@ -158,11 +216,31 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 				        RetrievalConfig = new RetrievalConfig() { 
 					        LatLng = new LatLng() {
 						        Latitude = -20.283700f,
-								Longitude = 57.371529f
-							},
+						        Longitude = 57.371529f
+					        },
 					        LanguageCode = "de_DE"
 				        }}
 		        }
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Url_Context()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "What is the content of https://jochen.kirstaetter.name/?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var context = new UrlContext();
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [context.AsAITool()]
 	        };
 
 	        // Act
