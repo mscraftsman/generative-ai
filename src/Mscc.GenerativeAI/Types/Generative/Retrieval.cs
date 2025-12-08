@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Defines a retrieval tool that model can call to access external knowledge.
     /// </summary>
-    public class Retrieval
+    public class Retrieval : ITool
     {
         /// <summary>
         /// Optional. Disable using the result from this tool in detecting grounding attribution.

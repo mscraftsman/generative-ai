@@ -3,7 +3,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Tool to retrieve public web data for grounding, powered by Google.
     /// </summary>
-    public class GoogleSearchRetrieval
+    public class GoogleSearchRetrieval : ITool
     {
         /// <summary>
         /// Specifies the dynamic retrieval configuration for the given source.

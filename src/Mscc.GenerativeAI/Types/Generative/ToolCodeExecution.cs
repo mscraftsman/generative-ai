@@ -8,7 +8,7 @@ namespace Mscc.GenerativeAI
     /// See also `<see cref="ExecutableCode"/>` and `<see cref="CodeExecutionResult"/>`
     /// which are only generated when using this tool.
     /// </remarks>
-    public class ToolCodeExecution
+    public class ToolCodeExecution : ITool
     {
         
     }

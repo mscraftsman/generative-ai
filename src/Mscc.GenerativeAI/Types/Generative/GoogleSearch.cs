@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google.
     /// </summary>
-    public class GoogleSearch
+    public class GoogleSearch : ITool
     {
         /// <summary>
         /// Optional. List of domains to be excluded from the search results.

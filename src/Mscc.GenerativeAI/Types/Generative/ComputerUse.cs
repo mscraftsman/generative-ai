@@ -5,7 +5,7 @@ namespace Mscc.GenerativeAI
     /// <summary>
     /// Computer Use tool type.
     /// </summary>
-    public class ComputerUse
+    public class ComputerUse : ITool
     {
         /// <summary>
         /// Required. The environment being operated.

@@ -7,7 +7,7 @@ namespace Mscc.GenerativeAI
     /// The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora.
     /// Files are imported to Semantic Retrieval corpora using the ImportFile API.
     /// </summary>
-    public class FileSearch
+    public class FileSearch : ITool
     {
         /// <summary>
         /// Optional. The configuration for the retrieval.
