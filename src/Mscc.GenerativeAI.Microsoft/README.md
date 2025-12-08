@@ -39,13 +39,16 @@ response = await chatClient.CompleteAsync(
 Console.WriteLine(response.Message);
 ```
 
+## Streaming content generation
+
 ```csharp
 using Microsoft.Extensions.AI;
 using Mscc.GenerativeAI.Microsoft;
 using System.ComponentModel
 
 // assuming credentials are set up in environment variables as instructed above.
-IChatClient chatClient = new GeminiChatClient().AsIChatClient("gemini-2.5-flash")
+IChatClient chatClient = new GeminiChatClient()
+    .AsIChatClient("gemini-2.5-flash")
     .AsBuilder()
     .UseFunctionInvocation()
     .UseOpenTelemetry()
@@ -67,6 +70,44 @@ await foreach (var update in chatClient.GetStreamingResponseAsync("How much olde
 }
 ```
 
+## Grounding using Google Search
+
+```csharp
+using Microsoft.Extensions.AI;
+using Mscc.GenerativeAI.Microsoft;
+
+// Chat with Gemini API.
+var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+var model = "gemini-2.5-flash";
+var prompt = "What is AI?";
+
+IChatClient chatClient = new GeminiChatClient(apiKey: apiKey, model);
+
+var chatOptions = new ChatOptions { Tools = [new HostedWebSearchTool()] };
+
+var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+Console.WriteLine(response.Text);
+```
+
+## Code execution
+
+```csharp
+using Microsoft.Extensions.AI;
+using Mscc.GenerativeAI.Microsoft;
+
+// Chat with Gemini API.
+var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+var model = "gemini-2.5-flash";
+var prompt = "What is the sum of the first 42 fibonacci numbers? Generate and run code to do the calculation?";
+
+IChatClient chatClient = new GeminiChatClient(apiKey: apiKey, model);
+
+var chatOptions = new ChatOptions { Tools = [new HostedCodeInterpreterTool()] };
+
+var response = await chatClient.GetResponseAsync(prompt);
+Console.WriteLine(response.Text);
+```
+
 ## Embeddings
 
 ```csharp
@@ -79,7 +120,7 @@ var model = "text-embedding-004";
 var prompt = "What is AI?";
 
 IEmbeddingGenerator<string,Embedding<float>> generator = 
-    new GeminiEmbeddingGenerator(apiKey, model);
+    new GeminiEmbeddingGenerator(apiKey: apiKey, model);
 
 var embeddings = await generator.GenerateAsync([prompt]);
 Console.WriteLine(string.Join(", ", embeddings[0].Vector.ToArray()));

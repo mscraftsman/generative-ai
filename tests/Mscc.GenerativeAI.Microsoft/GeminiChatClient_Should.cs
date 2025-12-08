@@ -30,7 +30,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         public async Task GetResponseAsync()
         {
 	        // Arrange
-	        var model = "gemini-2.0-flash";
+	        var model = "gemini-2.5-flash";
 	        var prompt = "What is AI?";
 	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
 
@@ -45,13 +45,94 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         public async Task GetResponseAsync_using_ChatHistory()
         {
 	        // Arrange
-	        var model = "gemini-2.0-flash";
+	        var model = "gemini-2.5-flash";
 	        var prompt = "What is AI?";
 	        List<mea.ChatMessage> chatHistory = new List<mea.ChatMessage> { new(mea.ChatRole.User, prompt) };
 	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
 
 	        // Act
 	        var response = await chatClient.GetResponseAsync(chatHistory);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Google_Search()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "Who won the 2025 F1 Championship?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var chatOptions = new ChatOptions { Tools = [new HostedWebSearchTool()] };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Code_Execution()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "What is the sum of the first 42 fibonacci numbers? Generate and run code to do the calculation?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var chatOptions = new ChatOptions { Tools = [new HostedCodeInterpreterTool()] };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        public async Task GetResponseAsync_with_File_Search()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "What is the sum of the first 42 fibonacci numbers? Generate and run code to do the calculation?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var chatOptions = new ChatOptions { Tools = [new HostedFileSearchTool()] };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        public async Task GetResponseAsync_with_Image_Generation()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "What is the sum of the first 42 fibonacci numbers? Generate and run code to do the calculation?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+#pragma warning disable MEAI001
+	        var chatOptions = new ChatOptions { Tools = [new HostedImageGenerationTool()] };
+#pragma warning restore MEAI001
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        public async Task GetResponseAsync_with_MCP_Server()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "What is the sum of the first 42 fibonacci numbers? Generate and run code to do the calculation?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+#pragma warning disable MEAI001
+	        var chatOptions = new ChatOptions { Tools = [new HostedMcpServerTool("github", "https://api.githubcopilot.com/mcp/")] };
+#pragma warning restore MEAI001
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
 
 	        // Assert
 	        _output.WriteLine(response.Text);
@@ -131,7 +212,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         {
             // assuming credentials are set up in environment variables.
             IChatClient chatClient = new GeminiClient(apiKey: _fixture.ApiKey)
-                .AsIChatClient("gemini-2.0-flash")
+                .AsIChatClient("gemini-2.5-flash")
                 .AsBuilder()
                 .UseFunctionInvocation()
                 .UseOpenTelemetry()
