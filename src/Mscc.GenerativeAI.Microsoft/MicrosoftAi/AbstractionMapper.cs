@@ -138,6 +138,7 @@ namespace Mscc.GenerativeAI.Microsoft
 	                {
 	                    thoughtSignature = ToGeminiThoughtSignature(content);
 	                    part.ThoughtSignature = thoughtSignature;
+	                    // part.Thought = thoughtSignature is not null ? true : null;
 	                    c.Parts.Add(part);
 	                }
                 }
