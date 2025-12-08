@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.6
+
+### Added
+
+- add various hosted tools (4892ae0)
+- add MEAI samples of using Web Search and Code Interpreter (4d0e489)
+
+### Fixed
+
+- fix optional toolConfig.functionCallConfig handling (25be2b3)
+
 ## 2.9.5
 
 ### Added
