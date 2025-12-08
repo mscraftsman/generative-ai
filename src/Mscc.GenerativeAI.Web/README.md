@@ -34,7 +34,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI.Web" Version="2.9.4" />
+    <PackageReference Include="Mscc.GenerativeAI.Web" Version="2.9.5" />
   </ItemGroup>
 ```
 

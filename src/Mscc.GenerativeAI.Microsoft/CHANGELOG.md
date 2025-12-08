@@ -11,6 +11,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.5
+
+### Added
+
+- add mapping of `ThinkingLevel` (e7adca0)
+- add handling of `Dimensions` (2505516)
+- add `ILogger` parameter (88b00f2)
+- add tests for GetResponseAsync (3425cb0)
+- add .NET version specifics (eab893e)
+- Merge pull request #153 from PederHP/FixComputerUseEnvironment (d054d02)
+
+### Changed
+
+- extend sample MEAI project (a514c9f)
+
+### Fixed
+
+- Fix bugs (734828f)
+- Fix JsonConverter type for ComputerUseEnvironment enum (247ed9a)
+
 ## 2.9.4
 
 ### Added
