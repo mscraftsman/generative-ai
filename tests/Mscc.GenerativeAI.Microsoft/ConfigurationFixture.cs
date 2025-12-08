@@ -46,31 +46,28 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             if (string.IsNullOrEmpty(ApiKey))
                 ApiKey = Environment.GetEnvironmentVariable("VERTEX_API_KEY");
 
-            if (string.IsNullOrEmpty(ApiKey))
+            ProjectId = Configuration["project_id"];
+            if (string.IsNullOrEmpty(ProjectId))
+                ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
+                            Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+            Region = Configuration["region"];
+            if (string.IsNullOrEmpty(Region))
+                Region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
+                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
+            AccessToken = Configuration["access_token"];
+            if (string.IsNullOrEmpty(AccessToken))
+                AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+            if (string.IsNullOrEmpty(AccessToken))
             {
-                ProjectId = Configuration["project_id"];
-                if (string.IsNullOrEmpty(ProjectId))
-                    ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                                Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
-                Region = Configuration["region"];
-                if (string.IsNullOrEmpty(Region))
-                    Region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
-                             Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
-                AccessToken = Configuration["access_token"];
-                if (string.IsNullOrEmpty(AccessToken))
-                    AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
-                if (string.IsNullOrEmpty(AccessToken))
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices
+	                    .OSPlatform.Windows))
                 {
-	                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices
-		                    .OSPlatform.Windows))
-	                {
-		                AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token")
-			                .TrimEnd();
-	                }
-	                else
-	                {
-		                AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
-	                }
+	                AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token")
+		                .TrimEnd();
+                }
+                else
+                {
+	                AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
                 }
             }
 
