@@ -253,12 +253,44 @@ namespace Mscc.GenerativeAI.Microsoft
 								break;
 
 							case mea.HostedWebSearchTool wst:
-								// ToDo: Differentiate between Google Search and Enterprise Web Search
+								// ToDo: Differentiate between Google Search and Grounding in Vertex AI
+								// Ref: https://github.com/dotnet/extensions/issues/7115
 								(request.Tools ??= []).Add(new Tool() { GoogleSearch = new() });
 								break;
 
 							case mea.HostedCodeInterpreterTool cit:
+								// ToDo: Consider HostedFileContent being used as inlined bytes (InlineData).
+								// Ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/multimodal/code-execution#googlegenaisdk_tools_code_exec_with_txt-drest
 								(request.Tools ??= []).Add(new Tool() { CodeExecution = new() });
+								break;
+							
+							case mea.HostedFileSearchTool fst:
+								if (fst.AdditionalProperties.TryGetValue("FileSearchStores", out var storesObject))
+								{
+									List<string>? stores = storesObject switch
+									{
+										List<string> ls => ls,
+										string s => [s],
+										_ => null
+									};
+
+									if (stores?.Count > 0)
+									{
+										(request.Tools ??= []).AddFileSearch(stores);
+									}
+								}
+								break;
+							
+							case mea.HostedImageGenerationTool igt:
+								Debug.WriteLine($"This AITool type is not supported yet: '{nameof(tool)}'");
+								break;
+							
+							case mea.HostedMcpServerTool mst:
+								Debug.WriteLine($"This AITool type is not supported yet: '{nameof(tool)}'");
+								break;
+							
+							default:
+								Debug.WriteLine($"This AITool type is not supported yet: '{nameof(tool)}'");
 								break;
 						}
 					}
