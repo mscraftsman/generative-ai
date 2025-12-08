@@ -60,5 +60,19 @@ namespace Mscc.GenerativeAI.Microsoft
             if (client is null) throw new ArgumentNullException(nameof(client));
             return client.GetGenerativeModel(model).AsISpeechToTextClient();
         }
+        
+        /// <summary>
+        /// Converts a Gemini <see cref="ITool"/> to a <see cref="mea.AITool"/>.
+        /// </summary>
+        /// <typeparam name="T">Gemini tool</typeparam>
+        /// <param name="tool">Instance of a Gemini tool</param>
+        /// <returns>An instance of a <see cref="mea.AITool"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the specified tool is null.</exception>
+        public static mea.AITool AsAITool<T>(this T tool) where T : ITool
+        {
+	        if (tool is null) throw new ArgumentNullException(nameof(tool));
+
+	        return new GeminiChatClient.GeminiAITool<T>(tool);
+        }
     }
 }

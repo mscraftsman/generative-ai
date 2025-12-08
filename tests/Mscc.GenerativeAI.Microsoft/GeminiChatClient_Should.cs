@@ -47,11 +47,30 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        // Arrange
 	        var model = "gemini-2.5-flash";
 	        var prompt = "What is AI?";
-	        List<mea.ChatMessage> chatHistory = new List<mea.ChatMessage> { new(mea.ChatRole.User, prompt) };
+	        List<mea.ChatMessage> chatHistory = new List<mea.ChatMessage> { new(ChatRole.User, prompt) };
 	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
 
 	        // Act
 	        var response = await chatClient.GetResponseAsync(chatHistory);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Web_Search()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "Who won the 2025 F1 Championship?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [new HostedWebSearchTool()]
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
 
 	        // Assert
 	        _output.WriteLine(response.Text);
@@ -64,7 +83,52 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        var model = "gemini-2.5-flash";
 	        var prompt = "Who won the 2025 F1 Championship?";
 	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
-	        var chatOptions = new ChatOptions { Tools = [new HostedWebSearchTool()] };
+	        // var search = new GoogleSearch{ ExcludeDomains = ["google.com"], BlockingConfidence = PhishBlockThreshold.BlockHighAndAbove };
+	        var search = new GoogleSearch{};
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [search.AsAITool()]
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Enterprise_Web_Search()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "Who won the 2025 F1 Championship?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var search = new EnterpriseWebSearch{ ExcludeDomains = ["google.com"], BlockingConfidence = PhishBlockThreshold.BlockHighAndAbove };
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [search.AsAITool()]
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_with_Google_Maps()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "Where is the capital of Kenya?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var maps = new GoogleMaps { EnableWidget = true };
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [maps.AsAITool()]
+	        };
 
 	        // Act
 	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);

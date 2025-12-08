@@ -240,6 +240,34 @@ namespace Mscc.GenerativeAI.Microsoft
 					{
 						switch (tool)
 						{
+							case GeminiChatClient.GeminiAITool<GoogleMaps> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { GoogleMaps = geminiAiTool.Tool });
+								break;
+							
+							case GeminiChatClient.GeminiAITool<EnterpriseWebSearch> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { EnterpriseWebSearch = geminiAiTool.Tool });
+								break;
+							
+							case GeminiChatClient.GeminiAITool<GoogleSearch> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { GoogleSearch = geminiAiTool.Tool });
+								break;
+							
+							case GeminiChatClient.GeminiAITool<GoogleSearchRetrieval> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { GoogleSearchRetrieval = geminiAiTool.Tool });
+								break;
+							
+							case GeminiChatClient.GeminiAITool<Retrieval> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { Retrieval = geminiAiTool.Tool });
+								break;
+							
+							case GeminiChatClient.GeminiAITool<ComputerUse> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { ComputerUse = geminiAiTool.Tool });
+								break;
+							
+							case GeminiChatClient.GeminiAITool<UrlContext> geminiAiTool:
+								(request.Tools ??= []).Add(new Tool() { UrlContext = geminiAiTool.Tool });
+								break;
+							
 							case mea.AIFunctionDeclaration aif:
 								functionDeclarations.Add(new FunctionDeclaration
 								{
@@ -255,29 +283,63 @@ namespace Mscc.GenerativeAI.Microsoft
 							case mea.HostedWebSearchTool wst:
 								// ToDo: Differentiate between Google Search and Grounding in Vertex AI
 								// Ref: https://github.com/dotnet/extensions/issues/7115
-								(request.Tools ??= []).Add(new Tool() { GoogleSearch = new() });
+								List<string>? excludeDomains = null;
+								if (wst.AdditionalProperties.TryGetValue("ExcludeDomains",
+									    out object? objExcludeDomains))
+								{
+									excludeDomains = objExcludeDomains as List<string>;
+								}
+
+								PhishBlockThreshold? blockingConfidence = null;
+								if (wst.AdditionalProperties.TryGetValue(nameof(PhishBlockThreshold),
+									    out object? objBlockingConfidence))
+								{
+									if (Enum.TryParse((string)objBlockingConfidence,
+										    out PhishBlockThreshold parsedBlockingConfidence))
+									{
+										blockingConfidence = parsedBlockingConfidence;
+									}
+								}
+
+								var googleSearchTool = new Tool() { GoogleSearch = new() };
+								googleSearchTool.GoogleSearch.ExcludeDomains = excludeDomains;
+								googleSearchTool.GoogleSearch.BlockingConfidence = blockingConfidence;
+								(request.Tools ??= []).Add(googleSearchTool);
 								break;
 
 							case mea.HostedCodeInterpreterTool cit:
 								// ToDo: Consider HostedFileContent being used as inlined bytes (InlineData).
 								// Ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/multimodal/code-execution#googlegenaisdk_tools_code_exec_with_txt-drest
+								var files = cit.Inputs?
+									.OfType<mea.HostedFileContent>()
+									.Select(f => f.FileId)
+									.ToList() ?? [];
+								
 								(request.Tools ??= []).Add(new Tool() { CodeExecution = new() });
 								break;
 							
 							case mea.HostedFileSearchTool fst:
-								if (fst.AdditionalProperties.TryGetValue("FileSearchStores", out var storesObject))
+								List<string> stores = fst.Inputs?
+									.OfType<mea.HostedVectorStoreContent>()
+									.Select(c => c.VectorStoreId)
+									.ToList() ?? [];
+								
+								if (stores.Count == 0)
 								{
-									List<string>? stores = storesObject switch
+									if (fst.AdditionalProperties.TryGetValue(nameof(FileSearchStore), out var storesObject))
 									{
-										List<string> ls => ls,
-										string s => [s],
-										_ => null
-									};
-
-									if (stores?.Count > 0)
-									{
-										(request.Tools ??= []).AddFileSearch(stores);
+										stores = storesObject switch
+										{
+											List<string> ls => ls,
+											string s => [s],
+											_ => null
+										};
 									}
+								}
+
+								if (stores?.Count > 0)
+								{
+									(request.Tools ??= []).AddFileSearch(stores);
 								}
 								break;
 							

@@ -102,4 +102,25 @@ public sealed class GeminiChatClient : mea.IChatClient
         
     /// <inheritdoc/>
     public void Dispose() { }
+    
+    /// <summary>
+    /// Provides an <see cref="mea.AITool"/> wrapper for a Gemini tool.
+    /// </summary>
+    /// <typeparam name="T">Gemini tool</typeparam>
+    /// <param name="tool">Instance of a Gemini tool</param>
+    internal sealed class GeminiAITool<T>(T tool) : mea.AITool where T : ITool
+    {
+	    public T Tool => tool;
+	    public override string Name => Tool.GetType().Name;
+
+	    /// <inheritdoc />
+	    public override object? GetService(Type serviceType, object? serviceKey = null)
+	    {
+		    if (tool is null) throw new ArgumentNullException(nameof(serviceType));
+
+		    return
+			    serviceKey is null && serviceType.IsInstanceOfType(Tool) ? Tool :
+				    base.GetService(serviceType, serviceKey);
+	    }
+    }
 }
