@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,15 +31,18 @@ public sealed class GeminiChatClient : mea.IChatClient
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
-    
+
     /// <summary>
     /// Creates an instance of the Gemini API client using Google AI.
     /// </summary>
     /// <param name="apiKey">API key provided by Google AI Studio</param>
     /// <param name="model">Model to use.</param>
-    public GeminiChatClient(string apiKey, string? model)
+    /// <param name="logger">Optional. Logger instance used for logging</param>
+    public GeminiChatClient(string apiKey, 
+	    string? model,
+	    ILogger? logger = null)
     {
-        var genAi = new GoogleAI(apiKey);
+        var genAi = new GoogleAI(apiKey, logger: logger);
         _client = genAi.GenerativeModel(model);
         _model = model ?? _client.Model;
     }
@@ -49,9 +53,13 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// <param name="projectId">Identifier of the Google Cloud project.</param>
     /// <param name="region">Optional. Region to use (default: "us-central1").</param>
     /// <param name="model">Model to use.</param>
-    public GeminiChatClient(string projectId, string? region = null, string model = null)
+    /// <param name="logger">Optional. Logger instance used for logging</param>
+    public GeminiChatClient(string projectId,
+	    string? region = null,
+	    string? model = null,
+	    ILogger? logger = null)
     {
-        var genAi = new VertexAI(projectId: projectId, region: region);
+        var genAi = new VertexAI(projectId: projectId, region: region, logger: logger);
         _client = genAi.GenerativeModel(model);
         _model = model ?? _client.Model;
     }
