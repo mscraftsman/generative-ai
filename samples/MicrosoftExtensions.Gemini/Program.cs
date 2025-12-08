@@ -2,6 +2,7 @@
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
 using System.Text.Json;
+using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 GenerativeAIExtensions.ReadDotEnv();
 var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY")!;
@@ -13,8 +14,10 @@ IChatClient chatClient = new GeminiChatClient(apiKey, model);
 var response = await chatClient.GetResponseAsync(prompt);
 Console.WriteLine(response.Text);
 
-response = await chatClient.GetResponseAsync( 
-    "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference.");
+prompt = "Explain the following expression 'Fortis Fortuna Adiuvat' and give a prominent reference.";
+List<ChatMessage> chatHistory = [];
+chatHistory.Add(new ChatMessage(ChatRole.User, prompt));
+response = await chatClient.GetResponseAsync(chatHistory);
 Console.WriteLine(response.Text);
 
 // structured output
