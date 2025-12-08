@@ -132,10 +132,12 @@ namespace Mscc.GenerativeAI.Microsoft
 			                break;
 	                }
 
-	                thoughtSignature = ToGeminiThoughtSignature(content);
-	                // part.Thought = thoughtSignature is not null ? true : null;
-	                part.ThoughtSignature = thoughtSignature;
-	                c.Parts.Add(part);
+	                if (part is not null)
+	                {
+	                    thoughtSignature = ToGeminiThoughtSignature(content);
+	                    part.ThoughtSignature = thoughtSignature;
+	                    c.Parts.Add(part);
+	                }
                 }
 
                 if (c.Parts.Count > 0)
