@@ -21,5 +21,9 @@ namespace Mscc.GenerativeAI
         /// Optional. Set to use a data source powered by Vertex AI RAG store.
         /// </summary>
         public VertexRagStore? VertexRagStore { get; set; }
+        /// <summary>
+        /// Use data source powered by external API for grounding.
+        /// </summary>
+        public ExternalApi? ExternalApi { get; set; }
     }
 }
