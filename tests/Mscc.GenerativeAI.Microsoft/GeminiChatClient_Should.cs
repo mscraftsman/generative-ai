@@ -118,6 +118,30 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         }
 
         [Fact]
+        public async Task GetResponseAsync_with_Vertex_AI_Search()
+        {
+	        // Arrange
+	        var model = "gemini-2.5-flash";
+	        var prompt = "How can I use this SDK?";
+	        var dataStoreId = "";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+	        var search = new Retrieval {
+		        VertexAiSearch = new VertexAISearch {
+			        Datastore = $"projects/{_fixture.ProjectId}/locations/global/collections/default_collection/dataStores/{dataStoreId}"
+	        }};
+	        var chatOptions = new ChatOptions
+	        {
+		        Tools = [search.AsAITool()]
+	        };
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt, chatOptions);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
         public async Task GetResponseAsync_with_Google_Maps()
         {
 	        // Arrange
@@ -135,7 +159,9 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 					        LatLng = new LatLng() {
 						        Latitude = -20.283700f,
 								Longitude = 57.371529f
-			        }}}
+							},
+					        LanguageCode = "de_DE"
+				        }}
 		        }
 	        };
 
