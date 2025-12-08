@@ -10,7 +10,7 @@ string model = Environment.GetEnvironmentVariable("GOOGLE_GENAI_MODEL") ?? "gemi
 // Using a community driven Mscc.GenerativeAI.Microsoft package
 
 ChatClientAgent agentCommunity = new(
-	new GeminiChatClient(apiKey, model),
+	new GeminiChatClient(apiKey: apiKey, model: model),
 	name: JokerName,
 	instructions: JokerInstructions);
 
