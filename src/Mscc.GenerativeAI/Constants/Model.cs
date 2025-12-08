@@ -16,9 +16,6 @@ namespace Mscc.GenerativeAI
         public const string GeminiExperimental1114 = GeminiExperimental1206;
         public const string GeminiExperimental1121 = GeminiExperimental1206;
         public const string GeminiExperimental1206 = "gemini-exp-1206";
-        public const string LearnLM = LearnLMExperimental;
-        public const string LearnLM15 = LearnLMExperimental;
-        public const string LearnLMExperimental = "learnlm-1.5-pro-experimental";
 
         // Gemini 2.0
         public const string Gemini20Pro = Gemini20ProExperimental;

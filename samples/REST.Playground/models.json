@@ -282,22 +282,6 @@
       "version": "gemini-2.5-pro-preview-tts-2025-05-19"
     },
     {
-      "description": "LearnLM 2.0 Flash Experimental",
-      "displayName": "LearnLM 2.0 Flash Experimental",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/learnlm-2.0-flash-experimental",
-      "outputTokenLimit": 32768,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.0"
-    },
-    {
       "displayName": "Gemma 3 1B",
       "inputTokenLimit": 32768,
       "name": "models/gemma-3-1b-it",
