@@ -26,6 +26,37 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             _fixture = fixture;
         }
 
+        [Fact]
+        public async Task GetResponseAsync()
+        {
+	        // Arrange
+	        var model = "gemini-2.0-flash";
+	        var prompt = "What is AI?";
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(prompt);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_using_ChatHistory()
+        {
+	        // Arrange
+	        var model = "gemini-2.0-flash";
+	        var prompt = "What is AI?";
+	        List<mea.ChatMessage> chatHistory = new List<mea.ChatMessage> { new(mea.ChatRole.User, prompt) };
+	        IChatClient chatClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+
+	        // Act
+	        var response = await chatClient.GetResponseAsync(chatHistory);
+
+	        // Assert
+	        _output.WriteLine(response.Text);
+        }
+
         [Theory]
         [InlineData("What is the user's name and age?")]
         [InlineData("Who am I?")]
@@ -33,7 +64,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         {
             // Arrange
             var model = Model.Gemini25Pro;
-            var gemini = new GeminiChatClient(_fixture.ApiKey, model);
+            var gemini = new GeminiChatClient(apiKey: _fixture.ApiKey, model);
             IChatClient chatClient = new ChatClientBuilder(gemini)
                 .UseFunctionInvocation()
                 .Build();
@@ -65,7 +96,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         {
             // Arrange
             var model = Model.Gemini25Pro;
-            var gemini = new GeminiChatClient(_fixture.ApiKey, model);
+            var gemini = new GeminiChatClient(apiKey: _fixture.ApiKey, model);
             IChatClient chatClient = new ChatClientBuilder(gemini)
                 .UseFunctionInvocation()
                 .Build();
@@ -99,7 +130,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         public async Task Dotnet_Genai_Sample()
         {
             // assuming credentials are set up in environment variables.
-            IChatClient chatClient = new GeminiClient(_fixture.ApiKey)
+            IChatClient chatClient = new GeminiClient(apiKey: _fixture.ApiKey)
                 .AsIChatClient("gemini-2.0-flash")
                 .AsBuilder()
                 .UseFunctionInvocation()
