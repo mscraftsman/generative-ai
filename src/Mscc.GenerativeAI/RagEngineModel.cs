@@ -38,6 +38,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="projectId"></param>
         /// <param name="region"></param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="model"></param>
         /// <param name="generationConfig"></param>
         /// <param name="safetySettings"></param>
@@ -46,7 +47,9 @@ namespace Mscc.GenerativeAI
         /// <param name="toolConfig"></param>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        internal RagEngineModel(string? projectId = null, string? region = null,
+        internal RagEngineModel(string? projectId = null, 
+	        string? region = null,
+	        string? accessToken = null,
             string? model = null,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
@@ -54,7 +57,7 @@ namespace Mscc.GenerativeAI
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
             IHttpClientFactory? httpClientFactory = null, 
-            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
+            ILogger? logger = null) : base(projectId, region, model, accessToken, httpClientFactory, logger)
         {
         }
 

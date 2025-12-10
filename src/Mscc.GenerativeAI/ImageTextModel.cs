@@ -37,13 +37,16 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="model">Model to use</param>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        public ImageTextModel(string? projectId = null, string? region = null,
+        public ImageTextModel(string? projectId = null, 
+	        string? region = null,
+	        string? accessToken = null,
             string? model = null,
             IHttpClientFactory? httpClientFactory = null,
-            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger) { }
+            ILogger? logger = null) : base(projectId, region, model, accessToken, httpClientFactory, logger) { }
 
         /// <summary>
         /// Generates images from the specified <see cref="ImageTextRequest"/>.

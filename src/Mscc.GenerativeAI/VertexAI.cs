@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using System.Net;
 
 namespace Mscc.GenerativeAI
 {
@@ -21,12 +20,13 @@ namespace Mscc.GenerativeAI
         private readonly string _region = "us-central1";
         private readonly string _version;
         private readonly string? _apiKey;
+        private readonly string? _accessToken;
         private readonly bool _isExpressMode;
         private readonly IHttpClientFactory? _httpClientFactory;
         private readonly RequestOptions? _requestOptions;
 
         private string _endpointId = string.Empty;
-
+        
         public string EndpointId
         {
             get => _endpointId;
@@ -60,6 +60,7 @@ namespace Mscc.GenerativeAI
                       Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION") ?? _region;
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
+            _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
             _version = ApiVersion.V1;
             _httpClientFactory = httpClientFactory;
             _requestOptions = requestOptions;
@@ -70,6 +71,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="endpointId">Optional. Endpoint ID of the deployed model to use.</param>
         /// <param name="apiVersion">Version of the API.</param>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
@@ -78,6 +80,7 @@ namespace Mscc.GenerativeAI
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="projectId"/> is <see langword="null"/>.</exception>
         public VertexAI(string? projectId,
             string? region = null,
+            string? accessToken = null,
             string? endpointId = null,
             string? apiVersion = null,
             IHttpClientFactory? httpClientFactory = null,
@@ -86,6 +89,7 @@ namespace Mscc.GenerativeAI
         {
             _projectId = projectId ?? _projectId ?? throw new ArgumentNullException(nameof(projectId));
             _region = region ?? _region;
+            _accessToken = accessToken ?? _accessToken;
             _endpointId = endpointId?.SanitizeEndpointName() ?? _endpointId;
             _version = apiVersion ?? _version;
         }
@@ -150,6 +154,7 @@ namespace Mscc.GenerativeAI
             return new GenerativeModel(_projectId,
                 _region,
                 model,
+                _accessToken,
                 _endpointId,
                 generationConfig,
                 safetySettings,
@@ -158,6 +163,7 @@ namespace Mscc.GenerativeAI
                 httpClientFactory: _httpClientFactory,
                 logger: logger ?? Logger)
             {
+	            AccessToken = _apiKey is null ? _accessToken : null,
                 Version = _version,
                 RequestOptions = _requestOptions
             };
@@ -189,6 +195,7 @@ namespace Mscc.GenerativeAI
             {
                 ProjectId = _projectId,
                 Region = _region,
+	            AccessToken = _apiKey is null ? _accessToken : null,
                 Version = _version,
                 RequestOptions = _requestOptions
             };
@@ -220,6 +227,7 @@ namespace Mscc.GenerativeAI
             {
                 ProjectId = _projectId, 
                 Region = _region,
+	            AccessToken = _apiKey is null ? _accessToken : null,
                 Version = _version,
                 RequestOptions = _requestOptions
             };
@@ -245,7 +253,12 @@ namespace Mscc.GenerativeAI
         {
             Guard();
 
-            return new SupervisedTuningJobModel(_projectId, _region, model, _httpClientFactory, logger: logger);
+            return new SupervisedTuningJobModel(_projectId,
+	            _region,
+	            _accessToken,
+	            model,
+	            _httpClientFactory,
+	            logger: logger);
         }
 
         /// <summary>
@@ -262,6 +275,7 @@ namespace Mscc.GenerativeAI
 
             return new ImageGenerationModel(_projectId,
                 _region,
+                _accessToken,
                 model,
                 _httpClientFactory,
                 logger: logger);
@@ -281,6 +295,7 @@ namespace Mscc.GenerativeAI
 
             return new ImageTextModel(_projectId,
                 _region,
+                _accessToken,
                 model,
                 _httpClientFactory,
                 logger: logger);

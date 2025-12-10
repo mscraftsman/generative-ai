@@ -264,6 +264,7 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
         /// <param name="model">Model to use</param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="endpoint">Optional. Endpoint ID of the tuned model to use.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
         /// <param name="safetySettings">Optional. A list of unique SafetySetting instances for blocking unsafe content.</param>
@@ -272,15 +273,18 @@ namespace Mscc.GenerativeAI
         /// <param name="toolConfig">Optional. Configuration of tools.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        internal GenerativeModel(string? projectId = null, string? region = null,
-            string? model = null, string? endpoint = null,
+        internal GenerativeModel(string? projectId = null, 
+	        string? region = null,
+            string? model = null, 
+	        string? accessToken = null,
+	        string? endpoint = null,
             GenerationConfig? generationConfig = null,
             List<SafetySetting>? safetySettings = null,
             Tools? tools = null,
             Content? systemInstruction = null,
             ToolConfig? toolConfig = null,
             IHttpClientFactory? httpClientFactory = null, 
-            ILogger? logger = null) : base(projectId, region, model, httpClientFactory, logger)
+            ILogger? logger = null) : base(projectId, region, model, accessToken, httpClientFactory, logger)
         {
             Logger.LogGenerativeModelInvoking();
 

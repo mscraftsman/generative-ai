@@ -108,9 +108,8 @@ namespace Mscc.GenerativeAI.Google
             if (Region == null) throw new ArgumentNullException(nameof(Region));
 
             var accessToken = _credential.GetAccessTokenForRequestAsync().Result; // _credential.Token.AccessToken
-            var vertex = new VertexAI(projectId: ProjectId, region: Region, requestOptions: requestOptions);
+            var vertex = new VertexAI(projectId: ProjectId, region: Region, accessToken: accessToken, requestOptions: requestOptions);
             var generativeModel = vertex.GenerativeModel(model, GenerationConfig, SafetySettings);
-            generativeModel.AccessToken = accessToken;
             return generativeModel;
         }
 

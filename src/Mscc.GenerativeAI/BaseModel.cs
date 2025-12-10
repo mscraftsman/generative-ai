@@ -214,12 +214,14 @@ namespace Mscc.GenerativeAI
         /// <param name="projectId"></param>
         /// <param name="region"></param>
         /// <param name="model"></param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="requestOptions">Options for the request.</param>
         public BaseModel(string? projectId = null,
             string? region = null,
             string? model = null,
+            string? accessToken = null,
             IHttpClientFactory? httpClientFactory = null,
             ILogger? logger = null,
             RequestOptions? requestOptions = null) : this(httpClientFactory, logger, requestOptions)
@@ -230,7 +232,9 @@ namespace Mscc.GenerativeAI
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
                     "application_default_credentials.json");
             var credentials = GetCredentialsFromFile(credentialsFile);
-            AccessToken = _accessToken ??
+            AccessToken = accessToken ??
+                          Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ??
+                          _accessToken ??
                           GetAccessTokenFromAdc();
             ProjectId = projectId ??
                         credentials?.ProjectId ??

@@ -135,9 +135,8 @@ Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` t
 ```csharp
 using Mscc.GenerativeAI;
 // Vertex AI with OAuth. Use `gcloud auth application-default print-access-token` to get the access token.
-var vertex = new VertexAI(projectId: projectId, region: region);
+var vertex = new VertexAI(projectId: projectId, region: region, accessToken: accessToken);
 var model = vertex.GenerativeModel(model: Model.Gemini25Flash);
-model.AccessToken = accessToken;
 ```
 
 Vertex AI in express mode using an API key.
@@ -180,9 +179,8 @@ var region = "us-central1";     // see documentation for available regions.
 var accessToken = "your_access_token";      // use `gcloud auth application-default print-access-token` to get it.
 var prompt = "Write a story about a magic backpack.";
 
-var vertex = new VertexAI(projectId: projectId, region: region);
+var vertex = new VertexAI(projectId: projectId, region: region, accessToken: accessToken);
 var model = vertex.GenerativeModel(model: Model.Gemini25Flash);
-model.AccessToken = accessToken;
 
 var response = await model.GenerateContent(prompt);
 Console.WriteLine(response.Text);
