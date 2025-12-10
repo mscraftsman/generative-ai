@@ -1,21 +1,17 @@
 # Release Notes
 
-## 2.9.7
+## 2.9.8
 
 ### Added
 
-- add and assign interface `ITool` (22d73ec)
-- add `ExternalApi` search functionality (Vertex AI) (c1b4ba7)
-- add handling of `ToolConfig` (34c565b)
-- add media content as byte array or stream (0925ebd)
-- add grounding with Vertex AI Search (90c53ab)
-- add generic handling of Gemini tools (9cd60a8)
-- add tests for various tools (840c413)
+- add constructor parameter `accessToken` #157 (81ad7f9)
+- add payload folder (6a7c757)
 
 ### Changed
 
-- amend tests for Vertex AI (82d6a7a)
-- enable Vertex AI configuration (5a911c5)
+- upgrade NuGet packages (a5c5de6)
+- sync test fixtures (130c21f)
+- update tests to use AccessToken (8528329)
 
 ## Changelog
 

@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 2.9.8
+
+### Added
+
+- add constructor parameter `accessToken` #157 (81ad7f9)
+
+### Changed
+
+- bump version
+
 ## 2.9.7
 
 ### Added
