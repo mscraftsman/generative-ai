@@ -1,87 +1,88 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <NoWarn>$(NoWarn);CS0618;NU1701</NoWarn>
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <NoWarn>$(NoWarn);CS0618;NU1701</NoWarn>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
-    <IsTrimmable>true</IsTrimmable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
-    <Nullable>annotations</Nullable>
-  </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0')) or $(TargetFramework.StartsWith('net7.0')) or $(TargetFramework.StartsWith('net8.0'))">
+        <IsTrimmable>true</IsTrimmable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+        <Nullable>annotations</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
-    <Reference Include="System" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Threading.Tasks" />
-    <PackageReference Include="Nullable" />
-  </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework) == 'netstandard2.0'">
+        <Reference Include="System"/>
+        <Reference Include="System.Net.Http"/>
+        <Reference Include="System.Threading.Tasks"/>
+        <PackageReference Include="Nullable"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="FluentAssertions" />
-    <PackageReference Include="Google.Protobuf" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="System.Text.Json" />
-    <PackageReference Include="xunit" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="FluentAssertions"/>
+        <PackageReference Include="Google.Protobuf"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="System.Text.Json"/>
+        <PackageReference Include="xunit"/>
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Mscc.GenerativeAI.Google\Mscc.GenerativeAI.Google.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Include="xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="payload\animals.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="payload\cat.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="payload\scones.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Mscc.GenerativeAI.Google\Mscc.GenerativeAI.Google.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update=".env" Condition="Exists('.env')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.user.json" Condition="Exists('appsettings.user.json')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="client_secret.json" Condition="Exists('client_secret.json')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="key.p12" Condition="Exists('key.p12')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="token.json" Condition="Exists('token.json')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="xunit.runner.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="payload\animals.mp4">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="payload\cat.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="payload\scones.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update=".env" Condition="Exists('.env')">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.user.json" Condition="Exists('appsettings.user.json')">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="client_secret.json" Condition="Exists('client_secret.json')">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="key.p12" Condition="Exists('key.p12')">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="token.json" Condition="Exists('token.json')">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>
