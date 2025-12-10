@@ -19,6 +19,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
         public string? Region { get; set; }
         public string? AccessToken { get; set; }
         public string? ServiceAccount { get; set; }
+        public string? Passphrase { get; set; }
         public ILogger Logger { get; set; }
 
 
@@ -38,40 +39,24 @@ namespace Test.Mscc.GenerativeAI.Microsoft
                 .AddUserSecrets<ConfigurationFixture>()
                 .Build();
 
-            ApiKey = Configuration["api_key"];
-            if (string.IsNullOrEmpty(ApiKey))
-                ApiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
-            if (string.IsNullOrEmpty(ApiKey))
-                ApiKey = Configuration["vertex_api_key"];
-            if (string.IsNullOrEmpty(ApiKey))
-                ApiKey = Environment.GetEnvironmentVariable("VERTEX_API_KEY");
-
-            ProjectId = Configuration["project_id"];
-            if (string.IsNullOrEmpty(ProjectId))
-                ProjectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                            Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
-            Region = Configuration["region"];
-            if (string.IsNullOrEmpty(Region))
-                Region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
-                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
-            AccessToken = Configuration["access_token"];
-            if (string.IsNullOrEmpty(AccessToken))
-                AccessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
-            if (string.IsNullOrEmpty(AccessToken))
-            {
-                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices
-	                    .OSPlatform.Windows))
-                {
-	                AccessToken = RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token")
-		                .TrimEnd();
-                }
-                else
-                {
-	                AccessToken = RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
-                }
-            }
-
-            ServiceAccount = Configuration["service_account"];
+            ApiKey = Configuration["api_key"]
+                     ?? Environment.GetEnvironmentVariable("GOOGLE_API_KEY")
+                     ?? Environment.GetEnvironmentVariable("GEMINI_API_KEY")
+                     ?? Configuration["vertex_api_key"]
+                     ?? Environment.GetEnvironmentVariable("VERTEX_API_KEY");
+            ProjectId = Configuration["project_id"]
+                        ?? Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID")
+                        ?? Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+            Region = Configuration["region"]
+                     ?? Environment.GetEnvironmentVariable("GOOGLE_REGION")
+                     ?? Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION");
+            AccessToken = Configuration["access_token"]
+                          ?? Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN")
+                          ?? GetApplicationDefaultAccessToken();
+            ServiceAccount = Configuration["service_account"]
+                             ?? Environment.GetEnvironmentVariable("GOOGLE_SERVICE_ACCOUNT");
+            Passphrase = Configuration["passphrase"] 
+                         ?? Environment.GetEnvironmentVariable("GOOGLE_PASSPHRASE");
 
             // Create a logger (or use dependency injection)
             using var loggerFactory = LoggerFactory.Create(builder =>
@@ -83,6 +68,20 @@ namespace Test.Mscc.GenerativeAI.Microsoft
                     .AddConsole();
             });
             ILogger logger = loggerFactory.CreateLogger<ConfigurationFixture>();
+        }
+
+        private string GetApplicationDefaultAccessToken()
+        {
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform
+                    .Windows))
+            {
+                return RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token")
+                    .TrimEnd();
+            }
+            else
+            {
+                return RunExternalExe("gcloud", "auth application-default print-access-token").TrimEnd();
+            }
         }
 
         private string RunExternalExe(string filename, string arguments)

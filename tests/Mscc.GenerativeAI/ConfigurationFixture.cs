@@ -19,6 +19,7 @@ namespace Test.Mscc.GenerativeAI
         public string? Region { get; set; }
         public string? AccessToken { get; set; }
         public string? ServiceAccount { get; set; }
+        public string? Passphrase { get; set; }
         public ILogger Logger { get; set; }
 
 
@@ -52,7 +53,10 @@ namespace Test.Mscc.GenerativeAI
             AccessToken = Configuration["access_token"]
                           ?? Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN")
                           ?? GetApplicationDefaultAccessToken();
-            ServiceAccount = Configuration["service_account"];
+            ServiceAccount = Configuration["service_account"]
+                             ?? Environment.GetEnvironmentVariable("GOOGLE_SERVICE_ACCOUNT");
+            Passphrase = Configuration["passphrase"] 
+                         ?? Environment.GetEnvironmentVariable("GOOGLE_PASSPHRASE");
 
             // Create a logger (or use dependency injection)
             using var loggerFactory = LoggerFactory.Create(builder =>
