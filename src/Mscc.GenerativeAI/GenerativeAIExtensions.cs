@@ -1418,45 +1418,75 @@ namespace Mscc.GenerativeAI
 		        request.GenerationConfig ??= new GenerationConfig();
 		        request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
 	        }
+
+	        public Tools WithTools()
+	        {
+		        request.Tools ??= [];
+		        return request.Tools;
+	        }
+        }
+
+        extension(Tools tools)
+        {
 	        
-	        public void UseGoogleSearch()
+	        public Tools UseGoogleSearch()
 	        {
 		        Tools defaultTools = [new Tool { GoogleSearch = new() }];
-		        request.Tools ??= defaultTools;
-		        if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearch is not null))
+		        tools ??= defaultTools;
+		        if (tools != null && !tools.Any(t => t.GoogleSearch is not null))
 		        {
-			        request.Tools.AddRange(defaultTools);
+			        tools.AddRange(defaultTools);
 		        }
+
+		        return tools;
 	        }
 
-	        public void UseGoogleMaps(bool? enableWidget = false)
+	        public Tools UseGoogleMaps(bool? enableWidget = false)
 	        {
 		        Tools defaultTools = [new Tool() { GoogleMaps = new() { EnableWidget = enableWidget } }];
-		        request.Tools ??= defaultTools;
-		        if (request.Tools != null && !request.Tools.Any(t => t.GoogleMaps is not null))
+		        tools ??= defaultTools;
+		        if (tools != null && !tools.Any(t => t.GoogleMaps is not null))
 		        {
-			        request.Tools.AddRange(defaultTools);
+			        tools.AddRange(defaultTools);
 		        }
+
+		        return tools;
 	        }
 
-	        public void UseGrounding()
+	        public Tools UseGrounding()
 	        {
 		        Tools defaultTools = [new Tool { GoogleSearchRetrieval = new() }];
-		        request.Tools ??= defaultTools;
-		        if (request.Tools != null && !request.Tools.Any(t => t.GoogleSearchRetrieval is not null))
+		        tools ??= defaultTools;
+		        if (tools != null && !tools.Any(t => t.GoogleSearchRetrieval is not null))
 		        {
-			        request.Tools.AddRange(defaultTools);
+			        tools.AddRange(defaultTools);
 		        }
+
+		        return tools;
 	        }
 
-	        public void UseCodeExecution()
+	        public Tools UseCodeExecution()
 	        {
 		        Tools defaultTools = [new Tool { CodeExecution = new() }];
-		        request.Tools ??= defaultTools;
-		        if (request.Tools != null && !request.Tools.Any(t => t.CodeExecution is not null))
+		        tools ??= defaultTools;
+		        if (tools != null && !tools.Any(t => t.CodeExecution is not null))
 		        {
-			        request.Tools.AddRange(defaultTools);
+			        tools.AddRange(defaultTools);
 		        }
+
+		        return tools;
+	        }
+	        
+	        public Tools UseUrlContext()
+	        {
+		        Tools defaultTools = [new Tool { UrlContext = new() }];
+		        tools ??= defaultTools;
+		        if (tools != null && !tools.Any(t => t.UrlContext is not null))
+		        {
+			        tools.AddRange(defaultTools);
+		        }
+
+		        return tools;
 	        }
         }
     }

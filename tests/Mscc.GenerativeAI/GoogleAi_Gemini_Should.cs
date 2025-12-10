@@ -4256,5 +4256,24 @@ Answer:";
             //     .ForEach(c =>
             //         _output.WriteLine($"{c!.RetrievedContext!.Title} - {c!.RetrievedContext!.Text}"));
         }
+
+        [Fact]
+        public async Task Generate_Content_using_Fluent_Google_Search()
+        {
+	        // Arrange
+	        var model = _googleAi.GenerativeModel(model: _model);
+	        var request = new GenerateContentRequest("What is AI?");
+	        request
+		        .WithTools()
+		        .UseGoogleSearch()
+		        .UseUrlContext();
+	        
+	        // Act
+	        var response = await model.GenerateContent(request);
+	        
+	        // Assert
+	        response.Should().NotBeNull();
+	        _output.WriteLine(response.Text);
+        }
     }
 }
