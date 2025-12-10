@@ -18,9 +18,13 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
-        public GeminiClient(string projectId, string? region = null)
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
+        public GeminiClient(string projectId, 
+	        string? region = null,
+            string? accessToken = null
+	        )
         {
-            _genAi = new VertexAI(projectId: projectId, region: region);
+            _genAi = new VertexAI(projectId: projectId, region: region, accessToken: accessToken);
         }
 
         /// <summary>

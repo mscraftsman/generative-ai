@@ -52,14 +52,16 @@ public sealed class GeminiChatClient : mea.IChatClient
     /// </summary>
     /// <param name="projectId">Identifier of the Google Cloud project.</param>
     /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+    /// <param name="accessToken">Access token for the Google Cloud project.</param>
     /// <param name="model">Model to use.</param>
     /// <param name="logger">Optional. Logger instance used for logging</param>
     public GeminiChatClient(string projectId,
 	    string? region = null,
+        string? accessToken = null,
 	    string? model = null,
 	    ILogger? logger = null)
     {
-        var genAi = new VertexAI(projectId: projectId, region: region, logger: logger);
+        var genAi = new VertexAI(projectId: projectId, region: region, accessToken: accessToken, logger: logger);
         _client = genAi.GenerativeModel(model);
         _model = model ?? _client.Model;
     }

@@ -49,10 +49,14 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project.</param>
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="accessToken">Access token for the Google Cloud project.</param>
         /// <param name="model">Model to use.</param>
-        public GeminiEmbeddingGenerator(string projectId, string? region = null, string? model = null)
+        public GeminiEmbeddingGenerator(string projectId, 
+	        string? region = null, 
+            string? accessToken = null,
+	        string? model = null)
         {
-            var genAi = new VertexAI(projectId: projectId, region: region);
+            var genAi = new VertexAI(projectId: projectId, region: region, accessToken: accessToken);
             _client = genAi.GenerativeModel(model);
             _model = model ?? _client.Model;
         }

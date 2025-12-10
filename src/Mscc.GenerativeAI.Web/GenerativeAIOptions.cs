@@ -59,6 +59,10 @@
         /// </summary>
         public string? Location { get; set; } // = string.Empty;
         /// <summary>
+        /// Gets or sets the access token for the service.
+        /// </summary>
+        public string? AccessToken { get; set; }
+        /// <summary>
         /// Gets or sets the model to use for the service.
         /// </summary>
         public string? Model

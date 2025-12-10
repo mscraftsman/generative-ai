@@ -47,6 +47,7 @@ namespace Mscc.GenerativeAI.Web
             {
                 _generativeAi = new VertexAI(projectId: options?.Value.ProjectId,
                     region: options?.Value.Region ?? options?.Value.Location,
+                    accessToken: options?.Value.AccessToken,
                     httpClientFactory: httpClientFactory);
             }
             else
@@ -68,6 +69,7 @@ namespace Mscc.GenerativeAI.Web
             {
                 _generativeAi = new VertexAI(projectId: options?.Value.ProjectId,
                     region: options?.Value.Region ?? options?.Value.Location,
+                    accessToken: options?.Value.AccessToken,
                     httpClientFactory: httpClientFactory);
             }
             else
