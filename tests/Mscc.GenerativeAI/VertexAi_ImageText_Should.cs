@@ -76,9 +76,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Image_Captions(string filename, string expected)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertexAi.ImageTextModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
 
             // Act
@@ -112,9 +111,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Get_Image_Captions_Language(string filename, string language, string expected)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertexAi.ImageTextModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
 
             // Act
@@ -138,9 +136,8 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Is this in the mountains?";
             var filename = "cat.jpg";
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertexAi.ImageTextModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
             var base64Image = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
 
             // Act

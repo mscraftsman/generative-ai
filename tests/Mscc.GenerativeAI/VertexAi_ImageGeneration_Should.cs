@@ -92,9 +92,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Content(string prompt, string aspectRatio)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
             var model = vertexAi.ImageGenerationModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -119,9 +118,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Generate_Images(string prompt, ImageAspectRatio? aspectRatio)
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
             var model = vertexAi.ImageGenerationModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
 
             // Act
             var response = await model.GenerateImages(prompt, aspectRatio: aspectRatio);
@@ -147,9 +145,8 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var modelName = Model.Imagen3Capability;
-            // var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
+            // var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken, logger: Logger);
             var model = _vertexAi.GenerativeModel(model: modelName);
-            model.AccessToken = _fixture.AccessToken;
             var imageToEdit = new SubjectReferenceImage()
             {
                 ReferenceId = 1,
@@ -190,9 +187,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Upscale_Image(string filename, UpscaleFactor upscaleFactor)
         {
             // Arrange
-            //var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, logger: Logger);
+            //var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken, logger: Logger);
             var model = _vertexAi.GenerativeModel(model: _model);
-            model.AccessToken = _fixture.AccessToken;
             var imageToScale = new Image()
             {
                 BytesBase64Encoded = Convert.ToBase64String(

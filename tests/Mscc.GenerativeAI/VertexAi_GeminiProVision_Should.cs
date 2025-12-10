@@ -79,9 +79,8 @@ namespace Test.Mscc.GenerativeAI
             };
             var generationConfig = new GenerationConfig() 
                 { MaxOutputTokens = 256 };
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertexAi.GenerativeModel(model: _model, generationConfig, safetySettings);
-            model.AccessToken = fixture.AccessToken;
 
             // Act
             var response = await model.GenerateContent(prompt);

@@ -22,9 +22,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Gemini_QuickStart()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
             var generationConfig = new GenerationConfig
             {
                 Temperature = 0.4f,
@@ -61,9 +60,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Multimodal_Multi_Image()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
 
             // Images
             var colosseum = await TestExtensions.ReadImageFileBase64Async(
@@ -122,9 +120,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task Multimodal_Video_Input()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
             var request = new GenerateContentRequest("What's in the video?");
             request.Contents[0].Role = Role.User;
             request.Contents[0].Parts.Add(new FileData
@@ -166,9 +163,8 @@ namespace Test.Mscc.GenerativeAI
         public async Task With_SafetySettings()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var model = vertex.GenerativeModel(model: _model);
-            model.AccessToken = fixture.AccessToken;
             var generationConfig = new GenerateContentConfig
             {
                 Temperature = 0.4f,
