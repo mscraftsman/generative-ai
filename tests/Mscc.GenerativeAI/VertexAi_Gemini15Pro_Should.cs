@@ -20,7 +20,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Assert
             vertex.Should().NotBeNull();
@@ -30,7 +30,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Act
             var model = vertex.GenerativeModel();
@@ -44,7 +44,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Act
             var model = vertex.GenerativeModel(model: _model);

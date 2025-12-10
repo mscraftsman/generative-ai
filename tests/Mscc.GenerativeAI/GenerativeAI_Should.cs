@@ -35,7 +35,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Interface_VertexAI()
         {
             // Arrange
-            IGenerativeAI genAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            IGenerativeAI genAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             var expected = _model.SanitizeModelName();
             
             // Act

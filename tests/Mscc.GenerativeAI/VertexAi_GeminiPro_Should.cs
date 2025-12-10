@@ -62,9 +62,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId,
-	            region: _fixture.Region,
-	            accessToken: _fixture.AccessToken);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
 
             // Act
             var model = _vertexAi.GenerativeModel();

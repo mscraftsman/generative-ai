@@ -20,7 +20,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Assert
             vertexAi.Should().NotBeNull();
@@ -31,7 +31,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.ImageText;
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Act
             var model = vertexAi.ImageTextModel();
@@ -45,7 +45,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Act
             var model = vertexAi.ImageTextModel();
@@ -59,7 +59,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Act
             var model = vertexAi.ImageTextModel(model: _model);

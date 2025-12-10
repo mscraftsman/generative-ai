@@ -22,7 +22,7 @@ namespace Test.Mscc.GenerativeAI
         {
             this.output = output;
             this.fixture = fixture;
-            _genAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            _genAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
             _tuningJob = _genAi.SupervisedTuningJob();
         }
 
@@ -32,7 +32,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Assert
             vertexAi.Should().NotBeNull();
@@ -43,7 +43,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Model.Gemini20Flash001;
-            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region);
+            var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Act
             var model = vertexAi.SupervisedTuningJob();

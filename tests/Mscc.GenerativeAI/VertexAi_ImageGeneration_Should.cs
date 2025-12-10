@@ -38,7 +38,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
 
             // Act
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
 
             // Assert
             vertexAi.Should().NotBeNull();
@@ -49,7 +49,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var expected = Environment.GetEnvironmentVariable("GOOGLE_AI_MODEL") ?? Model.ImageGeneration;
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
 
             // Act
             var model = vertexAi.ImageGenerationModel();
@@ -63,7 +63,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Default_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
 
             // Act
             var model = vertexAi.ImageGenerationModel();
@@ -77,7 +77,7 @@ namespace Test.Mscc.GenerativeAI
         public void Initialize_Model()
         {
             // Arrange
-            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region);
+            var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
 
             // Act
             var model = vertexAi.ImageGenerationModel(model: _model);
@@ -187,7 +187,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Upscale_Image(string filename, UpscaleFactor upscaleFactor)
         {
             // Arrange
-            //var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken, logger: Logger);
+            // var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken, logger: Logger);
             var model = _vertexAi.GenerativeModel(model: _model);
             var imageToScale = new Image()
             {
