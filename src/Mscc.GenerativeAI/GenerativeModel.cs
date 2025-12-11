@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// Represents a generative model that can be used to generate content, count tokens, and perform other generative AI tasks.
+    /// </summary>
     public class GenerativeModel : BaseModel
     {
         private const string UrlGoogleAi = "{BaseUrlGoogleAi}/{model}:{method}";
@@ -28,12 +31,30 @@ namespace Mscc.GenerativeAI
         private readonly Tools defaultGoogleSearch = [new Tool { GoogleSearch = new() }];
         private readonly Tools defaultCodeExecution = [new Tool { CodeExecution = new() }];
 
+        /// <summary>
+        /// Optional. A list of unique SafetySetting instances for blocking unsafe content.
+        /// </summary>
         private List<SafetySetting>? _safetySettings;
+        /// <summary>
+        /// Optional. Configuration options for model generation and outputs.
+        /// </summary>
         private GenerationConfig? _generationConfig;
+        /// <summary>
+        /// Optional. A list of Tools the model may use to generate the next response.
+        /// </summary>
         private Tools? _tools;
+        /// <summary>
+        /// Optional. Configuration of tools used by the model.
+        /// </summary>
         private ToolConfig? _toolConfig;
+        /// <summary>
+        /// Optional. Instructions for the model to steer it toward better performance.
+        /// </summary>
         private Content? _systemInstruction;
 
+        /// <summary>
+        /// Gets the appropriate API URL based on the configuration (Google AI vs. Vertex AI, custom endpoint, etc.).
+        /// </summary>
         private string Url
         {
             get
@@ -62,6 +83,9 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Gets or sets the API version. For Vertex AI, this is fixed to v1.
+        /// </summary>
         /// <inheritdoc />
         internal override string Version
         {
@@ -83,6 +107,9 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Determines the API method name based on the model and configuration.
+        /// </summary>
         private string Method
         {
             get
@@ -155,6 +182,9 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the model is configured to use Vertex AI.
+        /// </summary>
         internal bool IsVertexAI => _useVertexAi;
 
         /// <summary>
@@ -166,27 +196,27 @@ namespace Mscc.GenerativeAI
         public bool UseServerSentEventsFormat { get; set; } = false;
 
         /// <summary>
-        /// Activate JSON Mode (default = no)
+        /// Gets or sets a value indicating whether to activate JSON Mode, which instructs the model to generate a JSON object.
         /// </summary>
         public bool UseJsonMode { get; set; } = false;
 
         /// <summary>
-        /// Activate Grounding with Google Search (default = no)
+        /// Gets or sets a value indicating whether to activate grounding with Google Search, which connects the model to real-time information.
         /// </summary>
         public bool UseGrounding { get; set; } = false;
 
         /// <summary>
-        /// Activate Google Search (default = no)
+        /// Gets or sets a value indicating whether to activate the Google Search tool, allowing the model to query Google Search.
         /// </summary>
         public bool UseGoogleSearch { get; set; } = false;
 
         /// <summary>
-        /// Activate automatic code execution (default = no)
+        /// Gets or sets a value indicating whether to activate automatic code execution, allowing the model to run code.
         /// </summary>
         public bool UseCodeExecution { get; set; } = false;
 
         /// <summary>
-        /// Enable realtime stream using Multimodal Live API
+        /// Gets or sets a value indicating whether to enable a realtime stream using the Multimodal Live API.
         /// </summary>
         public bool UseRealtime { get; set; } = false;
 
@@ -203,11 +233,12 @@ namespace Mscc.GenerativeAI
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
+        /// The default constructor attempts to read `.env` file and environment variables to set default values.
         /// </summary>
         public GenerativeModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerativeModel"/> class.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class with specified HTTP client factory and logger.
         /// The default constructor attempts to read <c>.env</c> file and environment variables.
         /// Sets default values, if available.
         /// </summary>
@@ -220,7 +251,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerativeModel"/> class with access to Google AI Gemini API.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class for use with Google AI, with optional express Vertex AI configuration.
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
         /// <param name="model">Model to use</param>
@@ -259,7 +290,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerativeModel"/> class with access to Vertex AI Gemini API.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class for use with Vertex AI.
         /// </summary>
         /// <param name="projectId">Identifier of the Google Cloud project</param>
         /// <param name="region">Region to use</param>
@@ -298,7 +329,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerativeModel"/> class given cached content.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class from a <see cref="CachedContent"/> object.
         /// </summary>
         /// <param name="cachedContent">Content that has been preprocessed.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
@@ -323,7 +354,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerativeModel"/> class given cached content.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class from a <see cref="TuningJob"/> object.
         /// </summary>
         /// <param name="tuningJob">Tuning Job to use with the model.</param>
         /// <param name="generationConfig">Optional. Configuration options for model generation and outputs.</param>
@@ -346,7 +377,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
+        /// Initializes a new instance of the <see cref="GenerativeModel"/> class for testing purposes, allowing injection of a custom <see cref="HttpMessageHandler"/>.
         /// </summary>
         internal GenerativeModel(HttpMessageHandler handler, ILogger? logger = null) : base(handler, logger)
         {
@@ -359,7 +390,7 @@ namespace Mscc.GenerativeAI
         #region Undecided location of methods.Maybe IGenerativeAI might be better...
 
         /// <summary>
-        /// Get a list of available tuned models and description.
+        /// Gets a list of available tuned models and their descriptions.
         /// </summary>
         /// <returns>List of available tuned models.</returns>
         /// <param name="pageSize">The maximum number of Models to return (per page).</param>
@@ -1945,7 +1976,10 @@ namespace Mscc.GenerativeAI
             return await CountTokens(request, requestOptions, cancellationToken: cancellationToken);
         }
 
-        public async Task<CountTokensResponse> CountTokens(FileResource file,
+        /// <summary>
+        /// Counts the number of tokens for the given file resource.
+        /// </summary>
+        public async Task<CountTokensResponse> CountTokens(FileResource? file,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
         {

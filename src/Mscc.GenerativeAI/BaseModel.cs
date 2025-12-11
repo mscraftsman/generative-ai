@@ -19,10 +19,22 @@ using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
+    /// <summary>
+    /// The base class for all models, providing common functionality for API communication.
+    /// </summary>
     public abstract class BaseModel : BaseLogger, IDisposable, IAsyncDisposable
     {
+        /// <summary>
+        /// The base URL for the Google AI API.
+        /// </summary>
         protected const string BaseUrlGoogleAi = "https://generativelanguage.googleapis.com/{version}";
+        /// <summary>
+        /// The base URL for the Vertex AI API.
+        /// </summary>
         protected const string BaseUrlVertexAi = "https://{region}-aiplatform.googleapis.com/{version}/projects/{projectId}/locations/{region}";
+        /// <summary>
+        /// The base URL for the Vertex AI API for global locations.
+        /// </summary>
         protected const string BaseUrlVertexAiGlobal = "https://aiplatform.googleapis.com/{version}/projects/{projectId}/locations/global";
 
         protected readonly string _publisher = "google";
@@ -43,12 +55,16 @@ namespace Mscc.GenerativeAI
         private TimeSpan? _httpTimeout;
         private RequestOptions? _requestOptions;
 
+        /// <summary>
+        /// Gets the <see cref="HttpClient"/> instance used for making API requests.
+        /// </summary>
         protected HttpClient Client =>
             _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
 
         private HttpClient CreateDefaultHttpClient()
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
+            // On older .NET frameworks, explicitly set Tls12 for security.
             var handler = new HttpClientHandler
             {
                 SslProtocols = SslProtocols.Tls12
@@ -63,6 +79,7 @@ namespace Mscc.GenerativeAI
                 InnerHandler = handler
             });
 #else
+            // On modern .NET, use SocketsHttpHandler for better performance and connection pooling.
             var handler = new SocketsHttpHandler
             {
                 PooledConnectionLifetime = TimeSpan.FromMinutes(30),
@@ -87,12 +104,18 @@ namespace Mscc.GenerativeAI
             return client;
         }
 
+        /// <summary>
+        /// Gets or sets the API version to use.
+        /// </summary>
         internal virtual string Version
         {
             get => _apiVersion;
             set => _apiVersion = value;
         }
 
+        /// <summary>
+        /// Gets or sets the request options for API calls.
+        /// </summary>
         internal RequestOptions? RequestOptions
         {
             get => _requestOptions;
@@ -146,7 +169,9 @@ namespace Mscc.GenerativeAI
         public string? ProjectId { set => _projectId = value; }
 
         /// <summary>
-        /// Returns the region to use for the request.
+        /// Gets or sets the region to use for the request.
+        /// This is used in Vertex AI requests.
+        /// The default value is "us-central1".
         /// </summary>
         public string Region
         {
@@ -164,18 +189,21 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Throws a <see cref="NotSupportedException"/>, if the functionality is not supported by combination of settings.
+        /// A hook to verify if a specific request is supported by the current model configuration.
+        /// Throws a <see cref="NotSupportedException"/> if the functionality is not supported.
         /// </summary>
+        /// <typeparam name="T">The type of the request object.</typeparam>
+        /// <param name="request">The request to verify.</param>
         protected virtual void ThrowIfUnsupportedRequest<T>(T request) { }
 
         // Instance fields for default headers
         private readonly ProductInfoHeaderValue _defaultUserAgent;
         private readonly KeyValuePair<string, string> _defaultApiClientHeader;
 
-        private int _disposed;
-
+        private int _disposed;        
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="BaseModel"/> class, primarily for Google AI.
+        /// It configures the model using an API key and environment variables.
         /// </summary>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
@@ -209,12 +237,13 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="BaseModel"/> class, primarily for Vertex AI.
+        /// It configures the model using a project ID, region, and access token.
         /// </summary>
-        /// <param name="projectId"></param>
-        /// <param name="region"></param>
-        /// <param name="model"></param>
-        /// <param name="accessToken">Access token for the Google Cloud project.</param>
+        /// <param name="projectId">The Google Cloud project ID.</param>
+        /// <param name="region">The Google Cloud region.</param>
+        /// <param name="model">The model name to use.</param>
+        /// <param name="accessToken">Optional. The access token for authentication.</param>
         /// <param name="httpClientFactory">Optional. The IHttpClientFactory to use for creating HttpClient instances.</param>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="requestOptions">Options for the request.</param>
@@ -551,6 +580,16 @@ namespace Mscc.GenerativeAI
             return await Deserialize<TResponse>(response);
         }
 
+        /// <summary>
+        /// Sends an HTTP request and returns the response.
+        /// It handles adding authentication headers, user-agent, and custom headers.
+        /// It also implements a retry mechanism for transient failures.
+        /// </summary>
+        /// <param name="request">The <see cref="HttpRequestMessage"/> to send.</param>
+        /// <param name="requestOptions">Optional. Options for the request, including timeout and retry settings.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <param name="completionOption">Defines when the operation should complete.</param>
+        /// <returns>The <see cref="HttpResponseMessage"/> from the API.</returns>
         protected async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default,
@@ -654,6 +693,11 @@ namespace Mscc.GenerativeAI
             return await lastResponse!.EnsureSuccessAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Asynchronously reads the content of an <see cref="HttpResponseMessage"/> as a string.
+        /// </summary>
+        /// <param name="response">The HTTP response.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
         private static async Task<string> GetResponseMessageAsync(HttpResponseMessage response,
             CancellationToken cancellationToken)
         {
@@ -664,6 +708,12 @@ namespace Mscc.GenerativeAI
 #endif
         }
 
+        /// <summary>
+        /// Creates a deep clone of an <see cref="HttpRequestMessage"/>.
+        /// This is necessary for retrying requests, as a request message can only be sent once.
+        /// </summary>
+        /// <param name="request">The request to clone.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
         private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
