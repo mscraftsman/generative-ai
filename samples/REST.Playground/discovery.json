@@ -2176,7 +2176,7 @@
       }
     }
   },
-  "revision": "20251208",
+  "revision": "20251210",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
