@@ -40,6 +40,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public RagVectorDbConfigRagManagedDb? RagManagedDb { get; set; }
 		/// <summary>
+		/// The config for the RAG-managed Vertex Vector Search 2.0.
+		/// </summary>
+		public RagVectorDbConfigRagManagedVertexVectorSearch? RagManagedVertexVectorSearch { get; set; }
+		/// <summary>
 		/// The config for the Vertex Feature Store.
 		/// </summary>
 		public RagVectorDbConfigVertexFeatureStore? VertexFeatureStore { get; set; }

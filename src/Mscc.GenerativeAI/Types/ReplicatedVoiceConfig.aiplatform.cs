@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI.Types
 	public partial class ReplicatedVoiceConfig
 	{
 		/// <summary>
-		/// Optional. The mimetype of the voice sample. Currently only mime_type=audio/pcm is supported, which is raw mono 16-bit signed little-endian pcm data, with 24k sampling rate.
+		/// Optional. The mimetype of the voice sample. The only currently supported value is <c>audio/wav</c>. This represents 16-bit signed little-endian wav data, with a 24kHz sampling rate. <c>mime_type</c> will default to <c>audio/wav</c> if not set.
 		/// </summary>
 		public string? MimeType { get; set; }
 		/// <summary>

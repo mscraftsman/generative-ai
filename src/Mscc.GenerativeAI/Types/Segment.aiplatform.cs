@@ -23,6 +23,5 @@ namespace Mscc.GenerativeAI.Types
 	/// </summary>
 	public partial class Segment
 	{
-
     }
 }

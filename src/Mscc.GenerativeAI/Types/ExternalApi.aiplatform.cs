@@ -25,6 +25,10 @@ namespace Mscc.GenerativeAI.Types
 	public partial class ExternalApi
 	{
 		/// <summary>
+		/// The authentication config to access the API. Deprecated. Please use auth_config instead.
+		/// </summary>
+		public ApiAuth? ApiAuth { get; set; }
+		/// <summary>
 		/// The API spec that the external API implements.
 		/// </summary>
 		public ApiSpecType? ApiSpec { get; set; }
