@@ -194,44 +194,6 @@
     },
     {
       "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
-      "displayName": "Gemini 2.0 Pro Experimental",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-pro-exp",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-exp-03-25"
-    },
-    {
-      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
-      "displayName": "Gemini 2.0 Pro Experimental 02-05",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-pro-exp-02-05",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-exp-03-25"
-    },
-    {
-      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
       "displayName": "Gemini Experimental 1206",
       "inputTokenLimit": 1048576,
       "maxTemperature": 2,
@@ -787,54 +749,6 @@
         "predictLongRunning"
       ],
       "version": "3.1"
-    },
-    {
-      "description": "Gemini 2.0 Flash 001",
-      "displayName": "Gemini 2.0 Flash 001",
-      "inputTokenLimit": 131072,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-live-001",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "bidiGenerateContent",
-        "countTokens"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "001"
-    },
-    {
-      "description": "Gemini Live 2.5 Flash Preview",
-      "displayName": "Gemini Live 2.5 Flash Preview",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-live-2.5-flash-preview",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "bidiGenerateContent",
-        "countTokens"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "001"
-    },
-    {
-      "description": "Gemini 2.5 Flash Live Preview",
-      "displayName": "Gemini 2.5 Flash Live Preview",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-live-preview",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "bidiGenerateContent",
-        "countTokens"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "001"
     },
     {
       "description": "Latest release of Gemini 2.5 Flash Native Audio",

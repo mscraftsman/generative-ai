@@ -1444,7 +1444,6 @@ namespace Test.Mscc.GenerativeAI
         [InlineData(Model.Gemini20Flash)]
         [InlineData(Model.Gemini20Flash001)]
         [InlineData(Model.Gemini20FlashLite)]
-        [InlineData(Model.Gemini20ProExperimental)]
         [InlineData(Model.Gemini25Pro)]
         // Ref: https://ai.google.dev/gemini-api/docs/grounding
         public async Task Generate_Content_Grounding_Search_Default(string modelName)
