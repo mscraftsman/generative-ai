@@ -24,10 +24,6 @@ namespace Mscc.GenerativeAI.Types
 	public partial class Retrieval
 	{
 		/// <summary>
-		/// Optional. Deprecated. This option is no longer supported.
-		/// </summary>
-		public bool? DisableAttribution { get; set; }
-		/// <summary>
 		/// Use data source powered by external API for grounding.
 		/// </summary>
 		public ExternalApi? ExternalApi { get; set; }

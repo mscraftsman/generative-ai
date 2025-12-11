@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
@@ -22,8 +24,12 @@ namespace Mscc.GenerativeAI.Types
 	public partial class GoogleSearch : ITool
 	{
 		/// <summary>
-		/// Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa).
+		/// Optional. Sites with confidence level chosen &amp; above this value will be blocked from the search results.
 		/// </summary>
-		public Interval? TimeRangeFilter { get; set; }
+		public BlockingConfidence? BlockingConfidence { get; set; }
+		/// <summary>
+		/// Optional. List of domains to be excluded from the search results. The default limit is 2000 domains.
+		/// </summary>
+		public List<string>? ExcludeDomains { get; set; }
     }
 }

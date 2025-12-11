@@ -44,10 +44,6 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public FunctionResponse? FunctionResponse { get; set; }
 		/// <summary>
-		/// Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams.
-		/// </summary>
-		public object? PartMetadata { get; set; }
-		/// <summary>
 		/// Optional. Indicates if the part is thought from the model.
 		/// </summary>
 		public bool? Thought { get; set; }

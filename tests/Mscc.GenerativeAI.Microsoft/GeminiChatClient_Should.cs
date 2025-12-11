@@ -105,7 +105,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        var model = "gemini-2.5-flash";
 	        var prompt = "Who won the 2025 F1 Championship?";
 	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId, region: _fixture.Region, model: model, logger: Logger);
-	        var search = new EnterpriseWebSearch{ ExcludeDomains = ["google.com"], BlockingConfidence = PhishBlockThreshold.BlockHighAndAbove };
+	        var search = new EnterpriseWebSearch{ ExcludeDomains = ["google.com"], BlockingConfidence = BlockingConfidence.BlockHighAndAbove };
 	        var chatOptions = new ChatOptions
 	        {
 		        Tools = [search.AsAITool()]
@@ -153,7 +153,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        {
 		        ExternalApi = new ExternalApi()
 		        {
-			        ApiSpec = ApiSpec.SimpleSearch,
+			        ApiSpec = ExternalApi.ApiSpecType.SimpleSearch,
 			        Endpoint = "https://google.com/",
 			        ApiAuth = new() { ApiKeyConfig = new() { ApiKeyString = "123456" }},
 			        // SimpleSearchParams = new SimpleSearchParams() { }
@@ -182,7 +182,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        {
 		        ExternalApi = new ExternalApi()
 		        {
-			        ApiSpec = ApiSpec.ElasticSearch,
+			        ApiSpec = ExternalApi.ApiSpecType.ElasticSearch,
 			        Endpoint = "",
 			        ApiAuth = new() { ApiKeyConfig = new() { ApiKeyString = "123456" }},
 			        ElasticSearchParams = new() { Index = "", SearchTemplate = "", NumHits = 10 }

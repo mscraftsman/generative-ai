@@ -2,6 +2,7 @@ using Shouldly;
 using Microsoft.Extensions.AI;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
