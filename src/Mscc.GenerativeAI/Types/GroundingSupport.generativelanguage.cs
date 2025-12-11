@@ -35,6 +35,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Segment of the content this support belongs to.
 		/// </summary>
-		public GoogleAiSegment? Segment { get; set; }
+		public Segment? Segment { get; set; }
     }
 }

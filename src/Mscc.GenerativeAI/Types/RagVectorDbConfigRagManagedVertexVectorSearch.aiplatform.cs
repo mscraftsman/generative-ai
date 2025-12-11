@@ -19,10 +19,13 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A segment of the content.
+	/// The config for the RAG-managed Vertex Vector Search 2.0.
 	/// </summary>
-	public partial class Segment
+	public partial class RagVectorDbConfigRagManagedVertexVectorSearch
 	{
-
+		/// <summary>
+		/// Output only. The resource name of the Vector Search 2.0 Collection that RAG Created for the corpus. Only populated after the corpus is successfully created. Format: <c>projects/{project}/locations/{location}/collections/{collection_id}</c>
+		/// </summary>
+		public string? CollectionName { get; set; }
     }
 }
