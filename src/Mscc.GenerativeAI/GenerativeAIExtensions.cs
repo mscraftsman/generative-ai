@@ -383,6 +383,11 @@ namespace Mscc.GenerativeAI
             }
         }
         
+        /// <summary>
+        /// Sanitizes the model name by ensuring it starts with "models/" unless it is a tuned model.
+        /// </summary>
+        /// <param name="value">The model name to sanitize.</param>
+        /// <returns>The sanitized model name.</returns>
         public static string SanitizeModelName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -401,6 +406,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the file name by ensuring it starts with "files/".
+        /// </summary>
+        /// <param name="value">The file name to sanitize.</param>
+        /// <returns>The sanitized file name.</returns>
         public static string SanitizeFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -414,6 +424,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the generated file name by ensuring it starts with "generatedFiles/".
+        /// </summary>
+        /// <param name="value">The generated file name to sanitize.</param>
+        /// <returns>The sanitized generated file name.</returns>
         public static string SanitizeGeneratedFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -427,6 +442,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the cached content name by ensuring it starts with "cachedContents/".
+        /// </summary>
+        /// <param name="value">The cached content name to sanitize.</param>
+        /// <returns>The sanitized cached content name.</returns>
         public static string SanitizeCachedContentName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -440,6 +460,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the batch name by ensuring it starts with "batches/".
+        /// </summary>
+        /// <param name="value">The batch name to sanitize.</param>
+        /// <returns>The sanitized batch name.</returns>
         public static string SanitizeBatchesName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -453,6 +478,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the tuning job name by ensuring it starts with "tuningJobs/".
+        /// </summary>
+        /// <param name="value">The tuning job name to sanitize.</param>
+        /// <returns>The sanitized tuning job name.</returns>
         public static string SanitizeTuningJobsName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -466,6 +496,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the endpoint name.
+        /// </summary>
+        /// <param name="value">The endpoint name to sanitize.</param>
+        /// <returns>The sanitized endpoint name.</returns>
         public static string SanitizeEndpointName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -479,6 +514,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the file search store name by ensuring it starts with "fileSearchStores/".
+        /// </summary>
+        /// <param name="value">The file search store name to sanitize.</param>
+        /// <returns>The sanitized file search store name.</returns>
         public static string SanitizeFileSearchStoreName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -492,6 +532,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the corpora name by ensuring it starts with "corpora/".
+        /// </summary>
+        /// <param name="value">The corpora name to sanitize.</param>
+        /// <returns>The sanitized corpora name.</returns>
         public static string SanitizeCorporaName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -505,6 +550,11 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Sanitizes the document name by ensuring it starts with "documents/".
+        /// </summary>
+        /// <param name="value">The document name to sanitize.</param>
+        /// <returns>The sanitized document name.</returns>
         public static string SanitizeDocumentName(this string value)
         {
             if (string.IsNullOrEmpty(value)) return value;
@@ -518,6 +568,13 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Populates a Part from a byte array string and mime type.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="value">The string representation of the byte array.</param>
+        /// <param name="mimeType">The mime type of the data.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromBytes(this Part part, string value, string mimeType)
         {
             if (string.IsNullOrEmpty(value)) return part;
@@ -526,6 +583,13 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Populates a Part from a code execution result.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="outcome">The outcome of the code execution.</param>
+        /// <param name="output">The output of the code execution.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromCodeExecutionResult(this Part part, string outcome, string output)
         {
             if (string.IsNullOrEmpty(outcome)) return part;
@@ -534,6 +598,13 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Populates a Part from executable code.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="code">The executable code.</param>
+        /// <param name="language">The language of the code.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromExecutableCode(this Part part, string code, Language language)
         {
             if (string.IsNullOrEmpty(code)) return part;
@@ -542,6 +613,13 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Populates a Part from a function call.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="name">The name of the function.</param>
+        /// <param name="args">The arguments for the function call.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromFunctionCall(this Part part, string name, string[] args)
         {
             if (string.IsNullOrEmpty(name)) return part;
@@ -550,6 +628,13 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Populates a Part from a function response.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="name">The name of the function.</param>
+        /// <param name="response">The response from the function.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromFunctionResponse(this Part part, string name, dynamic response)
         {
             if (string.IsNullOrEmpty(name)) return part;
@@ -558,6 +643,12 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Populates a Part from a text string.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="value">The text value.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromText(this Part part, string value)
         {
             if (string.IsNullOrEmpty(value)) return part;
@@ -566,6 +657,13 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Populates a Part from a URI.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="uri">The URI of the file data.</param>
+        /// <param name="mimeType">The mime type of the file. If null, it will be inferred from the URI.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromUri(this Part part, string uri, string? mimeType)
         {
             if (string.IsNullOrEmpty(uri)) return part;
@@ -575,6 +673,14 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        // Populates a Part with video metadata.
+        /// </summary>
+        /// <param name="part">The part to populate.</param>
+        /// <param name="startOffset">The start offset of the video.</param>
+        /// <param name="endOffset">The end offset of the video.</param>
+        /// <param name="fps">The frames per second of the video.</param>
+        /// <returns>The populated part.</returns>
         public static Part FromVideoMetadata(this Part part, string startOffset, string endOffset, double fps)
         {
             part.VideoMetadata ??= new();
@@ -584,6 +690,12 @@ namespace Mscc.GenerativeAI
             return part;
         }
 
+        /// <summary>
+        /// Creates an Image object from a file URI.
+        /// </summary>
+        /// <param name="uri">The URI of the image file.</param>
+        /// <param name="mimeType">The mime type of the image. If null, it will be inferred from the URI.</param>
+        /// <returns>An Image object.</returns>
         public static Image FromFile(string uri, string? mimeType = null)
         {
             mimeType ??= GetMimeType(uri);
@@ -657,6 +769,11 @@ namespace Mscc.GenerativeAI
             }
         }
 
+        /// <summary>
+        /// Checks if a string is a valid Base64 string.
+        /// </summary>
+        /// <param name="value">The string to check.</param>
+        /// <returns>True if the string is a valid Base64 string, otherwise false.</returns>
         internal static bool IsValidBase64String(this string value)
         {
 #if NET8_0_OR_GREATER
@@ -674,6 +791,11 @@ namespace Mscc.GenerativeAI
 #endif
         }
 
+        /// <summary>
+        /// Checks if a string is valid JSON.
+        /// </summary>
+        /// <param name="value">The string to check.</param>
+        /// <returns>True if the string is valid JSON, otherwise false.</returns>
         internal static bool IsValidJson(this string value)
         {
             try
@@ -749,11 +871,22 @@ namespace Mscc.GenerativeAI
             throw new GeminiApiException($"The request was not successful. Last API response:\n{message}", response);
         }
 
+        /// <summary>
+        /// Reads an image file from a URL as a byte array.
+        /// </summary>
+        /// <param name="url">The URL of the image file.</param>
+        /// <returns>A byte array of the image file.</returns>
         internal static async Task<byte[]> ReadImageFileAsync(string url)
         {
             return await ReadImageFileAsync(url, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Reads an image file from a URL as a byte array.
+        /// </summary>
+        /// <param name="url">The URL of the image file.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A byte array of the image file.</returns>
         internal static async Task<byte[]> ReadImageFileAsync(string url,
             CancellationToken cancellationToken = default)
         {
@@ -769,6 +902,12 @@ namespace Mscc.GenerativeAI
             return imageBytes;
         }
 
+        /// <summary>
+        /// Reads an image file from a URL and returns it as a Base64 encoded string.
+        /// </summary>
+        /// <param name="url">The URL of the image file.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A Base64 encoded string of the image file.</returns>
         internal static async Task<string> ReadImageFileBase64Async(string url,
             CancellationToken cancellationToken = default)
         {
@@ -776,6 +915,12 @@ namespace Mscc.GenerativeAI
             return Convert.ToBase64String(imageBytes);
         }
 
+        /// <summary>
+        /// Gets the MIME type from a file extension in a URI.
+        /// </summary>
+        /// <param name="uri">The URI of the file.</param>
+        /// <returns>The inferred MIME type, or "application/octet-stream" if not found.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null.</exception>
         internal static string GetMimeType(string uri)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
@@ -1388,11 +1533,21 @@ namespace Mscc.GenerativeAI
             return value;
         }
 
+        /// <summary>
+        /// Gets the normalized (snake_case) name of a delegate's method.
+        /// </summary>
+        /// <param name="callback">The delegate to get the name from.</param>
+        /// <returns>The snake_case method name.</returns>
         internal static string GetNormalizedName(this Delegate callback)
         {
             return callback.Method.Name.ToSnakeCase();
         }
 
+        /// <summary>
+        /// Converts HTTP headers to a formatted string, redacting sensitive information.
+        /// </summary>
+        /// <param name="headers">The HttpHeaders to format.</param>
+        /// <returns>A formatted string representation of the headers.</returns>
         public static string ToFormattedString(this HttpHeaders headers)
         {
             if (headers == null)
@@ -1413,12 +1568,19 @@ namespace Mscc.GenerativeAI
 
         extension(GenerateContentRequest request)
         {
+	        /// <summary>
+	        /// Configures the request to expect a JSON response.
+	        /// </summary>
 	        public void UseJsonMode()
 	        {
 		        request.GenerationConfig ??= new GenerationConfig();
 		        request.GenerationConfig.ResponseMimeType ??= Constants.MediaType;
 	        }
 
+	        /// <summary>
+	        /// Gets the tools for the request, initializing the collection if it's null.
+	        /// </summary>
+	        /// <returns>The list of tools for the request.</returns>
 	        public Tools WithTools()
 	        {
 		        request.Tools ??= [];
@@ -1428,7 +1590,10 @@ namespace Mscc.GenerativeAI
 
         extension(Tools tools)
         {
-	        
+	        /// <summary>
+	        /// Adds the Google Search tool if it's not already present.
+	        /// </summary>
+	        /// <returns>The updated list of tools.</returns>
 	        public Tools UseGoogleSearch()
 	        {
 		        Tools defaultTools = [new Tool { GoogleSearch = new() }];
@@ -1441,6 +1606,11 @@ namespace Mscc.GenerativeAI
 		        return tools;
 	        }
 
+	        /// <summary>
+	        /// Adds the Google Maps tool if it's not already present.
+	        /// </summary>
+	        /// <param name="enableWidget">Whether to enable the widget for Google Maps.</param>
+	        /// <returns>The updated list of tools.</returns>
 	        public Tools UseGoogleMaps(bool? enableWidget = false)
 	        {
 		        Tools defaultTools = [new Tool() { GoogleMaps = new() { EnableWidget = enableWidget } }];
@@ -1453,6 +1623,10 @@ namespace Mscc.GenerativeAI
 		        return tools;
 	        }
 
+	        /// <summary>
+	        /// Adds the Google Search Retrieval tool for grounding if it's not already present.
+	        /// </summary>
+	        /// <returns>The updated list of tools.</returns>
 	        public Tools UseGrounding()
 	        {
 		        Tools defaultTools = [new Tool { GoogleSearchRetrieval = new() }];
@@ -1465,6 +1639,10 @@ namespace Mscc.GenerativeAI
 		        return tools;
 	        }
 
+	        /// <summary>
+	        /// Adds the Code Execution tool if it's not already present.
+	        /// </summary>
+	        /// <returns>The updated list of tools.</returns>
 	        public Tools UseCodeExecution()
 	        {
 		        Tools defaultTools = [new Tool { CodeExecution = new() }];
@@ -1477,6 +1655,10 @@ namespace Mscc.GenerativeAI
 		        return tools;
 	        }
 	        
+	        /// <summary>
+	        /// Adds the URL Context tool if it's not already present.
+	        /// </summary>
+	        /// <returns>The updated list of tools.</returns>
 	        public Tools UseUrlContext()
 	        {
 		        Tools defaultTools = [new Tool { UrlContext = new() }];
