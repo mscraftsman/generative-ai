@@ -112,6 +112,7 @@ namespace Mscc.CodeGenerator
 			{ "EmbedContentRequest.TaskType", "TaskType" },
 			{ "Environment", "ComputerUseEnvironment" },
 			{ "File", "FileResource" },
+			{ "GoogleAiGroundingSupport", "GroundingSupport" },
 			{ "Method", "HarmBlockMethod" },
 			{ "Model", "ModelResponse" },
 			{ "Probability", "HarmProbability" },
