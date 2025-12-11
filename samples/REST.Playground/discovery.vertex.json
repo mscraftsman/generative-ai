@@ -5692,9 +5692,7 @@
           "flatPath": "v1beta1/interactionsInternal",
           "httpMethod": "GET",
           "id": "aiplatform.interactionsInternal.list",
-          "parameterOrder": [
-
-          ],
+          "parameterOrder": [],
           "parameters": {
             "page_size": {
               "description": "Optional. The maximum number of `Interactions` to return (per page). The service may return fewer `Interactions`. If unspecified, at most 10 `Interactions` will be returned. The maximum size limit is 20 `Interactions` per page.",
