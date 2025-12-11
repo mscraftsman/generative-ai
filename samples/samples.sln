@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "issue124", "issue124\issue1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AgentFramework", "Microsoft.AgentFramework\Microsoft.AgentFramework.csproj", "{570D5106-506D-4094-A84E-F8F3F9578967}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maui.Chat", "Maui.Chat\Maui.Chat.csproj", "{52C8F77A-48F8-49BC-A007-E875C8BD3F25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -335,6 +337,18 @@ Global
 		{570D5106-506D-4094-A84E-F8F3F9578967}.Release|x64.Build.0 = Release|Any CPU
 		{570D5106-506D-4094-A84E-F8F3F9578967}.Release|x86.ActiveCfg = Release|Any CPU
 		{570D5106-506D-4094-A84E-F8F3F9578967}.Release|x86.Build.0 = Release|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Debug|x64.Build.0 = Debug|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Debug|x86.Build.0 = Debug|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Release|x64.ActiveCfg = Release|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Release|x64.Build.0 = Release|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Release|x86.ActiveCfg = Release|Any CPU
+		{52C8F77A-48F8-49BC-A007-E875C8BD3F25}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
