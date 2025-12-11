@@ -113,6 +113,7 @@ namespace Mscc.CodeGenerator
 			{ "Environment", "ComputerUseEnvironment" },
 			{ "File", "FileResource" },
 			{ "GoogleAiGroundingSupport", "GroundingSupport" },
+			{ "GoogleAiSegment", "Segment" },
 			{ "Method", "HarmBlockMethod" },
 			{ "Model", "ModelResponse" },
 			{ "Probability", "HarmProbability" },
