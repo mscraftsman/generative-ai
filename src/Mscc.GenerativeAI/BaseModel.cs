@@ -51,7 +51,7 @@ namespace Mscc.GenerativeAI
         protected string? _endpointId;
 
         protected readonly Version _httpVersion = HttpVersion.Version11;
-        private readonly IHttpClientFactory? _httpClientFactory;
+        internal readonly IHttpClientFactory? _httpClientFactory;
         private HttpClient? _httpClient;
         private TimeSpan? _httpTimeout;
         private RequestOptions? _requestOptions;

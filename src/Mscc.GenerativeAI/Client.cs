@@ -35,6 +35,7 @@ namespace Mscc.GenerativeAI
         public Client(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             _apiVersion = ApiVersion.V1Beta;
+            _apiClient = base._httpClientFactory;
             Logger.LogClientInvoking();
         }
         
@@ -58,7 +59,8 @@ namespace Mscc.GenerativeAI
             {
                 httpOptions = new RequestOptions() { BaseUrl = baseUrl };
             }
-            
+
+            ApiKey = apiKey;
 #if false
             _apiClient = GetApiClient(vertexai,
                 apiKey,
