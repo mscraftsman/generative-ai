@@ -104,7 +104,11 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        // Arrange
 	        var model = "gemini-2.5-flash";
 	        var prompt = "Who won the 2025 F1 Championship?";
-	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId, region: _fixture.Region, model: model, logger: Logger);
+	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId,
+		        region: _fixture.Region,
+		        accessToken: _fixture.AccessToken,
+		        model: model,
+		        logger: Logger);
 	        var search = new EnterpriseWebSearch{ ExcludeDomains = ["google.com"], BlockingConfidence = BlockingConfidence.BlockHighAndAbove };
 	        var chatOptions = new ChatOptions
 	        {
@@ -125,7 +129,11 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        var model = "gemini-2.5-flash";
 	        var prompt = "How can I use this SDK?";
 	        var dataStoreId = "123456";
-	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId, region: _fixture.Region, model: model, logger: Logger);
+	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId,
+		        region: _fixture.Region,
+		        accessToken: _fixture.AccessToken,
+		        model: model,
+		        logger: Logger);
 	        var search = new Retrieval {
 		        VertexAiSearch = new VertexAISearch {
 			        Datastore = $"projects/{_fixture.ProjectId}/locations/global/collections/default_collection/dataStores/{dataStoreId}"
@@ -148,7 +156,11 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        // Arrange
 	        var model = "gemini-2.5-flash";
 	        var prompt = "How can I use this SDK?";
-	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId, region: _fixture.Region, model: model, logger: Logger);
+	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId,
+		        region: _fixture.Region,
+		        accessToken: _fixture.AccessToken,
+		        model: model,
+		        logger: Logger);
 	        var search = new Retrieval
 	        {
 		        ExternalApi = new ExternalApi()
@@ -177,7 +189,11 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 	        // Arrange
 	        var model = "gemini-2.5-flash";
 	        var prompt = "How can I use this SDK?";
-	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId, region: _fixture.Region, model: model, logger: Logger);
+	        IChatClient chatClient = new GeminiChatClient(projectId: _fixture.ProjectId,
+		        region: _fixture.Region,
+		        accessToken: _fixture.AccessToken,
+		        model: model,
+		        logger: Logger);
 	        var search = new Retrieval
 	        {
 		        ExternalApi = new ExternalApi()
