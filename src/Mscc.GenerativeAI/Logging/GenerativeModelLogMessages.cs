@@ -89,7 +89,7 @@ namespace Mscc.GenerativeAI.Types
         /// Logs <see cref="Client"/>
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
-        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Live model starting")]
+        [LoggerMessage(EventId = 0, Level = LogLevel.Information, Message = "Client starting")]
         public static partial void LogClientInvoking(
             this ILogger logger);
 
