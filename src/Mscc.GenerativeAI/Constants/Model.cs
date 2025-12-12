@@ -96,6 +96,11 @@ namespace Mscc.GenerativeAI.Types
         public const string NanoBananaPro = NanoBananaProPreview;
         public const string NanoBananaProPreview = "nano-banana-pro-preview";
 
+        public const string DeepResearch = DeepResearchPro;
+        public const string DeepResearchPro = DeepResearchProPreview;
+        public const string DeepResearchProPreview = DeepResearchProPreview122025;
+        public const string DeepResearchProPreview122025 = "deep-research-pro-preview-12-2025";
+        
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
         // public const string Gemma3_270M = "gemma-3-270m-it";

@@ -565,6 +565,23 @@
       "version": "Gemini 2.5 Computer Use Preview 10-2025"
     },
     {
+      "description": "Preview release (December 12th, 2025) of Deep Research Pro",
+      "displayName": "Deep Research Pro Preview (Dec-12-2025)",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/deep-research-pro-preview-12-2025",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "deepthink-exp-05-20"
+    },
+    {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Embedding 001",
       "inputTokenLimit": 2048,
