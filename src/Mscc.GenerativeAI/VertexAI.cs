@@ -170,7 +170,7 @@ namespace Mscc.GenerativeAI
                 httpClientFactory: _httpClientFactory,
                 logger: logger ?? Logger)
             {
-	            AccessToken = _apiKey is null ? _accessToken : null,
+	            // AccessToken = _apiKey is null ? _accessToken : null,
                 Version = _version,
                 RequestOptions = _requestOptions
             };
@@ -203,7 +203,7 @@ namespace Mscc.GenerativeAI
             {
                 ProjectId = _projectId,
                 Region = _region,
-	            AccessToken = _apiKey is null ? _accessToken : null,
+	            // AccessToken = _apiKey is null ? _accessToken : null,
                 Version = _version,
                 RequestOptions = _requestOptions
             };
@@ -236,7 +236,7 @@ namespace Mscc.GenerativeAI
             {
                 ProjectId = _projectId, 
                 Region = _region,
-	            AccessToken = _apiKey is null ? _accessToken : null,
+	            // AccessToken = _apiKey is null ? _accessToken : null,
                 Version = _version,
                 RequestOptions = _requestOptions
             };
