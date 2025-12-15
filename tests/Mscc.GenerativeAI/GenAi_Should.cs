@@ -50,6 +50,36 @@ namespace Test.Mscc.GenerativeAI
 		}
 
 		[Fact]
+		public async Task CreateInteraction_Simple_Request_Streaming()
+		{
+			// Act
+			var stream = client.Interactions.CreateStream(new InteractionRequest
+			{
+				Model = _model,
+				InputString = "Explain quantum entanglement in simple terms."
+			});
+
+			// Assert
+			stream.Should().NotBeNull();
+			await foreach (var chunk in stream)
+			{
+				if (chunk.EventType == "content.delta")
+				{
+					if (chunk.Delta.Type == "text")
+						_output.WriteLine(chunk.Delta.Text);
+					if (chunk.Delta.Type == "thought_signature")	// "thought"
+						_output.WriteLine(chunk.Delta.Signature);
+				}
+				else if (chunk.EventType == "interaction.complete")
+				{
+					_output.WriteLine($"\n\n--- Stream Finished ---");
+					_output.WriteLine($"Total Tokens {chunk.Interaction.Usage.TotalTokens}");
+				}
+				
+			}
+		}
+
+		[Fact]
 		public async Task CreateInteraction_Simple_Request_with_GenerationConfig()
 		{
 			// Act
