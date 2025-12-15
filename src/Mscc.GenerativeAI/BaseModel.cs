@@ -620,6 +620,71 @@ namespace Mscc.GenerativeAI
             await response.EnsureSuccessAsync(cancellationToken);
             return await Deserialize<TResponse>(response);
         }
+        
+        /// <summary>
+        /// Sends a POST request to the specified API endpoint and streams the response.
+        /// </summary>
+        /// <remarks>
+        /// <seealso href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events">Using Server-Sent Events</seealso>
+        /// </remarks>
+        /// <typeparam name="TRequest">The type of the request object.</typeparam>
+        /// <typeparam name="TResponse">The type of the expected response objects in the stream.</typeparam>
+        /// <param name="request">The request object to send.</param>
+        /// <param name="url">The URL template for the API endpoint.</param>
+        /// <param name="method">The specific API method to call.</param>
+        /// <param name="requestOptions">Optional. Options for the request, like timeout and retry settings.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An asynchronous stream of response objects.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the request is null.</exception>
+        protected async IAsyncEnumerable<TResponse> PostStreamAsync<TRequest, TResponse>(TRequest request,
+	        string url, string method,
+	        RequestOptions? requestOptions = null,
+	        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+	        if (request == null) throw new ArgumentNullException(nameof(request));
+
+	        var requestUri = ParseUrl(url, method).AddQueryString(new Dictionary<string, string?>() { ["alt"] = "sse" });
+	        var json = Serialize(request);
+	        var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
+	        using var httpRequest = new HttpRequestMessage(HttpMethod.Post, requestUri);
+	        httpRequest.Version = _httpVersion;
+	        httpRequest.Content = payload;
+	        // message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
+	        httpRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(Constants.MediaType));
+
+	        using var response = await SendAsync(httpRequest, requestOptions, cancellationToken, HttpCompletionOption.ResponseHeadersRead);
+	        await response.EnsureSuccessAsync(cancellationToken);
+	        if (response.Content is not null)
+	        {
+#if NET472_OR_GREATER || NETSTANDARD2_0
+		        using var sr = new StreamReader(await response.Content.ReadAsStreamAsync());
+#else
+                using var sr = new StreamReader(await response.Content.ReadAsStreamAsync(cancellationToken));
+#endif
+		        while (!sr.EndOfStream)
+		        {
+#if NET472_OR_GREATER || NETSTANDARD2_0 || NET6_0
+			        var data = await sr.ReadLineAsync();
+#else
+                    var data = await sr.ReadLineAsync(cancellationToken);
+#endif
+			        if (string.IsNullOrWhiteSpace(data))
+				        continue;
+			        if (data.StartsWith(":", StringComparison.OrdinalIgnoreCase))
+				        continue;
+			        if (data.StartsWith("event:", StringComparison.OrdinalIgnoreCase))
+				        continue;
+			        if (data.Equals("data: [DONE]", StringComparison.OrdinalIgnoreCase))
+				        continue;
+
+			        var item = JsonSerializer.Deserialize<TResponse>(
+				        data.Substring("data:".Length).Trim(), ReadOptions);
+			        if (cancellationToken.IsCancellationRequested)
+				        yield break;
+			        yield return item;
+		        }
+	        }
+        }
 
         /// <summary>
         /// Sends an HTTP request and returns the response.
