@@ -84,7 +84,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.ShouldNotBeNull();
-            model.Name.ShouldBe($"{Model.Gemini25Pro.SanitizeModelName()}");
+            model.Name.ShouldBe($"{Model.Gemini25Flash.SanitizeModelName()}");
         }
 
         [Fact]
