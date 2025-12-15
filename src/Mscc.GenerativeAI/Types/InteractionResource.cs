@@ -95,7 +95,37 @@ public partial class InteractionContent
 public partial class InteractionTurn
 {
     public string? Role { get; set; }
-    public List<InteractionContent>? Content { get; set; }
+    public object? Content
+    {
+	    get
+	    {
+		    return ContentList ??
+		           (object?)ContentContent ??
+		           ContentString;
+	    }
+	    set
+	    {
+		    switch (value)
+		    {
+			    case List<InteractionContent> lic:
+				    ContentList = lic;
+				    break;
+			    case InteractionContent ic:
+				    ContentContent = ic;
+					break;
+				default:
+				    ContentString = Convert.ToString(value);
+				    break;
+		    }
+	    }
+    }
+
+    [JsonIgnore]
+    public List<InteractionContent>? ContentList { get; set; }
+    [JsonIgnore]
+    public InteractionContent? ContentContent { get; set; }
+    [JsonIgnore]
+    public string? ContentString { get; set; }
 }
 
 public partial class Usage
@@ -114,6 +144,6 @@ public partial class Usage
 
 public partial class ModalityTokens
 {
-	public Modality? Modality { get; set; }
+	public ResponseModality? Modality { get; set; }
 	public int? Tokens { get; set; }
 }
