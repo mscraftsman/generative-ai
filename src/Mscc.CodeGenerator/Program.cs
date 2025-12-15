@@ -156,6 +156,7 @@ namespace Mscc.CodeGenerator
 			"ResponseModality",
 			"Schema.Type",
 			"TaskType",
+			"ThinkingLevel",
 			"TuningMode",
 			"UrlRetrievalStatus"
 		};
