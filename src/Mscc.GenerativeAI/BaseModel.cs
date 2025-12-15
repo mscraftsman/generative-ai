@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Authentication;
 using System.Text;
@@ -59,10 +60,15 @@ namespace Mscc.GenerativeAI
 
         /// <summary>
         /// Gets the <see cref="HttpClient"/> instance used for making API requests.
+        /// If an <see cref="IHttpClientFactory"/> is available, it is used to create the client; otherwise, a default client is created.
         /// </summary>
         protected HttpClient Client =>
             _httpClient ??= _httpClientFactory?.CreateClient(nameof(BaseModel)) ?? CreateDefaultHttpClient();
 
+        /// <summary>
+        /// Creates a default <see cref="HttpClient"/> with appropriate settings for the target framework.
+        /// </summary>
+        /// <returns>A new <see cref="HttpClient"/> instance.</returns>
         private HttpClient CreateDefaultHttpClient()
         {
 #if NET472_OR_GREATER || NETSTANDARD2_0
@@ -148,7 +154,7 @@ namespace Mscc.GenerativeAI
         public string? ApiKey { set => _apiKey = value.GuardApiKey(); }
 
         /// <summary>
-        /// Specify API key in HTTP header
+        /// Adds the API key to the request header if it is available.
         /// </summary>
         /// <seealso href="https://cloud.google.com/docs/authentication/api-keys-use#using-with-rest">Using an API key with REST</seealso>
         /// <param name="request"><see cref="HttpRequestMessage"/> to send to the API.</param>
@@ -277,6 +283,9 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Internal constructor for testing purposes, allows injecting a custom HttpMessageHandler.
         /// </summary>
+        /// <param name="handler">The <see cref="HttpMessageHandler"/> to use for HTTP requests.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
+        /// <param name="requestOptions">Optional. Provides options for API requests.</param>
         internal BaseModel(HttpMessageHandler handler, ILogger? logger = null,
             RequestOptions? requestOptions = null) : base(logger)
         {
@@ -299,13 +308,12 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Parses the URL template and replaces the placeholder with current values.
-        /// Given two API endpoints for Google AI Gemini and Vertex AI Gemini this
-        /// method uses regular expressions to replace placeholders in a URL template with actual values.
+        /// Parses the URL template and replaces placeholders with their current values.
+        /// This method supports templates for both Google AI and Vertex AI endpoints.
         /// </summary>
-        /// <param name="url">API endpoint to parse.</param>
-        /// <param name="method">Method part of the URL to inject</param>
-        /// <returns></returns>
+        /// <param name="url">The URL template to parse (e.g., <see cref="BaseUrlGoogleAi"/>).</param>
+        /// <param name="method">The specific API method to append to the URL (e.g., ":generateContent").</param>
+        /// <returns>The fully resolved URL with all placeholders replaced.</returns>
         protected string ParseUrl(string url, string method = "")
         {
             var replacements = GetReplacements();
@@ -343,10 +351,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Return serialized JSON string of request payload.
+        /// Serializes the request payload to a JSON string.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of the request object.</typeparam>
+        /// <param name="request">The request object to serialize.</param>
+        /// <returns>A JSON string representing the request.</returns>
         protected string Serialize<T>(T request)
         {
             var json = JsonSerializer.Serialize(request, WriteOptions);
@@ -357,11 +366,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Return deserialized object from JSON response.
+        /// Deserializes the JSON response from an API call into an object.
         /// </summary>
-        /// <typeparam name="T">Type to deserialize response into.</typeparam>
-        /// <param name="response">Response from an API call in JSON format.</param>
-        /// <returns>An instance of type T.</returns>
+        /// <typeparam name="T">The type to deserialize the response into.</typeparam>
+        /// <param name="response">The <see cref="HttpResponseMessage"/> from the API call.</param>
+        /// <returns>A task that resolves to an instance of type <typeparamref name="T"/>.</returns>
         protected async Task<T> Deserialize<T>(HttpResponseMessage response)
         {
             var json = await response.Content.ReadAsStringAsync();
@@ -376,9 +385,9 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get default read options for JSON deserialization.
+        /// Configures and returns the default <see cref="JsonSerializerOptions"/> for deserialization.
         /// </summary>
-        /// <returns>default options for JSON deserialization.</returns>
+        /// <returns>Default options for JSON deserialization.</returns>
         private static JsonSerializerOptions ReadJsonSerializerOptions()
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
@@ -407,6 +416,10 @@ namespace Mscc.GenerativeAI
             return options;
         }
 
+        /// <summary>
+        /// A <see cref="IJsonTypeInfoResolver"/> modifier that adds a snake_case alias for each property.
+        /// This allows deserialization to work with both camelCase and snake_case property names.
+        /// </summary>
         private static void AddSnakeCaseAlias(JsonTypeInfo typeInfo)
         {
 	        if (typeInfo.Kind != JsonTypeInfoKind.Object) return;
@@ -431,9 +444,9 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get default write options for JSON serialization.
+        /// Configures and returns the default <see cref="JsonSerializerOptions"/> for serialization.
         /// </summary>
-        /// <returns>default options for JSON serialization.</returns>
+        /// <returns>Default options for JSON serialization.</returns>
         private static JsonSerializerOptions WriteJsonSerializerOptions()
         {
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
@@ -460,11 +473,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Get credentials from specified file.
+        /// Reads credentials from a specified JSON file.
         /// </summary>
-        /// <remarks>This would usually be the secret.json file from Google Cloud Platform.</remarks>
-        /// <param name="credentialsFile">File with credentials to read.</param>
-        /// <returns>Credentials read from file.</returns>
+        /// <remarks>This is typically used for reading service account credentials from Google Cloud Platform.</remarks>
+        /// <param name="credentialsFile">The path to the credentials file.</param>
+        /// <returns>A <see cref="Credentials"/> object if the file exists and is valid; otherwise, <c>null</c>.</returns>
         private Credentials? GetCredentialsFromFile(string credentialsFile)
         {
             Credentials? credentials = null;
@@ -480,11 +493,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// This method uses the gcloud command-line tool to retrieve an access token from the Application Default Credentials (ADC).
-        /// It is specific to Google Cloud Platform and allows easy authentication with the Gemini API on Google Cloud.
-        /// Reference: https://cloud.google.com/docs/authentication 
+        /// Retrieves an access token from Application Default Credentials (ADC) using the gcloud command-line tool.
+        /// This method is specific to Google Cloud Platform.
         /// </summary>
-        /// <returns>The access token.</returns>
+        /// <returns>The access token as a string, or an empty string if it fails.</returns>
+        /// <seealso href="https://cloud.google.com/docs/authentication"/>
         private string GetAccessTokenFromAdc()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -498,12 +511,12 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Run an external application as process in the underlying operating system, if possible.
+        /// Executes an external command-line application.
         /// </summary>
         /// <param name="filename">The command or application to run.</param>
-        /// <param name="arguments">Optional arguments given to the application to run.</param>
-        /// <returns>Output from the application.</returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="arguments">Optional arguments to pass to the application.</param>
+        /// <returns>The standard output from the application.</returns>
+        /// <exception cref="Exception">Thrown if the process exits with a non-zero code.</exception>
         private string RunExternalExe(string filename, string arguments)
         {
             var process = new Process();
@@ -564,11 +577,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Formatting string for logging purpose.
+        /// Formats a command and its arguments for logging purposes.
         /// </summary>
-        /// <param name="filename">The command or application to run.</param>
-        /// <param name="arguments">Optional arguments given to the application to run.</param>
-        /// <returns>Formatted string containing parameter values.</returns>
+        /// <param name="filename">The command or application that was run.</param>
+        /// <param name="arguments">The arguments passed to the application.</param>
+        /// <returns>A formatted string containing the command and arguments.</returns>
         private string Format(string filename, string? arguments)
         {
             return "'" + filename +
@@ -577,19 +590,19 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// 
+        /// Sends a POST request to the specified API endpoint and deserializes the response.
         /// </summary>
-        /// <param name="request"></param>
-        /// <param name="url"></param>
-        /// <param name="method"></param>
-        /// <param name="requestOptions">Options for the request.</param>
-        /// <param name="completionOption"></param>
+        /// <typeparam name="TRequest">The type of the request object.</typeparam>
+        /// <typeparam name="TResponse">The type of the expected response object.</typeparam>
+        /// <param name="request">The request object to send.</param>
+        /// <param name="url">The URL template for the API endpoint.</param>
+        /// <param name="method">The specific API method to call.</param>
+        /// <param name="requestOptions">Optional. Options for the request, like timeout and retry settings.</param>
+        /// <param name="completionOption">Optional. Defines when the HTTP operation should complete.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <typeparam name="TResponse"></typeparam>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="GeminiApiTimeoutException">The HTTP response timed out.</exception>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the deserialized response.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the request is null.</exception>
+        /// <exception cref="GeminiApiTimeoutException">Thrown if the HTTP response times out.</exception>
         protected async Task<TResponse> PostAsync<TRequest, TResponse>(TRequest request,
             string url, string method,
             RequestOptions? requestOptions = null,
@@ -726,6 +739,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="response">The HTTP response.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the response content as a string.</returns>
         private static async Task<string> GetResponseMessageAsync(HttpResponseMessage response,
             CancellationToken cancellationToken)
         {
@@ -742,6 +756,7 @@ namespace Mscc.GenerativeAI
         /// </summary>
         /// <param name="request">The request to clone.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the cloned HTTP request message.</returns>
         private static async Task<HttpRequestMessage> CloneHttpRequestMessageAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
@@ -774,7 +789,7 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Disposes <see cref="BaseModel"/> and its underlying resources.
+        /// Disposes the <see cref="BaseModel"/> and its underlying resources.
         /// </summary>
         public void Dispose()
         {
@@ -783,6 +798,10 @@ namespace Mscc.GenerativeAI
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="BaseModel"/> and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
@@ -805,7 +824,7 @@ namespace Mscc.GenerativeAI
         // }
 
         /// <summary>
-        /// Asynchronously disposes <see cref="BaseModel"/> and its underlying resources.
+        /// Asynchronously disposes the <see cref="BaseModel"/> and its underlying resources.
         /// </summary>
         /// <returns>A <see cref="ValueTask"/> that represents the asynchronous dispose operation.</returns>
         public virtual ValueTask DisposeAsync()
