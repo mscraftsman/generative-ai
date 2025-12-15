@@ -14,6 +14,7 @@ using System.Security.Authentication;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -386,7 +387,10 @@ namespace Mscc.GenerativeAI
                 WriteIndented = true,
 #endif
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver
+                {
+	                Modifiers = { AddSnakeCaseAlias }
+                },
                 DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
                 NumberHandling = JsonNumberHandling.AllowReadingFromString,
                 PropertyNameCaseInsensitive = true,
@@ -397,10 +401,33 @@ namespace Mscc.GenerativeAI
                 RespectNullableAnnotations = true
 #endif
             };
-            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+            options.Converters.Add(new FlexibleEnumConverterFactory());
             options.Converters.Add(new DateTimeFormatJsonConverter());
 
             return options;
+        }
+
+        private static void AddSnakeCaseAlias(JsonTypeInfo typeInfo)
+        {
+	        if (typeInfo.Kind != JsonTypeInfoKind.Object) return;
+
+	        foreach (JsonPropertyInfo property in typeInfo.Properties.ToList())
+	        {
+		        string snakeCaseName = JsonNamingPolicy.SnakeCaseLower.ConvertName(property.Name);
+
+		        if (!string.Equals(snakeCaseName, property.Name,
+			            StringComparison
+				            .OrdinalIgnoreCase)) // && !string.Equals(snakeCaseName, property..JsonPropertyName, StringComparison.OrdinalIgnoreCase))
+		        {
+			        JsonPropertyInfo aliasProperty =
+				        typeInfo.CreateJsonPropertyInfo(property.PropertyType, snakeCaseName);
+
+			        aliasProperty.Get = property.Get;
+			        aliasProperty.Set = property.Set;
+			        
+			        typeInfo.Properties.Add(aliasProperty);
+		        }
+	        }
         }
 
         /// <summary>
@@ -507,7 +534,7 @@ namespace Mscc.GenerativeAI
             }
             catch (Exception e)
             {
-                Logger.LogRunExternalExe("OS error while executing " + Format(filename, arguments) + ": " + e.Message);
+                Logger.LogRunExternalExe($"OS error while executing {Format(filename, arguments)}: {e.Message}");
                 return string.Empty;
             }
 
