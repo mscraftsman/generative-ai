@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Text.Json.Serialization;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
@@ -35,23 +34,6 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Optional. Controls the maximum depth of the model&apos;s internal reasoning process before it produces a response. If not specified, the default is HIGH. Recommended for Gemini 3 or later models. Use with earlier models results in an error.
 		/// </summary>
-		public ThinkingLevelType? ThinkingLevel { get; set; }
-
-		[JsonConverter(typeof(JsonStringEnumConverter<ThinkingLevelType>))]
-		public enum ThinkingLevelType
-		{
-			/// <summary>
-			/// Default value.
-			/// </summary>
-			ThinkingLevelUnspecified,
-			/// <summary>
-			/// Low thinking level.
-			/// </summary>
-			Low,
-			/// <summary>
-			/// High thinking level.
-			/// </summary>
-			High,
-		}
+		public ThinkingLevel? ThinkingLevel { get; set; }
     }
 }
