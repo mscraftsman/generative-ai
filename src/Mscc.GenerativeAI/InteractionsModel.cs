@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI.Types;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,25 +32,12 @@ namespace Mscc.GenerativeAI
         public InteractionsModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
-	    /// Creates a new interaction.
-	    /// </summary>
-	    /// <param name="model">The name of the `Model` used for generating the interaction. </param>
-	    /// <param name="agent">The name of the `Agent` used for generating the interaction.</param>
-	    /// <param name="input">The inputs for the interaction (common to both Model and Agent).</param>
-	    /// <param name="systemInstruction">System instruction for the interaction.</param>
-	    /// <param name="tools">A list of tool declarations the model may call during interaction.</param>
-	    /// <param name="responseFormat">Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.</param>
-	    /// <param name="responseMimeType">The mime type of the response. This is required if response_format is set.</param>
-	    /// <param name="stream">Input only. Whether the interaction will be streamed.</param>
-	    /// <param name="store">Input only. Whether to store the response and request for later retrieval.</param>
-	    /// <param name="background">Whether to run the model interaction in the background.</param>
-	    /// <param name="generationConfig">Configuration parameters for the model interaction. Alternative to `agent_config`. Only applicable when `model` is set.</param>
-	    /// <param name="agentConfig">Configuration for the agent. Alternative to `generation_config`. Only applicable when `agent` is set.</param>
-	    /// <param name="previousInteractionId">The ID of the previous interaction, if any.</param>
-	    /// <param name="responseModalities">The requested modalities of the response (TEXT, IMAGE, AUDIO).</param>
-	    /// <param name="requestOptions">Options for the request.</param>
-	    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-	    /// <returns>An Interaction resource.</returns>
+        /// Creates a new interaction.
+        /// </summary>
+        /// <param name="request">Request for the interaction.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An Interaction resource.</returns>
         public async Task<InteractionResource> Create(InteractionRequest request,
 	        RequestOptions? requestOptions = null, 
 	        CancellationToken cancellationToken = default)
@@ -88,9 +73,9 @@ namespace Mscc.GenerativeAI
 	        Tools? tools = null,
 	        object? responseFormat = null,
 	        string? responseMimeType = null,
-            bool? stream = false,
-            bool? store = false,
-	        bool? background = false,
+            bool? stream = null,
+            bool? store = null,
+	        bool? background = null,
 	        GenerationConfig? generationConfig = null,
 	        object? agentConfig = null,
 	        string? previousInteractionId = null,
@@ -100,10 +85,20 @@ namespace Mscc.GenerativeAI
         {
 	        var request = new InteractionRequest
 	        {
+		        InputListContent = input,
 		        Model = model, 
 		        Agent = agent,
-		        InputListContent = input,
-		        SystemInstruction = systemInstruction
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Stream = stream,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
 	        };
 	        return await Create(request, requestOptions, cancellationToken);
         }
@@ -135,9 +130,9 @@ namespace Mscc.GenerativeAI
 	        Tools? tools = null,
 	        object? responseFormat = null,
 	        string? responseMimeType = null,
-	        bool? stream = false,
-	        bool? store = false,
-	        bool? background = false,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
 	        GenerationConfig? generationConfig = null,
 	        object? agentConfig = null,
 	        string? previousInteractionId = null,
@@ -147,10 +142,20 @@ namespace Mscc.GenerativeAI
         {
 	        var request = new InteractionRequest
 	        {
+		        InputContent = input,
 		        Model = model, 
 		        Agent = agent,
-		        InputContent = input,
-		        SystemInstruction = systemInstruction
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Stream = stream,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
 	        };
 	        return await Create(request, requestOptions, cancellationToken);
         }
@@ -182,9 +187,9 @@ namespace Mscc.GenerativeAI
 	        Tools? tools = null,
 	        object? responseFormat = null,
 	        string? responseMimeType = null,
-	        bool? stream = false,
-	        bool? store = false,
-	        bool? background = false,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
 	        GenerationConfig? generationConfig = null,
 	        object? agentConfig = null,
 	        string? previousInteractionId = null,
@@ -194,10 +199,20 @@ namespace Mscc.GenerativeAI
         {
 	        var request = new InteractionRequest
 	        {
+		        InputString = input,
 		        Model = model, 
 		        Agent = agent,
-		        InputString = input,
-		        SystemInstruction = systemInstruction
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Stream = stream,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
 	        };
 	        return await Create(request, requestOptions, cancellationToken);
         }
@@ -222,7 +237,6 @@ namespace Mscc.GenerativeAI
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>An Interaction resource.</returns>
-        // ToDo: implement multi-turn handling
         public async Task<InteractionResource> Create(string? model = null,
 	        string? agent = null,
 	        List<InteractionTurn>? input = null,
@@ -230,9 +244,9 @@ namespace Mscc.GenerativeAI
 	        Tools? tools = null,
 	        object? responseFormat = null,
 	        string? responseMimeType = null,
-	        bool? stream = false,
-	        bool? store = false,
-	        bool? background = false,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
 	        GenerationConfig? generationConfig = null,
 	        object? agentConfig = null,
 	        string? previousInteractionId = null,
@@ -242,10 +256,20 @@ namespace Mscc.GenerativeAI
         {
 	        var request = new InteractionRequest
 	        {
+		        InputListTurn = input,
 		        Model = model, 
 		        Agent = agent,
-		        InputListTurn = input,
-		        SystemInstruction = systemInstruction
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Stream = stream,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
 	        };
 	        return await Create(request, requestOptions, cancellationToken);
         }
