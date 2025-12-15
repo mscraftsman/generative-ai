@@ -1,15 +1,19 @@
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI.Types;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
-	/// <summary>
-	/// The Gemini Interactions API is an experimental API that allows developers to build generative AI applications using Gemini models. Gemini is our most capable model, built from the ground up to be multimodal. It can generalize and seamlessly understand, operate across, and combine different types of information including language, images, audio, video, and code. You can use the Gemini API for use cases like reasoning across text and images, content generation, dialogue agents, summarization and classification systems, and more.
-	/// </summary>
+    /// <summary>
+    /// The Gemini Interactions API is an experimental API that allows developers to build generative AI applications using Gemini models.
+    /// Gemini is a highly capable multimodal model that can understand and process various types of information, including language, images, audio, video, and code.
+    /// The API supports use cases like reasoning across text and images, content generation, dialogue agents, summarization, and classification.
+    /// </summary>
     public class InteractionsModel : BaseModel
     {
         internal override string Version => ApiVersion.V1Beta;
@@ -20,166 +24,57 @@ namespace Mscc.GenerativeAI
         public InteractionsModel() : this(httpClientFactory: null, logger: null) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractionsModel"/> class.
+        /// Initializes a new instance of the <see cref="InteractionsModel"/> class with a specified <see cref="IHttpClientFactory"/>.
         /// </summary>
+        /// <param name="apiClient">The <see cref="IHttpClientFactory"/> to use for making API requests.</param>
         public InteractionsModel(IHttpClientFactory apiClient) : this(httpClientFactory: apiClient, logger: null) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InteractionsModel"/> class.
+        /// Initializes a new instance of the <see cref="InteractionsModel"/> class with optional <see cref="IHttpClientFactory"/> and <see cref="ILogger"/>.
         /// </summary>
         /// <param name="httpClientFactory">Optional. The <see cref="IHttpClientFactory"/> to use for creating HttpClient instances.</param>
-        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="logger">Optional. The <see cref="ILogger"/> instance for logging.</param>
         public InteractionsModel(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger) { }
 
         /// <summary>
-        /// Creates a new interaction.
+        /// Creates a new interaction based on the provided request.
         /// </summary>
-        /// <param name="request">Request for the interaction.</param>
-        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="request">The request object containing all parameters for the interaction.</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request, such as timeout and retry settings.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>An Interaction resource.</returns>
+        /// <returns>An <see cref="InteractionResource"/> representing the created interaction.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the request is null.</exception>
         public async Task<InteractionResource> Create(InteractionRequest request,
 	        RequestOptions? requestOptions = null, 
 	        CancellationToken cancellationToken = default)
         {
+	        if (request == null) throw new ArgumentNullException(nameof(request));
+	        ThrowIfUnsupportedRequest(request);
+
 	        var url = "{BaseUrlGoogleAi}/interactions";
 	        return await PostAsync<InteractionRequest, InteractionResource>(request, url, string.Empty, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
-	    /// Creates a new interaction.
-	    /// </summary>
-	    /// <param name="model">The name of the `Model` used for generating the interaction. </param>
-	    /// <param name="agent">The name of the `Agent` used for generating the interaction.</param>
-	    /// <param name="input">The inputs for the interaction (common to both Model and Agent).</param>
-	    /// <param name="systemInstruction">System instruction for the interaction.</param>
-	    /// <param name="tools">A list of tool declarations the model may call during interaction.</param>
-	    /// <param name="responseFormat">Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.</param>
-	    /// <param name="responseMimeType">The mime type of the response. This is required if response_format is set.</param>
-	    /// <param name="stream">Input only. Whether the interaction will be streamed.</param>
-	    /// <param name="store">Input only. Whether to store the response and request for later retrieval.</param>
-	    /// <param name="background">Whether to run the model interaction in the background.</param>
-	    /// <param name="generationConfig">Configuration parameters for the model interaction. Alternative to `agent_config`. Only applicable when `model` is set.</param>
-	    /// <param name="agentConfig">Configuration for the agent. Alternative to `generation_config`. Only applicable when `agent` is set.</param>
-	    /// <param name="previousInteractionId">The ID of the previous interaction, if any.</param>
-	    /// <param name="responseModalities">The requested modalities of the response (TEXT, IMAGE, AUDIO).</param>
-	    /// <param name="requestOptions">Options for the request.</param>
-	    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-	    /// <returns>An Interaction resource.</returns>
-        public async Task<InteractionResource> Create(string? model = null,
-	        string? agent = null,
-	        List<InteractionContent>? input = null,
-            string? systemInstruction = null,
-	        Tools? tools = null,
-	        object? responseFormat = null,
-	        string? responseMimeType = null,
-            bool? stream = null,
-            bool? store = null,
-	        bool? background = null,
-	        GenerationConfig? generationConfig = null,
-	        object? agentConfig = null,
-	        string? previousInteractionId = null,
-	        List<ResponseModality>? responseModalities = null,
-	        RequestOptions? requestOptions = null, 
-	        CancellationToken cancellationToken = default)
-        {
-	        var request = new InteractionRequest
-	        {
-		        InputListContent = input,
-		        Model = model, 
-		        Agent = agent,
-		        SystemInstruction = systemInstruction,
-		        Tools = tools,
-		        ResponseFormat = responseFormat,
-		        ResponseMimeType = responseMimeType,
-		        Stream = stream,
-		        Store = store,
-		        Background = background,
-		        GenerationConfig = generationConfig,
-		        AgentConfig = agentConfig,
-		        PreviousInteractionId = previousInteractionId,
-		        ResponseModalities = responseModalities
-	        };
-	        return await Create(request, requestOptions, cancellationToken);
-        }
-
-        /// <summary>
-        /// Creates a new interaction.
+        /// Creates a new interaction with the specified parameters.
         /// </summary>
-        /// <param name="model">The name of the `Model` used for generating the interaction. </param>
-        /// <param name="agent">The name of the `Agent` used for generating the interaction.</param>
-        /// <param name="input">The inputs for the interaction (common to both Model and Agent).</param>
-        /// <param name="systemInstruction">System instruction for the interaction.</param>
-        /// <param name="tools">A list of tool declarations the model may call during interaction.</param>
-        /// <param name="responseFormat">Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.</param>
-        /// <param name="responseMimeType">The mime type of the response. This is required if response_format is set.</param>
-        /// <param name="stream">Input only. Whether the interaction will be streamed.</param>
-        /// <param name="store">Input only. Whether to store the response and request for later retrieval.</param>
-        /// <param name="background">Whether to run the model interaction in the background.</param>
-        /// <param name="generationConfig">Configuration parameters for the model interaction. Alternative to `agent_config`. Only applicable when `model` is set.</param>
-        /// <param name="agentConfig">Configuration for the agent. Alternative to `generation_config`. Only applicable when `agent` is set.</param>
-        /// <param name="previousInteractionId">The ID of the previous interaction, if any.</param>
-        /// <param name="responseModalities">The requested modalities of the response (TEXT, IMAGE, AUDIO).</param>
-        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">The input string for the interaction.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>An Interaction resource.</returns>
-        public async Task<InteractionResource> Create(string? model = null,
-	        string? agent = null,
-	        InteractionContent? input = null,
-	        string? systemInstruction = null,
-	        Tools? tools = null,
-	        object? responseFormat = null,
-	        string? responseMimeType = null,
-	        bool? stream = null,
-	        bool? store = null,
-	        bool? background = null,
-	        GenerationConfig? generationConfig = null,
-	        object? agentConfig = null,
-	        string? previousInteractionId = null,
-	        List<ResponseModality>? responseModalities = null,
-	        RequestOptions? requestOptions = null,
-	        CancellationToken cancellationToken = default)
-        {
-	        var request = new InteractionRequest
-	        {
-		        InputContent = input,
-		        Model = model, 
-		        Agent = agent,
-		        SystemInstruction = systemInstruction,
-		        Tools = tools,
-		        ResponseFormat = responseFormat,
-		        ResponseMimeType = responseMimeType,
-		        Stream = stream,
-		        Store = store,
-		        Background = background,
-		        GenerationConfig = generationConfig,
-		        AgentConfig = agentConfig,
-		        PreviousInteractionId = previousInteractionId,
-		        ResponseModalities = responseModalities
-	        };
-	        return await Create(request, requestOptions, cancellationToken);
-        }
-
-        /// <summary>
-        /// Creates a new interaction.
-        /// </summary>
-        /// <param name="model">The name of the `Model` used for generating the interaction. </param>
-        /// <param name="agent">The name of the `Agent` used for generating the interaction.</param>
-        /// <param name="input">The inputs for the interaction (common to both Model and Agent).</param>
-        /// <param name="systemInstruction">System instruction for the interaction.</param>
-        /// <param name="tools">A list of tool declarations the model may call during interaction.</param>
-        /// <param name="responseFormat">Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.</param>
-        /// <param name="responseMimeType">The mime type of the response. This is required if response_format is set.</param>
-        /// <param name="stream">Input only. Whether the interaction will be streamed.</param>
-        /// <param name="store">Input only. Whether to store the response and request for later retrieval.</param>
-        /// <param name="background">Whether to run the model interaction in the background.</param>
-        /// <param name="generationConfig">Configuration parameters for the model interaction. Alternative to `agent_config`. Only applicable when `model` is set.</param>
-        /// <param name="agentConfig">Configuration for the agent. Alternative to `generation_config`. Only applicable when `agent` is set.</param>
-        /// <param name="previousInteractionId">The ID of the previous interaction, if any.</param>
-        /// <param name="responseModalities">The requested modalities of the response (TEXT, IMAGE, AUDIO).</param>
-        /// <param name="requestOptions">Options for the request.</param>
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>An Interaction resource.</returns>
+        /// <returns>An <see cref="InteractionResource"/> representing the created interaction.</returns>
         public async Task<InteractionResource> Create(string? model = null,
 	        string? agent = null,
 	        string? input = null,
@@ -206,7 +101,6 @@ namespace Mscc.GenerativeAI
 		        Tools = tools,
 		        ResponseFormat = responseFormat,
 		        ResponseMimeType = responseMimeType,
-		        Stream = stream,
 		        Store = store,
 		        Background = background,
 		        GenerationConfig = generationConfig,
@@ -218,25 +112,137 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Creates a new interaction.
+        /// Creates a new interaction with the specified parameters, using structured content as input.
         /// </summary>
-        /// <param name="model">The name of the `Model` used for generating the interaction. </param>
-        /// <param name="agent">The name of the `Agent` used for generating the interaction.</param>
-        /// <param name="input">The inputs for the interaction (common to both Model and Agent).</param>
-        /// <param name="systemInstruction">System instruction for the interaction.</param>
-        /// <param name="tools">A list of tool declarations the model may call during interaction.</param>
-        /// <param name="responseFormat">Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.</param>
-        /// <param name="responseMimeType">The mime type of the response. This is required if response_format is set.</param>
-        /// <param name="stream">Input only. Whether the interaction will be streamed.</param>
-        /// <param name="store">Input only. Whether to store the response and request for later retrieval.</param>
-        /// <param name="background">Whether to run the model interaction in the background.</param>
-        /// <param name="generationConfig">Configuration parameters for the model interaction. Alternative to `agent_config`. Only applicable when `model` is set.</param>
-        /// <param name="agentConfig">Configuration for the agent. Alternative to `generation_config`. Only applicable when `agent` is set.</param>
-        /// <param name="previousInteractionId">The ID of the previous interaction, if any.</param>
-        /// <param name="responseModalities">The requested modalities of the response (TEXT, IMAGE, AUDIO).</param>
-        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">The structured content for the interaction.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>An Interaction resource.</returns>
+        /// <returns>An <see cref="InteractionResource"/> representing the created interaction.</returns>
+        public async Task<InteractionResource> Create(string? model = null,
+	        string? agent = null,
+	        InteractionContent? input = null,
+	        string? systemInstruction = null,
+	        Tools? tools = null,
+	        object? responseFormat = null,
+	        string? responseMimeType = null,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
+	        GenerationConfig? generationConfig = null,
+	        object? agentConfig = null,
+	        string? previousInteractionId = null,
+	        List<ResponseModality>? responseModalities = null,
+	        RequestOptions? requestOptions = null,
+	        CancellationToken cancellationToken = default)
+        {
+	        var request = new InteractionRequest
+	        {
+		        InputContent = input,
+		        Model = model, 
+		        Agent = agent,
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
+	        };
+	        return await Create(request, requestOptions, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a new interaction with a list of content parts as input.
+        /// </summary>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">A list of content parts for the interaction.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An <see cref="InteractionResource"/> representing the created interaction.</returns>
+        public async Task<InteractionResource> Create(string? model = null,
+	        string? agent = null,
+	        List<InteractionContent>? input = null,
+            string? systemInstruction = null,
+	        Tools? tools = null,
+	        object? responseFormat = null,
+	        string? responseMimeType = null,
+            bool? stream = null,
+            bool? store = null,
+	        bool? background = null,
+	        GenerationConfig? generationConfig = null,
+	        object? agentConfig = null,
+	        string? previousInteractionId = null,
+	        List<ResponseModality>? responseModalities = null,
+	        RequestOptions? requestOptions = null, 
+	        CancellationToken cancellationToken = default)
+        {
+	        var request = new InteractionRequest
+	        {
+		        InputListContent = input,
+		        Model = model, 
+		        Agent = agent,
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
+	        };
+	        return await Create(request, requestOptions, cancellationToken);
+        }
+
+        /// <summary>
+        /// Creates a new interaction with a history of conversation turns as input.
+        /// </summary>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">A list of conversation turns representing the history.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An <see cref="InteractionResource"/> representing the created interaction.</returns>
         public async Task<InteractionResource> Create(string? model = null,
 	        string? agent = null,
 	        List<InteractionTurn>? input = null,
@@ -263,7 +269,6 @@ namespace Mscc.GenerativeAI
 		        Tools = tools,
 		        ResponseFormat = responseFormat,
 		        ResponseMimeType = responseMimeType,
-		        Stream = stream,
 		        Store = store,
 		        Background = background,
 		        GenerationConfig = generationConfig,
@@ -275,15 +280,289 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Retrieves the full details of a single interaction based on its `Interaction.id`.
+        /// Creates a new interaction and streams the response as it is generated.
+        /// </summary>
+        /// <param name="request">The request object containing all parameters for the interaction.</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An asynchronous stream of <see cref="InteractionSseEvent"/> chunks.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if the request is null.</exception>
+        public async IAsyncEnumerable<InteractionSseEvent> CreateStream(InteractionRequest request,
+	        RequestOptions? requestOptions = null, 
+	        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+	        if (request == null) throw new ArgumentNullException(nameof(request));
+	        ThrowIfUnsupportedRequest(request);
+
+	        request.Stream = true;
+
+	        var url = "{BaseUrlGoogleAi}/interactions";
+	        await foreach (var item in PostStreamAsync<InteractionRequest, InteractionSseEvent>(request, url, string.Empty, requestOptions, cancellationToken))
+	        {
+		        if (cancellationToken.IsCancellationRequested)
+			        yield break;
+		        yield return item;
+	        }
+        }
+
+        /// <summary>
+        /// Creates a new interaction and streams the response.
+        /// </summary>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">The input string for the interaction.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An asynchronous stream of <see cref="InteractionSseEvent"/> chunks.</returns>
+        public async IAsyncEnumerable<InteractionSseEvent> CreateStream(string? model = null,
+	        string? agent = null,
+	        string? input = null,
+	        string? systemInstruction = null,
+	        Tools? tools = null,
+	        object? responseFormat = null,
+	        string? responseMimeType = null,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
+	        GenerationConfig? generationConfig = null,
+	        object? agentConfig = null,
+	        string? previousInteractionId = null,
+	        List<ResponseModality>? responseModalities = null,
+	        RequestOptions? requestOptions = null, 
+	        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+	        var request = new InteractionRequest
+	        {
+		        InputString = input,
+		        Model = model, 
+		        Agent = agent,
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
+	        };
+
+	        await foreach (var item in CreateStream(request, requestOptions, cancellationToken))
+	        {
+		        if (cancellationToken.IsCancellationRequested)
+			        yield break;
+		        yield return item;
+	        }
+        }
+
+        /// <summary>
+        /// Creates a new interaction with structured content and streams the response.
+        /// </summary>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">The structured content for the interaction.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An asynchronous stream of <see cref="InteractionSseEvent"/> chunks.</returns>
+        public async IAsyncEnumerable<InteractionSseEvent> CreateStream(string? model = null,
+	        string? agent = null,
+	        InteractionContent? input = null,
+	        string? systemInstruction = null,
+	        Tools? tools = null,
+	        object? responseFormat = null,
+	        string? responseMimeType = null,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
+	        GenerationConfig? generationConfig = null,
+	        object? agentConfig = null,
+	        string? previousInteractionId = null,
+	        List<ResponseModality>? responseModalities = null,
+	        RequestOptions? requestOptions = null, 
+	        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+	        var request = new InteractionRequest
+	        {
+		        InputContent = input,
+		        Model = model, 
+		        Agent = agent,
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
+	        };
+
+	        await foreach (var item in CreateStream(request, requestOptions, cancellationToken))
+	        {
+		        if (cancellationToken.IsCancellationRequested)
+			        yield break;
+		        yield return item;
+	        }
+        }
+
+        /// <summary>
+        /// Creates a new interaction with a list of content parts and streams the response.
+        /// </summary>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">A list of content parts for the interaction.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An asynchronous stream of <see cref="InteractionSseEvent"/> chunks.</returns>
+        public async IAsyncEnumerable<InteractionSseEvent> CreateStream(string? model = null,
+	        string? agent = null,
+	        List<InteractionContent>? input = null,
+	        string? systemInstruction = null,
+	        Tools? tools = null,
+	        object? responseFormat = null,
+	        string? responseMimeType = null,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
+	        GenerationConfig? generationConfig = null,
+	        object? agentConfig = null,
+	        string? previousInteractionId = null,
+	        List<ResponseModality>? responseModalities = null,
+	        RequestOptions? requestOptions = null, 
+	        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+	        var request = new InteractionRequest
+	        {
+		        InputListContent = input,
+		        Model = model, 
+		        Agent = agent,
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
+	        };
+
+	        await foreach (var item in CreateStream(request, requestOptions, cancellationToken))
+	        {
+		        if (cancellationToken.IsCancellationRequested)
+			        yield break;
+		        yield return item;
+	        }
+        }
+
+        /// <summary>
+        /// Creates a new interaction with a history of conversation turns and streams the response.
+        /// </summary>
+        /// <param name="model">The name of the `Model` to use for the interaction.</param>
+        /// <param name="agent">The name of the `Agent` to use for the interaction.</param>
+        /// <param name="input">A list of conversation turns representing the history.</param>
+        /// <param name="systemInstruction">A system instruction to guide the model's behavior.</param>
+        /// <param name="tools">A list of tool declarations the model may call.</param>
+        /// <param name="responseFormat">Enforces the response to be a JSON object matching a specified schema.</param>
+        /// <param name="responseMimeType">The MIME type of the response, required if `responseFormat` is set.</param>
+        /// <param name="stream">If true, the interaction will be streamed.</param>
+        /// <param name="store">If true, the request and response will be stored for later retrieval.</param>
+        /// <param name="background">If true, the interaction will run in the background.</param>
+        /// <param name="generationConfig">Configuration for the model's generation process.</param>
+        /// <param name="agentConfig">Configuration for the agent.</param>
+        /// <param name="previousInteractionId">The ID of the previous interaction in a conversation.</param>
+        /// <param name="responseModalities">The requested modalities for the response (e.g., TEXT, IMAGE).</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An asynchronous stream of <see cref="InteractionSseEvent"/> chunks.</returns>
+        public async IAsyncEnumerable<InteractionSseEvent> CreateStream(string? model = null,
+	        string? agent = null,
+	        List<InteractionTurn>? input = null,
+	        string? systemInstruction = null,
+	        Tools? tools = null,
+	        object? responseFormat = null,
+	        string? responseMimeType = null,
+	        bool? stream = null,
+	        bool? store = null,
+	        bool? background = null,
+	        GenerationConfig? generationConfig = null,
+	        object? agentConfig = null,
+	        string? previousInteractionId = null,
+	        List<ResponseModality>? responseModalities = null,
+	        RequestOptions? requestOptions = null, 
+	        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+	        var request = new InteractionRequest
+	        {
+		        InputListTurn = input,
+		        Model = model, 
+		        Agent = agent,
+		        SystemInstruction = systemInstruction,
+		        Tools = tools,
+		        ResponseFormat = responseFormat,
+		        ResponseMimeType = responseMimeType,
+		        Store = store,
+		        Background = background,
+		        GenerationConfig = generationConfig,
+		        AgentConfig = agentConfig,
+		        PreviousInteractionId = previousInteractionId,
+		        ResponseModalities = responseModalities
+	        };
+
+	        await foreach (var item in CreateStream(request, requestOptions, cancellationToken))
+	        {
+		        if (cancellationToken.IsCancellationRequested)
+			        yield break;
+		        yield return item;
+	        }
+        }
+
+        /// <summary>
+        /// Retrieves the full details of a single interaction by its ID.
         /// </summary>
         /// <param name="id">The unique identifier of the interaction to retrieve.</param>
-        /// <param name="stream">If set to true, the generated content will be streamed incrementally.</param>
-        /// <param name="lastEventId">Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.</param>
-        /// <param name="apiVersion">Which version of the API to use.</param>
-        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="stream">If true, the generated content will be streamed incrementally.</param>
+        /// <param name="lastEventId">Optional. If set, resumes the stream from the event after the specified ID. Requires `stream` to be true.</param>
+        /// <param name="apiVersion">The API version to use for the request.</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>An Interaction resource.</returns>
+        /// <returns>An <see cref="InteractionResource"/> with the details of the interaction.</returns>
         public async Task<InteractionResource> Get(string id,
 	        bool? stream = false,
 	        string? lastEventId = null,
@@ -300,13 +579,13 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
-        /// Deletes the interaction by id.
+        /// Deletes an interaction by its ID.
         /// </summary>
         /// <param name="id">The unique identifier of the interaction to delete.</param>
-        /// <param name="apiVersion">Which version of the API to use.</param>
-        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="apiVersion">The API version to use for the request.</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>If successful, the response is empty.</returns>
+        /// <returns>An empty string if the deletion is successful.</returns>
         public async Task<string> Delete(string id,
 	        string? apiVersion = null,
 	        RequestOptions? requestOptions = null, 
@@ -325,13 +604,13 @@ namespace Mscc.GenerativeAI
         }
         
         /// <summary>
-        /// Cancels an interaction by id. This only applies to background interactions that are still running.
+        /// Cancels a running background interaction by its ID.
         /// </summary>
-        /// <param name="id">The unique identifier of the interaction to retrieve.</param>
-        /// <param name="apiVersion">Which version of the API to use.</param>
-        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="id">The unique identifier of the interaction to cancel.</param>
+        /// <param name="apiVersion">The API version to use for the request.</param>
+        /// <param name="requestOptions">Optional. Options for configuring the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>An Interaction resource.</returns>
+        /// <returns>An <see cref="InteractionResource"/> representing the canceled interaction.</returns>
         public async Task<InteractionResource> Cancel(string id,
 	        string? apiVersion = null,
 	        RequestOptions? requestOptions = null, 
