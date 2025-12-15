@@ -39,67 +39,269 @@ namespace Test.Mscc.GenerativeAI
 		[Fact]
 		public async Task CreateInteraction_Simple_Request()
 		{
+            // Act
 			var interaction = await client.Interactions.Create(
 				model: _model,
-				input: "Hello, how are you?"
+				input: "Tell me a short joke about programming."
 			);
 
+            // Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task CreateInteraction_Simple_Request_with_GenerationConfig()
+		{
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: "Tell me a story about a brave knight.",
+				generationConfig: new()
+				{
+					Temperature = 0.7,
+					MaxOutputTokens = 500,
+					ThinkingLevel = ThinkingLevel.Low
+				}
+			);
+
+			// Assert
 			_output.WriteLine(interaction.Text);
 		}
 
 		[Fact]
 		public async Task CreateInteraction_Multi_Turn()
 		{
+            // Act
 			var interaction = await client.Interactions.Create(
 				model: _model,
 				input: new List<InteractionTurn>
 				{
-					new() { Role = Role.User, Content = [new() { Text = "Hello!" }] },
-					new() { Role = Role.Model, Content = [new() { Text = "Hi there! How can I help you today?" }] },
-					new() { Role = Role.User, Content = [new() { Text = "What is the capital of France?" }] }
+					new() { Role = Role.User, Content = "Hello!" },
+					new() { Role = Role.Model, Content = "Hi there! How can I help you today?" },
+					new() { Role = Role.User, Content = "What is the capital of France?" }
 				}
 			);
 
+            // Assert
 			_output.WriteLine(interaction.Text);
 		}
 
-		[Fact]
-		public async Task CreateInteraction_Image_Input()
+		[Theory]
+		[InlineData("scones.jpg", "image/jpeg", "What is in this picture?", "blueberries")]
+		[InlineData("cat.jpg", "image/jpeg", "Describe this image", "snow")]
+		public async Task CreateInteraction_Image_Input(string filename, string mimetype, string prompt, string expected)
 		{
+            // Arrange
+			var base64Image =
+				Convert.ToBase64String(
+					File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
+
+            // Act
 			var interaction = await client.Interactions.Create(
 				model: _model,
 				input: new List<InteractionContent>
 				{
-					new() { Type = "text", Text = "Hello!" },
-					new() { Type = "image", Data = "", MimeType = "image/png" }
+					new() { Type = "text", Text = prompt },
+					new() { Type = "image", Data = base64Image, MimeType = mimetype }
 				}
 			);
 
+            // Assert
 			_output.WriteLine(interaction.Text);
 		}
 
 		[Fact]
 		public async Task CreateInteraction_Function_Calling()
 		{
+            // Act
 			var interaction = await client.Interactions.Create(
 				model: _model,
-				input: "What is the weather like in Flic en Flac, Mauritius?",
-				tools: []
+				input: "What is the weather like in Flic en Flac, Mauritius?"
+				// tools: [{
+				// 	"type": "function",
+				// 	"name": "get_weather",
+				// 	"description": "Get the current weather in a given location",
+				// 	"parameters": {
+				// 	"type": "object",
+				// 	"properties": {
+				// 	"location": {
+				// 	"type": "string",
+				// 	"description": "The city and state, e.g. San Francisco, CA"
+				// 	}
+				// 	},
+				// 	"required": ["location"]
+				// 	}
+				// 	}]
 			);
 
+            // Assert
 			_output.WriteLine(interaction.Text);
 		}
 
 		[Fact]
 		public async Task CreateInteraction_Deep_Research()
 		{
-			var interaction = await client.Interactions.Create(
+            // Act
+			var initialInteraction = await client.Interactions.Create(
 				agent: Model.DeepResearchPro,
 				input: "Find a way to clean the oceans from plastic",
 				background: true
 			);
 
-			_output.WriteLine(interaction.Status);
+            // Assert
+			_output.WriteLine($"Research started. Interaction ID: {initialInteraction.Id} - {initialInteraction.Status}");
+
+			while (true)
+			{
+				var interaction = await client.Interactions.Get(initialInteraction.Id);
+				_output.WriteLine($"  Status: {interaction.Status}");
+
+				if (interaction.Status == "completed")	// InteractionStatus.Completed
+				{
+					_output.WriteLine($"\nFinal Report:\n{interaction.Text}");
+					break;
+				}
+				if (interaction.Status == "cancelled" ||
+				    interaction.Status == "failed")	// InteractionStatus.Completed
+				{
+					_output.WriteLine($"Failed with status: {interaction.Status}");
+					break;
+				}
+				
+				await Task.Delay(TimeSpan.FromSeconds(10));
+			}
+		}
+
+		[Fact]
+		public async Task Conversation_Stateful()
+		{
+			// Act
+			var interaction1 = await client.Interactions.Create(
+				model: _model,
+				input: "Hi, my name is JoKi and I'm a Sr software crafter."
+			);
+
+			// Assert
+			_output.WriteLine(interaction1.Text);
+
+			var interaction2 = await client.Interactions.Create(
+				model: _model,
+				input: "What's my name?",
+				previousInteractionId: interaction1.Id
+			);
+
+			// Assert
+			_output.WriteLine(interaction2.Text);
+		}
+
+		[Fact]
+		public async Task Conversation_Stateless()
+		{
+			// Arrange
+			List<InteractionTurn> conversationHistory =
+			[
+				new() { Role = Role.User, Content = "What are the three largest cities in Germany?" }
+			];
+			
+			// Act
+			var interaction1 = await client.Interactions.Create(
+				model: _model,
+				input: conversationHistory
+			);
+			
+			// Assert
+			_output.WriteLine(interaction1.Text);
+
+			conversationHistory.Add(
+				new() { Role = Role.Model, Content = interaction1.Outputs });
+			conversationHistory.Add(
+				new() { Role = Role.User, Content = "What is the most famous landmark in the second one?" });
+
+			var interaction2 = await client.Interactions.Create(
+				model: _model,
+				input: conversationHistory
+			);
+
+			// Assert
+			_output.WriteLine(interaction2.Text);
+		}
+
+		[Theory]
+		[InlineData("image", "scones.jpg", "Describe this image", "blueberries")]
+		[InlineData("audio", "pixel.mp3", "What does this audio say?", "Aisha Sherif")]
+		[InlineData("video", "Big_Buck_Bunny.mp4", "What is happening in this video? Provide a timestamped summary.", "squirrel")]
+		[InlineData("document", "gemini.pdf", "What is this document about?", "DeepMind")]
+		public async Task Multimodal_Understanding_Inline(string type, string filename, string prompt, string expected)
+		{
+			// Arrange
+			var mimeType = GenerativeAIExtensions.GetMimeType(filename);
+			var base64Image =
+				Convert.ToBase64String(
+					File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: new List<InteractionContent>
+				{
+					new() { Type = "text", Text = prompt },
+					new() { Type = type, Data = base64Image, MimeType = mimeType }
+				}
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Theory]
+		[InlineData("image", "image/jpeg", "Describe this image", "blueberries")]
+		[InlineData("audio", "audio/mpeg", "What does this audio say?", "Aisha Sherif")]
+		[InlineData("video", "video/mp4", "What is happening in this video? Provide a timestamped summary.", "squirrel")]
+		[InlineData("document", "application/pdf", "What is this document about?", "DeepMind")]
+		public async Task Multimodal_Understanding_using_FilesAPI(string type, string mimeType, string prompt, string expected)
+		{
+			// Arrange
+			var files = await client.Files.ListFiles();
+			var file = files.Files
+				.FirstOrDefault(x => x.MimeType.StartsWith(mimeType));
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: new List<InteractionContent>
+				{
+					new() { Type = "text", Text = prompt },
+					new() { Type = type, Uri = file.Uri, MimeType = mimeType }
+				}
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Multimodal_Generation()
+		{
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: Model.Gemini3ProImagePreview,
+				input: "Generate an image of a futuristic city.",
+				responseModalities: [ResponseModality.Image]
+			);
+
+			// Assert
+			foreach (InteractionContent output in interaction.Outputs)
+			{
+				if (output.Type == "image")
+				{
+					_output.WriteLine($"Generated image with MIME type: {output.MimeType}");
+					var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
+						Path.ChangeExtension($"{Guid.NewGuid():D}",
+							output.MimeType.Replace("image/", "")));
+					File.WriteAllBytes(fileName, Convert.FromBase64String(output.Data));
+                    _output.WriteLine($"Wrote image to {fileName}");
+				}
+			}
 		}
 	}
 }
