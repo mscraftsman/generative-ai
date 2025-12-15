@@ -233,7 +233,7 @@ namespace Mscc.GenerativeAI.Microsoft
 
 						if (thinkingConfigDict.TryGetValue("ThinkingLevel", out var thinkingLevel))
 						{
-							if (Enum.TryParse(thinkingLevel.ToString(), out ThinkingConfig.ThinkingLevelType level))
+							if (Enum.TryParse(thinkingLevel.ToString(), out ThinkingLevel level))
 							{
 								request.GenerationConfig.ThinkingConfig.ThinkingLevel = level;
 							}
