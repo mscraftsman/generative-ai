@@ -147,3 +147,22 @@ public partial class ModalityTokens
 	public ResponseModality? Modality { get; set; }
 	public int? Tokens { get; set; }
 }
+
+public partial class InteractionSseEvent
+{
+	public string? EventType { get; set; }
+	public string? EventId { get; set; }
+	public InteractionResource? Interaction { get; set; }
+	public string? InteractionId { get; set; }
+	public string? Status { get; set; }	// enum State?
+	public int? Index { get; set; }
+	public InteractionContent? Content { get; set; }
+	public InteractionContent? Delta { get; set; }
+	public InteractionError? Error { get; set; }
+}
+
+public partial class InteractionError
+{
+	public string? Code { get; set; }
+	public string? Message { get; set; }
+}
