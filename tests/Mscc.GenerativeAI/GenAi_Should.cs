@@ -33,7 +33,7 @@ namespace Test.Mscc.GenerativeAI
 		{
 			_output = output;
 			_fixture = fixture;
-			client = new Client(apiKey: _fixture.ApiKey, logger: Logger);
+			client = new Client(logger: Logger);
 		}
 
 		[Fact]
