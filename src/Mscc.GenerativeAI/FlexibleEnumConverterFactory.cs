@@ -93,10 +93,15 @@ namespace Mscc.GenerativeAI
 				// Option A: Write the exact Enum name (Default)
 				// writer.WriteStringValue(value.ToString());
 
-				// Option B: Force CamelCase on output (replicates JsonStringEnumConverter behavior)
 				string name = value.ToString();
-				string camelCase = JsonNamingPolicy.CamelCase.ConvertName(name);
-				writer.WriteStringValue(camelCase);
+
+				// Option B: Force CamelCase on output (replicates JsonStringEnumConverter behavior)
+				// string camelCase = JsonNamingPolicy.CamelCase.ConvertName(name);
+				// writer.WriteStringValue(camelCase);
+
+				// Option B: Force CamelCase on output (replicates JsonStringEnumConverter behavior)
+				string snakeCase = JsonNamingPolicy.SnakeCaseLower.ConvertName(name);
+				writer.WriteStringValue(snakeCase);
 			}
 		}
 	}

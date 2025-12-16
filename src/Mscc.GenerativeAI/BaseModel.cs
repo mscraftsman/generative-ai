@@ -466,7 +466,8 @@ namespace Mscc.GenerativeAI
                 RespectNullableAnnotations = true
 #endif
             };
-            options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
+            options.Converters.Add(new FlexibleEnumConverterFactory());
+            // options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper));
             options.Converters.Add(new DateTimeFormatJsonConverter());
 
             return options;
