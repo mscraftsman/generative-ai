@@ -810,14 +810,31 @@ namespace Mscc.GenerativeAI
             // Truncate base64 strings in "data" properties
             // Pattern looks for "data": "..." where the value is longer than 50 chars.
             // Using [^"] to match any character except double quote, handling potential JSON escaping of base64 chars.
-            const string pattern = @"""(?<key>data)""\s*:\s*""(?<content>[^""]{50,})""";
+            const string patternData = @"""(?<key>data)""\s*:\s*""(?<content>[^""]{50,})""";
 
-            return Regex.Replace(json, pattern, m =>
+            // Truncate inlineData.data
+            json = Regex.Replace(json, patternData, m =>
             {
                 var content = m.Groups["content"].Value;
                 var truncated = content.Substring(0, 42) + "...[truncated]";
                 return $@"""{m.Groups["key"].Value}"": ""{truncated}""";
             }, RegexOptions.IgnoreCase);
+            
+            const string patternSignature = @"""(?<key>thoughtSignature)""\s*:\s*""(?<content>[^""]+)""";
+            json = Regex.Replace(json, patternSignature, m =>
+            {
+	            // var value = "{ " + $"{m.Value}" + " }";
+	            // var part = JsonSerializer.Deserialize<Part>(value, ReadOptions);
+	            // // var content = JsonSerializer.Deserialize<byte[]>(m.Groups["content"].Value, ReadOptions);
+	            // var dummy = Convert.FromBase64String(m.Groups["content"].Value);
+	            // var decoded = Convert.ToBase64String(part.ThoughtSignature);
+	            // return $@"""{m.Groups["key"].Value}"": ""{decoded}""";
+	            var content = m.Groups["content"].Value;
+	            var truncated = content.Substring(0, 42) + "...[truncated]";
+	            return $@"""{m.Groups["key"].Value}"": ""{truncated}""";
+            }, RegexOptions.IgnoreCase);
+            
+            return json;
         }
 
         /// <summary>
