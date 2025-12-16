@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -273,6 +274,62 @@ namespace Mscc.GenerativeAI.Types
             }
 
             return functions!.FunctionDeclarations!;
+        }
+
+        /// <summary>
+        /// Invokes a function by name with the provided arguments.
+        /// </summary>
+        /// <param name="name">The name of the function to invoke.</param>
+        /// <param name="arguments">The arguments to pass to the function.</param>
+        /// <returns>The result of the function invocation.</returns>
+        public object? Invoke(string name, object arguments)
+        {
+            var functionDeclaration = this
+                .Where(t => t.FunctionDeclarations is not null)
+                .SelectMany(t => t.FunctionDeclarations!)
+                .FirstOrDefault(f => f.Name == name && f.Callback is not null);
+
+            if (functionDeclaration is null)
+            {
+                throw new ArgumentException($"Function '{name}' not found.");
+            }
+
+            var function = functionDeclaration.Callback!;
+            var methodInfo = function.Method;
+            var parameters = methodInfo.GetParameters();
+            var args = new object?[parameters.Length];
+
+            if (arguments is JsonElement jsonElement && jsonElement.ValueKind == JsonValueKind.Object)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var param = parameters[i];
+                    if (jsonElement.TryGetProperty(param.Name!, out var prop))
+                    {
+                        args[i] = JsonSerializer.Deserialize(prop.GetRawText(), param.ParameterType);
+                    }
+                }
+            }
+            else if (arguments is Dictionary<string, object> dict)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var param = parameters[i];
+                    if (dict.TryGetValue(param.Name!, out var value))
+                    {
+                        if (value is JsonElement je)
+                        {
+                            args[i] = JsonSerializer.Deserialize(je.GetRawText(), param.ParameterType);
+                        }
+                        else 
+                        {
+                            args[i] = Convert.ChangeType(value, param.ParameterType);
+                        }
+                    }
+                }
+            }
+
+            return function.DynamicInvoke(args);
         }
 
         internal Func<string, string, CancellationToken, ValueTask<object?>> DefaultFunctionCallback { get; set; } =
