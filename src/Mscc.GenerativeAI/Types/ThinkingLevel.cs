@@ -19,7 +19,9 @@ using System.Text.Json.Serialization;
 
 namespace Mscc.GenerativeAI.Types
 {
-
+	/// <summary>
+	/// The number of thoughts tokens that the model should generate.
+	/// </summary>
 	[JsonConverter(typeof(JsonStringEnumConverter<ThinkingLevel>))]
 	public enum ThinkingLevel
 	{
@@ -32,8 +34,16 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		Low,
 		/// <summary>
+		/// Medium thinking level.
+		/// </summary>
+		Medium,
+		/// <summary>
 		/// High thinking level.
 		/// </summary>
 		High,
+		/// <summary>
+		/// Minimal thinking level.
+		/// </summary>
+		Minimal,
 	}
 }
