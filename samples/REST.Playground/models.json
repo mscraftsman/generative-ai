@@ -800,6 +800,23 @@
       "topK": 64,
       "topP": 0.95,
       "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
+    },
+    {
+      "description": "Gemini 2.5 Flash Native Audio Preview 12-2025",
+      "displayName": "Gemini 2.5 Flash Native Audio Preview 12-2025",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-native-audio-preview-12-2025",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "12-2025"
     }
   ]
 }
