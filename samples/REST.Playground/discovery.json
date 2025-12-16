@@ -96,6 +96,25 @@
   },
   "protocol": "rest",
   "resources": {
+    "auth_tokens": {
+      "methods": {
+        "create": {
+          "description": "Creates a token that can be used to constrain the behavior of a BidiGenerateContent session.",
+          "flatPath": "v1beta/auth_tokens",
+          "httpMethod": "POST",
+          "id": "generativelanguage.auth_tokens.create",
+          "parameterOrder": [],
+          "parameters": {},
+          "path": "v1beta/auth_tokens",
+          "request": {
+            "$ref": "AuthToken"
+          },
+          "response": {
+            "$ref": "AuthToken"
+          }
+        }
+      }
+    },
     "batches": {
       "methods": {
         "cancel": {
@@ -1091,6 +1110,30 @@
     },
     "media": {
       "methods": {
+        "download": {
+          "description": "Gets a generated file. When calling this method via REST, only the metadata of the generated file is returned. To retrieve the file content via REST, add alt=media as a query parameter.",
+          "flatPath": "v1beta/generatedFiles/{generatedFilesId}",
+          "httpMethod": "GET",
+          "id": "generativelanguage.media.download",
+          "parameterOrder": [
+            "name"
+          ],
+          "parameters": {
+            "name": {
+              "description": "Required. The name of the generated file to retrieve. Example: `generatedFiles/abc-123`",
+              "location": "path",
+              "pattern": "^generatedFiles/[^/]+$",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "path": "v1beta/{+name}",
+          "response": {
+            "$ref": "GeneratedFile"
+          },
+          "supportsMediaDownload": true,
+          "useMediaDownloadService": true
+        },
         "upload": {
           "description": "Creates a `File`.",
           "flatPath": "v1beta/files",
@@ -2205,6 +2248,97 @@
       },
       "type": "object"
     },
+    "AudioTranscriptionConfig": {
+      "description": "The audio transcription configuration.",
+      "id": "AudioTranscriptionConfig",
+      "properties": {},
+      "type": "object"
+    },
+    "AuthToken": {
+      "description": "A request to create an ephemeral authentication token.",
+      "id": "AuthToken",
+      "properties": {
+        "bidiGenerateContentSetup": {
+          "$ref": "BidiGenerateContentSetup",
+          "description": "Optional. Input only. Immutable. Configuration specific to `BidiGenerateContent`."
+        },
+        "expireTime": {
+          "description": "Optional. Input only. Immutable. An optional time after which, when using the resulting token, messages in BidiGenerateContent sessions will be rejected. (Gemini may preemptively close the session after this time.) If not set then this defaults to 30 minutes in the future. If set, this value must be less than 20 hours in the future.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "fieldMask": {
+          "description": "Optional. Input only. Immutable. If field_mask is empty, and `bidi_generate_content_setup` is not present, then the effective `BidiGenerateContentSetup` message is taken from the Live API connection. If field_mask is empty, and `bidi_generate_content_setup` _is_ present, then the effective `BidiGenerateContentSetup` message is taken entirely from `bidi_generate_content_setup` in this request. The setup message from the Live API connection is ignored. If field_mask is not empty, then the corresponding fields from `bidi_generate_content_setup` will overwrite the fields from the setup message in the Live API connection.",
+          "format": "google-fieldmask",
+          "type": "string"
+        },
+        "name": {
+          "description": "Output only. Identifier. The token itself.",
+          "readOnly": true,
+          "type": "string"
+        },
+        "newSessionExpireTime": {
+          "description": "Optional. Input only. Immutable. The time after which new Live API sessions using the token resulting from this request will be rejected. If not set this defaults to 60 seconds in the future. If set, this value must be less than 20 hours in the future.",
+          "format": "google-datetime",
+          "type": "string"
+        },
+        "uses": {
+          "description": "Optional. Input only. Immutable. The number of times the token can be used. If this value is zero then no limit is applied. Resuming a Live API session does not count as a use. If unspecified, the default is 1.",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "AutomaticActivityDetection": {
+      "description": "Configures automatic detection of activity.",
+      "id": "AutomaticActivityDetection",
+      "properties": {
+        "disabled": {
+          "description": "Optional. If enabled (the default), detected voice and text input count as activity. If disabled, the client must send activity signals.",
+          "type": "boolean"
+        },
+        "endOfSpeechSensitivity": {
+          "description": "Optional. Determines how likely detected speech is ended.",
+          "enum": [
+            "END_SENSITIVITY_UNSPECIFIED",
+            "END_SENSITIVITY_HIGH",
+            "END_SENSITIVITY_LOW"
+          ],
+          "enumDescriptions": [
+            "The default is END_SENSITIVITY_HIGH.",
+            "Automatic detection ends speech more often.",
+            "Automatic detection ends speech less often."
+          ],
+          "type": "string"
+        },
+        "prefixPaddingMs": {
+          "description": "Optional. The required duration of detected speech before start-of-speech is committed. The lower this value, the more sensitive the start-of-speech detection is and shorter speech can be recognized. However, this also increases the probability of false positives.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "silenceDurationMs": {
+          "description": "Optional. The required duration of detected non-speech (e.g. silence) before end-of-speech is committed. The larger this value, the longer speech gaps can be without interrupting the user's activity but this will increase the model's latency.",
+          "format": "int32",
+          "type": "integer"
+        },
+        "startOfSpeechSensitivity": {
+          "description": "Optional. Determines how likely speech is to be detected.",
+          "enum": [
+            "START_SENSITIVITY_UNSPECIFIED",
+            "START_SENSITIVITY_HIGH",
+            "START_SENSITIVITY_LOW"
+          ],
+          "enumDescriptions": [
+            "The default is START_SENSITIVITY_HIGH.",
+            "Automatic detection will detect the start of speech more often.",
+            "Automatic detection will detect the start of speech less often."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "BatchEmbedContentsRequest": {
       "description": "Batch request to get embeddings from the model for a list of prompts.",
       "id": "BatchEmbedContentsRequest",
@@ -2308,6 +2442,56 @@
           "format": "int64",
           "readOnly": true,
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "BidiGenerateContentSetup": {
+      "description": "Message to be sent in the first (and only in the first) `BidiGenerateContentClientMessage`. Contains configuration that will apply for the duration of the streaming RPC. Clients should wait for a `BidiGenerateContentSetupComplete` message before sending any additional messages.",
+      "id": "BidiGenerateContentSetup",
+      "properties": {
+        "contextWindowCompression": {
+          "$ref": "ContextWindowCompressionConfig",
+          "description": "Optional. Configures a context window compression mechanism. If included, the server will automatically reduce the size of the context when it exceeds the configured length."
+        },
+        "generationConfig": {
+          "$ref": "GenerationConfig",
+          "description": "Optional. Generation config. The following fields are not supported: - `response_logprobs` - `response_mime_type` - `logprobs` - `response_schema` - `response_json_schema` - `stop_sequence` - `routing_config` - `audio_timestamp`"
+        },
+        "inputAudioTranscription": {
+          "$ref": "AudioTranscriptionConfig",
+          "description": "Optional. If set, enables transcription of voice input. The transcription aligns with the input audio language, if configured."
+        },
+        "model": {
+          "description": "Required. The model's resource name. This serves as an ID for the Model to use. Format: `models/{model}`",
+          "type": "string"
+        },
+        "outputAudioTranscription": {
+          "$ref": "AudioTranscriptionConfig",
+          "description": "Optional. If set, enables transcription of the model's audio output. The transcription aligns with the language code specified for the output audio, if configured."
+        },
+        "proactivity": {
+          "$ref": "ProactivityConfig",
+          "description": "Optional. Configures the proactivity of the model. This allows the model to respond proactively to the input and to ignore irrelevant input."
+        },
+        "realtimeInputConfig": {
+          "$ref": "RealtimeInputConfig",
+          "description": "Optional. Configures the handling of realtime input."
+        },
+        "sessionResumption": {
+          "$ref": "SessionResumptionConfig",
+          "description": "Optional. Configures session resumption mechanism. If included, the server will send `SessionResumptionUpdate` messages."
+        },
+        "systemInstruction": {
+          "$ref": "Content",
+          "description": "Optional. The user provided system instructions for the model. Note: Only text should be used in parts and content in each part will be in a separate paragraph."
+        },
+        "tools": {
+          "description": "Optional. A list of `Tools` the model may use to generate the next response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model.",
+          "items": {
+            "$ref": "Tool"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -2738,6 +2922,22 @@
             "Content was blocked by safety settings.",
             "Content was blocked, but the reason is uncategorized."
           ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ContextWindowCompressionConfig": {
+      "description": "Enables context window compression — a mechanism for managing the model's context window so that it does not exceed a given length.",
+      "id": "ContextWindowCompressionConfig",
+      "properties": {
+        "slidingWindow": {
+          "$ref": "SlidingWindow",
+          "description": "A sliding-window mechanism."
+        },
+        "triggerTokens": {
+          "description": "The number of tokens (before running a turn) required to trigger a context window compression. This can be used to balance quality against latency as shorter context windows may result in faster model responses. However, any compression operation will cause a temporary latency increase, so they should not be triggered frequently. If not set, the default is 80% of the model's context window limit. This leaves 20% for the next user request/model response.",
+          "format": "int64",
           "type": "string"
         }
       },
@@ -4133,6 +4333,10 @@
           "format": "int32",
           "type": "integer"
         },
+        "enableAffectiveDialog": {
+          "description": "Optional. If enabled, the model will detect emotions and adapt its responses accordingly.",
+          "type": "boolean"
+        },
         "enableEnhancedCivicAnswers": {
           "description": "Optional. Enables enhanced civic answers. It may not be available for all models.",
           "type": "boolean"
@@ -4250,9 +4454,9 @@
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguageV1betaGroundingSupport": {
+    "GoogleAiGenerativelanguagev1betaGroundingSupport": {
       "description": "Grounding support.",
-      "id": "GoogleAiGenerativelanguageV1betaGroundingSupport",
+      "id": "GoogleAiGenerativelanguagev1betaGroundingSupport",
       "properties": {
         "confidenceScores": {
           "description": "Optional. Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. This list must have the same size as the grounding_chunk_indices.",
@@ -4271,15 +4475,15 @@
           "type": "array"
         },
         "segment": {
-          "$ref": "GoogleAiGenerativelanguageV1betaSegment",
+          "$ref": "GoogleAiGenerativelanguagev1betaSegment",
           "description": "Segment of the content this support belongs to."
         }
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguageV1betaSegment": {
+    "GoogleAiGenerativelanguagev1betaSegment": {
       "description": "Segment of the content.",
-      "id": "GoogleAiGenerativelanguageV1betaSegment",
+      "id": "GoogleAiGenerativelanguagev1betaSegment",
       "properties": {
         "endIndex": {
           "description": "End index in the given Part, measured in bytes. Offset from the start of the Part, exclusive, starting at zero.",
@@ -4389,7 +4593,7 @@
         "groundingSupports": {
           "description": "List of grounding support.",
           "items": {
-            "$ref": "GoogleAiGenerativelanguageV1betaGroundingSupport"
+            "$ref": "GoogleAiGenerativelanguagev1betaGroundingSupport"
           },
           "type": "array"
         },
@@ -5023,6 +5227,30 @@
       },
       "type": "object"
     },
+    "MediaResolution": {
+      "description": "Media resolution for the input media.",
+      "id": "MediaResolution",
+      "properties": {
+        "level": {
+          "enum": [
+            "MEDIA_RESOLUTION_UNSPECIFIED",
+            "MEDIA_RESOLUTION_LOW",
+            "MEDIA_RESOLUTION_MEDIUM",
+            "MEDIA_RESOLUTION_HIGH",
+            "MEDIA_RESOLUTION_ULTRA_HIGH"
+          ],
+          "enumDescriptions": [
+            "Media resolution has not been set.",
+            "Media resolution set to low.",
+            "Media resolution set to medium.",
+            "Media resolution set to high.",
+            "Media resolution set to ultra high."
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "Message": {
       "description": "The base unit of structured text. A `Message` includes an `author` and the `content` of the `Message`. The `author` is used to tag messages when they are fed to the model as text.",
       "id": "Message",
@@ -5263,6 +5491,10 @@
           "$ref": "Blob",
           "description": "Inline media bytes."
         },
+        "mediaResolution": {
+          "$ref": "MediaResolution",
+          "description": "Optional. Media resolution for the input media."
+        },
         "partMetadata": {
           "additionalProperties": {
             "description": "Properties of the object.",
@@ -5414,6 +5646,17 @@
       },
       "type": "object"
     },
+    "ProactivityConfig": {
+      "description": "Config for proactivity features.",
+      "id": "ProactivityConfig",
+      "properties": {
+        "proactiveAudio": {
+          "description": "Optional. If enabled, the model can reject responding to the last prompt. For example, this allows the model to ignore out of context speech or to stay silent if the user did not make a request, yet.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "PromptFeedback": {
       "description": "A set of the feedback metadata the prompt specified in `GenerateContentRequest.content`.",
       "id": "PromptFeedback",
@@ -5444,6 +5687,45 @@
             "$ref": "SafetyRating"
           },
           "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "RealtimeInputConfig": {
+      "description": "Configures the realtime input behavior in `BidiGenerateContent`.",
+      "id": "RealtimeInputConfig",
+      "properties": {
+        "activityHandling": {
+          "description": "Optional. Defines what effect activity has.",
+          "enum": [
+            "ACTIVITY_HANDLING_UNSPECIFIED",
+            "START_OF_ACTIVITY_INTERRUPTS",
+            "NO_INTERRUPTION"
+          ],
+          "enumDescriptions": [
+            "If unspecified, the default behavior is `START_OF_ACTIVITY_INTERRUPTS`.",
+            "If true, start of activity will interrupt the model's response (also called \"barge in\"). The model's current response will be cut-off in the moment of the interruption. This is the default behavior.",
+            "The model's response will not be interrupted."
+          ],
+          "type": "string"
+        },
+        "automaticActivityDetection": {
+          "$ref": "AutomaticActivityDetection",
+          "description": "Optional. If not set, automatic activity detection is enabled by default. If automatic voice detection is disabled, the client must send activity signals."
+        },
+        "turnCoverage": {
+          "description": "Optional. Defines which input is included in the user's turn.",
+          "enum": [
+            "TURN_COVERAGE_UNSPECIFIED",
+            "TURN_INCLUDES_ONLY_ACTIVITY",
+            "TURN_INCLUDES_ALL_INPUT"
+          ],
+          "enumDescriptions": [
+            "If unspecified, the default behavior is `TURN_INCLUDES_ONLY_ACTIVITY`.",
+            "The users turn only includes activity since the last turn, excluding inactivity (e.g. silence on the audio stream). This is the default behavior.",
+            "The users turn includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream)."
+          ],
+          "type": "string"
         }
       },
       "type": "object"
@@ -5883,6 +6165,29 @@
       },
       "type": "object"
     },
+    "SessionResumptionConfig": {
+      "description": "Session resumption configuration. This message is included in the session configuration as `BidiGenerateContentSetup.session_resumption`. If configured, the server will send `SessionResumptionUpdate` messages.",
+      "id": "SessionResumptionConfig",
+      "properties": {
+        "handle": {
+          "description": "The handle of a previous session. If not present then a new session is created. Session handles come from `SessionResumptionUpdate.token` values in previous connections.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "SlidingWindow": {
+      "description": "The SlidingWindow method operates by discarding content at the beginning of the context window. The resulting context will always begin at the start of a USER role turn. System instructions and any `BidiGenerateContentSetup.prefix_turns` will always remain at the beginning of the result.",
+      "id": "SlidingWindow",
+      "properties": {
+        "targetTokens": {
+          "description": "The target number of tokens to keep. The default value is trigger_tokens/2. Discarding parts of the context window causes a temporary latency increase so this value should be calibrated to avoid frequent compression operations.",
+          "format": "int64",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SpeakerVoiceConfig": {
       "description": "The configuration for a single speaker in a multi speaker setup.",
       "id": "SpeakerVoiceConfig",
@@ -6215,6 +6520,24 @@
       },
       "type": "object"
     },
+    "TuningContent": {
+      "description": "The structured datatype containing multi-part content of an example message. This is a subset of the Content proto used during model inference with limited type support. A `Content` includes a `role` field designating the producer of the `Content` and a `parts` field containing multi-part data that contains the content of the message turn.",
+      "id": "TuningContent",
+      "properties": {
+        "parts": {
+          "description": "Ordered `Parts` that constitute a single message. Parts may have different MIME types.",
+          "items": {
+            "$ref": "TuningPart"
+          },
+          "type": "array"
+        },
+        "role": {
+          "description": "Optional. The producer of the content. Must be either 'user' or 'model'. Useful to set for multi-turn conversations, otherwise can be left blank or unset.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "TuningExample": {
       "description": "A single example for tuning.",
       "id": "TuningExample",
@@ -6240,6 +6563,42 @@
             "$ref": "TuningExample"
           },
           "type": "array"
+        },
+        "multiturnExamples": {
+          "description": "Content examples. For multiturn conversations.",
+          "items": {
+            "$ref": "TuningMultiturnExample"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "TuningMultiturnExample": {
+      "description": "A tuning example with multiturn input.",
+      "id": "TuningMultiturnExample",
+      "properties": {
+        "contents": {
+          "description": "Each Content represents a turn in the conversation.",
+          "items": {
+            "$ref": "TuningContent"
+          },
+          "type": "array"
+        },
+        "systemInstruction": {
+          "$ref": "TuningContent",
+          "description": "Optional. Developer set system instructions. Currently, text only."
+        }
+      },
+      "type": "object"
+    },
+    "TuningPart": {
+      "description": "A datatype containing data that is part of a multi-part `TuningContent` message. This is a subset of the Part used for model inference, with limited type support. A `Part` consists of data which has an associated datatype. A `Part` can only contain one of the accepted types in `Part.data`.",
+      "id": "TuningPart",
+      "properties": {
+        "text": {
+          "description": "Inline text.",
+          "type": "string"
         }
       },
       "type": "object"
