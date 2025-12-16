@@ -39,5 +39,9 @@ namespace Mscc.GenerativeAI.Types
 		/// Media resolution set to high (zoomed reframing with 256 tokens).
 		/// </summary>
 		MediaResolutionHigh,
+		/// <summary>
+		/// Media resolution set to ultra high.
+		/// </summary>
+		MediaResolutionUltraHigh,
 	}
 }
