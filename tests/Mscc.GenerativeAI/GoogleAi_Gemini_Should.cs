@@ -1262,6 +1262,30 @@ namespace Test.Mscc.GenerativeAI
         }
 
         [Fact]
+        public async Task Start_Chat_with_Automatic_Function_Calling()
+        {
+	        // Arrange
+	        var model = _googleAi.GenerativeModel(model: _model);
+	        var tools = new Tools();
+	        tools.AddFunction(ToggleDarkMode);
+	        tools.AddFunction(GetCurrentWeather);
+	        tools.AddFunction(SendEmailAsync);
+	        var chat = model.StartChat(tools: tools, enableAutomaticFunctionCalling: true);
+
+	        // Act
+	        var response = await chat.SendMessage("What is the weather like in Flic en Flac, Mauritius?");
+
+	        // Assert
+	        model.ShouldNotBeNull();
+	        chat.History.Count.ShouldBe(4);
+	        response.ShouldNotBeNull();
+	        response.Candidates.ShouldNotBeNull();
+	        response.Candidates.Count.ShouldBe(1);
+	        response.Text.ShouldNotBeNull();
+	        _output.WriteLine($"model: {response.Text}");
+        }
+
+        [Fact]
         public async Task Start_Chat_Streaming()
         {
             // Arrange
@@ -1777,7 +1801,7 @@ namespace Test.Mscc.GenerativeAI
         }
         string GetCurrentWeather(string location)
         {
-            return $"The weather in {location} is 72 degrees and sunny.";
+            return $"The weather in {location} is 27° degrees Celsius and sunny.";
         }
         async Task<object> SendEmailAsync(string recipient, string subject, string body)
         {
