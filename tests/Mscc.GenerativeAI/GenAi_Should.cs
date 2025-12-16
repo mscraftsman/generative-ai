@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Json.Schema.Generation;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
@@ -60,7 +60,7 @@ namespace Test.Mscc.GenerativeAI
 			});
 
 			// Assert
-			stream.Should().NotBeNull();
+			stream.ShouldNotBeNull();
 			await foreach (var chunk in stream)
 			{
 				if (chunk.EventType == "content.delta")

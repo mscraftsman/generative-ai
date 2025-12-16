@@ -3310,7 +3310,8 @@ namespace Test.Mscc.GenerativeAI
             // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
             // response.File.ExpirationTime.Should().NotBeNull();
             // response.File.UpdateTime.Should().NotBeNull();
-            response.File.SizeBytes.ShouldBeGreaterThan(0);
+            response.File.SizeBytes.ShouldNotBeNull();
+            response.File.SizeBytes.Value.ShouldBeGreaterThan(0);
             response.File.Sha256Hash.ShouldNotBeNull();
             response.File.Uri.ShouldNotBeNull();
             _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
@@ -3373,7 +3374,8 @@ namespace Test.Mscc.GenerativeAI
             // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
             // response.File.ExpirationTime.Should().NotBeNull();
             // response.File.UpdateTime.Should().NotBeNull();
-            response.File.SizeBytes.ShouldBeGreaterThan(0);
+            response.File.SizeBytes.ShouldNotBeNull();
+            response.File.SizeBytes.Value.ShouldBeGreaterThan(0);
             response.File.Sha256Hash.ShouldNotBeNull();
             response.File.Uri.ShouldNotBeNull();
             _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
@@ -3413,7 +3415,8 @@ namespace Test.Mscc.GenerativeAI
                 // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
                 // response.File.ExpirationTime.Should().NotBeNull();
                 // response.File.UpdateTime.Should().NotBeNull();
-                response.File.SizeBytes.ShouldBeGreaterThan(0);
+                response.File.SizeBytes.ShouldNotBeNull(); 
+                response.File.SizeBytes.Value.ShouldBeGreaterThan(0);
                 response.File.Sha256Hash.ShouldNotBeNull();
                 response.File.Uri.ShouldNotBeNull();
                 _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
