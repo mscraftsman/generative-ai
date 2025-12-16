@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -89,17 +90,37 @@ namespace Mscc.GenerativeAI
             /// <param name="options">The JSON serializer options.</param>
 			public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
 			{
-				// For Serialization: You can choose your preferred output format.
-				// Option A: Write the exact Enum name (Default)
-				// writer.WriteStringValue(value.ToString());
+				var fieldInfo = value.GetType().GetField(value.ToString());
+				if (fieldInfo != null)
+				{
+					// 1. Check for [JsonStringEnumMemberName] (System.Text.Json)
+					var jsonMemberAttr = (JsonStringEnumMemberNameAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(JsonStringEnumMemberNameAttribute));
+					if (jsonMemberAttr != null)
+					{
+						writer.WriteStringValue(jsonMemberAttr.Name);
+						return;
+					}
+
+					// 2. Check for [EnumMember] (System.Runtime.Serialization)
+					var enumMemberAttr = (EnumMemberAttribute)Attribute.GetCustomAttribute(fieldInfo, typeof(EnumMemberAttribute));
+					if (enumMemberAttr != null && enumMemberAttr.Value != null)
+					{
+						writer.WriteStringValue(enumMemberAttr.Value);
+						return;
+					}
+				}
 
 				string name = value.ToString();
+
+				// For Serialization: You can choose your preferred output format.
+				// Option A: Write the exact Enum name (Default)
+				// writer.WriteStringValue(name);
 
 				// Option B: Force CamelCase on output (replicates JsonStringEnumConverter behavior)
 				// string camelCase = JsonNamingPolicy.CamelCase.ConvertName(name);
 				// writer.WriteStringValue(camelCase);
 
-				// Option B: Force CamelCase on output (replicates JsonStringEnumConverter behavior)
+				// Option C: Force snake_case on output (replicates JsonStringEnumConverter behavior)
 				string snakeCase = JsonNamingPolicy.SnakeCaseLower.ConvertName(name);
 				writer.WriteStringValue(snakeCase);
 			}
