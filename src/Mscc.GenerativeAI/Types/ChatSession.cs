@@ -1,11 +1,10 @@
-﻿using Mscc.GenerativeAI.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI.Types
 {
@@ -106,7 +105,7 @@ namespace Mscc.GenerativeAI.Types
             request.Contents = History.Select(x =>
                 new Content { Role = x.Role, PartTypes = x.Parts }
             ).ToList();
-            request.GenerationConfig ??= generationConfig;
+            request.GenerationConfig ??= generationConfig ?? _generationConfig;
             request.SafetySettings ??= safetySettings ?? _safetySettings;
             request.Tools ??= tools ?? _tools;
             request.ToolConfig ??= toolConfig;
@@ -115,14 +114,13 @@ namespace Mscc.GenerativeAI.Types
             
             response.CheckResponse();
 
-            // ToDo: Handle AFC and extend History correctly.
             if (_enableAutomaticFunctionCalling)
             {
-                var result = HandleAutomaticFunctionCalling(response,
+                var result = await HandleAutomaticFunctionCalling(response,
                     History,
-                    generationConfig ?? _generationConfig,
-                    safetySettings ?? _safetySettings,
-                    _tools);
+                    request.GenerationConfig,
+                    request.SafetySettings,
+                    request.Tools);
                 response = result.response;
             }
 
@@ -246,11 +244,11 @@ namespace Mscc.GenerativeAI.Types
 
             if (_enableAutomaticFunctionCalling)
             {
-                var result = HandleAutomaticFunctionCalling(response,
+                var result = await HandleAutomaticFunctionCalling(response,
                     History,
-                    generationConfig ?? _generationConfig,
-                    safetySettings ?? _safetySettings,
-                    _tools);
+                    request.GenerationConfig,
+                    request.SafetySettings,
+                    request.Tools);
                 response = result.response;
             }
 
@@ -472,52 +470,56 @@ namespace Mscc.GenerativeAI.Types
             return result;
         }
 
-        private (List<ContentResponse> history, ContentResponse content, GenerateContentResponse response) HandleAutomaticFunctionCalling(
+        private async Task<(List<ContentResponse> history, ContentResponse content, GenerateContentResponse response)> HandleAutomaticFunctionCalling(
             GenerateContentResponse response, 
             List<ContentResponse> history, 
             GenerationConfig? generationConfig, 
             List<SafetySetting>? safetySettings, 
             Tools? tools)
         {
-            throw new NotImplementedException();
-            // var functionResponseParts = new List<Part>();
-            // var functionCalls = GetFunctionCalls(response);
-            // history.Add(response.Candidates[0].Content);
-            //
-            // foreach (var functionCall in functionCalls)
-            // {
-            //     var functionResponse = tools.Find(x =>
-            //         x.FunctionDeclarations.Where(fd => fd.Name == functionCall.Name).Any());
-            //     if (functionResponse is not null)
-            //     {
-            //         // functionResponseParts.Add(functionResponse);
-            //     }
-            // }
-            //
-            // var send = new ContentResponse() { Role = Role.User, Parts = functionResponseParts };
-            // history.Add(send);
-            //
-            // var request = new GenerateContentRequest
-            // {
-            //     Contents = history.Select(x =>
-            //         new Content { Role = x.Role, PartTypes = x.Parts }
-            //     ).ToList(),
-            //     GenerationConfig = generationConfig,
-            //     SafetySettings = safetySettings,
-            //     Tools = tools
-            // };
-            // response = _model.GenerateContent(request).Result;
-            // response.CheckResponse();
-            //
-            // return (history, send, response);
+	        if (tools == null) throw new InvalidOperationException("Tools must be provided for automatic function calling.");
+
+	        var functionResponseParts = new List<Part>();
+	        var functionCalls = GetFunctionCalls(response);
+
+            if (functionCalls.Count > 0)
+            {
+                var parts = response.Candidates[0].Content.Parts;
+                var content = new ContentResponse { Role = Role.Model, Parts = parts };
+                history.Add(content);
+            }
+            
+            foreach (var functionCall in functionCalls)
+            {
+                var result = tools.Invoke(functionCall.Name!, functionCall.Args!);
+                var functionResponse = new FunctionResponse { Name = functionCall.Name, Response = result };
+                functionResponseParts.Add(new Part { FunctionResponse = functionResponse });
+            }
+
+            var matchingContent = new ContentResponse { Role = Role.Function, Parts = functionResponseParts };
+            history.Add(matchingContent);
+
+            var request = new GenerateContentRequest
+            {
+                Contents = history.Select(x =>
+                    new Content { Role = x.Role, PartTypes = x.Parts }
+                ).ToList(),
+                GenerationConfig = generationConfig,
+                SafetySettings = safetySettings,
+                Tools = tools
+            };
+            response = await _model.GenerateContent(request);
+            response.CheckResponse();
+
+            return (history, matchingContent, response);
         }
 
         private List<FunctionCall> GetFunctionCalls(GenerateContentResponse response)
         {
             if (response.Candidates.Count != 1)
             {
-                throw new ValueErrorException(
-                    $"Automatic function calling only works with 1 candidate, got {response.Candidates.Count}");
+                // throw new ValueErrorException($"Automatic function calling only works with 1 candidate, got {response.Candidates.Count}");
+                return [];
             }
             
             var parts = response.Candidates[0].Content.Parts;
