@@ -360,7 +360,7 @@ namespace Mscc.GenerativeAI
         {
             var json = JsonSerializer.Serialize(request, WriteOptions);
 
-            Logger.LogJsonRequest(json);
+            Logger.LogJsonRequest(TruncateJsonForLogging(json));
 
             return json;
         }
@@ -375,7 +375,7 @@ namespace Mscc.GenerativeAI
         {
             var json = await response.Content.ReadAsStringAsync();
 
-            Logger.LogJsonResponse(json);
+            Logger.LogJsonResponse(TruncateJsonForLogging(json));
 
 #if NET472_OR_GREATER || NETSTANDARD2_0
             return JsonSerializer.Deserialize<T>(json, ReadOptions);
@@ -722,7 +722,7 @@ namespace Mscc.GenerativeAI
                 request.Method,
                 request.RequestUri,
                 $"{request.Headers.ToFormattedString()}{(request.Content is null ? string.Empty : request.Content.Headers.ToFormattedString())}",
-                request.Content is null ? string.Empty : await request.Content.ReadAsStringAsync()
+                request.Content is null ? string.Empty : TruncateJsonForLogging(await request.Content.ReadAsStringAsync())
             );
 
             var retry = requestOptions?.Retry ?? new Retry();
@@ -797,6 +797,25 @@ namespace Mscc.GenerativeAI
             }
 
             return await lastResponse!.EnsureSuccessAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Truncates the base64 data in the log to avoid blowing up the log file.
+        /// </summary>
+        /// <param name="json">The JSON string to sanitize.</param>
+        /// <returns>The sanitized JSON string.</returns>
+        private string TruncateJsonForLogging(string json)
+        {
+            // Truncate base64 strings in "data" properties
+            // Pattern looks for "data": "..." where the value is longer than 50 chars and looks like base64 (no spaces)
+            const string pattern = @"""(data)"":\s*""(?<content>[A-Za-z0-9+/=]{50,})""";
+
+            return Regex.Replace(json, pattern, m =>
+            {
+                var content = m.Groups["content"].Value;
+                var truncated = content.Substring(0, 42) + "...[truncated]";
+                return $@"""{m.Groups[1].Value}"": ""{truncated}""";
+            }, RegexOptions.IgnoreCase);
         }
 
         /// <summary>
