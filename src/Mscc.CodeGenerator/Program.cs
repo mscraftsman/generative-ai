@@ -115,6 +115,7 @@ namespace Mscc.CodeGenerator
 			{ "Environment", "ComputerUseEnvironment" },
 			{ "File", "FileResource" },
 			{ "GoogleAiGenerativelanguagev1betaGroundingSupport", "GroundingSupport" },
+			{ "GoogleAiGenerativelanguageV1betaGroundingSupport", "GroundingSupport" },
 			{ "GoogleAiGroundingSupport", "GroundingSupport" },
 			{ "GoogleAiSegment", "Segment" },
 			{ "Method", "HarmBlockMethod" },
