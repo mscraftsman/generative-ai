@@ -4184,11 +4184,7 @@ Answer:";
         public async Task FileSearchStore_Create()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
-            
+            var model = new FileSearchStoresModel(logger: Logger);
             // Act
             var response = await model.Create();
 
@@ -4207,10 +4203,7 @@ Answer:";
         public async Task FileSearchStore_List()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
+            var model = new FileSearchStoresModel(logger: Logger);
             
             // Act
             var response = await model.List();
@@ -4231,10 +4224,7 @@ Answer:";
         public async Task FileSearchStore_Get()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
+            var model = new FileSearchStoresModel(logger: Logger);
             var listResponse = await model.List();
             var store = listResponse.FileSearchStores.FirstOrDefault();
             
@@ -4254,10 +4244,7 @@ Answer:";
         public async Task FileSearchStore_Delete()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
+            var model = new FileSearchStoresModel(logger: Logger);
             var listResponse = await model.List();
             var store = listResponse.FileSearchStores.FirstOrDefault();
             
