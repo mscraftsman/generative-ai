@@ -2,6 +2,7 @@
 using Json.Schema.Generation;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
 using System;
 using System.Collections;
@@ -1238,7 +1239,7 @@ namespace Test.Mscc.GenerativeAI
             var filePath = Path.Combine(Environment.CurrentDirectory, "payload", "a11.txt");
             var document = await _googleAi.UploadFile(filePath, "Apollo 11 Flight Report");
             _output.WriteLine(
-                $"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(StateFileResource), document.File.State)})");
+                $"Display Name: {document.File.DisplayName} ({Enum.GetName(typeof(FileResource.StateType), document.File.State)})");
 
             var request = new GenerateContentRequest("Hi, could you summarize this transcript?");
             request.AddMedia(document.File);
@@ -1258,6 +1259,30 @@ namespace Test.Mscc.GenerativeAI
             response.Candidates.Count.ShouldBe(1);
             response.Text.ShouldNotBeNull();
             _output.WriteLine($"model: {response.Text}");
+        }
+
+        [Fact]
+        public async Task Start_Chat_with_Automatic_Function_Calling()
+        {
+	        // Arrange
+	        var model = _googleAi.GenerativeModel(model: _model);
+	        var tools = new Tools();
+	        tools.AddFunction(ToggleDarkMode);
+	        tools.AddFunction(GetCurrentWeather);
+	        tools.AddFunction(SendEmailAsync);
+	        var chat = model.StartChat(tools: tools, enableAutomaticFunctionCalling: true);
+
+	        // Act
+	        var response = await chat.SendMessage("What is the weather like in Flic en Flac, Mauritius?");
+
+	        // Assert
+	        model.ShouldNotBeNull();
+	        chat.History.Count.ShouldBe(4);
+	        response.ShouldNotBeNull();
+	        response.Candidates.ShouldNotBeNull();
+	        response.Candidates.Count.ShouldBe(1);
+	        response.Text.ShouldNotBeNull();
+	        _output.WriteLine($"model: {response.Text}");
         }
 
         [Fact]
@@ -1776,7 +1801,7 @@ namespace Test.Mscc.GenerativeAI
         }
         string GetCurrentWeather(string location)
         {
-            return $"The weather in {location} is 72 degrees and sunny.";
+            return $"The weather in {location} is 27° degrees Celsius and sunny.";
         }
         async Task<object> SendEmailAsync(string recipient, string subject, string body)
         {
@@ -2504,7 +2529,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var model = _vertexAi.GenerativeModel(model: Model.GeminiPro);
             model.ProjectId = _fixture.ProjectId;
-            var parameters = new HyperParameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
+            var parameters = new Hyperparameters() { BatchSize = 2, LearningRate = 0.001f, EpochCount = 3 };
             var dataset = new List<TuningExample>
             {
                 new() { TextInput = "1", Output = "2" },
@@ -3309,7 +3334,8 @@ namespace Test.Mscc.GenerativeAI
             // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
             // response.File.ExpirationTime.Should().NotBeNull();
             // response.File.UpdateTime.Should().NotBeNull();
-            response.File.SizeBytes.ShouldBeGreaterThan(0);
+            response.File.SizeBytes.ShouldNotBeNull();
+            response.File.SizeBytes.Value.ShouldBeGreaterThan(0);
             response.File.Sha256Hash.ShouldNotBeNull();
             response.File.Uri.ShouldNotBeNull();
             _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
@@ -3372,7 +3398,8 @@ namespace Test.Mscc.GenerativeAI
             // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
             // response.File.ExpirationTime.Should().NotBeNull();
             // response.File.UpdateTime.Should().NotBeNull();
-            response.File.SizeBytes.ShouldBeGreaterThan(0);
+            response.File.SizeBytes.ShouldNotBeNull();
+            response.File.SizeBytes.Value.ShouldBeGreaterThan(0);
             response.File.Sha256Hash.ShouldNotBeNull();
             response.File.Uri.ShouldNotBeNull();
             _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
@@ -3412,7 +3439,8 @@ namespace Test.Mscc.GenerativeAI
                 // response.File.CreateTime.Should().BeGreaterThan(DateTime.Now.Add(TimeSpan.FromHours(48)));
                 // response.File.ExpirationTime.Should().NotBeNull();
                 // response.File.UpdateTime.Should().NotBeNull();
-                response.File.SizeBytes.ShouldBeGreaterThan(0);
+                response.File.SizeBytes.ShouldNotBeNull(); 
+                response.File.SizeBytes.Value.ShouldBeGreaterThan(0);
                 response.File.Sha256Hash.ShouldNotBeNull();
                 response.File.Uri.ShouldNotBeNull();
                 _output.WriteLine($"Uploaded file '{response?.File.DisplayName}' as: {response?.File.Uri}");
@@ -3436,7 +3464,7 @@ namespace Test.Mscc.GenerativeAI
             sut.Files.ForEach(x =>
             {
                 _output.WriteLine(
-                    $"Display Name: {x.DisplayName} ({Enum.GetName(typeof(StateFileResource), x.State)})");
+                    $"Display Name: {x.DisplayName} ({Enum.GetName(typeof(FileResource.StateType), x.State)})");
                 _output.WriteLine(
                     $"File: {x.Name} (MimeType: {x.MimeType}, Size: {x.SizeBytes} bytes, Created: {x.CreateTime} UTC, Updated: {x.UpdateTime} UTC)");
                 _output.WriteLine($"Uri: {x.Uri}");
@@ -4156,11 +4184,7 @@ Answer:";
         public async Task FileSearchStore_Create()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
-            
+            var model = new FileSearchStoresModel(logger: Logger);
             // Act
             var response = await model.Create();
 
@@ -4179,10 +4203,7 @@ Answer:";
         public async Task FileSearchStore_List()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
+            var model = new FileSearchStoresModel(logger: Logger);
             
             // Act
             var response = await model.List();
@@ -4203,10 +4224,7 @@ Answer:";
         public async Task FileSearchStore_Get()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
+            var model = new FileSearchStoresModel(logger: Logger);
             var listResponse = await model.List();
             var store = listResponse.FileSearchStores.FirstOrDefault();
             
@@ -4226,10 +4244,7 @@ Answer:";
         public async Task FileSearchStore_Delete()
         {
             // Arrange
-            var model = new FileSearchStoresModel(logger: Logger)
-            {
-                ApiKey = _fixture.ApiKey
-            };
+            var model = new FileSearchStoresModel(logger: Logger);
             var listResponse = await model.List();
             var store = listResponse.FileSearchStores.FirstOrDefault();
             

@@ -7,7 +7,7 @@
 #    "contents": {
 #      "parts": {
 #        "text": "Hello there"}}}'
-POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview:generateContent
 Content-Type: application/json
 x-goog-api-key: {{apiKey}}
 

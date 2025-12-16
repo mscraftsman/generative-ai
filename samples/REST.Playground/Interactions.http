@@ -1,0 +1,32 @@
+
+POST https://generativelanguage.googleapis.com/v1alpha/interactions
+x-goog-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "model": "gemini-2.5-flash",
+  "input": "Tell me a one-sentence joke about programming."
+}
+
+###
+
+
+# curl -X POST "https://generativelanguage.googleapis.com/v1beta/interactions?alt=sse" 
+#-H "Content-Type: application/json" 
+#-H "x-goog-api-key: $GEMINI_API_KEY" 
+#-d '{
+#    "model": "gemini-2.5-flash",
+#    "input": "Explain quantum entanglement in simple terms.",
+#    "stream": true
+#}'
+POST https://generativelanguage.googleapis.com/v1beta/interactions?alt=sse
+x-goog-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "model": "gemini-2.5-flash",
+  "input": "Explain quantum entanglement in simple terms.",
+  "stream": true
+}
+
+###

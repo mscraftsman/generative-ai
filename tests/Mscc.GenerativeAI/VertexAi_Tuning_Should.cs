@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Shouldly;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -100,7 +101,7 @@ namespace Test.Mscc.GenerativeAI
                 datasetUri: "gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_train_data.jsonl",
                 validationUri: "gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_validation_data.jsonl",
                 displayName: "tuned_gemini_1_5_pro",
-                new HyperParameters() { 
+                new SupervisedHyperParameters() { 
                     EpochCount = 4, 
                     AdapterSize = AdapterSize.AdapterSizeFour, 
                     LearningRateMultiplier = 1.0f
@@ -125,7 +126,7 @@ namespace Test.Mscc.GenerativeAI
             foreach (TuningJob item in result)
             {
                 output.WriteLine($"{item.TunedModelDisplayName}");
-                output.WriteLine($"Completed: {item.HasEnded} - {Enum.GetName(typeof(StateTuningJob), item.State)}");
+                output.WriteLine($"Completed: {item.HasEnded} - {Enum.GetName(typeof(TuningJob.StateType), item.State)}");
                 output.WriteLine($"{item.Name} ({item.CreateTime})");
             }
         }
@@ -142,7 +143,7 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             result.ShouldNotBeNull();
             result.Name.ShouldBe(name);
-            output.WriteLine($"Completed: {result.HasEnded} - {Enum.GetName(typeof(StateTuningJob), result.State)}");
+            output.WriteLine($"Completed: {result.HasEnded} - {Enum.GetName(typeof(TuningJob.StateType), result.State)}");
             output.WriteLine($"{result.Name} ({result.CreateTime})");
         }
 

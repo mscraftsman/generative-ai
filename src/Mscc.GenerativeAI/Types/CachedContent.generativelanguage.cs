@@ -1,0 +1,65 @@
+/*
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+using System;
+using System.Collections.Generic;
+
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
+namespace Mscc.GenerativeAI.Types
+{
+	/// <summary>
+	/// Content that has been preprocessed and can be used in subsequent request to GenerativeService. Cached content can be only used with model it was created for.
+	/// </summary>
+	public partial class CachedContent
+	{
+		/// <summary>
+		/// Optional. Input only. Immutable. The content to cache.
+		/// </summary>
+		public List<Content>? Contents { get; set; }
+		/// <summary>
+		/// Output only. Creation time of the cache entry.
+		/// </summary>
+		public DateTime? CreateTime { get; set; }
+		/// <summary>
+		/// Optional. Immutable. The user-generated meaningful display name of the cached content. Maximum 128 Unicode characters.
+		/// </summary>
+		public string? DisplayName { get; set; }
+		/// <summary>
+		/// Timestamp in UTC of when this resource is considered expired. This is *always* provided on output, regardless of what was sent on input.
+		/// </summary>
+		public DateTime? ExpireTime { get; set; }
+		/// <summary>
+		/// Optional. Input only. Immutable. Developer set system instruction. Currently text only.
+		/// </summary>
+		public Content? SystemInstruction { get; set; }
+		/// <summary>
+		/// Optional. Input only. Immutable. Tool config. This config is shared for all tools.
+		/// </summary>
+		public ToolConfig? ToolConfig { get; set; }
+		/// <summary>
+		/// Optional. Input only. Immutable. A list of <c>Tools</c> the model may use to generate the next response
+		/// </summary>
+		public Tools? Tools { get; set; }
+		/// <summary>
+		/// Output only. When the cache entry was last updated in UTC time.
+		/// </summary>
+		public DateTime? UpdateTime { get; set; }
+		/// <summary>
+		/// Output only. Metadata on the usage of the cached content.
+		/// </summary>
+		public CachedContentUsageMetadata? UsageMetadata { get; set; }
+    }
+}

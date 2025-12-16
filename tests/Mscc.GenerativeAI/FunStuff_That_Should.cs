@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System.Text.Json;
 
-namespace Mscc.GenerativeAI
+namespace Mscc.GenerativeAI.Types
 {
     public static class TypeExtensions
     {

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System.Net.Http.Headers;
 using System.Text;
 using ArgumentNullException = System.ArgumentNullException;
@@ -380,7 +381,7 @@ namespace Mscc.GenerativeAI
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {
-            var method = GenerativeAI.Method.RetrieveContexts;
+            var method = GenerativeAI.Types.Method.RetrieveContexts;
             var url = "{BaseUrlVertexAi}:{method}";
             return await PostAsync<RagRetrievalQueryRequest, RagQueryResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -396,11 +397,11 @@ namespace Mscc.GenerativeAI
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns></returns>
-        public async Task<RagQueryResponse> RetrievalQuery(RagResource[] ragResources,
+        public async Task<RagQueryResponse> RetrievalQuery(List<VertexRagStoreRagResource> ragResources,
             string text,
             RagRetrievalConfig? ragRetrievalConfig,
             float? vectorDistanceThreshold,
-            float? similarityTopK,
+            int? similarityTopK,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
         {

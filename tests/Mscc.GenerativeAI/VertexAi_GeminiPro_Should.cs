@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
 using Xunit;
 using Xunit.Abstractions;
@@ -83,7 +84,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Assert
             model.ShouldNotBeNull();
-            model.Name.ShouldBe($"{Model.Gemini25Pro.SanitizeModelName()}");
+            model.Name.ShouldBe($"{Model.Gemini25Flash.SanitizeModelName()}");
         }
 
         [Fact]

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
 using System;
 using System.Net;

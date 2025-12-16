@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System.Text;
 
 namespace Mscc.GenerativeAI
@@ -23,7 +24,7 @@ namespace Mscc.GenerativeAI
 
         private string Url => _useVertexAi ? UrlVertexAi : UrlGoogleAi;
         
-        private string Method => GenerativeAI.Method.Predict;
+        private string Method => GenerativeAI.Types.Method.Predict;
         
         internal bool IsVertexAI => _useVertexAi;
 

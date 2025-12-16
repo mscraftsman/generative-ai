@@ -1,3 +1,4 @@
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -297,12 +298,12 @@ namespace Mscc.GenerativeAI.Microsoft
 									excludeDomains = objExcludeDomains as List<string>;
 								}
 
-								PhishBlockThreshold? blockingConfidence = null;
-								if (wst.AdditionalProperties.TryGetValue(nameof(PhishBlockThreshold),
+								BlockingConfidence? blockingConfidence = null;
+								if (wst.AdditionalProperties.TryGetValue(nameof(BlockingConfidence),
 									    out object? objBlockingConfidence))
 								{
 									if (Enum.TryParse((string)objBlockingConfidence,
-										    out PhishBlockThreshold parsedBlockingConfidence))
+										    out BlockingConfidence parsedBlockingConfidence))
 									{
 										blockingConfidence = parsedBlockingConfidence;
 									}
@@ -779,31 +780,31 @@ namespace Mscc.GenerativeAI.Microsoft
 			if (response.UsageMetadata.AudioDurationSeconds != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.AudioDurationSeconds)] =
-					response.UsageMetadata.AudioDurationSeconds;
+					response.UsageMetadata.AudioDurationSeconds ?? 0;
 			}
 
 			if (response.UsageMetadata.CachedContentTokenCount != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.CachedContentTokenCount)] =
-					response.UsageMetadata.CachedContentTokenCount;
+					response.UsageMetadata.CachedContentTokenCount ?? 0;
 			}
 
 			if (response.UsageMetadata.ThoughtsTokenCount != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.ThoughtsTokenCount)] =
-					response.UsageMetadata.ThoughtsTokenCount;
+					response.UsageMetadata.ThoughtsTokenCount ?? 0;
 			}
 
 			if (response.UsageMetadata.ToolUsePromptTokenCount != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.ToolUsePromptTokenCount)] =
-					response.UsageMetadata.ToolUsePromptTokenCount;
+					response.UsageMetadata.ToolUsePromptTokenCount ?? 0;
 			}
 
 			if (response.UsageMetadata.VideoDurationSeconds != 0)
 			{
 				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.VideoDurationSeconds)] =
-					response.UsageMetadata.VideoDurationSeconds;
+					response.UsageMetadata.VideoDurationSeconds ?? 0;
 			}
 
 			return details;

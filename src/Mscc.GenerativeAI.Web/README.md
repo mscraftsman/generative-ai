@@ -34,7 +34,7 @@ Alternatively, add the following line to your `.csproj` file.
 
 ```text
   <ItemGroup>
-    <PackageReference Include="Mscc.GenerativeAI.Web" Version="2.9.8" />
+    <PackageReference Include="Mscc.GenerativeAI.Web" Version="3.0.0" />
   </ItemGroup>
 ```
 
@@ -182,7 +182,7 @@ builder.Services.AddGenerativeAI(options =>
 {
     // User defined option values
     options.ProjectId = string.Empty;
-    options.Model = GenerativeAI.Model.GeminiProVision;
+    options.Model = GenerativeAI.Types.Model.GeminiProVision;
     options.Credentials.ApiKey = "YOUR_API_KEY";
 });
 

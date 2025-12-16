@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using gauth = Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
+using Mscc.GenerativeAI.Types;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Mscc.GenerativeAI.Google

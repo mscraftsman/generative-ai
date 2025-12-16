@@ -1,4 +1,20 @@
-namespace Mscc.GenerativeAI
+/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace Mscc.GenerativeAI.Types
 {
     /// <summary>
     /// Helper class to provide model names.
@@ -48,10 +64,11 @@ namespace Mscc.GenerativeAI
         public const string Gemini25FlashPreviewNativeAudioDialog = "gemini-2.5-flash-preview-native-audio-dialog-rai-v3";
         public const string Gemini25FlashImage = "gemini-2.5-flash-image";
         public const string Gemini25FlashImagePreview = "gemini-2.5-flash-image-preview";
-        public const string Gemini25FlashNativeAudio = Gemini25FlashNativeAudioPreview092025;
-        public const string Gemini25FlashNativeAudioPreview = Gemini25FlashNativeAudioPreview092025;
+        public const string Gemini25FlashNativeAudio = Gemini25FlashNativeAudioPreview122025;
+        public const string Gemini25FlashNativeAudioPreview = Gemini25FlashNativeAudioPreview122025;
         public const string Gemini25FlashNativeAudioLatest = "gemini-2.5-flash-native-audio-latest";
         public const string Gemini25FlashNativeAudioPreview092025 = "gemini-2.5-flash-native-audio-preview-09-2025";
+        public const string Gemini25FlashNativeAudioPreview122025 = "gemini-2.5-flash-native-audio-preview-12-2025";
         public const string Gemini25Pro = "gemini-2.5-pro";
         public const string Gemini25ProExperimental = Gemini25ProExperimental0325;
         public const string Gemini25ProExperimental0325 = "gemini-2.5-pro-exp-03-25";
@@ -80,6 +97,11 @@ namespace Mscc.GenerativeAI
         public const string NanoBananaPro = NanoBananaProPreview;
         public const string NanoBananaProPreview = "nano-banana-pro-preview";
 
+        public const string DeepResearch = DeepResearchPro;
+        public const string DeepResearchPro = DeepResearchProPreview;
+        public const string DeepResearchProPreview = DeepResearchProPreview122025;
+        public const string DeepResearchProPreview122025 = "deep-research-pro-preview-12-2025";
+        
         // Gemma 3
         public const string Gemma3 = Gemma3_27B;
         // public const string Gemma3_270M = "gemma-3-270m-it";

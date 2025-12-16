@@ -1,0 +1,216 @@
+﻿/*
+ * Copyright 2024-2025 Jochen Kirstätter
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using System.Diagnostics;
+
+namespace Mscc.GenerativeAI.Types
+{
+    /// <summary>
+    /// The base structured datatype containing multipart content of a message.
+    /// Ref: https://ai.google.dev/api/rest/v1beta/Content
+    /// </summary>
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+    public partial class Content
+    {
+        private List<Part>? _partTypes;
+
+        /// <summary>
+        /// Ordered Parts that constitute a single message. Parts may have different MIME types.
+        /// </summary>
+        [JsonIgnore]
+        public List<IPart>? Parts { get; set; }
+        /// <summary>
+        /// Optional. The producer of the content. Must be either 'user' or 'model'. If not set, the
+        /// service will default to 'user'.
+        /// </summary>
+        [JsonPropertyOrder(-1)]
+        public string? Role { get; set; }
+        /// <summary>
+        /// Ordered Parts that constitute a single message. Parts may have different MIME types.
+        /// </summary>
+        [DebuggerHidden]
+        [JsonPropertyName("parts")]
+        public List<Part>? PartTypes
+        {
+            get
+            {
+                SynchronizeParts();
+                return _partTypes;
+            }
+            set => _partTypes = value;
+        }
+        /// <summary>
+        /// The ETag of the item.
+        /// </summary>
+        public string? ETag { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        public Content()
+        {
+            Parts = new List<IPart>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        /// <param name="text">String to process.</param>
+        /// <param name="role">Provide the <see cref="GenerativeAI.Types.Role"/> of the text.</param>
+        public Content(string text, string role = GenerativeAI.Types.Role.User) : this()
+        {
+            Role = role;
+            Parts?.Add(new TextData { Text = text });
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        /// <param name="part">The part to add.</param>
+        /// <param name="role">Provide the <see cref="GenerativeAI.Types.Role"/> of the text.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="part"/> is null.</exception>
+        public Content(IPart part, string role = GenerativeAI.Types.Role.User) : this()
+        {
+            if (part is null) throw new ArgumentNullException(nameof(part));
+            Role = role;
+            Parts?.Add(part);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Content"/> class.
+        /// </summary>
+        /// <param name="parts">The parts to add.</param>
+        /// <param name="role">Provide the <see cref="GenerativeAI.Types.Role"/> of the text.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parts"/> is null.</exception>
+        public Content(IEnumerable<IPart> parts, string role = GenerativeAI.Types.Role.User) : this()
+        {
+            if (parts is null) throw new ArgumentNullException(nameof(parts));
+            Role = role;
+            Parts?.AddRange(parts);
+        }
+
+        private void SynchronizeParts()
+        {
+            // partTypes = null;
+            if (Parts is null || Parts?.Count == 0) return;
+
+            _partTypes = [];
+            foreach (var part in Parts!)
+            {
+                if (part is TextData text)
+                {
+                    _partTypes.Add(new Part { TextData = text });
+                }
+                if (part is InlineData inline)
+                {
+                    _partTypes.Add(new Part { InlineData = inline });
+                }
+                if (part is FileData file)
+                {
+                    _partTypes.Add(new Part { FileData = file });
+                }
+                if (part is FunctionResponse response)
+                {
+                    _partTypes.Add(new Part { FunctionResponse = response });
+                }
+                if (part is FunctionCall call)
+                {
+                    _partTypes.Add(new Part { FunctionCall = call });
+                }
+                if (part is VideoMetadata video)
+                {
+                    _partTypes.Add(new Part { VideoMetadata = video });
+                }
+                if (part is ExecutableCode code)
+                {
+                    _partTypes.Add(new Part { ExecutableCode = code });
+                }
+                if (part is CodeExecutionResult result)
+                {
+                    _partTypes.Add(new Part { CodeExecutionResult = result });
+                }
+                // Handle Part objects directly (already the correct type)
+                if (part is Part partType)
+                {
+	                _partTypes.Add(partType);
+                }
+            }
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"Role: {Role} - Parts: {Parts?.Count}";
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+    public sealed class ContentResponse
+    {
+        public List<Part> Parts { get; set; }
+        public string Role { get; set; }
+
+        [JsonIgnore]
+        public string Text
+        {
+            get
+            {
+                if (Parts.Count > 0)
+                {
+                    return Parts[0].Text ?? string.Empty;
+                }
+                return string.Empty;
+            }
+            set
+            {
+                if (Parts.Count == 0)
+                {
+                    Parts.Add(new Part() { Text = value });
+                }
+                Parts[0].Text = value;
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentResponse"/> class.
+        /// </summary>
+        internal ContentResponse() => Parts = [];
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentResponse"/> class.
+        /// </summary>
+        /// <param name="text">String to process.</param>
+        /// <param name="role">Role of the content. Must be either 'user' or 'model'.</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="text"/> or <paramref name="role"/> is empty or null.</exception>
+        public ContentResponse(string text, string role = GenerativeAI.Types.Role.User) : this()
+        {
+            // if (string.IsNullOrEmpty(text)) throw new ArgumentException(nameof(text));
+            // if (string.IsNullOrEmpty(role)) throw new ArgumentException(nameof(role));
+
+            Text = text;
+            Role = role;
+        }
+
+        private string GetDebuggerDisplay()
+        {
+            return $"Role: {Role} - Parts: {Parts.Count} - {Text}";
+        }
+    }
+}

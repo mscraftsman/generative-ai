@@ -565,6 +565,23 @@
       "version": "Gemini 2.5 Computer Use Preview 10-2025"
     },
     {
+      "description": "Preview release (December 12th, 2025) of Deep Research Pro",
+      "displayName": "Deep Research Pro Preview (Dec-12-2025)",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/deep-research-pro-preview-12-2025",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "deepthink-exp-05-20"
+    },
+    {
       "description": "Obtain a distributed representation of a text.",
       "displayName": "Embedding 001",
       "inputTokenLimit": 2048,
@@ -783,6 +800,34 @@
       "topK": 64,
       "topP": 0.95,
       "version": "gemini-2.5-flash-preview-native-audio-dialog-2025-05-19"
+    },
+    {
+      "description": "Gemini 2.5 Flash Native Audio Preview 12-2025",
+      "displayName": "Gemini 2.5 Flash Native Audio Preview 12-2025",
+      "inputTokenLimit": 131072,
+      "maxTemperature": 2,
+      "name": "models/gemini-2.5-flash-native-audio-preview-12-2025",
+      "outputTokenLimit": 8192,
+      "supportedGenerationMethods": [
+        "countTokens",
+        "bidiGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "12-2025"
+    },
+    {
+      "description": "Lyria Realtime Experimental",
+      "displayName": "Lyria Realtime Experimental",
+      "inputTokenLimit": 1048576,
+      "name": "models/lyria-realtime-exp",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "bidiGenerateMusic"
+      ],
+      "version": "lyria-realtime-exp"
     }
   ]
 }

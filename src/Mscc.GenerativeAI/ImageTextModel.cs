@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -16,7 +17,7 @@ namespace Mscc.GenerativeAI
 
         internal override string Version => ApiVersion.V1;
         private string Url => UrlVertexAi;
-        private string Method => GenerativeAI.Method.Predict;
+        private string Method => GenerativeAI.Types.Method.Predict;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageTextModel"/> class.

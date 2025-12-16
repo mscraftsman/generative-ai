@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +26,10 @@ namespace Mscc.GenerativeAI
         private FilesModel? _filesModel;
         private MediaModel? _mediaModel;
         private GeneratedFilesModel? _generatedFilesModel;
+        private FileSearchStoresModel? _fileSearchStoresModel;
+        private OperationsModel? _operationsModel;
+        private ImageGenerationModel? _imageGenerationModel;
+        private BatchesModel? _batchesModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleAI"/> class with access to Google AI Gemini API.
@@ -176,13 +181,12 @@ namespace Mscc.GenerativeAI
         public BatchesModel Batches(ILogger? logger = null)
         {
             Guard();
-
-            var batches = new BatchesModel(_httpClientFactory, logger: logger)
+            _batchesModel = new BatchesModel(_httpClientFactory, logger: logger)
             {
                 ApiKey = _apiKey, 
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return batches;
+            return _batchesModel;
         }
 
         /// <summary>
@@ -195,44 +199,41 @@ namespace Mscc.GenerativeAI
             ILogger? logger = null)
         {
             Guard();
-
-            var imageGenerationModel = new ImageGenerationModel(apiKey: _apiKey,
+            _imageGenerationModel ??= new ImageGenerationModel(apiKey: _apiKey,
                 model: model,
                 httpClientFactory: _httpClientFactory,
                 logger: logger ?? Logger)
             {
                 AccessToken = _apiKey is null ? _accessToken : null
             };
-            return imageGenerationModel;
+            return _imageGenerationModel;
         }
 
         /// <summary>
         /// Returns an instance of <see cref="FileSearchStoresModel"/>.
         /// </summary>
-        /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <returns></returns>
-        public FileSearchStoresModel FileSearchStoresModel(ILogger? logger = null)
+        public FileSearchStoresModel FileSearchStoresModel()
         {
             Guard();
-
-            var model = new FileSearchStoresModel(_httpClientFactory, logger: logger)
+            _fileSearchStoresModel ??= new FileSearchStoresModel(_httpClientFactory, Logger)
             {
-                ApiKey = _apiKey, 
-                AccessToken = _apiKey is null ? _accessToken : null
+                ApiKey = _apiKey
             };
-            return model;
+            return _fileSearchStoresModel;
         }
 
-        public OperationsModel OperationsModel(ILogger? logger = null)
+        /// <summary>
+        /// Returns an instance of <see cref="OperationsModel"/>.
+        /// </summary>
+        public OperationsModel OperationsModel()
         {
             Guard();
-
-            var model = new OperationsModel(_httpClientFactory, logger: logger)
+            _operationsModel ??= new OperationsModel(_httpClientFactory, Logger)
             {
                 ApiKey = _apiKey, 
-                AccessToken = _apiKey is null ? _accessToken : null
             };
-            return model;
+            return _operationsModel;
         }
 
         /// <summary>
