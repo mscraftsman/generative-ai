@@ -13,24 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// Media resolution for the input media.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class MediaResolution
 	{
-		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
-		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
-		/// <summary>
-		/// Content examples. For multiturn conversations.
-		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public LevelType? Level { get; set; }
+
+		[JsonConverter(typeof(JsonStringEnumConverter<LevelType>))]
+		public enum LevelType
+		{
+			/// <summary>
+			/// Media resolution has not been set.
+			/// </summary>
+			MediaResolutionUnspecified,
+			/// <summary>
+			/// Media resolution set to low.
+			/// </summary>
+			MediaResolutionLow,
+			/// <summary>
+			/// Media resolution set to medium.
+			/// </summary>
+			MediaResolutionMedium,
+			/// <summary>
+			/// Media resolution set to high.
+			/// </summary>
+			MediaResolutionHigh,
+			/// <summary>
+			/// Media resolution set to ultra high.
+			/// </summary>
+			MediaResolutionUltraHigh,
+		}
     }
 }

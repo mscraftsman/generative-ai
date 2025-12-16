@@ -24,9 +24,9 @@ namespace Mscc.GenerativeAI.Types
 	public enum ResponseModality
 	{
 		/// <summary>
-		/// Default value. This value is unused.
+		/// Default value.
 		/// </summary>
-		ResponseModalityUnspecified,
+		ModalityUnspecified,
 		/// <summary>
 		/// Indicates the model should return text.
 		/// </summary>

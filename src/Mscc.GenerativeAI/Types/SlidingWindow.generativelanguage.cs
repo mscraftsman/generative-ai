@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// The SlidingWindow method operates by discarding content at the beginning of the context window. The resulting context will always begin at the start of a USER role turn. System instructions and any <c>BidiGenerateContentSetup.prefix_turns</c> will always remain at the beginning of the result.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class SlidingWindow
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// The target number of tokens to keep. The default value is trigger_tokens/2. Discarding parts of the context window causes a temporary latency increase so this value should be calibrated to avoid frequent compression operations.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
-		/// <summary>
-		/// Content examples. For multiturn conversations.
-		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public long? TargetTokens { get; set; }
     }
 }

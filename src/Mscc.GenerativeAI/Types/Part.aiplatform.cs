@@ -23,10 +23,5 @@ namespace Mscc.GenerativeAI.Types
 	/// </summary>
 	public partial class Part
 	{
-
-		/// <summary>
-		/// per part media resolution. Media resolution for the input media.
-		/// </summary>
-		public PartMediaResolution? MediaResolution { get; set; }
     }
 }

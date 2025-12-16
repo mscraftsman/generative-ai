@@ -20,17 +20,17 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// A tuning example with multiturn input.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class TuningMultiturnExample
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// Each Content represents a turn in the conversation.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
+		public List<TuningContent>? Contents { get; set; }
 		/// <summary>
-		/// Content examples. For multiturn conversations.
+		/// Optional. Developer set system instructions. Currently, text only.
 		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public TuningContent? SystemInstruction { get; set; }
     }
 }

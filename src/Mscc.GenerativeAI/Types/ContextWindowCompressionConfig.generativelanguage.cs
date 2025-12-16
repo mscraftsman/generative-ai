@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// Enables context window compression — a mechanism for managing the model&apos;s context window so that it does not exceed a given length.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class ContextWindowCompressionConfig
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// A sliding-window mechanism.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
+		public SlidingWindow? SlidingWindow { get; set; }
 		/// <summary>
-		/// Content examples. For multiturn conversations.
+		/// The number of tokens (before running a turn) required to trigger a context window compression. This can be used to balance quality against latency as shorter context windows may result in faster model responses. However, any compression operation will cause a temporary latency increase, so they should not be triggered frequently. If not set, the default is 80% of the model&apos;s context window limit. This leaves 20% for the next user request/model response.
 		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public long? TriggerTokens { get; set; }
     }
 }

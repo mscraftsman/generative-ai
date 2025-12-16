@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// A response from <c>CountMessageTokens</c>. It returns the model&apos;s <c>token_count</c> for the <c>prompt</c>.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class CountMessageTokensResponse
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// The number of tokens that the <c>model</c> tokenizes the <c>prompt</c> into. Always non-negative.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
-		/// <summary>
-		/// Content examples. For multiturn conversations.
-		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public int? TokenCount { get; set; }
     }
 }

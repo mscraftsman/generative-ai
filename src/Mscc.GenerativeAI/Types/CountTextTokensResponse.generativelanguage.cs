@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 Jochen Kirstätter
+ * Copyleft 2024-2025 Jochen Kirstätter and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
+// *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
+
 namespace Mscc.GenerativeAI.Types
 {
-    /// <summary>
-    /// Media resolution for the input media.
-    /// </summary>
-    public partial class PartMediaResolution : IPart
-    {
-        /// <summary>
-        /// The tokenization quality used for given media.
-        /// </summary>
-        public MediaResolution? Level { get; set; }
-        
-        /// <summary>
-        /// Specifies the required sequence length for media tokenization.
-        /// </summary>
-        public int? NumTokens { get; set; }
+	/// <summary>
+	/// A response from <c>CountTextTokens</c>. It returns the model&apos;s <c>token_count</c> for the <c>prompt</c>.
+	/// </summary>
+	public partial class CountTextTokensResponse
+	{
+		/// <summary>
+		/// The number of tokens that the <c>model</c> tokenizes the <c>prompt</c> into. Always non-negative.
+		/// </summary>
+		public int? TokenCount { get; set; }
     }
 }

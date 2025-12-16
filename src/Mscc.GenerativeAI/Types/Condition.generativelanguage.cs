@@ -19,9 +19,17 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// per part media resolution. Media resolution for the input media.
+	/// Filter condition applicable to a single key.
 	/// </summary>
-	public partial class PartMediaResolution
+	public partial class Condition
 	{
+		/// <summary>
+		/// The numeric value to filter the metadata on.
+		/// </summary>
+		public double? NumericValue { get; set; }
+		/// <summary>
+		/// The string value to filter the metadata on.
+		/// </summary>
+		public string? StringValue { get; set; }
     }
 }

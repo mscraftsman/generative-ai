@@ -44,6 +44,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public FunctionResponse? FunctionResponse { get; set; }
 		/// <summary>
+		/// Optional. Media resolution for the input media.
+		/// </summary>
+		public MediaResolution? MediaResolution { get; set; }
+		/// <summary>
 		/// Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams.
 		/// </summary>
 		public object? PartMetadata { get; set; }

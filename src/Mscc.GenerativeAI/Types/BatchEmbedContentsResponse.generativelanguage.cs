@@ -20,17 +20,13 @@ using System.Collections.Generic;
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// The response to a <c>BatchEmbedContentsRequest</c>.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class BatchEmbedContentsResponse
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// Output only. The embeddings for each request, in the same order as provided in the batch request.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
-		/// <summary>
-		/// Content examples. For multiturn conversations.
-		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public List<ContentEmbedding>? Embeddings { get; set; }
     }
 }

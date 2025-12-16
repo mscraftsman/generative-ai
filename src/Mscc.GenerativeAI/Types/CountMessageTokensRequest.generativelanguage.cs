@@ -13,35 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Text.Json.Serialization;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
-
-	[JsonConverter(typeof(JsonStringEnumConverter<MediaResolution>))]
-	public enum MediaResolution
+	/// <summary>
+	/// Counts the number of tokens in the <c>prompt</c> sent to a model. Models may tokenize text differently, so each model may return a different <c>token_count</c>.
+	/// </summary>
+	public partial class CountMessageTokensRequest
 	{
 		/// <summary>
-		/// Media resolution has not been set.
+		/// Required. The prompt, whose token count is to be returned.
 		/// </summary>
-		MediaResolutionUnspecified,
-		/// <summary>
-		/// Media resolution set to low (64 tokens).
-		/// </summary>
-		MediaResolutionLow,
-		/// <summary>
-		/// Media resolution set to medium (256 tokens).
-		/// </summary>
-		MediaResolutionMedium,
-		/// <summary>
-		/// Media resolution set to high (zoomed reframing with 256 tokens).
-		/// </summary>
-		MediaResolutionHigh,
-		/// <summary>
-		/// Media resolution set to ultra high.
-		/// </summary>
-		MediaResolutionUltraHigh,
-	}
+		public MessagePrompt? Prompt { get; set; }
+    }
 }

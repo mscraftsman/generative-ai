@@ -34,6 +34,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public int? CandidateCount { get; set; }
 		/// <summary>
+		/// Optional. If enabled, the model will detect emotions and adapt its responses accordingly.
+		/// </summary>
+		public bool? EnableAffectiveDialog { get; set; }
+		/// <summary>
 		/// Optional. Enables enhanced civic answers. It may not be available for all models.
 		/// </summary>
 		public bool? EnableEnhancedCivicAnswers { get; set; }
@@ -56,7 +60,7 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Optional. If specified, the media resolution specified will be used.
 		/// </summary>
-		public MediaResolution? MediaResolution { get; set; }
+		public MediaResolutionType? MediaResolution { get; set; }
 		/// <summary>
 		/// Optional. Presence penalty applied to the next token&apos;s logprobs if the token has already been seen in the response. This penalty is binary on/off and not dependant on the number of times the token is used (after the first). Use frequency_penalty for a penalty that increases with each use. A positive penalty will discourage the use of tokens that have already been used in the response, increasing the vocabulary. A negative penalty will encourage the use of tokens that have already been used in the response, decreasing the vocabulary.
 		/// </summary>
@@ -109,5 +113,26 @@ namespace Mscc.GenerativeAI.Types
 		/// Optional. The maximum cumulative probability of tokens to consider when sampling. The model uses combined Top-k and Top-p (nucleus) sampling. Tokens are sorted based on their assigned probabilities so that only the most likely tokens are considered. Top-k sampling directly limits the maximum number of tokens to consider, while Nucleus sampling limits the number of tokens based on the cumulative probability. Note: The default value varies by <c>Model</c> and is specified by the<c>Model.top_p</c> attribute returned from the <c>getModel</c> function. An empty <c>top_k</c> attribute indicates that the model doesn&apos;t apply top-k sampling and doesn&apos;t allow setting <c>top_k</c> on requests.
 		/// </summary>
 		public double? TopP { get; set; }
+
+		[JsonConverter(typeof(JsonStringEnumConverter<MediaResolutionType>))]
+		public enum MediaResolutionType
+		{
+			/// <summary>
+			/// Media resolution has not been set.
+			/// </summary>
+			MediaResolutionUnspecified,
+			/// <summary>
+			/// Media resolution set to low (64 tokens).
+			/// </summary>
+			MediaResolutionLow,
+			/// <summary>
+			/// Media resolution set to medium (256 tokens).
+			/// </summary>
+			MediaResolutionMedium,
+			/// <summary>
+			/// Media resolution set to high (zoomed reframing with 256 tokens).
+			/// </summary>
+			MediaResolutionHigh,
+		}
     }
 }

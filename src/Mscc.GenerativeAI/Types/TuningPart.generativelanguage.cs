@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// A datatype containing data that is part of a multi-part <c>TuningContent</c> message. This is a subset of the Part used for model inference, with limited type support. A <c>Part</c> consists of data which has an associated datatype. A <c>Part</c> can only contain one of the accepted types in <c>Part.data</c>.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class TuningPart
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// Inline text.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
-		/// <summary>
-		/// Content examples. For multiturn conversations.
-		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public string? Text { get; set; }
     }
 }

@@ -125,7 +125,7 @@ namespace Mscc.GenerativeAI.Types
         /// Adds the Computer Use tool to the list of tools.
         /// </summary>
         /// <param name="environment">The environment being operated.</param>
-        public void AddComputerUse(ComputerUseEnvironment? environment = ComputerUseEnvironment.Browser)
+        public void AddComputerUse(ComputerUseEnvironment? environment = ComputerUseEnvironment.EnvironmentBrowser)
         {
             if (!this.Any(t => t.ComputerUse is not null))
             {
@@ -134,7 +134,7 @@ namespace Mscc.GenerativeAI.Types
                     ComputerUse = new()
                     {
                         Environment = environment ??
-                                      ComputerUseEnvironment.Browser
+                                      ComputerUseEnvironment.EnvironmentBrowser
                     }
                 });
             }
