@@ -1,10 +1,12 @@
 SKIP_DOWNLOAD=false
+API_VERSION=""
 
 # Parse arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -s|--skip-download) SKIP_DOWNLOAD=true ;;
-        -h|--help) echo "Usage: $0 [-s|--skip-download]"; exit 0 ;;
+        -v|--version) API_VERSION="$2"; shift ;;
+        -h|--help) echo "Usage: $0 [-s|--skip-download] [-v|--version <version>]"; exit 0 ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -23,11 +25,11 @@ mkdir -p ./Types
 rm -f ./Types/*
 
 if [ "$SKIP_DOWNLOAD" = false ]; then
-  curl "https://generativelanguage.googleapis.com/\$discovery/rest?version=v1beta&key=$GEMINI_API_KEY" \
+  curl "https://generativelanguage.googleapis.com/\$discovery/rest?version=${API_VERSION:-v1beta}&key=$GEMINI_API_KEY" \
     -H "Content-Type: application/json" \
     -o generativelanguage.json
 
-  curl "https://aiplatform.googleapis.com/\$discovery/rest?version=v1beta1" \
+  curl "https://aiplatform.googleapis.com/\$discovery/rest?version=${API_VERSION:-v1beta}1" \
     -H "Content-Type: application/json" \
     -o aiplatform.json
 
