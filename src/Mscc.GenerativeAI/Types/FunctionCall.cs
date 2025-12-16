@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+using System.Diagnostics;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
 	/// A predicted <see cref="FunctionCall"/> returned from the model that contains a string representing the <see cref="FunctionDeclaration.name"/> with the arguments and their values.
 	/// </summary>
+	[DebuggerDisplay("{Name,nq}({Args,nq})")]
 	public partial class FunctionCall : IPart
 	{
 	}
