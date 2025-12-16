@@ -492,7 +492,11 @@ namespace Mscc.GenerativeAI.Types
             foreach (var functionCall in functionCalls)
             {
                 var result = tools.Invoke(functionCall.Name!, functionCall.Args!);
-                var functionResponse = new FunctionResponse { Name = functionCall.Name, Response = result };
+                var functionResponse = new FunctionResponse
+                {
+	                Name = functionCall.Name, 
+	                Response = new { Output = result }
+                };
                 functionResponseParts.Add(new Part { FunctionResponse = functionResponse });
             }
 
