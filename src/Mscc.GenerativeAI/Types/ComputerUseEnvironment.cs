@@ -31,5 +31,9 @@ namespace Mscc.GenerativeAI.Types
 		/// Operates in a web browser.
 		/// </summary>
 		EnvironmentBrowser,
+		/// <summary>
+		/// Operates in a web browser.
+		/// </summary>
+		Browser,
 	}
 }
