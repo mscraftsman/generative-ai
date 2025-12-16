@@ -102,7 +102,9 @@ namespace Mscc.CodeGenerator
 			"Operation.Done",
 			"Part.InlineData",
 			"Part.Text",
-			"PartMediaResolution.Level"
+			"PartMediaResolution.Level",
+			"TuningContent.Parts",
+			"TuningContent.Role"
 		};
 
 		private readonly Dictionary<string, string> _typeReplacements = new Dictionary<string, string>
@@ -112,6 +114,7 @@ namespace Mscc.CodeGenerator
 			{ "EmbedContentRequest.TaskType", "TaskType" },
 			{ "Environment", "ComputerUseEnvironment" },
 			{ "File", "FileResource" },
+			{ "GoogleAiGenerativelanguagev1betaGroundingSupport", "GroundingSupport" },
 			{ "GoogleAiGroundingSupport", "GroundingSupport" },
 			{ "GoogleAiSegment", "Segment" },
 			{ "Method", "HarmBlockMethod" },
@@ -148,7 +151,6 @@ namespace Mscc.CodeGenerator
 			"HarmProbability",
 			"HarmSeverity",
 			"HttpElementLocation",
-			"MediaResolution",
 			"Outcome",
 			"ParameterType",
 			"PermissionRole",
