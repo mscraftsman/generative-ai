@@ -807,14 +807,15 @@ namespace Mscc.GenerativeAI
         private string TruncateJsonForLogging(string json)
         {
             // Truncate base64 strings in "data" properties
-            // Pattern looks for "data": "..." where the value is longer than 50 chars and looks like base64 (no spaces)
-            const string pattern = @"""(data)"":\s*""(?<content>[A-Za-z0-9+/=]{50,})""";
+            // Pattern looks for "data": "..." where the value is longer than 50 chars.
+            // Using [^"] to match any character except double quote, handling potential JSON escaping of base64 chars.
+            const string pattern = @"""(?<key>data)""\s*:\s*""(?<content>[^""]{50,})""";
 
             return Regex.Replace(json, pattern, m =>
             {
                 var content = m.Groups["content"].Value;
                 var truncated = content.Substring(0, 42) + "...[truncated]";
-                return $@"""{m.Groups[1].Value}"": ""{truncated}""";
+                return $@"""{m.Groups["key"].Value}"": ""{truncated}""";
             }, RegexOptions.IgnoreCase);
         }
 
