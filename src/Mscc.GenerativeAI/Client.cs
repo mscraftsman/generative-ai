@@ -31,8 +31,8 @@ namespace Mscc.GenerativeAI
         public AuthTokensModel AuthTokens => _authTokens ?? new AuthTokensModel(_apiClient, Logger);
         public OperationsModel Operations => _operations ?? new OperationsModel(_apiClient, Logger);
         public InteractionsModel Interactions => _interactions ?? new InteractionsModel(_apiClient, Logger);
-        
-        public Client(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
+
+        private Client(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
             _apiVersion = ApiVersion.V1Beta;
             _apiClient = base._httpClientFactory;
