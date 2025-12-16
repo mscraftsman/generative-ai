@@ -817,6 +817,17 @@
       "topK": 64,
       "topP": 0.95,
       "version": "12-2025"
+    },
+    {
+      "description": "Lyria Realtime Experimental",
+      "displayName": "Lyria Realtime Experimental",
+      "inputTokenLimit": 1048576,
+      "name": "models/lyria-realtime-exp",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "bidiGenerateMusic"
+      ],
+      "version": "lyria-realtime-exp"
     }
   ]
 }
