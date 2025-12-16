@@ -1,19 +1,13 @@
-﻿using Shouldly;
-using Json.Schema.Generation;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Types;
 using Neovolve.Logging.Xunit;
+using Shouldly;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -65,10 +59,10 @@ namespace Test.Mscc.GenerativeAI
 			{
 				if (chunk.EventType == "content.delta")
 				{
-					if (chunk.Delta.Type == "text")
+					if (chunk.Delta.Type == InteractionContentType.Text)
 						_output.WriteLine(chunk.Delta.Text);
-					if (chunk.Delta.Type == "thought_signature")	// "thought"
-						_output.WriteLine(chunk.Delta.Signature);
+					if (chunk.Delta.Type == InteractionContentType.ThoughtSignature)	// "thought"
+						_output.WriteLine($"Signature: {chunk.Delta.Signature}\n");
 				}
 				else if (chunk.EventType == "interaction.complete")
 				{
@@ -131,8 +125,8 @@ namespace Test.Mscc.GenerativeAI
 				model: _model,
 				input: new List<InteractionContent>
 				{
-					new() { Type = "text", Text = prompt },
-					new() { Type = "image", Data = base64Image, MimeType = mimetype }
+					new() { Type = InteractionContentType.Text, Text = prompt },
+					new() { Type = InteractionContentType.Image, Data = base64Image, MimeType = mimetype }
 				}
 			);
 
@@ -140,31 +134,156 @@ namespace Test.Mscc.GenerativeAI
 			_output.WriteLine(interaction.Text);
 		}
 
-		[Fact]
-		public async Task CreateInteraction_Function_Calling()
+		string GetCurrentWeather(string location)
 		{
+			return $"The weather in {location} is sunny.";
+		}
+
+		[Fact]
+		public async Task Tools_Use_Function_Calling()
+		{
+			// Arrange
+			var tools = new InteractionTools();
+			tools.Add(GetCurrentWeather, null, "Get the current weather in a given location.");
+			
             // Act
 			var interaction = await client.Interactions.Create(
 				model: _model,
-				input: "What is the weather like in Flic en Flac, Mauritius?"
-				// tools: [{
-				// 	"type": "function",
-				// 	"name": "get_weather",
-				// 	"description": "Get the current weather in a given location",
-				// 	"parameters": {
-				// 	"type": "object",
-				// 	"properties": {
-				// 	"location": {
-				// 	"type": "string",
-				// 	"description": "The city and state, e.g. San Francisco, CA"
-				// 	}
-				// 	},
-				// 	"required": ["location"]
-				// 	}
-				// 	}]
+				input: "What is the weather like in Flic en Flac, Mauritius?",
+				tools: tools
 			);
 
-            // Assert
+			foreach (var output in interaction.Outputs)
+			{
+				if (output.Type == InteractionContentType.FunctionCall)
+				{
+					_output.WriteLine($"Function Call: {output.Name}({output.Arguments})");
+					var result = tools.Invoke(output.Name, output.Arguments);
+
+					interaction = await client.Interactions.Create(
+						model: _model,
+						previousInteractionId: interaction.Id,
+						input: new List<InteractionContent>
+						{
+							new()
+							{
+								Type = InteractionContentType.FunctionResult,
+								Name = output.Name,
+								CallId = output.Id,
+								Result = result
+							}
+						}
+					);
+				}
+			}
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Tools_Use_Google_Search()
+		{
+			// Arrange
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: "Who is the current prime minister in Mauritius?",
+				tools: [new InteractionTool { Type = InteractionToolType.GoogleSearch }]
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Tools_Use_Code_Execution()
+		{
+			// Arrange
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: "Calculate the first 10 Fibonacci numbers",
+				tools: [new InteractionTool { Type = InteractionToolType.CodeExecution }]
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Tools_Use_Url_Context()
+		{
+			// Arrange
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: "Summarize https://jochen.kirstaetter.name/",
+				tools: [new InteractionTool { Type = InteractionToolType.UrlContext }]
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Tools_Use_Computer_Use()
+		{
+			// Arrange
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: Model.Gemini25ComputerUse,
+				input: "Find a flight to Tokyo",
+				tools: [new InteractionTool { Type = InteractionToolType.ComputerUse }]
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Tools_Use_Mcp_Server()
+		{
+			// Arrange
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: $"Today is {DateTime.Now.Date}. What is the temperature today in Flic en Flac, Mauritius?",
+				tools: [new InteractionTool
+					{
+						Type = InteractionToolType.McpServer,
+						Name = "weather_service",
+						Url = "https://gemini-api-demos.uc.r.appspot.com/mcp"
+					}
+				]
+			);
+
+			// Assert
+			_output.WriteLine(interaction.Text);
+		}
+
+		[Fact]
+		public async Task Tools_Use_File_Search()
+		{
+			// Arrange
+
+			// Act
+			var interaction = await client.Interactions.Create(
+				model: _model,
+				input: "Who is the author of the book?",
+				tools: [new InteractionTool
+				{
+					Type = InteractionToolType.FileSearch,
+					FileSearchStoreNames = ["fileSearchStores/m64d1sevsr4y-xfyawui3fxqg"]
+				}]
+			);
+
+			// Assert
 			_output.WriteLine(interaction.Text);
 		}
 
@@ -257,11 +376,11 @@ namespace Test.Mscc.GenerativeAI
 		}
 
 		[Theory]
-		[InlineData("image", "scones.jpg", "Describe this image", "blueberries")]
-		[InlineData("audio", "pixel.mp3", "What does this audio say?", "Aisha Sherif")]
-		[InlineData("video", "Big_Buck_Bunny.mp4", "What is happening in this video? Provide a timestamped summary.", "squirrel")]
-		[InlineData("document", "gemini.pdf", "What is this document about?", "DeepMind")]
-		public async Task Multimodal_Understanding_Inline(string type, string filename, string prompt, string expected)
+		[InlineData(InteractionContentType.Image, "scones.jpg", "Describe this image", "blueberries")]
+		[InlineData(InteractionContentType.Audio, "pixel.mp3", "What does this audio say?", "Aisha Sherif")]
+		[InlineData(InteractionContentType.Video, "Big_Buck_Bunny.mp4", "What is happening in this video? Provide a timestamped summary.", "squirrel")]
+		[InlineData(InteractionContentType.Document, "gemini.pdf", "What is this document about?", "DeepMind")]
+		public async Task Multimodal_Understanding_Inline(InteractionContentType type, string filename, string prompt, string expected)
 		{
 			// Arrange
 			var mimeType = GenerativeAIExtensions.GetMimeType(filename);
@@ -274,7 +393,7 @@ namespace Test.Mscc.GenerativeAI
 				model: _model,
 				input: new List<InteractionContent>
 				{
-					new() { Type = "text", Text = prompt },
+					new() { Type = InteractionContentType.Text, Text = prompt },
 					new() { Type = type, Data = base64Image, MimeType = mimeType }
 				}
 			);
@@ -284,11 +403,11 @@ namespace Test.Mscc.GenerativeAI
 		}
 
 		[Theory]
-		[InlineData("image", "image/jpeg", "Describe this image", "blueberries")]
-		[InlineData("audio", "audio/mpeg", "What does this audio say?", "Aisha Sherif")]
-		[InlineData("video", "video/mp4", "What is happening in this video? Provide a timestamped summary.", "squirrel")]
-		[InlineData("document", "application/pdf", "What is this document about?", "DeepMind")]
-		public async Task Multimodal_Understanding_using_FilesAPI(string type, string mimeType, string prompt, string expected)
+		[InlineData(InteractionContentType.Image, "image/jpeg", "Describe this image", "blueberries")]
+		[InlineData(InteractionContentType.Audio, "audio/mpeg", "What does this audio say?", "Aisha Sherif")]
+		[InlineData(InteractionContentType.Video, "video/mp4", "What is happening in this video? Provide a timestamped summary.", "squirrel")]
+		[InlineData(InteractionContentType.Document, "application/pdf", "What is this document about?", "DeepMind")]
+		public async Task Multimodal_Understanding_using_FilesAPI(InteractionContentType type, string mimeType, string prompt, string expected)
 		{
 			// Arrange
 			var files = await client.Files.ListFiles();
@@ -300,7 +419,7 @@ namespace Test.Mscc.GenerativeAI
 				model: _model,
 				input: new List<InteractionContent>
 				{
-					new() { Type = "text", Text = prompt },
+					new() { Type = InteractionContentType.Text, Text = prompt },
 					new() { Type = type, Uri = file.Uri, MimeType = mimeType }
 				}
 			);
@@ -322,7 +441,7 @@ namespace Test.Mscc.GenerativeAI
 			// Assert
 			foreach (InteractionContent output in interaction.Outputs)
 			{
-				if (output.Type == "image")
+				if (output.Type == InteractionContentType.Image)
 				{
 					_output.WriteLine($"Generated image with MIME type: {output.MimeType}");
 					var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
