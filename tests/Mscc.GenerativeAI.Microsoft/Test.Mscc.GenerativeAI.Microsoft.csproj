@@ -31,7 +31,7 @@
 
 	<ItemGroup>
         <PackageReference Include="coverlet.collector" />
-		<PackageReference Include="FluentAssertions" />
+		<PackageReference Include="Shouldly" />
 		<PackageReference Include="Microsoft.Extensions.AI" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" />

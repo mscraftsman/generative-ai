@@ -29,7 +29,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FluentAssertions"/>
+        		<PackageReference Include="Shouldly" />
         <PackageReference Include="Google.Protobuf"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>

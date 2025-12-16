@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using System;
 using System.Text;
@@ -44,15 +44,16 @@ namespace Test.Mscc.GenerativeAI
             var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            responseStream.Should().NotBeNull();
+            responseStream.ShouldNotBeNull();
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 fullText.Append(response?.Text);
             }
-            fullText.ToString().Should().Contain("blueberry");
+            fullText.ToString().ShouldContain("blueberry");
             output.WriteLine(fullText.ToString());
         }
 
@@ -92,28 +93,19 @@ namespace Test.Mscc.GenerativeAI
             var responseStream = model.GenerateContentStream(request, options);
             
             // Assert
-            responseStream.Should().NotBeNull();
+            responseStream.ShouldNotBeNull();
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 fullText.Append(response?.Text);
             }
-            fullText.ToString().Should().Contain("redeemer");
+            fullText.ToString().ShouldContain("redeemer");
             output.WriteLine(fullText.ToString());
 
-            // // Act
-            // var response = await model.GenerateContent(request);
-            //
-            // // Assert
-            // response.Should().NotBeNull();
-            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            // //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            // //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // //response.Text.Should().Contain("redeemer");
-            // output.WriteLine(response?.Text);
-            // output.WriteLine(fullText.ToString());
+
         }
 
         [Fact]
@@ -135,28 +127,19 @@ namespace Test.Mscc.GenerativeAI
             var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            responseStream.Should().NotBeNull();
+            responseStream.ShouldNotBeNull();
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 fullText.Append(response?.Text);
             }
-            fullText.ToString().Should().Contain("Zootopia");
+            fullText.ToString().ShouldContain("Zootopia");
             output.WriteLine(fullText.ToString());
 
-            // Act
-            // var response = await model.GenerateContent(request);
 
-            // Assert
-            // response.Should().NotBeNull();
-            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            // //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            // //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // response.Text.Should().Contain("Zootopia");
-            // output.WriteLine(response?.Text);
-            // output.WriteLine(fullText.ToString());
         }
 
         [Fact]
@@ -193,28 +176,19 @@ namespace Test.Mscc.GenerativeAI
             var responseStream = model.GenerateContentStream(request);
 
             // Assert
-            responseStream.Should().NotBeNull();
+            responseStream.ShouldNotBeNull();
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 fullText.Append(response?.Text);
             }
-            fullText.ToString().Should().Contain("assist");
+            fullText.ToString().ShouldContain("assist");
             output.WriteLine(fullText.ToString());
 
-            // Act
-            // var response = await model.GenerateContent(request);
 
-            // Assert
-            // response.Should().NotBeNull();
-            // response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            // //response.Candidates.FirstOrDefault().Content.Should().NotBeNull();
-            // //response.Candidates.FirstOrDefault().Content.Parts.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
-            // response.Text.Should().Contain("assist");
-            // output.WriteLine(response?.Text);
-            // output.WriteLine(fullText.ToString());
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using System.IO;
 using Xunit;
@@ -29,10 +29,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -56,10 +56,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateImages(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -88,10 +88,10 @@ namespace Test.Mscc.GenerativeAI
             );
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -116,10 +116,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateImages(request);
             
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Images)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -149,10 +149,10 @@ namespace Test.Mscc.GenerativeAI
             );
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Images)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -184,10 +184,10 @@ namespace Test.Mscc.GenerativeAI
             );
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",

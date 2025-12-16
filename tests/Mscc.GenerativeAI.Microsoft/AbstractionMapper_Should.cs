@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.AI;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Microsoft;
@@ -61,14 +61,15 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response }) as mea.ChatResponse;
 
             // Assert - Check that RawRepresentation is set on DataContent
-            chatResponse.Should().NotBeNull();
-            chatResponse!.Messages.Should().NotBeNull().And.HaveCount(1);
+            chatResponse.ShouldNotBeNull();
+            chatResponse!.Messages.ShouldNotBeNull();
+            chatResponse!.Messages.Count.ShouldBe(1);
             var messageContent = chatResponse.Messages[0].Contents.FirstOrDefault() as mea.DataContent;
-            messageContent.Should().NotBeNull();
-            messageContent!.RawRepresentation.Should().NotBeNull();
-            messageContent.RawRepresentation.Should().BeOfType<Part>();
+            messageContent.ShouldNotBeNull();
+            messageContent!.RawRepresentation.ShouldNotBeNull();
+            messageContent.RawRepresentation.ShouldBeOfType<Part>();
             var partFromRaw = messageContent.RawRepresentation as Part;
-            partFromRaw!.ThoughtSignature.Should().BeEquivalentTo(thoughtSignature);
+            partFromRaw!.ThoughtSignature.ShouldBeEquivalentTo(thoughtSignature);
 
             // Act - Convert back to GenerateContentRequest
             var chatMessages = chatResponse.Messages;
@@ -76,13 +77,15 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             var request = toRequestMethod.Invoke(null, new object?[] { null, chatMessages, null }) as GenerateContentRequest;
 
             // Assert - Check that ThoughtSignature is preserved in the request
-            request.Should().NotBeNull();
-            request!.Contents.Should().NotBeNull().And.HaveCount(1);
-            request.Contents[0].PartTypes.Should().NotBeNull().And.HaveCount(1);
+            request.ShouldNotBeNull();
+            request!.Contents.ShouldNotBeNull();
+            request!.Contents.Count.ShouldBe(1);
+            request.Contents[0].PartTypes.ShouldNotBeNull();
+            request.Contents[0].PartTypes.Count.ShouldBe(1);
             var requestPart = request.Contents[0].PartTypes![0];
-            requestPart.ThoughtSignature.Should().BeEquivalentTo(thoughtSignature);
-            requestPart.InlineData.Should().NotBeNull();
-            requestPart.InlineData!.MimeType.Should().Be("image/png");
+            requestPart.ThoughtSignature.ShouldBeEquivalentTo(thoughtSignature);
+            requestPart.InlineData.ShouldNotBeNull();
+            requestPart.InlineData!.MimeType.ShouldBe("image/png");
         }
 
         [Fact]
@@ -120,13 +123,14 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response }) as mea.ChatResponse;
 
             // Assert
-            chatResponse.Should().NotBeNull();
-            chatResponse!.Messages.Should().NotBeNull().And.HaveCount(1);
+            chatResponse.ShouldNotBeNull();
+            chatResponse!.Messages.ShouldNotBeNull();
+            chatResponse!.Messages.Count.ShouldBe(1);
             var messageContent = chatResponse.Messages[0].Contents.FirstOrDefault() as mea.DataContent;
-            messageContent.Should().NotBeNull();
-            messageContent!.RawRepresentation.Should().NotBeNull();
+            messageContent.ShouldNotBeNull();
+            messageContent!.RawRepresentation.ShouldNotBeNull();
             var partFromRaw = messageContent.RawRepresentation as Part;
-            partFromRaw!.ThoughtSignature.Should().BeNull();
+            partFromRaw!.ThoughtSignature.ShouldBeNull();
         }
 
         [Fact]
@@ -147,13 +151,15 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             var request = toRequestMethod.Invoke(null, new object?[] { null, chatMessages, null }) as GenerateContentRequest;
 
             // Assert - Should create InlineData without ThoughtSignature
-            request.Should().NotBeNull();
-            request!.Contents.Should().NotBeNull().And.HaveCount(1);
-            request.Contents[0].PartTypes.Should().NotBeNull().And.HaveCount(1);
+            request.ShouldNotBeNull();
+            request!.Contents.ShouldNotBeNull();
+            request!.Contents.Count.ShouldBe(1);
+            request.Contents[0].PartTypes.ShouldNotBeNull();
+            request.Contents[0].PartTypes.Count.ShouldBe(1);
             var requestPart = request.Contents[0].PartTypes![0];
-            requestPart.ThoughtSignature.Should().BeNull();
-            requestPart.InlineData.Should().NotBeNull();
-            requestPart.InlineData!.MimeType.Should().Be("image/png");
+            requestPart.ThoughtSignature.ShouldBeNull();
+            requestPart.InlineData.ShouldNotBeNull();
+            requestPart.InlineData!.MimeType.ShouldBe("image/png");
         }
     }
 }

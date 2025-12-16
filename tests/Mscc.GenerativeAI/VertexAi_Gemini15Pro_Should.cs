@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,7 +23,7 @@ namespace Test.Mscc.GenerativeAI
             var vertex = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -36,8 +36,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertex.GenerativeModel();
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini20FlashLite001.SanitizeModelName());
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(Model.Gemini20FlashLite001.SanitizeModelName());
         }
 
         [Fact]
@@ -50,8 +50,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertex.GenerativeModel(model: _model);
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(_model.SanitizeModelName());
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(_model.SanitizeModelName());
         }
 
         [Fact]
@@ -91,9 +91,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeEmpty();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeEmpty();
             output.WriteLine(response?.Text);
         }
 
@@ -113,9 +114,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(parts);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().Contain("84");
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldContain("84");
             output.WriteLine($"Result: {response?.Text}");
         }
 
@@ -137,9 +139,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeEmpty();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeEmpty();
             output.WriteLine(response?.Text);
         }
 
@@ -157,9 +160,10 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 output.WriteLine(response?.Text);
                 output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -187,9 +191,10 @@ namespace Test.Mscc.GenerativeAI
             // Assert
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 output.WriteLine(response?.Text);
                 output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -219,10 +224,11 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Candidates[0].FinishReason.Should().Be(FinishReason.Safety);
-            response.Text.Should().BeNull();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Candidates[0].FinishReason.ShouldBe(FinishReason.Safety);
+            response.Text.ShouldBeNull();
             // output.WriteLine(response?.Text);
         }
 
@@ -259,9 +265,10 @@ Answer:";
             var response = await model.GenerateContent(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeNull();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeNull();
             output.WriteLine($"{prompt} {response?.Text}");
             output.WriteLine($"Usage metadata: {response.UsageMetadata.TotalTokenCount}");
             output.WriteLine($"Finish reason: {response.Candidates[0].FinishReason}");
@@ -289,8 +296,8 @@ Answer:";
             var response = await model.CountTokens(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.TotalTokens.Should().Be(expected);
+            response.ShouldNotBeNull();
+            response.TotalTokens.ShouldBe(expected);
             output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
@@ -315,8 +322,8 @@ Answer:";
             var response = await model.CountTokens(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.TotalTokens.Should().Be(expected);
+            response.ShouldNotBeNull();
+            response.TotalTokens.ShouldBe(expected);
             output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
 
@@ -333,7 +340,7 @@ Answer:";
             //var response = await chat.SendMessageStream(chatInput1);
 
             //// Assert
-            //response.Should().NotBeNull();
+            //response.ShouldNotBeNull();
             return Task.CompletedTask;
         }
 
@@ -353,9 +360,10 @@ Answer:";
             //var response2 = await result2.Response;
 
             //// Assert
-            //response1.Should().NotBeNull();
-            //response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Text.Should().NotBeEmpty();
+            //response1.ShouldNotBeNull();
+            //response.Candidates.ShouldNotBeNull();
+            //response.Candidates.Count.ShouldBe(1);
+            //response.Text.ShouldNotBeEmpty();
             return Task.CompletedTask;
         }
 
@@ -390,10 +398,11 @@ Answer:";
             var response = model.GenerateContentStream(request);
 
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             return Task.CompletedTask;
-            //response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            //response.Text.Should().NotBeEmpty();
+            //response.Candidates.ShouldNotBeNull();
+            //response.Candidates.Count.ShouldBe(1);
+            //response.Text.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -405,7 +414,7 @@ Answer:";
             var vertex = new VertexAI(apiKey: fixture.ApiKeyVertex);
 
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -418,8 +427,8 @@ Answer:";
             var model = vertex.GenerativeModel();
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini20FlashLite001.SanitizeModelName());
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(Model.Gemini20FlashLite001.SanitizeModelName());
         }
 
         [Fact]
@@ -432,8 +441,8 @@ Answer:";
             var model = vertex.GenerativeModel(model: _model);
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(_model.SanitizeModelName());
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(_model.SanitizeModelName());
         }
 
         [Fact]
@@ -448,9 +457,10 @@ Answer:";
             var response = await model.GenerateContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeEmpty();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeEmpty();
             output.WriteLine(response?.Text);
         }
 
@@ -466,12 +476,13 @@ Answer:";
             var responseStream = model.GenerateContentStream(prompt);
 
             // Assert
-            responseStream.Should().NotBeNull();
+            responseStream.ShouldNotBeNull();
             await foreach (var response in responseStream)
             {
-                response.Should().NotBeNull();
-                response.Candidates.Should().NotBeNull().And.HaveCount(1);
-                response.Text.Should().NotBeEmpty();
+                response.ShouldNotBeNull();
+                response.Candidates.ShouldNotBeNull();
+                response.Candidates.Count.ShouldBe(1);
+                response.Text.ShouldNotBeEmpty();
                 output.WriteLine(response?.Text);
                 output.WriteLine($"PromptTokenCount: {response?.UsageMetadata?.PromptTokenCount}");
                 output.WriteLine($"CandidatesTokenCount: {response?.UsageMetadata?.CandidatesTokenCount}");
@@ -500,8 +511,8 @@ Answer:";
             var response = await model.CountTokens(request);
 
             // Assert
-            response.Should().NotBeNull();
-            response.TotalTokens.Should().Be(expected);
+            response.ShouldNotBeNull();
+            response.TotalTokens.ShouldBe(expected);
             output.WriteLine($"Tokens: {response?.TotalTokens}");
         }
     }

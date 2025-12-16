@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,9 +26,9 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(model: _model);
 
             // Assert
-            genAi.Should().NotBeNull();
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected}");
+            genAi.ShouldNotBeNull();
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{expected}");
         }
 
         [Fact]
@@ -42,9 +42,9 @@ namespace Test.Mscc.GenerativeAI
             var model = genAi.GenerativeModel(model: _model);
             
             // Assert
-            genAi.Should().NotBeNull();
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected}");
+            genAi.ShouldNotBeNull();
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{expected}");
         }
 
         [Fact]
@@ -59,8 +59,8 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(prompt);
             
             // Assert
-            genAi.Should().NotBeNull();
-            model.Should().NotBeNull();
+            genAi.ShouldNotBeNull();
+            model.ShouldNotBeNull();
             output.WriteLine($"{response.Text}");
         }
 
@@ -76,11 +76,11 @@ namespace Test.Mscc.GenerativeAI
             var getModel = await model.GetModel();
 
             // Assert
-            genAi.Should().NotBeNull();
-            model.Should().NotBeNull();
-            getModel.Should().NotBeNull();
-            getModel.Name.Should().NotBeNull();
-            getModel.Name!.SanitizeModelName().Should().Be(expected);
+            genAi.ShouldNotBeNull();
+            model.ShouldNotBeNull();
+            getModel.ShouldNotBeNull();
+            getModel.Name.ShouldNotBeNull();
+            getModel.Name!.SanitizeModelName().ShouldBe(expected);
         }
     }
 }

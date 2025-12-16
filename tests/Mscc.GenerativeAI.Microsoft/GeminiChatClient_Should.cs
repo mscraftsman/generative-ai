@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
@@ -338,12 +338,14 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             var response = await chatClient.GetResponseAsync(chatHistory, options);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Messages.Should().NotBeNull().And.HaveCount(3);
-            response.Messages[0].Contents.Should().NotBeNull().And.HaveCountGreaterOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Messages.ShouldNotBeNull();
+            response.Messages.Count.ShouldBe(3);
+            response.Messages[0].Contents.ShouldNotBeNull();
+            response.Messages[0].Contents.Count.ShouldBeGreaterThanOrEqualTo(1);
             var functionCallContent = response.Messages[0].Contents[0] as FunctionCallContent;
-            functionCallContent.Should().NotBeNull();
-            functionCallContent?.Name.Should().Be("get_user_information");
+            functionCallContent.ShouldNotBeNull();
+            functionCallContent?.Name.ShouldBe("get_user_information");
             _output.WriteLine(response.Text);
         }
 
@@ -371,15 +373,17 @@ namespace Test.Mscc.GenerativeAI.Microsoft
                 chatClient.GetStreamingResponseAsync(chatHistory, options);
 
             // Assert
-            responseStream.Should().NotBeNull();
+            responseStream.ShouldNotBeNull();
             await foreach (ChatResponseUpdate responseUpdate in responseStream)
             {
-                responseUpdate.Should().NotBeNull();
-                // responseUpdate.Messages.Should().NotBeNull().And.HaveCount(3);
-                // responseUpdate.Messages[0].Contents.Should().NotBeNull().And.HaveCountGreaterOrEqualTo(1);
+                responseUpdate.ShouldNotBeNull();
+                // responseUpdate.Messages.ShouldNotBeNull();
+                // responseUpdate.Messages.Count.ShouldBe(3);
+                // responseUpdate.Messages[0].Contents.ShouldNotBeNull();
+                // responseUpdate.Messages[0].Contents.Count.ShouldBeGreaterThanOrEqualTo(1);
                 // var functionCallContent = responseUpdate.Messages[0].Contents[0] as mea.FunctionCallContent;
-                // functionCallContent.Should().NotBeNull();
-                // functionCallContent?.Name.Should().Be("get_user_information");
+                // functionCallContent.ShouldNotBeNull();
+                // functionCallContent?.Name.ShouldBe("get_user_information");
                 _output.WriteLine(responseUpdate.Text);
             }
         }

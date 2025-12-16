@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
@@ -37,8 +37,8 @@ namespace Test.Mscc.GenerativeAI
             var model = _googleAi.GenerativeModel(model: _model);
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(expected);
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(expected);
         }
 
         [Fact]
@@ -53,9 +53,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.EmbedContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Embedding.Should().NotBeNull();
-            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Embedding.ShouldNotBeNull();
+            response.Embedding.Values.ShouldNotBeNull();
+            response.Embedding.Values.Count.ShouldBeGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
                 _output.WriteLine(x.ToString());
@@ -74,9 +75,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.EmbedContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Embedding.Should().NotBeNull();
-            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Embedding.ShouldNotBeNull();
+            response.Embedding.Values.ShouldNotBeNull();
+            response.Embedding.Values.Count.ShouldBeGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
                 _output.WriteLine(x.ToString());
@@ -95,9 +97,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.EmbedContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Embedding.Should().NotBeNull();
-            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Embedding.ShouldNotBeNull();
+            response.Embedding.Values.ShouldNotBeNull();
+            response.Embedding.Values.Count.ShouldBeGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
                 _output.WriteLine(x.ToString());
@@ -116,9 +119,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.EmbedContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Embedding.Should().NotBeNull();
-            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Embedding.ShouldNotBeNull();
+            response.Embedding.Values.ShouldNotBeNull();
+            response.Embedding.Values.Count.ShouldBeGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
                 _output.WriteLine(x.ToString());
@@ -142,9 +146,10 @@ namespace Test.Mscc.GenerativeAI
                 title: "Embedding of list of strings");
 
             // Assert
-            response.Should().NotBeNull();
-            response.Embedding.Should().NotBeNull();
-            response.Embedding.Values.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Embedding.ShouldNotBeNull();
+            response.Embedding.Values.ShouldNotBeNull();
+            response.Embedding.Values.Count.ShouldBeGreaterThanOrEqualTo(1);
             response.Embedding.Values.ForEach(x =>
             {
                 _output.WriteLine(x.ToString());
@@ -174,7 +179,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Embeddings(request);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
         }
     }
 }

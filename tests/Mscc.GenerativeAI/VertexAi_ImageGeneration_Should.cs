@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
@@ -41,7 +41,7 @@ namespace Test.Mscc.GenerativeAI
             var vertexAi = new VertexAI(projectId: _fixture.ProjectId, region: _fixture.Region, accessToken: _fixture.AccessToken);
 
             // Assert
-            vertexAi.Should().NotBeNull();
+            vertexAi.ShouldNotBeNull();
         }
 
         [Fact]
@@ -55,8 +55,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.ImageGenerationModel();
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{expected.SanitizeModelName()}");
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.ImageGenerationModel();
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageGeneration.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{Model.ImageGeneration.SanitizeModelName()}");
         }
 
         [Fact]
@@ -83,8 +83,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.ImageGenerationModel(model: _model);
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.Imagen3.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{Model.Imagen3.SanitizeModelName()}");
         }
 
         [Theory]
@@ -99,10 +99,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent(prompt);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -125,10 +125,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateImages(prompt, aspectRatio: aspectRatio);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -167,10 +167,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.EditImage(modelName, prompt, [imageToEdit]);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",
@@ -199,10 +199,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.UpscaleImage(_model, imageToScale, upscaleFactor);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.Count.ShouldBeGreaterThanOrEqualTo(1);
+            response.Predictions.Count.ShouldBeLessThanOrEqualTo(8);
             foreach (var image in response.Predictions)
             {
                 var fileName = Path.Combine(Environment.CurrentDirectory, "payload",

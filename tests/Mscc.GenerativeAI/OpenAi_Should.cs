@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
 using Neovolve.Logging.Xunit;
@@ -26,8 +26,9 @@ namespace Test.Mscc.GenerativeAI
             var sut = await model.ListModels();
 
             // Assert
-            sut.Should().NotBeNull();
-            sut.Data.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            sut.ShouldNotBeNull();
+            sut.Data.ShouldNotBeNull();
+            sut.Data.Count.ShouldBeGreaterThanOrEqualTo(1);
             sut.Data.ForEach(x =>
             {
                 output.WriteLine($"Model: {x.Id} ({x.Object} / {x.Created}) by {x.OwnedBy}");
@@ -47,7 +48,7 @@ namespace Test.Mscc.GenerativeAI
             var sut = await model.GetModel(modelsId: modelName);
 
             // Assert
-            sut.Should().NotBeNull();
+            sut.ShouldNotBeNull();
             output.WriteLine($"Model: {sut.Id} ({sut.Object} / {sut.Created}) by {sut.OwnedBy}");
         }
 
@@ -68,7 +69,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Completions(request);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine($"{response.Choices[0].Message.Content}");
         }
 
@@ -101,7 +102,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Completions(request);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine($"{response.Choices[0].Message.Content}");
         }
 
@@ -122,7 +123,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Completions(request);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine($"{response.Choices[0].Message.Content}");
         }
 
@@ -141,7 +142,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Embeddings(request);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine($"{string.Join(",", response.Data[0].Embedding.ToArray())}");
         }
 
@@ -160,7 +161,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Embeddings(request);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine($"{string.Join(",", response.Data[0].Embedding.ToArray())}");
         }
 
@@ -205,8 +206,9 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Images(request);
             
             // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            response.Data.Count.ShouldBeGreaterThanOrEqualTo(1);
             foreach (var image in response.Data)
             {
                 if (!string.IsNullOrEmpty(image.B64Json))
@@ -242,8 +244,9 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.Images(request);
             
             // Assert
-            response.Should().NotBeNull();
-            response.Data.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            response.ShouldNotBeNull();
+            response.Data.ShouldNotBeNull();
+            response.Data.Count.ShouldBeGreaterThanOrEqualTo(1);
             foreach (var image in response.Data)
             {
                 if (!string.IsNullOrEmpty(image.B64Json))

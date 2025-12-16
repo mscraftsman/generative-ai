@@ -15,7 +15,7 @@
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.9" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="11.0.10" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.2" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Google.Apis.Auth" Version="1.73.0" />
     <PackageVersion Include="Google.Protobuf" Version="3.33.2" />
     <PackageVersion Include="JsonSchema.Net.Generation" Version="5.0.4" />

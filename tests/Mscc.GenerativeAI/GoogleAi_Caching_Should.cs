@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
@@ -35,7 +35,8 @@ namespace Test.Mscc.GenerativeAI
             Func<Task> action = async () => await _cachedContent.Create(request: null);
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentNullException>().WithParameterName("request");
+            var exception = await action.ShouldThrowAsync<ArgumentNullException>();
+            exception.ParamName.ShouldBe("request");
         }
         
         [Fact]
@@ -45,7 +46,7 @@ namespace Test.Mscc.GenerativeAI
             Func<Task> action = async () => await _cachedContent.Create(_model);
             
             // Assert
-            await action.Should().ThrowAsync<HttpRequestException>();
+            await action.ShouldThrowAsync<HttpRequestException>();
         }
 
         [Theory]
@@ -62,6 +63,7 @@ namespace Test.Mscc.GenerativeAI
                 Thread.Sleep(200);
                 file = await _genAi.GenerativeModel().GetFile(file.Name);
             }
+            // Waiting for video to be processed
             var contents = new List<Content>();
             var content = new Content();
             content.Parts.Add(new FileData { FileUri = file.Uri, MimeType = file.MimeType });
@@ -86,7 +88,7 @@ namespace Test.Mscc.GenerativeAI
             var result = await _cachedContent.List();
 
             // Assert
-            result.Should().NotBeNull();
+            result.ShouldNotBeNull();
             foreach (CachedContent item in result)
             {
                 output.WriteLine($"{item.Name} ({item.Expiration})");
@@ -103,8 +105,8 @@ namespace Test.Mscc.GenerativeAI
             var result = await _cachedContent.Get(cachedContentName);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Name.Should().Be(cachedContentName);
+            result.ShouldNotBeNull();
+            result.Name.ShouldBe(cachedContentName);
         }
 
         [Fact]
@@ -119,7 +121,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await _cachedContent.Delete(name);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine(response);
         }
         
@@ -132,7 +134,8 @@ namespace Test.Mscc.GenerativeAI
             Func<Task> action = async () => await _cachedContent.Delete(null);
 
             // Assert
-            await action.Should().ThrowAsync<ArgumentException>().WithParameterName("cachedContentName");
+            var exception = await action.ShouldThrowAsync<ArgumentException>();
+            exception.ParamName.ShouldBe("cachedContentName");
         }
 
         [Fact]
@@ -156,11 +159,12 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GenerateContent("Please summarize this transcript");
             
             // Assert
-            cache.Should().NotBeNull();
-            model.Should().NotBeNull();
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeNull();
+            cache.ShouldNotBeNull();
+            model.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeNull();
             output.WriteLine($"{response.Text}");
         }
 
@@ -187,11 +191,12 @@ namespace Test.Mscc.GenerativeAI
             var response = await apollo_model.GenerateContent("Find a lighthearted moment from this transcript");
             
             // Assert
-            cache.Should().NotBeNull();
-            apollo_model.Should().NotBeNull();
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeNull();
+            cache.ShouldNotBeNull();
+            apollo_model.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeNull();
             output.WriteLine($"{response.Text}");
         }        
 
@@ -227,11 +232,12 @@ namespace Test.Mscc.GenerativeAI
                 "I didn't understand that last part, could you explain it in simpler language?");
             
             // Assert
-            cache.Should().NotBeNull();
-            model.Should().NotBeNull();
-            response.Should().NotBeNull();
-            response.Candidates.Should().NotBeNull().And.HaveCount(1);
-            response.Text.Should().NotBeNull();
+            cache.ShouldNotBeNull();
+            model.ShouldNotBeNull();
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            response.Text.ShouldNotBeNull();
             output.WriteLine($"model: {response.Text}");
         }        
     }

@@ -2,10 +2,11 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
+using System.Linq;
 
 namespace Test.Mscc.GenerativeAI
 {
@@ -23,7 +24,7 @@ namespace Test.Mscc.GenerativeAI
             var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Assert
-            vertexAi.Should().NotBeNull();
+            vertexAi.ShouldNotBeNull();
         }
 
         [Fact]
@@ -37,8 +38,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.ImageTextModel();
             
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{expected.SanitizeModelName()}");
         }
 
         [Fact]
@@ -51,8 +52,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.ImageTextModel();
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageText.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{Model.ImageText.SanitizeModelName()}");
         }
 
         [Fact]
@@ -65,8 +66,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.ImageTextModel(model: _model);
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{Model.ImageText.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{Model.ImageText.SanitizeModelName()}");
         }
 
         [Theory]
@@ -84,11 +85,11 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GetCaptions(base64Image);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
-            response.Predictions[0].Should().Contain(expected);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeEmpty();
+            response.Predictions.Count().ShouldBeLessThanOrEqualTo(8);
+            response.Predictions[0].ShouldContain(expected);
             foreach (var item in response.Predictions)
             {
                 output.WriteLine($"Information: {item}");
@@ -119,11 +120,11 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.GetCaptions(base64Image, language: language);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
-            response.Predictions[0].Should().Contain(expected);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeEmpty();
+            response.Predictions.Count().ShouldBeLessThanOrEqualTo(8);
+            response.Predictions[0].ShouldContain(expected);
             foreach (var item in response.Predictions)
             {
                 output.WriteLine($"Information: {item}");
@@ -144,10 +145,10 @@ namespace Test.Mscc.GenerativeAI
             var response = await model.AskQuestion(base64Image, prompt, 2);
 
             // Assert
-            response.Should().NotBeNull();
-            response.Predictions.Should().NotBeNull()
-                .And.HaveCountGreaterThanOrEqualTo(1)
-                .And.HaveCountLessThanOrEqualTo(8);
+            response.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeNull();
+            response.Predictions.ShouldNotBeEmpty();
+            response.Predictions.Count().ShouldBeLessThanOrEqualTo(8);
             foreach (var item in response.Predictions)
             {
                 output.WriteLine($"Answer: {item}");

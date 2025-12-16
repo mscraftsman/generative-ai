@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using Mscc.GenerativeAI.Google;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace Test.Mscc.GenerativeAI.Google
             var vertex = new GenerativeModelGoogle();
 
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Test.Mscc.GenerativeAI.Google
             GenerativeModelGoogle vertex = GenerativeModelGoogle.CreateInstance();
 
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Test.Mscc.GenerativeAI.Google
             var vertex = GenerativeModelGoogle.CreateInstance(fixture.ServiceAccount, passphrase:fixture.Passphrase);
             
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Test.Mscc.GenerativeAI.Google
             };
 
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Test.Mscc.GenerativeAI.Google
                 .WithRegion(fixture.Region);
         
             // Assert
-            vertex.Should().NotBeNull();
+            vertex.ShouldNotBeNull();
         }
 
         [Fact]
@@ -91,8 +91,8 @@ namespace Test.Mscc.GenerativeAI.Google
             var model = vertex.CreateModel();
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(Model.Gemini25Pro.SanitizeModelName());
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(Model.Gemini25Pro.SanitizeModelName());
         }
 
         [Theory]
@@ -111,8 +111,8 @@ namespace Test.Mscc.GenerativeAI.Google
             var model = vertex.CreateModel(expected);
 
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be(expected.SanitizeModelName());
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe(expected.SanitizeModelName());
         }
 
         [Fact]

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Shouldly;
 using Mscc.GenerativeAI;
 using Xunit;
 using Xunit.Abstractions;
@@ -35,7 +35,7 @@ namespace Test.Mscc.GenerativeAI
             var vertexAi = new VertexAI(projectId: fixture.ProjectId, region: fixture.Region, accessToken: fixture.AccessToken);
 
             // Assert
-            vertexAi.Should().NotBeNull();
+            vertexAi.ShouldNotBeNull();
         }
 
         [Fact]
@@ -49,8 +49,8 @@ namespace Test.Mscc.GenerativeAI
             var model = vertexAi.SupervisedTuningJob();
             
             // Assert
-            model.Should().NotBeNull();
-            model.Name.Should().Be($"{expected.SanitizeModelName()}");
+            model.ShouldNotBeNull();
+            model.Name.ShouldBe($"{expected.SanitizeModelName()}");
         }
         
         [Fact]
@@ -64,9 +64,8 @@ namespace Test.Mscc.GenerativeAI
             };
             
             // Assert
-            await action.Should()
-                .ThrowAsync<ArgumentException>()
-                .WithMessage("Value cannot be null or empty.*");
+            var exception = await action.ShouldThrowAsync<ArgumentException>();
+            exception.Message.ShouldMatch("Value cannot be null or empty.*");
         }
         
         [Fact]
@@ -76,9 +75,8 @@ namespace Test.Mscc.GenerativeAI
             Func<Task> action = async () => await _tuningJob.Create(request: null);
 
             // Assert
-            await action.Should()
-                .ThrowAsync<ArgumentNullException>()
-                .WithParameterName("request");
+            var exception = await action.ShouldThrowAsync<ArgumentNullException>();
+            exception.ParamName.ShouldBe("request");
         }
         
         [Fact]
@@ -91,7 +89,7 @@ namespace Test.Mscc.GenerativeAI
             Func<Task> action = async () => await _tuningJob.Create(request);
             
             // Assert
-            await action.Should().ThrowAsync<HttpRequestException>();
+            await action.ShouldThrowAsync<HttpRequestException>();
         }
         
         [Fact]
@@ -112,8 +110,8 @@ namespace Test.Mscc.GenerativeAI
             var result =  await _tuningJob.Create(request);
             
             // Assert
-            result.Should().NotBeNull();
-            result.Name.Should().NotBeNull();
+            result.ShouldNotBeNull();
+            result.Name.ShouldNotBeNull();
         }
 
         [Fact]
@@ -123,7 +121,7 @@ namespace Test.Mscc.GenerativeAI
             var result = await _tuningJob.List();
 
             // Assert
-            result.Should().NotBeNull();
+            result.ShouldNotBeNull();
             foreach (TuningJob item in result)
             {
                 output.WriteLine($"{item.TunedModelDisplayName}");
@@ -142,8 +140,8 @@ namespace Test.Mscc.GenerativeAI
             var result = await _tuningJob.Get(name);
 
             // Assert
-            result.Should().NotBeNull();
-            result.Name.Should().Be(name);
+            result.ShouldNotBeNull();
+            result.Name.ShouldBe(name);
             output.WriteLine($"Completed: {result.HasEnded} - {Enum.GetName(typeof(StateTuningJob), result.State)}");
             output.WriteLine($"{result.Name} ({result.CreateTime})");
         }
@@ -160,7 +158,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await _tuningJob.Cancel(name);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine(response);
         }
 
@@ -176,7 +174,7 @@ namespace Test.Mscc.GenerativeAI
             var response = await _tuningJob.Delete(name);
             
             // Assert
-            response.Should().NotBeNull();
+            response.ShouldNotBeNull();
             output.WriteLine(response);
         }
     }
