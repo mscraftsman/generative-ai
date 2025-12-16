@@ -26,6 +26,10 @@ namespace Mscc.GenerativeAI.Types
 		/// <summary>
 		/// Default value.
 		/// </summary>
+		ResponseModalityUnspecified,
+		/// <summary>
+		/// Default value.
+		/// </summary>
 		ModalityUnspecified,
 		/// <summary>
 		/// Indicates the model should return text.
