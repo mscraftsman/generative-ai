@@ -91,6 +91,8 @@ namespace Mscc.GenerativeAI.Types
         public const string Gemini3ProPreview = "gemini-3-pro-preview";
         public const string Gemini3ProImage = Gemini3ProImagePreview;
         public const string Gemini3ProImagePreview = "gemini-3-pro-image-preview";
+        public const string Gemini3Flash = Gemini3FlashPreview;
+        public const string Gemini3FlashPreview = "gemini-3-flash-preview"; 
         
         // Nano Banana!
         public const string NanoBanana = Gemini25FlashImage;

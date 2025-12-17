@@ -495,6 +495,25 @@
       "version": "3-pro-preview-11-2025"
     },
     {
+      "description": "Gemini 3 Flash Preview",
+      "displayName": "Gemini 3 Flash Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-3-flash-preview",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3-flash-preview-12-2025"
+    },
+    {
       "description": "Gemini 3 Pro Image Preview",
       "displayName": "Nano Banana Pro",
       "inputTokenLimit": 131072,
