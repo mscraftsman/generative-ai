@@ -2219,7 +2219,7 @@
       }
     }
   },
-  "revision": "20251215",
+  "revision": "20251218",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -4333,10 +4333,6 @@
           "format": "int32",
           "type": "integer"
         },
-        "enableAffectiveDialog": {
-          "description": "Optional. If enabled, the model will detect emotions and adapt its responses accordingly.",
-          "type": "boolean"
-        },
         "enableEnhancedCivicAnswers": {
           "description": "Optional. Enables enhanced civic answers. It may not be available for all models.",
           "type": "boolean"
@@ -4454,9 +4450,9 @@
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguagev1betaGroundingSupport": {
+    "GoogleAiGenerativelanguageV1betaGroundingSupport": {
       "description": "Grounding support.",
-      "id": "GoogleAiGenerativelanguagev1betaGroundingSupport",
+      "id": "GoogleAiGenerativelanguageV1betaGroundingSupport",
       "properties": {
         "confidenceScores": {
           "description": "Optional. Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. This list must have the same size as the grounding_chunk_indices.",
@@ -4475,15 +4471,15 @@
           "type": "array"
         },
         "segment": {
-          "$ref": "GoogleAiGenerativelanguagev1betaSegment",
+          "$ref": "GoogleAiGenerativelanguageV1betaSegment",
           "description": "Segment of the content this support belongs to."
         }
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguagev1betaSegment": {
+    "GoogleAiGenerativelanguageV1betaSegment": {
       "description": "Segment of the content.",
-      "id": "GoogleAiGenerativelanguagev1betaSegment",
+      "id": "GoogleAiGenerativelanguageV1betaSegment",
       "properties": {
         "endIndex": {
           "description": "End index in the given Part, measured in bytes. Offset from the start of the Part, exclusive, starting at zero.",
@@ -4593,7 +4589,7 @@
         "groundingSupports": {
           "description": "List of grounding support.",
           "items": {
-            "$ref": "GoogleAiGenerativelanguagev1betaGroundingSupport"
+            "$ref": "GoogleAiGenerativelanguageV1betaGroundingSupport"
           },
           "type": "array"
         },
@@ -5223,6 +5219,21 @@
         "uri": {
           "description": "URI reference of the place.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "McpServer": {
+      "description": "A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 5",
+      "id": "McpServer",
+      "properties": {
+        "name": {
+          "description": "The name of the MCPServer.",
+          "type": "string"
+        },
+        "streamableHttpTransport": {
+          "$ref": "StreamableHttpTransport",
+          "description": "A transport that can stream HTTP requests and responses."
         }
       },
       "type": "object"
@@ -6249,6 +6260,38 @@
       },
       "type": "object"
     },
+    "StreamableHttpTransport": {
+      "description": "A transport that can stream HTTP requests and responses. Next ID: 6",
+      "id": "StreamableHttpTransport",
+      "properties": {
+        "headers": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional: Fields for authentication headers, timeouts, etc., if needed.",
+          "type": "object"
+        },
+        "sseReadTimeout": {
+          "description": "Timeout for SSE read operations.",
+          "format": "google-duration",
+          "type": "string"
+        },
+        "terminateOnClose": {
+          "description": "Whether to close the client session when the transport closes.",
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "HTTP timeout for regular operations.",
+          "format": "google-duration",
+          "type": "string"
+        },
+        "url": {
+          "description": "The full URL for the MCPServer endpoint. Example: \"https://api.example.com/mcp\"",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "StringList": {
       "description": "User provided string values assigned to a single metadata key.",
       "id": "StringList",
@@ -6366,6 +6409,13 @@
         "googleSearchRetrieval": {
           "$ref": "GoogleSearchRetrieval",
           "description": "Optional. Retrieval tool that is powered by Google search."
+        },
+        "mcpServers": {
+          "description": "Optional. MCP Servers to connect to.",
+          "items": {
+            "$ref": "McpServer"
+          },
+          "type": "array"
         },
         "urlContext": {
           "$ref": "UrlContext",
