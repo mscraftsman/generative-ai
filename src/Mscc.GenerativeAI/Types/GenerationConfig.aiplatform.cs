@@ -29,6 +29,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public bool? AudioTimestamp { get; set; }
 		/// <summary>
+		/// Optional. If enabled, the model will detect emotions and adapt its responses accordingly. For example, if the model detects that the user is frustrated, it may provide a more empathetic response.
+		/// </summary>
+		public bool? EnableAffectiveDialog { get; set; }
+		/// <summary>
 		/// Optional. Config for model selection.
 		/// </summary>
 		public GenerationConfigModelConfig? ModelConfig { get; set; }

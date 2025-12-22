@@ -19,12 +19,12 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Represents a customer-managed encryption key spec that can be applied to a top-level resource.
+	/// Represents a customer-managed encryption key specification that can be applied to a Vertex AI resource.
 	/// </summary>
 	public partial class EncryptionSpec
 	{
 		/// <summary>
-		/// Required. The Cloud KMS resource identifier of the customer managed encryption key used to protect a resource. Has the form: <c>projects/my-project/locations/my-region/keyRings/my-kr/cryptoKeys/my-key</c>. The key needs to be in the same region as where the compute resource is created.
+		/// Required. Resource name of the Cloud KMS key used to protect the resource. The Cloud KMS key must be in the same region as the resource. It must have the format <c>projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}</c>.
 		/// </summary>
 		public string? KmsKeyName { get; set; }
     }

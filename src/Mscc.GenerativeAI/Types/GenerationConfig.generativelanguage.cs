@@ -34,10 +34,6 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public int? CandidateCount { get; set; }
 		/// <summary>
-		/// Optional. If enabled, the model will detect emotions and adapt its responses accordingly.
-		/// </summary>
-		public bool? EnableAffectiveDialog { get; set; }
-		/// <summary>
 		/// Optional. Enables enhanced civic answers. It may not be available for all models.
 		/// </summary>
 		public bool? EnableEnhancedCivicAnswers { get; set; }

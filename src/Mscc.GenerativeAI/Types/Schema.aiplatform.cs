@@ -19,21 +19,21 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Schema is used to define the format of input/output data. Represents a select subset of an [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema-object). More fields may be added in the future as needed.
+	/// Defines the schema of input and output data. This is a subset of the [OpenAPI 3.0 Schema Object](https://spec.openapis.org/oas/v3.0.3#schema-object).
 	/// </summary>
 	public partial class Schema
 	{
 
 		/// <summary>
-		/// Optional. Can either be a boolean or an object; controls the presence of additional properties.
+		/// Optional. If <c>type</c> is <c>OBJECT</c>, specifies how to handle properties not defined in <c>properties</c>. If it is a boolean <c>false</c>, no additional properties are allowed. If it is a schema, additional properties are allowed if they conform to the schema.
 		/// </summary>
 		public object? AdditionalProperties { get; set; }
 		/// <summary>
-		/// Optional. A map of definitions for use by <c>ref</c> Only allowed at the root of the schema.
+		/// Optional. <c>defs</c> provides a map of schema definitions that can be reused by <c>ref</c> elsewhere in the schema. Only allowed at root level of the schema.
 		/// </summary>
 		public object? Defs { get; set; }
 		/// <summary>
-		/// Optional. Allows indirect references between schema nodes. The value should be a valid reference to a child of the root <c>defs</c>. For example, the following schema defines a reference to a schema node named &quot;Pet&quot;: type: object properties: pet: ref: #/defs/Pet defs: Pet: type: object properties: name: type: string The value of the &quot;pet&quot; property is a reference to the schema node named &quot;Pet&quot;. See details in https://json-schema.org/understanding-json-schema/structuring
+		/// Optional. Allows referencing another schema definition to use in place of this schema. The value must be a valid reference to a schema in <c>defs</c>. For example, the following schema defines a reference to a schema node named &quot;Pet&quot;: type: object properties: pet: ref: #/defs/Pet defs: Pet: type: object properties: name: type: string The value of the &quot;pet&quot; property is a reference to the schema node named &quot;Pet&quot;. See details in https://json-schema.org/understanding-json-schema/structuring
 		/// </summary>
 		public string? Ref { get; set; }
     }
