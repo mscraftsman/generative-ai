@@ -53,6 +53,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public GoogleSearchRetrieval? GoogleSearchRetrieval { get; set; }
 		/// <summary>
+		/// Optional. MCP Servers to connect to.
+		/// </summary>
+		public List<McpServer>? McpServers { get; set; }
+		/// <summary>
 		/// Optional. Tool to support URL context retrieval.
 		/// </summary>
 		public UrlContext? UrlContext { get; set; }
