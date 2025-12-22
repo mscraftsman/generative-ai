@@ -36,6 +36,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         dotnet-version: ['10.x']
     runs-on: ${{ matrix.os }}
 
@@ -44,15 +45,15 @@ jobs:
       run: |
         git config --global core.longpaths true
 
-    - name: Check-out latest sources 
-      uses: actions/checkout@v4
-
     - name: Install Cosign
       uses: sigstore/cosign-installer@v3.6.0
     - name: Check Cosign install!
       run: cosign version
 
-    - name: Set up .NET
+    - name: 📥 Check-out latest sources 
+      uses: actions/checkout@v4
+
+    - name: 🔧 Set up .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
@@ -60,10 +61,15 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    - name: Build for .NET
+    # NetFX testing on non-Windows requires mono
+    - name: 🔧 Setup Mono
+      if: runner.os == 'Linux'
+      run: sudo apt-get install -y mono-devel
+
+    - name: 🏗️ Build for .NET
       run: dotnet build ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -c Release
 
-    - name: Pack for .NET
+    - name: 📦 Pack for .NET
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI/Mscc.GenerativeAI.csproj -o output/ --no-build
 
     - name: Setup access to GitHub Package Registry (GPR)
@@ -78,6 +84,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
         dotnet-version: ['10.x']
     runs-on: ${{ matrix.os }}
 
@@ -85,18 +92,23 @@ jobs:
 #    - name: Wait for GPR package propagation
 #      run: sleep 300
     
-    - name: Check-out latest sources 
+    - name: 📥 Check-out latest sources 
       uses: actions/checkout@v4
 
-    - name: Set up .NET
+    - name: 🔧 Set up .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
         source-url: https://nuget.pkg.github.com/mscraftsman/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      
+      # NetFX testing on non-Windows requires mono
+    - name: 🔧 Setup Mono
+      if: runner.os == 'Linux'
+      run: sudo apt-get install -y mono-devel
 
-    - name: Setup access to GitHub Package Registry (GPR)
+    - name: 🔧 Setup access to GitHub Package Registry (GPR)
       run: dotnet nuget add source --username jochenkirstaetter --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
 
     - name: Set NuGet source
@@ -105,16 +117,16 @@ jobs:
     - name: Restore Dependencies
       run: dotnet restore ./GenerativeAI.sln
 
-    - name: Build
+    - name: 🏗️ Build
       run: dotnet build ./GenerativeAI.sln -c Release
 
-    - name: Pack for ASP.NET Core
+    - name: 📦 Pack for ASP.NET Core
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Web/Mscc.GenerativeAI.Web.csproj -o output/ --no-build
 
-    - name: Pack for .NET using Google Cloud Client Library
+    - name: 📦 Pack for .NET using Google Cloud Client Library
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Google/Mscc.GenerativeAI.Google.csproj -o output/ --no-build
 
-    - name: Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
+    - name: 📦 Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
       run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -o output/ --no-build
 
     - name: Push to GitHub Package Registry (GPR)
