@@ -40,6 +40,6 @@ jobs:
             ## What's changed
             
             ---- 
-            **Full Changelog**: https://github.com/mscraftsman/generative-ai/compare/${{ steps.previous_tag.outputs.previous_tag }}...${{ github.ref_name }}
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.previous_tag.outputs.previous_tag }}...${{ github.ref_name }}
           draft: false
           prerelease: false
