@@ -36,6 +36,10 @@ namespace Mscc.GenerativeAI.Types
 		/// Optional. The tuning task. Either I2V or T2V.
 		/// </summary>
 		public TuningTaskType? TuningTask { get; set; }
+		/// <summary>
+		/// Optional. The ratio of Google internal dataset to use in the training mixture, in range of <c>[0, 1)</c>. If <c>0.2</c>, it means 20% of Google internal dataset and 80% of user dataset will be used for training.
+		/// </summary>
+		public double? VeoDataMixtureRatio { get; set; }
 
 		[JsonConverter(typeof(JsonStringEnumConverter<TuningTaskType>))]
 		public enum TuningTaskType
