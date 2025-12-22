@@ -8,6 +8,7 @@ namespace Mscc.GenerativeAI.Microsoft
         /// <summary>Gets an <see cref="mea.IChatClient"/> for use with this <see cref="GenerativeModel"/>.</summary>
         /// <param name="chatClient">The client.</param>
         /// <returns>An <see cref="mea.IChatClient"/> that can be used to converse via the <see cref="GenerativeModel"/>.</returns>
+	    public static mea.ChatClientBuilder AsBuilder(this mea.IChatClient client) => new mea.ChatClientBuilder(client);
         public static mea.IChatClient AsIChatClient(this GenerativeModel chatClient) =>
             new GeminiChatClient(chatClient);
         
