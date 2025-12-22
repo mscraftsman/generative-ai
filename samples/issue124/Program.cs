@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder
 	.SetMinimumLevel(LogLevel.Debug)
