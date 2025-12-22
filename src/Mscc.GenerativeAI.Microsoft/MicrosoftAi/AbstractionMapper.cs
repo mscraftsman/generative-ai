@@ -476,11 +476,12 @@ namespace Mscc.GenerativeAI.Microsoft
 			{
 				var retry = new Retry();
 				TimeSpan? timeout = null;
-				TryAddOption<int?>(options, "RetryInitial", v => retry.Initial = v ?? 0);
-				TryAddOption<int?>(options, "RetryMultiplies", v => retry.Multiplies = v ?? 0);
-				TryAddOption<int?>(options, "RetryMaximum", v => retry.Maximum = v ?? 0);
+				TryAddOption<int?>(options, "RetryInitial", v => retry.Initial = v ?? retry.Initial);
+				TryAddOption<int?>(options, "RetryMultiplies", v => retry.Multiplies = v ?? retry.Multiplies);
+				TryAddOption<int?>(options, "RetryMaximum", v => retry.Maximum = v ?? retry.Maximum);
 				TryAddOption<int?>(options, "RetryTimeout", v =>
-					retry.Timeout = v.HasValue ? TimeSpan.FromSeconds((double)v.Value) : null);
+					retry.Timeout = v.HasValue ? TimeSpan.FromSeconds((double)v.Value) : retry.Timeout);
+				TryAddOption<int[]?>(options, "RetryStatusCodes", v => retry.StatusCodes = v ?? retry.StatusCodes);
 				TryAddOption<TimeSpan?>(options, "Timeout", v => timeout = v);
 
 				if (retry.Initial > 0 && timeout is not null)
@@ -490,6 +491,10 @@ namespace Mscc.GenerativeAI.Microsoft
 				else if (timeout is not null)
 				{
 					return new RequestOptions(timeout: timeout);
+				}
+				else
+				{
+					return new RequestOptions(retry: retry);
 				}
 			}
 
