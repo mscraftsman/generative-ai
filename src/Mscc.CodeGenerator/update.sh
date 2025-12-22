@@ -33,16 +33,16 @@ if [ "$SKIP_DOWNLOAD" = false ]; then
     -H "Content-Type: application/json" \
     -o aiplatform.json
 
-  jq --sort-keys . generativelanguage.json > $SOURCE/discovery.json
-  jq --sort-keys . aiplatform.json > $SOURCE/discovery.vertex.json
+  jq --sort-keys . generativelanguage.json > "$SOURCE"/discovery.json
+  jq --sort-keys . aiplatform.json > "$SOURCE"/discovery.vertex.json
 
   rm generativelanguage.json
   rm aiplatform.json
 fi
 
 # Generate C# types...
-dotnet run --project ./Mscc.CodeGenerator.csproj $SOURCE/discovery.json ./Types
-dotnet run --project ./Mscc.CodeGenerator.csproj $SOURCE/discovery.vertex.json ./Types
+dotnet run --project ./Mscc.CodeGenerator.csproj "$SOURCE"/discovery.json ./Types
+dotnet run --project ./Mscc.CodeGenerator.csproj "$SOURCE"/discovery.vertex.json ./Types
 
-cp ./Types/* $TARGET
+cp ./Types/* "$TARGET"
 rm -f ./Types/*
