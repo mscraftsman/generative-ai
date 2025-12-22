@@ -29,6 +29,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public EnterpriseWebSearch? EnterpriseWebSearch { get; set; }
 		/// <summary>
+		/// Optional. If specified, Vertex AI will use Parallel.ai to search for information to answer user queries. The search results will be grounded on Parallel.ai and presented to the model for response generation
+		/// </summary>
+		public ToolParallelAiSearch? ParallelAiSearch { get; set; }
+		/// <summary>
 		/// Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation.
 		/// </summary>
 		public Retrieval? Retrieval { get; set; }
