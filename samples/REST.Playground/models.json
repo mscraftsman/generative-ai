@@ -236,7 +236,8 @@
       "outputTokenLimit": 16384,
       "supportedGenerationMethods": [
         "countTokens",
-        "generateContent"
+        "generateContent",
+        "batchGenerateContent"
       ],
       "temperature": 1,
       "topK": 64,
