@@ -104,17 +104,17 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// The initial delay before the first retry, in seconds.
         /// </summary>
-        public int Initial { get; set; } = 1;
+        public int Initial { get; set => field = Math.Max(1, value); } = 1;
 
         /// <summary>
         /// The multiplier for the delay between retries.
         /// </summary>
-        public int Multiplies { get; set; } = 2;
+        public int Multiplies { get; set => field = Math.Max(1, value); } = 2;
 
         /// <summary>
         /// The maximum number of retries.
         /// </summary>
-        public int Maximum { get; set; } = 60;
+        public int Maximum { get; set => field = Math.Max(1, value); } = 60;
 
         /// <summary>
         /// The overall timeout for the retry logic.
