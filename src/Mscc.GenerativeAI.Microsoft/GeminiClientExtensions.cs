@@ -10,13 +10,6 @@ namespace Mscc.GenerativeAI.Microsoft
     public static class GeminiClientExtensions
     {
         /// <summary>
-        /// Creates a new <see cref="mea.ChatClientBuilder"/> from an existing <see cref="mea.IChatClient"/>.
-        /// </summary>
-        /// <param name="client">The chat client instance.</param>
-        /// <returns>A new <see cref="mea.ChatClientBuilder"/>.</returns>
-	    public static mea.ChatClientBuilder AsBuilder(this mea.IChatClient client) => new mea.ChatClientBuilder(client);
-	    
-        /// <summary>
         /// Creates a <see cref="mea.IChatClient"/> adapter for the specified <see cref="GenerativeModel"/>.
         /// </summary>
         /// <param name="chatClient">The <see cref="GenerativeModel"/> to adapt.</param>
