@@ -729,6 +729,30 @@ namespace Mscc.GenerativeAI.Microsoft
 				}
 			}
 
+			if (candidate.CitationMetadata is { Citations: { Count: > 0 } citations }
+			    && contents.OfType<mea.TextContent>().FirstOrDefault() is mea.TextContent textContent)
+			{
+				foreach (var citation in citations)
+				{
+					textContent.Annotations = new List<mea.AIAnnotation>()
+					{
+						new mea.CitationAnnotation()
+						{
+							Title = citation.Title,
+							Url = Uri.TryCreate(citation.Uri, UriKind.Absolute, out Uri? uri) ? uri : null,
+							AnnotatedRegions = new List<mea.AnnotatedRegion>()
+							{
+								new mea.TextSpanAnnotatedRegion()
+								{
+									StartIndex = citation.StartIndex, 
+									EndIndex = citation.EndIndex,
+								}
+							}
+						}
+					};
+				}
+			}
+
 			return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
 				contents)
 			{
