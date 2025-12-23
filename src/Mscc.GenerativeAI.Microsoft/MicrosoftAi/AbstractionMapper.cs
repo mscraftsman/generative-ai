@@ -18,6 +18,13 @@ namespace Mscc.GenerativeAI.Microsoft
 	{
 		internal const int EmbeddingDimensions = 768;
 
+		/// <summary>A thought signature that can be used to skip thought validation when sending foreign function calls.</summary>
+		/// <remarks>
+		/// See https://ai.google.dev/gemini-api/docs/thought-signatures#faqs.
+		/// This is more common in agentic scenarios, where a chat history is built up across multiple providers/models.
+		/// </remarks>
+		private static readonly byte[] s_skipThoughtValidation = Encoding.UTF8.GetBytes("skip_thought_signature_validator");
+		
 		/// <summary>
 		/// Converts a Microsoft.Extensions.AI messages and options to a <see cref="GenerateContentRequest"/>.
 		/// </summary>
@@ -40,7 +47,7 @@ namespace Mscc.GenerativeAI.Microsoft
 			}
 
 			request.Contents ??= [];
-			byte[]? thoughtSignature;
+			byte[]? thoughtSignature = null;
 			foreach (var message in messages)
 			{
 				if (message.Role == mea.ChatRole.System)
@@ -55,15 +62,23 @@ namespace Mscc.GenerativeAI.Microsoft
 
 				c.Role = message.Role == mea.ChatRole.Assistant ? "model" : "user";
 
-				Dictionary<string, string> functionNames = new();
+				Dictionary<string, string>? functionNames = null;
 
 				foreach (var content in message.Contents)
 				{
 					Part? part = null;
 					switch (content)
 					{
+						case mea.AIContent aic when aic.RawRepresentation is Part rawPart:
+							part = rawPart;
+							break;
+						
 						case mea.TextReasoningContent trc:
-							part = new Part { Text = trc.Text, Thought = true };
+							part = new Part
+							{
+								Thought = true,
+								Text = !string.IsNullOrWhiteSpace(trc.Text) ? trc.Text : null, 
+							};
 							break;
 
 						case mea.TextContent tc:
@@ -75,7 +90,9 @@ namespace Mscc.GenerativeAI.Microsoft
 							{
 								InlineData = new InlineData
 								{
-									Data = dc.Base64Data.ToString(), MimeType = dc.MediaType
+									Data = dc.Base64Data.ToString(), 
+									MimeType = dc.MediaType,
+									DisplayName = dc.Name
 								}
 							};
 							break;
@@ -83,24 +100,33 @@ namespace Mscc.GenerativeAI.Microsoft
 						case mea.UriContent uc:
 							part = new Part
 							{
-								FileData = new FileData { FileUri = uc.Uri.AbsoluteUri, MimeType = uc.MediaType }
+								FileData = new FileData
+								{
+									FileUri = uc.Uri.AbsoluteUri, 
+									MimeType = uc.MediaType
+								}
 							};
 							break;
 
 						case mea.FunctionCallContent fcc:
-							functionNames[fcc.CallId] = fcc.Name;
+							(functionNames ??= new())[fcc.CallId] = fcc.Name;
+							functionNames[""] = fcc.Name; // track last function name in case calls don't have IDs
 							part = new Part
 							{
 								FunctionCall = new FunctionCall()
 								{
-									Id = fcc.CallId, Name = fcc.Name, Args = fcc.Arguments
+									Id = fcc.CallId, 
+									Name = fcc.Name, 
+									Args = fcc.Arguments is null ? null : 
+										fcc.Arguments as Dictionary<string, object> ?? new(fcc.Arguments!)
 								},
 							};
 							break;
 
 						case mea.FunctionResultContent frc:
 							var functionName = frc.CallId;
-							if (functionNames.TryGetValue(frc.CallId, out var name))
+							if (functionNames.TryGetValue(frc.CallId, out string? name) ||
+							    functionNames.TryGetValue("", out name))
 							{
 								functionName = name;
 							}
@@ -115,7 +141,9 @@ namespace Mscc.GenerativeAI.Microsoft
 							{
 								FunctionResponse = new FunctionResponse
 								{
-									Id = frc.CallId, Name = functionName, Response = frc.Result
+									Id = frc.CallId, 
+									Name = functionName, 
+									Response = frc.Result
 								}
 							};
 							break;
@@ -128,7 +156,7 @@ namespace Mscc.GenerativeAI.Microsoft
 					if (part is not null)
 					{
 						thoughtSignature = ToGeminiThoughtSignature(content);
-						part.ThoughtSignature = thoughtSignature;
+						part.ThoughtSignature = thoughtSignature ?? s_skipThoughtValidation;
 						// part.Thought = thoughtSignature is not null ? true : null;
 						c.Parts.Add(part);
 					}
@@ -243,7 +271,7 @@ namespace Mscc.GenerativeAI.Microsoft
 
 				if (options.Tools is { } aiTools)
 				{
-					List<FunctionDeclaration> functionDeclarations = [];
+					List<FunctionDeclaration>? functionDeclarations = null;
 					foreach (var tool in aiTools)
 					{
 						switch (tool)
@@ -276,15 +304,21 @@ namespace Mscc.GenerativeAI.Microsoft
 								(request.Tools ??= []).Add(new Tool() { UrlContext = geminiAiTool.Tool });
 								break;
 							
+							// case ToolAITool raw:
+							// 	(request.Tools ??= []).Add(raw.Tool);
+							// 	break;
+							
 							case mea.AIFunctionDeclaration aif:
+								functionDeclarations ??= new();
 								functionDeclarations.Add(new FunctionDeclaration
 								{
 									Name = aif.Name,
 									Description = aif.Description,
-									Parameters = ToGeminiSchema(aif.JsonSchema),
-									Response = aif.ReturnJsonSchema is { } rjs
-										? ToGeminiSchema(rjs)
-										: null,
+									ParametersJsonSchema = aif.JsonSchema,
+									// Parameters = ToGeminiSchema(aif.JsonSchema),
+									// Response = aif.ReturnJsonSchema is { } rjs
+									// 	? ToGeminiSchema(rjs)
+									// 	: null,
 								});
 								break;
 
@@ -365,7 +399,7 @@ namespace Mscc.GenerativeAI.Microsoft
 						}
 					}
 
-					if (functionDeclarations.Count > 0)
+					if (functionDeclarations is { Count: > 0 })
 					{
 						(request.Tools ??= []).Add(new Tool() { FunctionDeclarations = functionDeclarations });
 
@@ -392,9 +426,17 @@ namespace Mscc.GenerativeAI.Microsoft
 								{
 									(request.ToolConfig.FunctionCallingConfig.AllowedFunctionNames ??= []).Add(name);
 								}
-
 								break;
 						}
+					}
+				}
+
+				if (options.ResponseFormat is mea.ChatResponseFormatJson responseFormat)
+				{
+					request.GenerationConfig.ResponseMimeType = "application/json";
+					if (responseFormat.Schema is { } schema)
+					{
+						request.GenerationConfig.ResponseJsonSchema = schema;
 					}
 				}
 			}
@@ -440,8 +482,10 @@ namespace Mscc.GenerativeAI.Microsoft
 		/// <param name="value">The value to wrap.</param>
 		/// <param name="key">Property to use as wrapper.</param>
 		/// <returns></returns>
-		private static JsonElement WrapInObject(object? value, string key = "result")
+		private static JsonElement? WrapInObject(object? value, string key = "result")
 		{
+			if (value is null) return null;
+			
 			using MemoryStream stream = new();
 			using Utf8JsonWriter writer = new(stream);
 
@@ -625,78 +669,58 @@ namespace Mscc.GenerativeAI.Microsoft
 			{
 				foreach (var part in candidate.Content.Parts)
 				{
+					mea.AIContent content;
+					
 					if (!string.IsNullOrEmpty(part.Text))
-						if (part.Thought is true ||
-						    part.ThoughtSignature is not null)
-							contents.Add(new mea.TextReasoningContent(part.Text)
-							{
-								ProtectedData = part.ThoughtSignature is not null
-									? Convert.ToBase64String(part.ThoughtSignature)
-									: null
-							});
-						else
-						{
-							contents.Add(new mea.TextContent(part.Text));
-						}
+						content = part.Thought is true
+							? new mea.TextReasoningContent(part.Text)
+							: new mea.TextContent(part.Text);
 					else if (!string.IsNullOrEmpty(part.InlineData?.Data))
 					{
-						var dataContent = new mea.DataContent(
+						content = new mea.DataContent(
 							Convert.FromBase64String(part.InlineData.Data),
-							part.InlineData.MimeType);
-						// Store the original Part to preserve ThoughtSignature for round-trip
-						dataContent.RawRepresentation = part;
-
-						// ALSO store ThoughtSignature in AdditionalProperties for serialization persistence
-						if (part.ThoughtSignature != null)
+							part.InlineData.MimeType ?? "application/octet-stream")
 						{
-							dataContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
-							dataContent.AdditionalProperties["ThoughtSignature"] =
-								Convert.ToBase64String(part.ThoughtSignature);
-						}
-
-						contents.Add(dataContent);
+							Name = part.InlineData.DisplayName
+						};
 					}
 					else if (!string.IsNullOrEmpty(part.FileData?.FileUri))
 					{
-						var dataContent = new mea.DataContent(part.FileData.FileUri,
-							part.FileData.MimeType);
-						// Store the original Part to preserve ThoughtSignature for round-trip
-						dataContent.RawRepresentation = part;
-
-						// ALSO store ThoughtSignature in AdditionalProperties for serialization persistence
-						if (part.ThoughtSignature != null)
-						{
-							dataContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
-							dataContent.AdditionalProperties["ThoughtSignature"] =
-								Convert.ToBase64String(part.ThoughtSignature);
-						}
-
-						contents.Add(dataContent);
+						content = new mea.UriContent(new Uri(part.FileData.FileUri),
+							part.FileData.MimeType ?? "application/octet-stream");
 					}
-					else if (part.FunctionCall is not null)
+					else if (part.FunctionCall?.Name is not null)
 					{
-						var functionCallContent = ToFunctionCallContent(part.FunctionCall);
-						functionCallContent.RawRepresentation = part;
-
-						if (part.ThoughtSignature != null)
-						{
-							functionCallContent.AdditionalProperties ??= new mea.AdditionalPropertiesDictionary();
-							functionCallContent.AdditionalProperties["ThoughtSignature"] =
-								Convert.ToBase64String(part.ThoughtSignature);
-						}
-
-						contents.Add(functionCallContent);
+						content = ToFunctionCallContent(part.FunctionCall);
 					}
 					else if (part.FunctionResponse is not null)
-						contents.Add(ToFunctionResultContent(part.FunctionResponse));
-					else if (part.CodeExecutionResult is not null)
-						contents.Add(new mea.TextContent(part.CodeExecutionResult.Output));
-					else if (part.ExecutableCode is not null)
-						contents.Add(new mea.TextContent(part.ExecutableCode.Code));
-					else if (part.VideoMetadata is not null)
-						Debug.WriteLine("Video meta data returned.");
+					{
+						content = ToFunctionResultContent(part.FunctionResponse);
+					}
+					else if (part.ExecutableCode?.Code is not null)
+					{
+						content = ToCodeInterpreterToolCallContent(part.ExecutableCode);
+					}
+					else if (part.CodeExecutionResult?.Output is not null)
+					{
+						content = ToCodeInterpreterToolResultContent(part.CodeExecutionResult);
+					}
 					else
-						Debug.WriteLine($"Part is not a string, inline data, or function call: {part.GetType()}");
+					{
+						Debug.WriteLine($"Part '{part.GetType()}' has not been mapped to AIContent. Using RawRepresentation only.");
+						content = new mea.AIContent();
+					}
+
+					content.RawRepresentation = part;
+					contents.Add(content);
+					
+					if (part.ThoughtSignature is { } thoughtSignature)
+					{
+						contents.Add(new mea.TextReasoningContent(null)
+						{
+							ProtectedData = Convert.ToBase64String(thoughtSignature),
+						});
+					}
 				}
 			}
 
@@ -734,7 +758,59 @@ namespace Mscc.GenerativeAI.Microsoft
 		/// <returns></returns>
 		private static mea.FunctionResultContent ToFunctionResultContent(FunctionResponse functionResponse)
 		{
-			return new mea.FunctionResultContent(functionResponse.Id!, functionResponse.Response);
+			return new mea.FunctionResultContent(functionResponse.Id ?? "", functionResponse.Response);
+			// var content = new mea.FunctionResultContent(
+			// 	functionResponse.Id ?? "",
+			// 	functionResponse.Response?.TryGetValue("output", out var output) is true ? output :
+			// 	functionResponse.Response?.TryGetValue("error", out var error) is true ? error :
+			// 	null);
+			// return content;
+		}
+
+		/// <summary>
+		/// Maps a <see cref="ExecutableCode"/> to a <see cref="mea.CodeInterpreterToolCallContent"/>.
+		/// </summary>
+		/// <param name="executableCode"></param>
+		/// <returns></returns>
+		private static mea.CodeInterpreterToolCallContent ToCodeInterpreterToolCallContent(
+			ExecutableCode executableCode)
+		{
+			var content = new mea.CodeInterpreterToolCallContent()
+			{
+				Inputs = new List<mea.AIContent>()
+				{
+					new mea.DataContent(Encoding.UTF8.GetBytes(executableCode.Code),
+						executableCode.Language switch
+						{
+							ExecutableCode.LanguageType.Python => "text/x-python",
+							_ => "text/x-source-code",
+						})
+				}
+			};
+			return content;
+		}
+
+		/// <summary>
+		/// Maps a <see cref="CodeExecutionResult"/> to a <see cref="mea.CodeInterpreterToolResultContent"/>.
+		/// </summary>
+		/// <param name="codeExecutionResult"></param>
+		/// <returns></returns>
+		private static mea.CodeInterpreterToolResultContent ToCodeInterpreterToolResultContent(
+			CodeExecutionResult codeExecutionResult)
+		{
+			var content = new mea.CodeInterpreterToolResultContent()
+			{
+				Outputs = new List<mea.AIContent>()
+				{
+					codeExecutionResult.Outcome is Outcome.OutcomeOk
+						? new mea.TextContent(codeExecutionResult.Output)
+						: new mea.ErrorContent(codeExecutionResult.Output)
+						{
+							ErrorCode = codeExecutionResult.Outcome.ToString()
+						}
+				}
+			};
+			return content;
 		}
 
 		/// <summary>
