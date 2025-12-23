@@ -753,6 +753,11 @@ namespace Mscc.GenerativeAI.Microsoft
 				}
 			}
 
+			if (response.PromptFeedback is { } promptFeedback)
+			{
+				contents.Add(new mea.ErrorContent(promptFeedback.BlockReasonMessage));
+			}
+			
 			return new mea.ChatMessage(ToAbstractionRole(response.Candidates?.FirstOrDefault()?.Content?.Role),
 				contents)
 			{
