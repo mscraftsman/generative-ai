@@ -331,7 +331,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 		{
 			// Arrange
 			var model = Model.Gemini25Pro;
-			var gemini = new GeminiChatClient(apiKey: _fixture.ApiKey, model);
+			var gemini = new GeminiChatClient(apiKey: _fixture.ApiKey, model, logger: Logger);
 			IChatClient chatClient = new ChatClientBuilder(gemini)
 				.UseFunctionInvocation()
 				.Build();
@@ -430,7 +430,33 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 			}
 		}
 
-		[Description("Get basic information of the current user")]
+		[Fact]
+		public async Task Test_Issue_163()
+		{
+			// var model = "gemini-2.5-flash";
+			var model = Model.Gemini3Pro; 
+			// var model = "gemini-3-flash-preview";
+			var nativeClient = new GeminiChatClient(apiKey: _fixture.ApiKey, model: model, logger: Logger);
+
+			var chatClient = nativeClient
+				.AsBuilder()
+				.UseFunctionInvocation(loggerFactory: null, configure: (functionInvokingClient) =>
+				{
+					functionInvokingClient.MaximumIterationsPerRequest = 999;
+					functionInvokingClient.IncludeDetailedErrors = true;
+				})
+				.Build();
+
+			var userMessage = new mea.ChatMessage(ChatRole.User, "What is 2 + 2?");
+
+			_output.WriteLine($"Q : {userMessage.Text}");
+
+			var output = await chatClient.GetResponseAsync<int>(userMessage);
+
+			_output.WriteLine($"A : {output.Result}");
+		}
+
+		[Description("Get basic information of the current user, eg. name, age, etc.")]
 		private static string GetUserInformation() => @"{ ""Name"": ""John Doe"", ""Age"": 42 }";
 	}
 }
