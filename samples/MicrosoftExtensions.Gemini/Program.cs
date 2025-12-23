@@ -9,7 +9,7 @@ var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY")!;
 var model = "gemini-2.0-flash";
 var prompt = "What is AI?";
 
-IChatClient chatClient = new GeminiChatClient(apiKey, model);
+IChatClient chatClient = new GeminiChatClient(apiKey: apiKey, model);
 
 var response = await chatClient.GetResponseAsync(prompt);
 Console.WriteLine(response.Text);

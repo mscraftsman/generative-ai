@@ -1,4 +1,5 @@
 ﻿using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 public class MovieRecommendation
 {

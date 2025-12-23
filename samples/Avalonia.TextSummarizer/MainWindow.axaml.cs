@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;

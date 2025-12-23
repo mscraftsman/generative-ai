@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 using OpenTelemetry;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;

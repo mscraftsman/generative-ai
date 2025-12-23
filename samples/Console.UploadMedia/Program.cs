@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 // Enables reading api key from dotnet user-secrets
 IConfigurationRoot config = new ConfigurationBuilder()

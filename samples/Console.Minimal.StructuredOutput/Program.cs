@@ -1,5 +1,6 @@
 ﻿
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 var prompt = "List a few popular cookie recipes.";
 var googleAi = new GoogleAI(Environment.GetEnvironmentVariable("GOOGLE_API_KEY"));

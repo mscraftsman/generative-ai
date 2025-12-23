@@ -9,17 +9,23 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Agents.AI" />
-        <PackageReference Include="Mscc.GenerativeAI.Microsoft" />
+        <PackageVersion Include="Mscc.GenerativeAI.Microsoft" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageVersion Include="Mscc.GenerativeAI.Microsoft" Version="2.9.5" />
+        <PackageVersion Include="Mscc.GenerativeAI.Microsoft" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>
         <None Update=".env">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Mscc.GenerativeAI.Microsoft">
+        <HintPath>..\..\..\..\..\home\jochen\.nuget\packages\mscc.generativeai.microsoft\3.0.0\lib\net9.0\Mscc.GenerativeAI.Microsoft.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

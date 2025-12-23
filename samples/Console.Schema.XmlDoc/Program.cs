@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 namespace Console.Schema.XmlDoc;
 
@@ -31,7 +32,7 @@ public class Program
         var generationConfig = new GenerationConfig()
         {
             ResponseMimeType = "application/json",
-            ResponseSchema = Mscc.GenerativeAI.Schema.FromType<ReviewAnalysisOutputModel>(GetXmlDocumentationPath())
+            ResponseSchema = Mscc.GenerativeAI.Types.Schema.FromType<ReviewAnalysisOutputModel>(GetXmlDocumentationPath())
         };
 
         // Create the request

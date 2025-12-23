@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Mscc.GenerativeAI;
+using Mscc.GenerativeAI.Types;
 
 // Read the API key from the user secrets file.
 var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();

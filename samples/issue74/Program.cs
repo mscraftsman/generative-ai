@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using Mscc.GenerativeAI;
 using Microsoft.Extensions.Logging;
+using Mscc.GenerativeAI.Types;
 
 using ILoggerFactory factory = LoggerFactory.Create(builder => builder
     .SetMinimumLevel(LogLevel.Debug)

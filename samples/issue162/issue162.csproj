@@ -8,7 +8,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Mscc.GenerativeAI.Microsoft" />
+        <PackageVersion Include="Mscc.GenerativeAI.Microsoft" Version="3.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Microsoft.Extensions.AI.Abstractions">
+          <HintPath>..\..\..\..\..\home\jochen\.nuget\packages\microsoft.extensions.ai.abstractions\10.1.1\lib\net10.0\Microsoft.Extensions.AI.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+          <HintPath>..\..\..\..\..\home\jochen\.nuget\packages\microsoft.extensions.logging.abstractions\10.0.1\lib\net8.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+        </Reference>
+        <Reference Include="Mscc.GenerativeAI">
+            <HintPath>..\..\..\..\..\home\jochen\.nuget\packages\mscc.generativeai\3.0.0\lib\net10.0\Mscc.GenerativeAI.dll</HintPath>
+        </Reference>
+        <Reference Include="Mscc.GenerativeAI.Microsoft">
+            <HintPath>..\..\..\..\..\home\jochen\.nuget\packages\mscc.generativeai.microsoft\3.0.0\lib\net9.0\Mscc.GenerativeAI.Microsoft.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
 </Project>
