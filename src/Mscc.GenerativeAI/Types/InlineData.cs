@@ -40,9 +40,9 @@ namespace Mscc.GenerativeAI.Types
         /// Maximum video length: 2 minutes. No limit on image resolution. 
         ///</remarks>
         public string? MimeType { get; set; } = "";
-		/// <summary>
-		/// 
-		/// </summary>
+        /// <summary>
+        /// Optional. The display name of the file. Used to provide a label or filename to distinguish files. This field is only returned in <c>PromptMessage</c> for prompt management. It is used in the Gemini calls only when server side tools (<c>code_execution</c>, <c>google_search</c>, and <c>url_context</c>) are enabled.
+        /// </summary>
         public string? DisplayName { get; set; }
     }
 }
