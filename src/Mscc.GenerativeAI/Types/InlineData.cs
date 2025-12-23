@@ -39,6 +39,10 @@ namespace Mscc.GenerativeAI.Types
         /// video/flv
         /// Maximum video length: 2 minutes. No limit on image resolution. 
         ///</remarks>
-        public string MimeType { get; set; } = "";
+        public string? MimeType { get; set; } = "";
+		/// <summary>
+		/// 
+		/// </summary>
+        public string? DisplayName { get; set; }
     }
 }
