@@ -1,10 +1,9 @@
 using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
-using System.Net;
 using System.Text;
 using System.Text.Json;
 using mea = Microsoft.Extensions.AI;
@@ -66,6 +65,12 @@ namespace Mscc.GenerativeAI.Microsoft
 
 				foreach (var content in message.Contents)
 				{
+					if (content is mea.FunctionCallContent fc)
+					{
+						(functionNames ??= new())[fc.CallId] = fc.Name;
+						functionNames[""] = fc.Name; // track last function name in case calls don't have IDs
+					}
+					
 					Part? part = null;
 					switch (content)
 					{
@@ -125,8 +130,8 @@ namespace Mscc.GenerativeAI.Microsoft
 
 						case mea.FunctionResultContent frc:
 							var functionName = frc.CallId;
-							if (functionNames.TryGetValue(frc.CallId, out string? name) ||
-							    functionNames.TryGetValue("", out name))
+							if (functionNames?.TryGetValue(frc.CallId, out string? name) is true ||
+							    functionNames?.TryGetValue("", out name) is true)
 							{
 								functionName = name;
 							}
