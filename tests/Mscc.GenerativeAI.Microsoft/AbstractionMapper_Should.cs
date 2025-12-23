@@ -162,5 +162,28 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             requestPart.InlineData.ShouldNotBeNull();
             requestPart.InlineData!.MimeType.ShouldBe("image/png");
         }
+
+        [Fact]
+        public void Return_Multiple_Embeddings_When_Multiple_Values_Are_Provided()
+        {
+            // Arrange
+            var request = new EmbedContentRequest();
+            var response = new EmbedContentResponse
+            {
+                Embeddings = new List<ContentEmbedding>
+                {
+                    new ContentEmbedding { Values = new List<float> { 1.0f, 2.0f, 3.0f } },
+                    new ContentEmbedding { Values = new List<float> { 4.0f, 5.0f, 6.0f } }
+                }
+            };
+            var toGeneratedEmbeddingsMethod = GetMethod("ToGeneratedEmbeddings");
+
+            // Act
+            var result = toGeneratedEmbeddingsMethod.Invoke(null, new object?[] { request, response }) as mea.GeneratedEmbeddings<mea.Embedding<float>>;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Count.ShouldBe(2);
+        }
     }
 }
