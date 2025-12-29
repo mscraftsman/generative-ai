@@ -11,6 +11,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 3.0.1
+
+### Added
+
+- add handling of `CreatedAt` (920782c)
+- map `PromptFeedback` (319b715)
+- map `CitationMetadata` (f16b007)
+- add property `DisplayName` (7f6d835)
+- add `RetryStatusCodes` to AdditionalProperties (0f95334)
+- provide initial dictionary of function names (00184a6)
+
+### Changed
+
+- improve mapping of `UsageMetadata` (1e67c92)
+- chore: add XML comment (851c52f)
+- chore: formatting (e89cf32)
+- upgrade NuGet packages (ac6c10b)
+- upgrade NuGet packages (c15d2cf)
+
+### Fixed
+
+- refactor `ToChatMessage` improving handling of `ThoughtSignature` #163 (ddfaa8d)
+- Merge pull request #165 from mscraftsman/fix-issue-164-12176495308426868827 (c8d748e)
+- Fix: Return multiple embeddings for multiple values (3600715)
+
 ## 3.0.0
 
 see main Changelog
