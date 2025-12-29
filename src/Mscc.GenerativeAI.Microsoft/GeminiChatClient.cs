@@ -77,7 +77,7 @@ public sealed class GeminiChatClient : mea.IChatClient
         var request = AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
         var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		var response = await _client.GenerateContent(request, requestOptions, cancellationToken);
-		return AbstractionMapper.ToChatResponse(response) ?? new mea.ChatResponse([]);
+		return AbstractionMapper.ToChatResponse(response, DateTimeOffset.UtcNow) ?? new mea.ChatResponse([]);
     }
 
     /// <inheritdoc/>
@@ -91,7 +91,7 @@ public sealed class GeminiChatClient : mea.IChatClient
         var request = AbstractionMapper.ToGeminiGenerateContentRequest(this, messages, options);
         var requestOptions = AbstractionMapper.ToGeminiGenerateContentRequestOptions(options);
 		await foreach (var response in _client.GenerateContentStream(request, requestOptions, cancellationToken))
-			yield return AbstractionMapper.ToChatResponseUpdate(response) ?? new mea.ChatResponseUpdate();
+			yield return AbstractionMapper.ToChatResponseUpdate(response, DateTimeOffset.UtcNow) ?? new mea.ChatResponseUpdate();
     }
     
     /// <inheritdoc/>

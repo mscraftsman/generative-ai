@@ -588,8 +588,9 @@ namespace Mscc.GenerativeAI.Microsoft
 		/// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatResponse"/>.
 		/// </summary>
 		/// <param name="response">The response with completion data.</param>
+		/// <param name="createdAt">The datetime when the response was created.</param>
 		/// <returns></returns>
-		public static mea.ChatResponse? ToChatResponse(GenerateContentResponse? response)
+		public static mea.ChatResponse? ToChatResponse(GenerateContentResponse? response, DateTimeOffset createdAt)
 		{
 			if (response is null) return null;
 
@@ -598,7 +599,7 @@ namespace Mscc.GenerativeAI.Microsoft
 			return new mea.ChatResponse(chatMessage)
 			{
 				AdditionalProperties = chatMessage.AdditionalProperties,
-				CreatedAt = chatMessage.CreatedAt,
+				CreatedAt = chatMessage.CreatedAt ?? createdAt,
 				FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
 				ModelId = response.ModelVersion,
 				RawRepresentation = response,
@@ -611,7 +612,9 @@ namespace Mscc.GenerativeAI.Microsoft
 		/// Converts a <see cref="GenerateContentResponse"/> to a <see cref="mea.ChatResponseUpdate"/>.
 		/// </summary>
 		/// <param name="response">The response stream to convert.</param>
-		public static mea.ChatResponseUpdate? ToChatResponseUpdate(GenerateContentResponse? response)
+		/// <param name="createdAt">The datetime when the response was created.</param>
+		/// <returns></returns>
+		public static mea.ChatResponseUpdate? ToChatResponseUpdate(GenerateContentResponse? response, DateTimeOffset createdAt)
 		{
 			if (response is null) return null;
 
@@ -622,7 +625,7 @@ namespace Mscc.GenerativeAI.Microsoft
 			{
 				AuthorName = chatMessage.AuthorName,
 				AdditionalProperties = chatMessage.AdditionalProperties,
-				CreatedAt = chatMessage.CreatedAt,
+				CreatedAt = chatMessage.CreatedAt ?? createdAt,
 				FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
 				MessageId = response.ResponseId,
 				ModelId = response.ModelVersion,
