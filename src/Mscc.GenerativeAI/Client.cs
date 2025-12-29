@@ -9,28 +9,28 @@ namespace Mscc.GenerativeAI
         private readonly IHttpClientFactory? _apiClient;
         private readonly DebugConfig _debugConfig;
 
-        private readonly LiveModel? _live;
-        private readonly AioModel? _aio;
-        private readonly ModelsModel? _models;
-        private readonly TuningsModel? _tunings;
-        private readonly CachesModel? _caches;
-        private readonly BatchesModel? _batches;
-        private readonly FilesModel? _files;
-        private readonly AuthTokensModel? _authTokens;
-        private readonly OperationsModel? _operations;
-        private readonly InteractionsModel? _interactions;
+        private LiveModel? _live;
+        private AioModel? _aio;
+        private ModelsModel? _models;
+        private TuningsModel? _tunings;
+        private CachesModel? _caches;
+        private BatchesModel? _batches;
+        private FilesModel? _files;
+        private AuthTokensModel? _authTokens;
+        private OperationsModel? _operations;
+        private InteractionsModel? _interactions;
         
-        public ChatsModel Chats => new ChatsModel(_models);
-        public LiveModel Live => _live ?? new LiveModel(_apiClient, Logger);
-        public AioModel Aio => _aio ?? new AioModel(_apiClient, Logger);
-        public ModelsModel Models => _models ?? new ModelsModel(_apiClient, Logger);
-        public TuningsModel Tunings => _tunings ?? new TuningsModel(_apiClient, Logger);
-        public CachesModel Caches => _caches ?? new CachesModel(_apiClient, Logger);
-        public BatchesModel Batches => _batches ?? new BatchesModel(_apiClient, Logger);
-        public FilesModel Files => _files ?? new FilesModel(_apiClient, Logger);
-        public AuthTokensModel AuthTokens => _authTokens ?? new AuthTokensModel(_apiClient, Logger);
-        public OperationsModel Operations => _operations ?? new OperationsModel(_apiClient, Logger);
-        public InteractionsModel Interactions => _interactions ?? new InteractionsModel(_apiClient, Logger);
+        public ChatsModel Chats => new ChatsModel(Models);
+        public LiveModel Live => _live ??= new LiveModel(_apiClient, Logger);
+        public AioModel Aio => _aio ??= new AioModel(_apiClient, Logger);
+        public ModelsModel Models => _models ??= new ModelsModel(_apiClient, Logger);
+        public TuningsModel Tunings => _tunings ??= new TuningsModel(_apiClient, Logger);
+        public CachesModel Caches => _caches ??= new CachesModel(_apiClient, Logger);
+        public BatchesModel Batches => _batches ??= new BatchesModel(_apiClient, Logger);
+        public FilesModel Files => _files ??= new FilesModel(_apiClient, Logger);
+        public AuthTokensModel AuthTokens => _authTokens ??= new AuthTokensModel(_apiClient, Logger);
+        public OperationsModel Operations => _operations ??= new OperationsModel(_apiClient, Logger);
+        public InteractionsModel Interactions => _interactions ??= new InteractionsModel(_apiClient, Logger);
 
         private Client(IHttpClientFactory? httpClientFactory = null, ILogger? logger = null) : base(httpClientFactory, logger)
         {
