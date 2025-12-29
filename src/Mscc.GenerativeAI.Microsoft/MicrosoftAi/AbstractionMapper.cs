@@ -508,11 +508,16 @@ namespace Mscc.GenerativeAI.Microsoft
 		public static EmbedContentRequest ToGeminiEmbedContentRequest(IEnumerable<string> values,
 			mea.EmbeddingGenerationOptions? options)
 		{
-			return new EmbedContentRequest(string.Join(" ", values))
+			var request = new EmbedContentRequest(values.ToList())
 			{
 				Model = options?.ModelId ?? null, // will be set GeminiApiClient.SelectedModel, if not set
 				OutputDimensionality = options?.Dimensions ?? EmbeddingDimensions
 			};
+            if (request.Content != null)
+            {
+                request.Content.Role = Role.User;
+            }
+            return request;
 		}
 
 		/// <summary>
@@ -588,13 +593,19 @@ namespace Mscc.GenerativeAI.Microsoft
 
 			mea.AdditionalPropertiesDictionary? responseProps = null;
 			mea.UsageDetails? usage = null;
-
-			return new mea.GeneratedEmbeddings<mea.Embedding<float>>([
-				new mea.Embedding<float>(response.Embedding?.Values.ToArray() ?? [])
+			var embeddings = new List<mea.Embedding<float>>();
+			if (response.Embeddings != null)
+			{
+				foreach (var embedding in response.Embeddings)
 				{
-					CreatedAt = DateTimeOffset.Now, ModelId = request.Model
+					embeddings.Add(new mea.Embedding<float>(embedding.Values?.ToArray() ?? [])
+					{
+						CreatedAt = DateTimeOffset.Now, ModelId = request.Model
+					});
 				}
-			]) { AdditionalProperties = responseProps, Usage = usage };
+			}
+
+			return new mea.GeneratedEmbeddings<mea.Embedding<float>>(embeddings) { AdditionalProperties = responseProps, Usage = usage };
 		}
 
 		/// <summary>
