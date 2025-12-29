@@ -600,11 +600,11 @@ namespace Mscc.GenerativeAI.Microsoft
 			{
 				AdditionalProperties = chatMessage.AdditionalProperties,
 				CreatedAt = chatMessage.CreatedAt ?? createdAt,
-				FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
+				FinishReason = ToChatFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
 				ModelId = response.ModelVersion,
 				RawRepresentation = response,
 				ResponseId = response.ResponseId,
-				Usage = ParseContentResponseUsage(response)
+				Usage = ToUsageDetails(response.UsageMetadata)
 			};
 		}
 
@@ -626,7 +626,7 @@ namespace Mscc.GenerativeAI.Microsoft
 				AuthorName = chatMessage.AuthorName,
 				AdditionalProperties = chatMessage.AdditionalProperties,
 				CreatedAt = chatMessage.CreatedAt ?? createdAt,
-				FinishReason = ToFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
+				FinishReason = ToChatFinishReason(response.Candidates?.FirstOrDefault()?.FinishReason),
 				MessageId = response.ResponseId,
 				ModelId = response.ModelVersion,
 				RawRepresentation = response,
@@ -872,7 +872,7 @@ namespace Mscc.GenerativeAI.Microsoft
 		/// Maps a <see cref="FinishReason"/> to a <see cref="mea.ChatFinishReason"/>.
 		/// </summary>
 		/// <param name="finishReason">The finish reason to map.</param>
-		private static mea.ChatFinishReason? ToFinishReason(FinishReason? finishReason)
+		private static mea.ChatFinishReason? ToChatFinishReason(FinishReason? finishReason)
 		{
 			return finishReason switch
 			{
@@ -893,47 +893,35 @@ namespace Mscc.GenerativeAI.Microsoft
 		/// <summary>
 		/// Parses usage details from a <see cref="GenerateContentResponse"/>
 		/// </summary>
-		/// <param name="response">The response to parse.</param>
+		/// <param name="usageMetadata">The usage metadata of the response to parse.</param>
 		/// <returns>A <see cref="mea.UsageDetails"/> instance containing the parsed usage details.</returns>
-		private static mea.UsageDetails? ParseContentResponseUsage(GenerateContentResponse response)
+		private static mea.UsageDetails? ToUsageDetails(UsageMetadata? usageMetadata)
 		{
-			if (response.UsageMetadata is null) return null;
+			if (usageMetadata is null) return null;
 
 			mea.UsageDetails details = new()
 			{
-				InputTokenCount = response.UsageMetadata.PromptTokenCount,
-				OutputTokenCount = response.UsageMetadata.CandidatesTokenCount,
-				TotalTokenCount = response.UsageMetadata.TotalTokenCount
+				InputTokenCount = usageMetadata.PromptTokenCount,
+				OutputTokenCount = (usageMetadata.CandidatesTokenCount ?? 0) +
+				                   (usageMetadata.ThoughtsTokenCount ?? 0),
+				TotalTokenCount = usageMetadata.TotalTokenCount,
+				CachedInputTokenCount = usageMetadata.CachedContentTokenCount,
+				ReasoningTokenCount = usageMetadata.ThoughtsTokenCount
 			};
 
-			if (response.UsageMetadata.AudioDurationSeconds != 0)
+			if (usageMetadata.ToolUsePromptTokenCount is { } tc)
 			{
-				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.AudioDurationSeconds)] =
-					response.UsageMetadata.AudioDurationSeconds ?? 0;
+				(details.AdditionalCounts ??= [])[nameof(usageMetadata.ToolUsePromptTokenCount)] = tc;
 			}
 
-			if (response.UsageMetadata.CachedContentTokenCount != 0)
+			if (usageMetadata.AudioDurationSeconds is { } ads)
 			{
-				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.CachedContentTokenCount)] =
-					response.UsageMetadata.CachedContentTokenCount ?? 0;
+				(details.AdditionalCounts ??= [])[nameof(usageMetadata.AudioDurationSeconds)] = ads;
 			}
 
-			if (response.UsageMetadata.ThoughtsTokenCount != 0)
+			if (usageMetadata.VideoDurationSeconds is { } vds)
 			{
-				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.ThoughtsTokenCount)] =
-					response.UsageMetadata.ThoughtsTokenCount ?? 0;
-			}
-
-			if (response.UsageMetadata.ToolUsePromptTokenCount != 0)
-			{
-				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.ToolUsePromptTokenCount)] =
-					response.UsageMetadata.ToolUsePromptTokenCount ?? 0;
-			}
-
-			if (response.UsageMetadata.VideoDurationSeconds != 0)
-			{
-				(details.AdditionalCounts ??= [])[nameof(response.UsageMetadata.VideoDurationSeconds)] =
-					response.UsageMetadata.VideoDurationSeconds ?? 0;
+				(details.AdditionalCounts ??= [])[nameof(usageMetadata.VideoDurationSeconds)] = vds;
 			}
 
 			return details;
