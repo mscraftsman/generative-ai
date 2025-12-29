@@ -1,12 +1,6 @@
 <Project>
+    <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
     
-    <!-- General options -->
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
-        <LangVersion>latest</LangVersion>
-        <Deterministic>true</Deterministic>
-    </PropertyGroup>
-
     <PropertyGroup Condition="$(TargetFramework.StartsWith('net8.0')) or $(TargetFramework.StartsWith('net9.0'))">
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
