@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
 
 namespace Mscc.GenerativeAI.Microsoft
 {
@@ -37,9 +38,11 @@ namespace Mscc.GenerativeAI.Microsoft
         /// </summary>
         /// <param name="apiKey">API key provided by Google AI Studio</param>
         /// <param name="model">Model to use.</param>
-        public GeminiEmbeddingGenerator(string apiKey, string? model)
+        public GeminiEmbeddingGenerator(string apiKey, 
+	        string? model,
+	        ILogger? logger = null)
         {
-            var genAi = new GoogleAI(apiKey);
+            var genAi = new GoogleAI(apiKey, logger: logger);
             _client = genAi.GenerativeModel(model);
             _model = model ?? _client.Model;
         }
@@ -54,9 +57,10 @@ namespace Mscc.GenerativeAI.Microsoft
         public GeminiEmbeddingGenerator(string projectId, 
 	        string? region = null, 
             string? accessToken = null,
-	        string? model = null)
+	        string? model = null,
+	        ILogger? logger = null)
         {
-            var genAi = new VertexAI(projectId: projectId, region: region, accessToken: accessToken);
+            var genAi = new VertexAI(projectId: projectId, region: region, accessToken: accessToken, logger: logger);
             _client = genAi.GenerativeModel(model);
             _model = model ?? _client.Model;
         }
