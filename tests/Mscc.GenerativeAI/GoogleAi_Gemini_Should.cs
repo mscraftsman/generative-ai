@@ -2780,7 +2780,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var request = new GenerateContentRequest();
-            var uri = "gs://bucket/object";
+            var uri = "gs://cloud-samples-data/generative-ai/image/a-man-and-a-dog.png";
 
             // Act
             await request.AddMedia(uri);
@@ -2792,7 +2792,7 @@ namespace Test.Mscc.GenerativeAI
             part.ShouldBeOfType<FileData>();
             var fileData = part as FileData;
             fileData.FileUri.ShouldBe(uri);
-            fileData.MimeType.ShouldBe("application/octet-stream");
+            fileData.MimeType.ShouldBe(GenerativeAIExtensions.GetMimeType(uri));
         }
         
         // Define the Instrument enum
@@ -3880,6 +3880,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
         public async Task Describe_Image_From_StorageBucket()
         {
             // Arrange
+            var uri = "gs://generativeai-downloads/images/scones.jpg";
             var prompt = "Describe the image with a creative description";
             var model = _vertexAi.GenerativeModel(model: _model);
             var generationConfig = new GenerateContentConfig
@@ -3888,10 +3889,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             };
             // var request = new GenerateContentRequest(prompt, generationConfig);
             var request = new GenerateContentRequest(prompt, generationConfig);
-            await request.AddMedia(
-                "gs://generativeai-downloads/images/scones.jpg",
-                "image/jpeg",
-                true);
+            await request.AddMedia(uri, GenerativeAIExtensions.GetMimeType(uri), true);
 
             // Act
             var response = await model.GenerateContent(request);
@@ -4006,16 +4004,15 @@ Answer:";
             _output.WriteLine($"{prompt} {response?.Text}");
         }
 
-        [Fact(Skip = "The 'gs' scheme is not supported.")]
+        [Fact]
         public async Task Multimodal_Video_Input()
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
-            var video = await TestExtensions.ReadImageFileBase64Async("gs://cloud-samples-data/video/animals.mp4");
+            var model = _vertexAi.GenerativeModel(model: _model);
+            var uri = "gs://cloud-samples-data/video/animals.mp4";
             var request = new GenerateContentRequest("What's in the video?");
-            request.Contents[0].Role = Role.User;
-            request.Contents[0].Parts.Add(new InlineData { MimeType = "video/mp4", Data = video });
+            request.AddMedia(uri);
 
             // Act
             var response = await model.GenerateContent(request);
