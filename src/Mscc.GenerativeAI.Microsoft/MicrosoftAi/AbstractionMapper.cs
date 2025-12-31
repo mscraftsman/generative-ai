@@ -649,15 +649,24 @@ namespace Mscc.GenerativeAI.Microsoft
 			if (response == null) throw new ArgumentNullException(nameof(response));
 
 			mea.AdditionalPropertiesDictionary? responseProps = null;
-			mea.UsageDetails? usage = null;
+			mea.UsageDetails? usage = ToUsageDetails(response.UsageMetadata);
 			var embeddings = new List<mea.Embedding<float>>();
-			if (response.Embeddings != null)
+			if (response.Embedding != null)
+			{
+				embeddings.Add(new mea.Embedding<float>(response.Embedding.Values?.ToArray() ?? [])
+				{
+					CreatedAt = DateTimeOffset.Now,
+					ModelId = request.Model
+				});
+			}
+			else if (response.Embeddings != null)
 			{
 				foreach (var embedding in response.Embeddings)
 				{
 					embeddings.Add(new mea.Embedding<float>(embedding.Values?.ToArray() ?? [])
 					{
-						CreatedAt = DateTimeOffset.Now, ModelId = request.Model
+						CreatedAt = DateTimeOffset.Now,
+						ModelId = request.Model
 					});
 				}
 			}
