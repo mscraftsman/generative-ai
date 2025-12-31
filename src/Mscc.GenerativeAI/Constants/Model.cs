@@ -49,6 +49,10 @@ namespace Mscc.GenerativeAI.Types
         public const string GeminiEmbeddingExperimental = "gemini-embedding-exp";
         public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
         
+        public const string GeminiEmbedding2 = GeminiEmbedding2Experimental;
+        public const string GeminiEmbedding2Experimental = GeminiEmbedding2Experimental112025;
+        public const string GeminiEmbedding2Experimental112025 = "gemini-embedding-2-exp-11-2025";
+        
         // Gemini 2.5
         public const string GeminiPro = Gemini25Pro;
         public const string GeminiFlashLatest = "gemini-flash-latest";
