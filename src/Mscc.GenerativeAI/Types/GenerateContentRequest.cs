@@ -250,6 +250,11 @@ namespace Mscc.GenerativeAI.Types
         /// <param name="index">Zero-based index of element in the Contents collection.</param>
         public void AddPart(IPart part, int index = 0)
         {
+	        Contents ??= [];
+	        if (Contents.Count == 0)
+	        {
+		        Contents.Add(new Content());
+	        }
             if (Contents?[index] == null)
                 throw new ArgumentNullException(nameof(index),
                     "The contents collection has no item at the specified index.");
