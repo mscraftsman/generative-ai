@@ -60,6 +60,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution
 		.env = .env
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "embeddingFix", "embeddingFix\embeddingFix.csproj", "{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -382,6 +384,18 @@ Global
 		{2FD71437-50DA-493E-B958-4C2850C9EF88}.Release|x64.Build.0 = Release|Any CPU
 		{2FD71437-50DA-493E-B958-4C2850C9EF88}.Release|x86.ActiveCfg = Release|Any CPU
 		{2FD71437-50DA-493E-B958-4C2850C9EF88}.Release|x86.Build.0 = Release|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Debug|x64.Build.0 = Debug|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Debug|x86.Build.0 = Debug|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Release|x64.Build.0 = Release|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{7388DE76-3AEF-4DC3-A588-CAFC5B9DAD7E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
