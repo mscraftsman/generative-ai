@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 ### Fixed
 
+## 3.0.2
+
+### Added
+
+- add sample from #164 (4d1676a)
+- add tests for #164 (81425b8)
+- add interface `ILogger` to `GeminiEmbeddingGenerator` (edde334)
+- add quick access to models response (c5984d0)
+
+### Fixed
+
+- fix mapping of embeddings #164 (2c5b343)
+
 ## 3.0.1
 
 ### Added
