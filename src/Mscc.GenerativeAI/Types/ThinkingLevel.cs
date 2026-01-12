@@ -28,10 +28,6 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		ThinkingLevelUnspecified,
 		/// <summary>
-		/// Little to no thinking.
-		/// </summary>
-		Minimal,
-		/// <summary>
 		/// Low thinking level.
 		/// </summary>
 		Low,
@@ -43,5 +39,9 @@ namespace Mscc.GenerativeAI.Types
 		/// High thinking level.
 		/// </summary>
 		High,
+		/// <summary>
+		/// MINIMAL thinking level.
+		/// </summary>
+		Minimal,
 	}
 }
