@@ -2794,6 +2794,22 @@ namespace Test.Mscc.GenerativeAI
             fileData.FileUri.ShouldBe(uri);
             fileData.MimeType.ShouldBe(GenerativeAIExtensions.GetMimeType(uri));
         }
+
+        [Fact]
+        public async Task Register_Files_from_GCS()
+        {
+	        // Arrange
+	        var requestOptions = new RequestOptions { ApiVersion = ApiVersion.V1Alpha };
+	        List<string> gcsUris = ["gs://cloud-samples-data/generative-ai/image/a-man-and-a-dog.png",
+		        "gs://generativeai-downloads/images/scones.jpg",
+		        "gs://cloud-samples-data/video/animals.mp4"];
+	        
+	        // Act
+	        var response = await _googleAi.RegisterFiles(gcsUris, requestOptions);
+	        
+	        // Assert
+	        response.ShouldBeOfType<RegisterFilesResponse>();
+        }
         
         // Define the Instrument enum
         /// <summary>
