@@ -29,7 +29,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public string? GoogleMapsWidgetContextToken { get; set; }
 		/// <summary>
-		/// List of supporting references retrieved from specified grounding source.
+		/// List of supporting references retrieved from specified grounding source. When streaming, this only contains the grounding chunks that have not been included in the grounding metadata of previous responses.
 		/// </summary>
 		public List<GroundingChunk>? GroundingChunks { get; set; }
 		/// <summary>

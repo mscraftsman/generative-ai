@@ -29,7 +29,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public List<double>? ConfidenceScores { get; set; }
 		/// <summary>
-		/// Optional. A list of indices (into &apos;grounding_chunk&apos;) specifying the citations associated with the claim. For instance [1,3,4] means that grounding_chunk[1], grounding_chunk[3], grounding_chunk[4] are the retrieved content attributed to the claim.
+		/// Optional. A list of indices (into &apos;grounding_chunk&apos; in <c>response.candidate.grounding_metadata</c>) specifying the citations associated with the claim. For instance [1,3,4] means that grounding_chunk[1], grounding_chunk[3], grounding_chunk[4] are the retrieved content attributed to the claim. If the response is streaming, the grounding_chunk_indices refer to the indices across all responses. It is the client&apos;s responsibility to accumulate the grounding chunks from all responses (while maintaining the same order).
 		/// </summary>
 		public List<int>? GroundingChunkIndices { get; set; }
 		/// <summary>
