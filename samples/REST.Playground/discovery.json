@@ -1,4 +1,13 @@
 {
+  "auth": {
+    "oauth2": {
+      "scopes": {
+        "https://www.googleapis.com/auth/devstorage.read_only": {
+          "description": "View your data in Google Cloud Storage"
+        }
+      }
+    }
+  },
   "basePath": "",
   "baseUrl": "https://generativelanguage.googleapis.com/",
   "batchPath": "batch",
@@ -1049,6 +1058,24 @@
           "response": {
             "$ref": "ListFilesResponse"
           }
+        },
+        "register": {
+          "description": "Registers a Google Cloud Storage files with FileService. The user is expected to provide Google Cloud Storage URIs and will receive a File resource for each URI in return. Note that the files are not copied, just registered with File API. If one file fails to register, the whole request fails.",
+          "flatPath": "v1beta/files:register",
+          "httpMethod": "POST",
+          "id": "generativelanguage.files.register",
+          "parameterOrder": [],
+          "parameters": {},
+          "path": "v1beta/files:register",
+          "request": {
+            "$ref": "RegisterFilesRequest"
+          },
+          "response": {
+            "$ref": "RegisterFilesResponse"
+          },
+          "scopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only"
+          ]
         }
       }
     },
@@ -2219,7 +2246,7 @@
       }
     }
   },
-  "revision": "20251218",
+  "revision": "20260112",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -4125,6 +4152,11 @@
           },
           "type": "array"
         },
+        "modelStatus": {
+          "$ref": "ModelStatus",
+          "description": "Output only. The current model status of this model.",
+          "readOnly": true
+        },
         "modelVersion": {
           "description": "Output only. The model version used to generate the response.",
           "readOnly": true,
@@ -4333,6 +4365,10 @@
           "format": "int32",
           "type": "integer"
         },
+        "enableAffectiveDialog": {
+          "description": "Optional. If enabled, the model will detect emotions and adapt its responses accordingly.",
+          "type": "boolean"
+        },
         "enableEnhancedCivicAnswers": {
           "description": "Optional. Enables enhanced civic answers. It may not be available for all models.",
           "type": "boolean"
@@ -4450,9 +4486,9 @@
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguageV1betaGroundingSupport": {
+    "GoogleAiGenerativelanguagev1betaGroundingSupport": {
       "description": "Grounding support.",
-      "id": "GoogleAiGenerativelanguageV1betaGroundingSupport",
+      "id": "GoogleAiGenerativelanguagev1betaGroundingSupport",
       "properties": {
         "confidenceScores": {
           "description": "Optional. Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. This list must have the same size as the grounding_chunk_indices.",
@@ -4463,7 +4499,7 @@
           "type": "array"
         },
         "groundingChunkIndices": {
-          "description": "Optional. A list of indices (into 'grounding_chunk') specifying the citations associated with the claim. For instance [1,3,4] means that grounding_chunk[1], grounding_chunk[3], grounding_chunk[4] are the retrieved content attributed to the claim.",
+          "description": "Optional. A list of indices (into 'grounding_chunk' in `response.candidate.grounding_metadata`) specifying the citations associated with the claim. For instance [1,3,4] means that grounding_chunk[1], grounding_chunk[3], grounding_chunk[4] are the retrieved content attributed to the claim. If the response is streaming, the grounding_chunk_indices refer to the indices across all responses. It is the client's responsibility to accumulate the grounding chunks from all responses (while maintaining the same order).",
           "items": {
             "format": "int32",
             "type": "integer"
@@ -4471,15 +4507,15 @@
           "type": "array"
         },
         "segment": {
-          "$ref": "GoogleAiGenerativelanguageV1betaSegment",
+          "$ref": "GoogleAiGenerativelanguagev1betaSegment",
           "description": "Segment of the content this support belongs to."
         }
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguageV1betaSegment": {
+    "GoogleAiGenerativelanguagev1betaSegment": {
       "description": "Segment of the content.",
-      "id": "GoogleAiGenerativelanguageV1betaSegment",
+      "id": "GoogleAiGenerativelanguagev1betaSegment",
       "properties": {
         "endIndex": {
           "description": "End index in the given Part, measured in bytes. Offset from the start of the Part, exclusive, starting at zero.",
@@ -4580,7 +4616,7 @@
           "type": "string"
         },
         "groundingChunks": {
-          "description": "List of supporting references retrieved from specified grounding source.",
+          "description": "List of supporting references retrieved from specified grounding source. When streaming, this only contains the grounding chunks that have not been included in the grounding metadata of previous responses.",
           "items": {
             "$ref": "GroundingChunk"
           },
@@ -4589,7 +4625,7 @@
         "groundingSupports": {
           "description": "List of grounding support.",
           "items": {
-            "$ref": "GoogleAiGenerativelanguageV1betaGroundingSupport"
+            "$ref": "GoogleAiGenerativelanguagev1betaGroundingSupport"
           },
           "type": "array"
         },
@@ -5425,6 +5461,56 @@
       },
       "type": "object"
     },
+    "ModelStatus": {
+      "description": "The status of the underlying model. This is used to indicate the stage of the underlying model and the retirement time if applicable.",
+      "id": "ModelStatus",
+      "properties": {
+        "message": {
+          "description": "A message explaining the model status.",
+          "type": "string"
+        },
+        "modelStage": {
+          "description": "The stage of the underlying model.",
+          "enum": [
+            "MODEL_STAGE_UNSPECIFIED",
+            "UNSTABLE_EXPERIMENTAL",
+            "EXPERIMENTAL",
+            "PREVIEW",
+            "STABLE",
+            "LEGACY",
+            "DEPRECATED",
+            "RETIRED"
+          ],
+          "enumDeprecated": [
+            false,
+            true,
+            false,
+            false,
+            false,
+            false,
+            true,
+            false
+          ],
+          "enumDescriptions": [
+            "Unspecified model stage.",
+            "The underlying model is subject to lots of tunings.",
+            "Models in this stage are for experimental purposes only.",
+            "Models in this stage are more mature than experimental models.",
+            "Models in this stage are considered stable and ready for production use.",
+            "If the model is on this stage, it means that this model is on the path to deprecation in near future. Only existing customers can use this model.",
+            "Models in this stage are deprecated. These models cannot be used.",
+            "Models in this stage are retired. These models cannot be used."
+          ],
+          "type": "string"
+        },
+        "retirementTime": {
+          "description": "The time at which the model will be retired.",
+          "format": "google-datetime",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "MultiSpeakerVoiceConfig": {
       "description": "The configuration for the multi-speaker setup.",
       "id": "MultiSpeakerVoiceConfig",
@@ -5737,6 +5823,34 @@
             "The users turn includes all realtime input since the last turn, including inactivity (e.g. silence on the audio stream)."
           ],
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "RegisterFilesRequest": {
+      "description": "Request for `RegisterFiles`.",
+      "id": "RegisterFilesRequest",
+      "properties": {
+        "uris": {
+          "description": "Required. The Google Cloud Storage URIs to register. Example: `gs://bucket/object`.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "RegisterFilesResponse": {
+      "description": "Response for `RegisterFiles`.",
+      "id": "RegisterFilesResponse",
+      "properties": {
+        "files": {
+          "description": "The registered files to be used when calling GenerateContent.",
+          "items": {
+            "$ref": "File"
+          },
+          "type": "array"
         }
       },
       "type": "object"
