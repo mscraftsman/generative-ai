@@ -1,0 +1,13 @@
+POST https://generativelanguage.googleapis.com/v1alpha/files:register
+x-goog-api-key: {{apiKey}}
+User-Agent: Mscc.GenerativeAI/3.0.2.0
+x-goog-api-client: Mscc.GenerativeAI/3.0.2.0
+Content-Type: application/json; charset=utf-8
+
+{
+  "uris": [
+    "gs://cloud-samples-data/generative-ai/image/a-man-and-a-dog.png",
+    "gs://generativeai-downloads/images/scones.jpg",
+    "gs://cloud-samples-data/video/animals.mp4"
+  ]
+}

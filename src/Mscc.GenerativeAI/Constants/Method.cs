@@ -33,6 +33,7 @@ namespace Mscc.GenerativeAI.Types
         public static string Copy = "copy";
         public static string StreamGenerateContent = "streamGenerateContent";
         public static string BidirectionalGenerateContent = "bidiGenerateContent";
+        public static string Register = "register";
 
         public static string Generate = "generate";
 

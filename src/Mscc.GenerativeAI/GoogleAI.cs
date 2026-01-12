@@ -396,6 +396,31 @@ namespace Mscc.GenerativeAI
             };
             return await _filesModel?.DeleteFile(file, requestOptions, cancellationToken)!;
         }
+        
+        /// <summary>
+        /// Registers a Google Cloud Storage files with FileService.
+        /// The user is expected to provide Google Cloud Storage URIs and will receive a File resource
+        /// for each URI in return. Note that the files are not copied, just registered with File API.
+        /// If one file fails to register, the whole request fails.
+        /// </summary>
+        /// <param name="gcsUris">List of Google Cloud Storage URIs to register.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        public async Task<RegisterFilesResponse> RegisterFiles(List<string> gcsUris,
+	        RequestOptions? requestOptions = null,
+	        CancellationToken cancellationToken = default)
+        {
+	        Guard();
+
+	        _filesModel ??= new(_httpClientFactory, logger: Logger)
+	        {
+		        ApiKey = _apiKey, 
+		        AccessToken = _apiKey is null ? _accessToken : null
+	        };
+	        var request = new RegisterFilesRequest { Uris = gcsUris };
+	        return await _filesModel?.RegisterFiles(request, requestOptions, cancellationToken);
+        }
 
         /// <summary>
         /// Lists the metadata for Files owned by the requesting project.

@@ -112,5 +112,27 @@ namespace Mscc.GenerativeAI
             return await response.Content.ReadAsStringAsync(cancellationToken);
 #endif
         }
+
+        /// <summary>
+        /// Registers a Google Cloud Storage files with FileService.
+        /// The user is expected to provide Google Cloud Storage URIs and will receive a File resource
+        /// for each URI in return. Note that the files are not copied, just registered with File API.
+        /// If one file fails to register, the whole request fails.
+        /// </summary>
+        /// <param name="request">Request with GCS Uris to register.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="request"/> is <see langword="null"/>.</exception>
+        public async Task<RegisterFilesResponse> RegisterFiles(RegisterFilesRequest request,
+	        RequestOptions? requestOptions = null,
+	        CancellationToken cancellationToken = default)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var url = $"{BaseUrlGoogleAi}/files:{Method.Register}";
+            url = ParseUrl(url);
+            return await PostAsync<RegisterFilesRequest, RegisterFilesResponse>(request, url, null, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+        }
     }
 }
