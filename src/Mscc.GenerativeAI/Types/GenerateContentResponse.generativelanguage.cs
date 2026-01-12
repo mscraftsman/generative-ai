@@ -29,6 +29,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public List<Candidate>? Candidates { get; set; }
 		/// <summary>
+		/// Output only. The current model status of this model.
+		/// </summary>
+		public ModelStatus? ModelStatus { get; set; }
+		/// <summary>
 		/// Output only. The model version used to generate the response.
 		/// </summary>
 		public string? ModelVersion { get; set; }
