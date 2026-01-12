@@ -17,7 +17,7 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="Google.Apis.Auth" Version="1.73.0" />
-    <PackageVersion Include="Google.Protobuf" Version="3.33.2" />
+    <PackageVersion Include="Google.Protobuf" Version="3.33.4" />
     <PackageVersion Include="JsonSchema.Net.Generation" Version="5.0.4" />
     <PackageVersion Include="JsonSchema.Net.Generation.DataAnnotations" Version="1.2.0" />
     <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0-preview.251219.1" />
