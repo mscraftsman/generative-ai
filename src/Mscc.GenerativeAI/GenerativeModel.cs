@@ -129,6 +129,8 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Types.Method.EmbedContent;
                     case GenerativeAI.Types.Model.GeminiEmbedding:
                         return GenerativeAI.Types.Method.EmbedContent;
+                    case GenerativeAI.Types.Model.GeminiEmbedding2:
+                        return GenerativeAI.Types.Method.EmbedContent;
                     case GenerativeAI.Types.Model.TextEmbedding:
                         return GenerativeAI.Types.Method.EmbedContent;
                     case GenerativeAI.Types.Model.Imagen3:
@@ -163,6 +165,7 @@ namespace Mscc.GenerativeAI
                     GenerativeAI.Types.Model.GeckoEmbedding => GenerativeAI.Types.Method.EmbedText,
                     GenerativeAI.Types.Model.Embedding => GenerativeAI.Types.Method.EmbedContent,
                     GenerativeAI.Types.Model.GeminiEmbedding => GenerativeAI.Types.Method.EmbedContent,
+                    GenerativeAI.Types.Model.GeminiEmbedding2 => GenerativeAI.Types.Method.EmbedContent,
                     GenerativeAI.Types.Model.TextEmbedding => GenerativeAI.Types.Method.EmbedContent,
                     GenerativeAI.Types.Model.Imagen3 => GenerativeAI.Types.Method.Predict,
                     GenerativeAI.Types.Model.Imagen3Fast => GenerativeAI.Types.Method.Predict,
