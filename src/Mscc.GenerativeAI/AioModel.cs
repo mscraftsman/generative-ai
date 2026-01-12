@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace Mscc.GenerativeAI
 {
-    public class AioModel(IHttpClientFactory apiClient, ILogger logger)
+    public sealed class AioModel(IHttpClientFactory apiClient, ILogger logger)
     {
         
     }

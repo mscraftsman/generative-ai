@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
-    public class LiveModel : BaseModel
+    public sealed class LiveModel : BaseModel
     {
 	    public LiveModel() : this(httpClientFactory: null, logger: null) { }
 	    public LiveModel(IHttpClientFactory apiClient) : this(httpClientFactory: apiClient, logger: null) { }

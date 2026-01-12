@@ -14,7 +14,7 @@ namespace Mscc.GenerativeAI
     /// Gemini is a highly capable multimodal model that can understand and process various types of information, including language, images, audio, video, and code.
     /// The API supports use cases like reasoning across text and images, content generation, dialogue agents, summarization, and classification.
     /// </summary>
-    public class InteractionsModel : BaseModel
+    public sealed class InteractionsModel : BaseModel
     {
         internal override string Version => ApiVersion.V1Beta;
 

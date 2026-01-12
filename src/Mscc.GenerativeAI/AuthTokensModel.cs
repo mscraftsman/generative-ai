@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Mscc.GenerativeAI
 {
-    public class AuthTokensModel(IHttpClientFactory apiClient, ILogger logger)
+    public sealed class AuthTokensModel(IHttpClientFactory apiClient, ILogger logger)
     {
 #if false
         public async Task<AuthToken> Create(AuthToken authToken)

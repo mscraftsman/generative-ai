@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Mscc.GenerativeAI
 {
-    public class OperationsModel : BaseModel
+    public sealed class OperationsModel : BaseModel
     {
         internal override string Version => ApiVersion.V1Beta;
 

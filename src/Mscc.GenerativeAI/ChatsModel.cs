@@ -1,7 +1,6 @@
 namespace Mscc.GenerativeAI
 {
-    public class ChatsModel(ModelsModel models)
-    {
-        
-    }
+	public sealed class ChatsModel(ModelsModel models)
+	{
+	}
 }
