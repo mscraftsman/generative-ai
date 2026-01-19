@@ -1671,6 +1671,18 @@ namespace Mscc.GenerativeAI
 
 		        return tools;
 	        }
+
+	        public Tools UseFileSearch(string[] storeNames)
+	        {
+		        Tools defaultTools = [new Tool { FileSearch = new FileSearch { Stores = [.. storeNames] } }];
+		        tools ??= defaultTools;
+		        if (tools != null && !tools.Any(t => t.FileSearch is not null))
+		        {
+			        tools.AddRange(defaultTools);
+		        }
+
+		        return tools;
+	        }
         }
     }
 }

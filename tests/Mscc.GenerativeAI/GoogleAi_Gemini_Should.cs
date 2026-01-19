@@ -4352,15 +4352,6 @@ Answer:";
             // Arrange
             var genAi = new GoogleAI(_fixture.ApiKey);
             var model = _googleAi.GenerativeModel(model: _model);
-            if (string.IsNullOrEmpty(storeName))
-            {
-                var fileSearchStoresModel = _googleAi.FileSearchStoresModel();
-                var listResponse = await fileSearchStoresModel.List();
-                var store = listResponse.FileSearchStores
-                    .FirstOrDefault(s => s.ActiveDocumentsCount > 0);
-                storeName = store.Name;
-            }
-            storeName = storeName.SanitizeFileSearchStoreName();
 
             Tools tools = [new Tool()
             {
@@ -4371,6 +4362,49 @@ Answer:";
             var response = await model.GenerateContent(prompt, tools: tools);
 
             // Assert
+            response.ShouldNotBeNull();
+            response.Candidates.ShouldNotBeNull();
+            response.Candidates.Count.ShouldBe(1);
+            // response.Candidates![0].GroundingMetadata.Should().NotBeNull();
+            // response.Candidates![0].GroundingMetadata!.GroundingChunks.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            // response.Candidates![0].GroundingMetadata!.GroundingSupports.Should().NotBeNull().And.HaveCountGreaterThanOrEqualTo(1);
+            _output.WriteLine(string.Join(Environment.NewLine,
+                response.Candidates![0].Content!.Parts
+                    .Select(x => x.Text)
+                    .ToArray()));
+            // response.Candidates![0].GroundingMetadata!.GroundingChunks?
+            //     .ForEach(c =>
+            //         _output.WriteLine($"{c!.RetrievedContext!.Title} - {c!.RetrievedContext!.Text}"));
+        }
+
+        [Theory]
+        [InlineData("Can you tell me about Robert Graves", "")]
+        [InlineData("What were the first words on the moon?", "hhablrucai0e-cz7rit6wgzai")]
+        public async Task Generate_Content_using_Fluent_FileSearch(string prompt, string storeName)
+        {
+            // Arrange
+            var genAi = new GoogleAI(_fixture.ApiKey);
+            var model = _googleAi.GenerativeModel(model: _model);
+            if (string.IsNullOrEmpty(storeName))
+            {
+	            var fileSearchStoresModel = _googleAi.FileSearchStoresModel();
+	            var listResponse = await fileSearchStoresModel.List();
+	            var store = listResponse.FileSearchStores
+		            .FirstOrDefault(s => s.ActiveDocumentsCount > 0);
+	            storeName = store.Name;
+            }
+            storeName = storeName.SanitizeFileSearchStoreName();
+
+            var request = new GenerateContentRequest(prompt);
+            request
+	            .WithTools()
+	            .UseFileSearch([storeName]);
+	        
+            // Act
+            var response = await model.GenerateContent(request);
+	        
+            // Assert
+            response.ShouldNotBeNull();
             response.ShouldNotBeNull();
             response.Candidates.ShouldNotBeNull();
             response.Candidates.Count.ShouldBe(1);
