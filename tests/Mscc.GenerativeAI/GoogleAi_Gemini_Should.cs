@@ -4379,7 +4379,7 @@ Answer:";
 
         [Theory]
         [InlineData("Can you tell me about Robert Graves", "")]
-        [InlineData("What were the first words on the moon?", "hhablrucai0e-cz7rit6wgzai")]
+        [InlineData("What were the first words on the moon?", "ss6mpb0bl603-tdpjmrj7fxgk")]
         public async Task Generate_Content_using_Fluent_FileSearch(string prompt, string storeName)
         {
             // Arrange
