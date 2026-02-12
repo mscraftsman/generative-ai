@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public object? Args { get; set; }
 		/// <summary>
-		/// Optional. The unique id of the function call. If populated, the client to execute the <c>function_call</c> and return the response with the matching <c>id</c>.
+		/// Optional. The unique identifier of the function call. If populated, the client to execute the <c>function_call</c> and return the response with the matching <c>id</c>.
 		/// </summary>
 		public string? Id { get; set; }
 		/// <summary>

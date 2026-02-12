@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public ContextWindowCompressionConfig? ContextWindowCompression { get; set; }
 		/// <summary>
-		/// Optional. Generation config. The following fields are not supported: - <c>response_logprobs</c> - <c>response_mime_type</c> - <c>logprobs</c> - <c>response_schema</c> - <c>response_json_schema</c> - <c>stop_sequence</c> - <c>routing_config</c> - <c>audio_timestamp</c>
+		/// Optional. Generation config. The following fields are not supported: - <c>response_logprobs</c> - <c>response_mime_type</c> - <c>logprobs</c> - <c>response_schema</c> - <c>response_json_schema</c> - <c>stop_sequence</c> - <c>skip_response_cache</c> - <c>routing_config</c> - <c>audio_timestamp</c>
 		/// </summary>
 		public GenerationConfig? GenerationConfig { get; set; }
 		/// <summary>

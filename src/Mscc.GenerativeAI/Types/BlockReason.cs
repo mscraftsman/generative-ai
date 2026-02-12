@@ -32,19 +32,19 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		BlockedReasonUnspecified,
 		/// <summary>
-		/// The prompt was blocked for safety reasons.
+		/// Prompt was blocked due to safety reasons. Inspect `safety_ratings` to understand which safety category blocked it.
 		/// </summary>
 		Safety,
 		/// <summary>
-		/// The prompt was blocked for other reasons. For example, it may be due to the prompt&apos;s language, or because it contains other harmful content.
+		/// Prompt was blocked due to unknown reasons.
 		/// </summary>
 		Other,
 		/// <summary>
-		/// The prompt was blocked because it contains a term from the terminology blocklist.
+		/// Prompt was blocked due to the terms which are included from the terminology blocklist.
 		/// </summary>
 		Blocklist,
 		/// <summary>
-		/// The prompt was blocked because it contains prohibited content.
+		/// Prompt was blocked due to prohibited content.
 		/// </summary>
 		ProhibitedContent,
 		/// <summary>
@@ -52,7 +52,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		ModelArmor,
 		/// <summary>
-		/// The prompt was blocked because it contains content that is unsafe for image generation.
+		/// Candidates blocked due to unsafe image generation content.
 		/// </summary>
 		ImageSafety,
 		/// <summary>

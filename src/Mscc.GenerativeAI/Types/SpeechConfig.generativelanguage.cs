@@ -19,12 +19,12 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// The speech generation config.
+	/// Config for speech generation and transcription.
 	/// </summary>
 	public partial class SpeechConfig
 	{
 		/// <summary>
-		/// Optional. Language code (in BCP 47 format, e.g. &quot;en-US&quot;) for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, en-US, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.
+		/// Optional. The IETF [BCP-47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language code that the user configured the app to use. Used for speech recognition and synthesis. Valid values are: <c>de-DE</c>, <c>en-AU</c>, <c>en-GB</c>, <c>en-IN</c>, <c>en-US</c>, <c>es-US</c>, <c>fr-FR</c>, <c>hi-IN</c>, <c>pt-BR</c>, <c>ar-XA</c>, <c>es-ES</c>, <c>fr-CA</c>, <c>id-ID</c>, <c>it-IT</c>, <c>ja-JP</c>, <c>tr-TR</c>, <c>vi-VN</c>, <c>bn-IN</c>, <c>gu-IN</c>, <c>kn-IN</c>, <c>ml-IN</c>, <c>mr-IN</c>, <c>ta-IN</c>, <c>te-IN</c>, <c>nl-NL</c>, <c>ko-KR</c>, <c>cmn-CN</c>, <c>pl-PL</c>, <c>ru-RU</c>, and <c>th-TH</c>.
 		/// </summary>
 		public string? LanguageCode { get; set; }
 		/// <summary>

@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI.Types
 	public partial class FunctionResponse
 	{
 		/// <summary>
-		/// Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call <c>id</c>.
+		/// Optional. The identifier of the function call this response is for. Populated by the client to match the corresponding function call <c>id</c>.
 		/// </summary>
 		public string? Id { get; set; }
 		/// <summary>

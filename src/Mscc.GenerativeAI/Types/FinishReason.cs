@@ -99,5 +99,9 @@ namespace Mscc.GenerativeAI.Types
 		/// Request has at least one thought signature missing.
 		/// </summary>
 		MissingThoughtSignature,
+		/// <summary>
+		/// Finished due to malformed response.
+		/// </summary>
+		MalformedResponse,
 	}
 }
