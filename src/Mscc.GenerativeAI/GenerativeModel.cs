@@ -123,15 +123,11 @@ namespace Mscc.GenerativeAI
                         return GenerativeAI.Types.Method.GenerateMessage;
                     case GenerativeAI.Types.Model.BisonText:
                         return GenerativeAI.Types.Method.GenerateText;
-                    case GenerativeAI.Types.Model.GeckoEmbedding:
-                        return GenerativeAI.Types.Method.EmbedText;
                     case GenerativeAI.Types.Model.Embedding:
                         return GenerativeAI.Types.Method.EmbedContent;
                     case GenerativeAI.Types.Model.GeminiEmbedding:
                         return GenerativeAI.Types.Method.EmbedContent;
                     case GenerativeAI.Types.Model.GeminiEmbedding2:
-                        return GenerativeAI.Types.Method.EmbedContent;
-                    case GenerativeAI.Types.Model.TextEmbedding:
                         return GenerativeAI.Types.Method.EmbedContent;
                     case GenerativeAI.Types.Model.Imagen3:
                         return GenerativeAI.Types.Method.Predict;
@@ -162,11 +158,9 @@ namespace Mscc.GenerativeAI
                 {
                     GenerativeAI.Types.Model.BisonChat => GenerativeAI.Types.Method.GenerateMessage,
                     GenerativeAI.Types.Model.BisonText => GenerativeAI.Types.Method.GenerateText,
-                    GenerativeAI.Types.Model.GeckoEmbedding => GenerativeAI.Types.Method.EmbedText,
                     GenerativeAI.Types.Model.Embedding => GenerativeAI.Types.Method.EmbedContent,
                     GenerativeAI.Types.Model.GeminiEmbedding => GenerativeAI.Types.Method.EmbedContent,
                     GenerativeAI.Types.Model.GeminiEmbedding2 => GenerativeAI.Types.Method.EmbedContent,
-                    GenerativeAI.Types.Model.TextEmbedding => GenerativeAI.Types.Method.EmbedContent,
                     GenerativeAI.Types.Model.Imagen3 => GenerativeAI.Types.Method.Predict,
                     GenerativeAI.Types.Model.Imagen3Fast => GenerativeAI.Types.Method.Predict,
                     GenerativeAI.Types.Model.Veo3 => GenerativeAI.Types.Method.PredictLongRunning,
@@ -1960,7 +1954,7 @@ namespace Mscc.GenerativeAI
                 case GenerativeAI.Types.Model.BisonText:
                     var textRequest = new GenerateTextRequest(prompt);
                     return await CountTokens(textRequest, requestOptions, cancellationToken);
-                case GenerativeAI.Types.Model.GeckoEmbedding:
+                case GenerativeAI.Types.Model.Embedding:
                     var embeddingRequest = new GenerateTextRequest(prompt);
                     return await CountTokens(embeddingRequest, requestOptions, cancellationToken);
                 default:
