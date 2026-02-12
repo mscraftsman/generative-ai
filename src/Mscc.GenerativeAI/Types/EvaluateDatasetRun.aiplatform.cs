@@ -32,7 +32,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public GoogleRpcStatus? Error { get; set; }
 		/// <summary>
-		/// Output only. Results for EvaluationService.EvaluateDataset.
+		/// Output only. Results for EvaluationService.
 		/// </summary>
 		public EvaluateDatasetResponse? EvaluateDatasetResponse { get; set; }
 		/// <summary>

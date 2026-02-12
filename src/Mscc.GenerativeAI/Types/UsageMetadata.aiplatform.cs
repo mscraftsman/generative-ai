@@ -42,6 +42,14 @@ namespace Mscc.GenerativeAI.Types
 			/// </summary>
 			OnDemand,
 			/// <summary>
+			/// Type for Priority Pay-As-You-Go traffic.
+			/// </summary>
+			OnDemandPriority,
+			/// <summary>
+			/// Type for Flex traffic.
+			/// </summary>
+			OnDemandFlex,
+			/// <summary>
 			/// Type for Provisioned Throughput traffic.
 			/// </summary>
 			ProvisionedThroughput,

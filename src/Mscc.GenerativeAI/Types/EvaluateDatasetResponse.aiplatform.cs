@@ -19,16 +19,16 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Response in LRO for EvaluationService.EvaluateDataset.
+	/// The results from an evaluation run performed by the EvaluationService.
 	/// </summary>
 	public partial class EvaluateDatasetResponse
 	{
 		/// <summary>
-		/// Output only. Aggregation statistics derived from results of EvaluationService.EvaluateDataset.
+		/// Output only. Aggregation statistics derived from results of EvaluationService.
 		/// </summary>
 		public AggregationOutput? AggregationOutput { get; set; }
 		/// <summary>
-		/// Output only. Output info for EvaluationService.EvaluateDataset.
+		/// Output only. Output info for EvaluationService.
 		/// </summary>
 		public OutputInfo? OutputInfo { get; set; }
     }

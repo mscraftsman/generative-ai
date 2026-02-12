@@ -34,6 +34,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public BleuSpec? BleuSpec { get; set; }
 		/// <summary>
+		/// Spec for a computation based metric.
+		/// </summary>
+		public ComputationBasedMetricSpec? ComputationBasedMetricSpec { get; set; }
+		/// <summary>
 		/// Spec for Custom Code Execution metric.
 		/// </summary>
 		public CustomCodeExecutionSpec? CustomCodeExecutionSpec { get; set; }

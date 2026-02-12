@@ -19,7 +19,7 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Describes the info for output of EvaluationService.EvaluateDataset.
+	/// Describes the info for output of EvaluationService.
 	/// </summary>
 	public partial class OutputInfo
 	{

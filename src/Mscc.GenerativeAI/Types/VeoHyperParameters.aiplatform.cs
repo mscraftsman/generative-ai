@@ -37,7 +37,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public TuningTaskType? TuningTask { get; set; }
 		/// <summary>
-		/// Optional. The ratio of Google internal dataset to use in the training mixture, in range of <c>[0, 1)</c>. If <c>0.2</c>, it means 20% of Google internal dataset and 80% of user dataset will be used for training.
+		/// Optional. The ratio of Google internal dataset to use in the training mixture, in range of <c>[0, 1)</c>. If <c>0.2</c>, it means 20% of Google internal dataset and 80% of user dataset will be used for training. If not set, the default value is 0.1.
 		/// </summary>
 		public double? VeoDataMixtureRatio { get; set; }
 
