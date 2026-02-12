@@ -39,15 +39,10 @@ namespace Mscc.GenerativeAI.Types
         public const string Gemini20Flash001 = "gemini-2.0-flash-001";
         public const string Gemini20FlashLite = "gemini-2.0-flash-lite";
         public const string Gemini20FlashLite001 = "gemini-2.0-flash-lite-001";
-        public const string Gemini20FlashLitePreview = "gemini-2.0-flash-lite-preview";
-        public const string Gemini20FlashLitePreview0205 = "gemini-2.0-flash-lite-preview-02-05";
-        public const string Gemini20FlashExperimental = "gemini-2.0-flash-exp";
         public const string Gemini20FlashImageGenerationExperimental = "gemini-2.0-flash-exp-image-generation";
 
         public const string GeminiEmbedding = GeminiEmbedding001;
         public const string GeminiEmbedding001 = "gemini-embedding-001";
-        public const string GeminiEmbeddingExperimental = "gemini-embedding-exp";
-        public const string GeminiEmbeddingExperimental0307 = "gemini-embedding-exp-03-07";
         
         public const string GeminiEmbedding2 = GeminiEmbedding2Experimental;
         public const string GeminiEmbedding2Experimental = GeminiEmbedding2Experimental112025;
@@ -143,16 +138,13 @@ namespace Mscc.GenerativeAI.Types
         public const string CodeGecko002 = "code-gecko-002"; // Vertex: code-gecko@002
         public const string CodeGeckoLatest = "code-gecko@latest";
         public const string CodeGecko = "code-gecko";
-        public const string GeckoEmbedding = "embedding-gecko-001";
-        public const string Embedding001 = "embedding-001";
-        public const string Embedding = Embedding001;
+        public const string Embedding = TextEmbedding;
         public const string AttributedQuestionAnswering = "aqa";
 
         // Text Embeddings on Vertex AI
         // Discontinuation date: Nov 18, 2025 or January 14, 2026.
-        public const string TextEmbedding004 = "text-embedding-004";
+        public const string TextEmbedding = TextEmbedding005;
         public const string TextEmbedding005 = "text-embedding-005";
-        public const string TextEmbedding = TextEmbedding004;
         public const string TextEmbeddingPreview0815 = "text-embedding-preview-0815";
         public const string TextEmbeddingPreview = TextEmbeddingPreview0815;
         public const string TextMultilingualEmbedding = "text-multilingual-embedding-002";

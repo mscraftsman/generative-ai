@@ -1,18 +1,6 @@
 {
   "models": [
     {
-      "description": "Obtain a distributed representation of a text.",
-      "displayName": "Embedding Gecko",
-      "inputTokenLimit": 1024,
-      "name": "models/embedding-gecko-001",
-      "outputTokenLimit": 1,
-      "supportedGenerationMethods": [
-        "embedText",
-        "countTextTokens"
-      ],
-      "version": "001"
-    },
-    {
       "description": "Stable version of Gemini 2.5 Flash, our mid-size multimodal model that supports up to 1 million tokens, released in June of 2025.",
       "displayName": "Gemini 2.5 Flash",
       "inputTokenLimit": 1048576,
@@ -49,23 +37,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "2.5"
-    },
-    {
-      "description": "Gemini 2.0 Flash Experimental",
-      "displayName": "Gemini 2.0 Flash Experimental",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-exp",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "bidiGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "2.0"
     },
     {
       "description": "Gemini 2.0 Flash",
@@ -155,42 +126,6 @@
       "topK": 40,
       "topP": 0.95,
       "version": "2.0"
-    },
-    {
-      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash-Lite",
-      "displayName": "Gemini 2.0 Flash-Lite Preview 02-05",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-lite-preview-02-05",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "preview-02-05"
-    },
-    {
-      "description": "Preview release (February 5th, 2025) of Gemini 2.0 Flash-Lite",
-      "displayName": "Gemini 2.0 Flash-Lite Preview",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.0-flash-lite-preview",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 40,
-      "topP": 0.95,
-      "version": "preview-02-05"
     },
     {
       "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
@@ -409,23 +344,6 @@
       "displayName": "Nano Banana",
       "inputTokenLimit": 32768,
       "maxTemperature": 1,
-      "name": "models/gemini-2.5-flash-image-preview",
-      "outputTokenLimit": 32768,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.0"
-    },
-    {
-      "description": "Gemini 2.5 Flash Preview Image",
-      "displayName": "Nano Banana",
-      "inputTokenLimit": 32768,
-      "maxTemperature": 1,
       "name": "models/gemini-2.5-flash-image",
       "outputTokenLimit": 32768,
       "supportedGenerationMethods": [
@@ -600,54 +518,6 @@
       "topK": 64,
       "topP": 0.95,
       "version": "deepthink-exp-05-20"
-    },
-    {
-      "description": "Obtain a distributed representation of a text.",
-      "displayName": "Embedding 001",
-      "inputTokenLimit": 2048,
-      "name": "models/embedding-001",
-      "outputTokenLimit": 1,
-      "supportedGenerationMethods": [
-        "embedContent"
-      ],
-      "version": "001"
-    },
-    {
-      "description": "Obtain a distributed representation of a text.",
-      "displayName": "Text Embedding 004",
-      "inputTokenLimit": 2048,
-      "name": "models/text-embedding-004",
-      "outputTokenLimit": 1,
-      "supportedGenerationMethods": [
-        "embedContent"
-      ],
-      "version": "004"
-    },
-    {
-      "description": "Obtain a distributed representation of a text.",
-      "displayName": "Gemini Embedding Experimental 03-07",
-      "inputTokenLimit": 8192,
-      "name": "models/gemini-embedding-exp-03-07",
-      "outputTokenLimit": 1,
-      "supportedGenerationMethods": [
-        "embedContent",
-        "countTextTokens",
-        "countTokens"
-      ],
-      "version": "exp-03-07"
-    },
-    {
-      "description": "Obtain a distributed representation of a text.",
-      "displayName": "Gemini Embedding Experimental",
-      "inputTokenLimit": 8192,
-      "name": "models/gemini-embedding-exp",
-      "outputTokenLimit": 1,
-      "supportedGenerationMethods": [
-        "embedContent",
-        "countTextTokens",
-        "countTokens"
-      ],
-      "version": "exp-03-07"
     },
     {
       "description": "Obtain a distributed representation of a text.",
