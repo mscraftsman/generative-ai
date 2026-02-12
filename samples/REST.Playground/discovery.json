@@ -2246,7 +2246,7 @@
       }
     }
   },
-  "revision": "20260112",
+  "revision": "20260207",
   "rootUrl": "https://generativelanguage.googleapis.com/",
   "schemas": {
     "AsyncBatchEmbedContentRequest": {
@@ -2483,7 +2483,7 @@
         },
         "generationConfig": {
           "$ref": "GenerationConfig",
-          "description": "Optional. Generation config. The following fields are not supported: - `response_logprobs` - `response_mime_type` - `logprobs` - `response_schema` - `response_json_schema` - `stop_sequence` - `routing_config` - `audio_timestamp`"
+          "description": "Optional. Generation config. The following fields are not supported: - `response_logprobs` - `response_mime_type` - `logprobs` - `response_schema` - `response_json_schema` - `stop_sequence` - `skip_response_cache` - `routing_config` - `audio_timestamp`"
         },
         "inputAudioTranscription": {
           "$ref": "AudioTranscriptionConfig",
@@ -2666,7 +2666,8 @@
             "IMAGE_RECITATION",
             "UNEXPECTED_TOOL_CALL",
             "TOO_MANY_TOOL_CALLS",
-            "MISSING_THOUGHT_SIGNATURE"
+            "MISSING_THOUGHT_SIGNATURE",
+            "MALFORMED_RESPONSE"
           ],
           "enumDescriptions": [
             "Default value. This value is unused.",
@@ -2687,7 +2688,8 @@
             "Image generation stopped due to recitation.",
             "Model generated a tool call but no tools were enabled in the request.",
             "Model called too many tools consecutively, thus the system exited execution.",
-            "Request has at least one thought signature missing."
+            "Request has at least one thought signature missing.",
+            "Finished due to malformed response."
           ],
           "readOnly": true,
           "type": "string"
@@ -3760,7 +3762,7 @@
           "type": "object"
         },
         "id": {
-          "description": "Optional. The unique id of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`.",
+          "description": "Optional. The unique identifier of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`.",
           "type": "string"
         },
         "name": {
@@ -3852,7 +3854,7 @@
       "id": "FunctionResponse",
       "properties": {
         "id": {
-          "description": "Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`.",
+          "description": "Optional. The identifier of the function call this response is for. Populated by the client to match the corresponding function call `id`.",
           "type": "string"
         },
         "name": {
@@ -4486,9 +4488,9 @@
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguagev1betaGroundingSupport": {
+    "GoogleAiGenerativelanguageV1alphaGroundingSupport": {
       "description": "Grounding support.",
-      "id": "GoogleAiGenerativelanguagev1betaGroundingSupport",
+      "id": "GoogleAiGenerativelanguageV1alphaGroundingSupport",
       "properties": {
         "confidenceScores": {
           "description": "Optional. Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. This list must have the same size as the grounding_chunk_indices.",
@@ -4507,15 +4509,15 @@
           "type": "array"
         },
         "segment": {
-          "$ref": "GoogleAiGenerativelanguagev1betaSegment",
+          "$ref": "GoogleAiGenerativelanguageV1alphaSegment",
           "description": "Segment of the content this support belongs to."
         }
       },
       "type": "object"
     },
-    "GoogleAiGenerativelanguagev1betaSegment": {
+    "GoogleAiGenerativelanguageV1alphaSegment": {
       "description": "Segment of the content.",
-      "id": "GoogleAiGenerativelanguagev1betaSegment",
+      "id": "GoogleAiGenerativelanguageV1alphaSegment",
       "properties": {
         "endIndex": {
           "description": "End index in the given Part, measured in bytes. Offset from the start of the Part, exclusive, starting at zero.",
@@ -4625,7 +4627,7 @@
         "groundingSupports": {
           "description": "List of grounding support.",
           "items": {
-            "$ref": "GoogleAiGenerativelanguagev1betaGroundingSupport"
+            "$ref": "GoogleAiGenerativelanguageV1alphaGroundingSupport"
           },
           "type": "array"
         },
@@ -4726,7 +4728,7 @@
       "id": "ImageConfig",
       "properties": {
         "aspectRatio": {
-          "description": "Optional. The aspect ratio of the image to generate. Supported aspect ratios: 1:1, 2:3, 3:2, 3:4, 4:3, 9:16, 16:9, 21:9. If not specified, the model will choose a default aspect ratio based on any reference images provided.",
+          "description": "Optional. The aspect ratio of the image to generate. Supported aspect ratios: `1:1`, `2:3`, `3:2`, `3:4`, `4:3`, `4:5`, `5:4`, `9:16`, `16:9`, or `21:9`. If not specified, the model will choose a default aspect ratio based on any reference images provided.",
           "type": "string"
         },
         "imageSize": {
@@ -6329,11 +6331,11 @@
       "type": "object"
     },
     "SpeechConfig": {
-      "description": "The speech generation config.",
+      "description": "Config for speech generation and transcription.",
       "id": "SpeechConfig",
       "properties": {
         "languageCode": {
-          "description": "Optional. Language code (in BCP 47 format, e.g. \"en-US\") for speech synthesis. Valid values are: de-DE, en-AU, en-GB, en-IN, en-US, es-US, fr-FR, hi-IN, pt-BR, ar-XA, es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN, ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, and th-TH.",
+          "description": "Optional. The IETF [BCP-47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language code that the user configured the app to use. Used for speech recognition and synthesis. Valid values are: `de-DE`, `en-AU`, `en-GB`, `en-IN`, `en-US`, `es-US`, `fr-FR`, `hi-IN`, `pt-BR`, `ar-XA`, `es-ES`, `fr-CA`, `id-ID`, `it-IT`, `ja-JP`, `tr-TR`, `vi-VN`, `bn-IN`, `gu-IN`, `kn-IN`, `ml-IN`, `mr-IN`, `ta-IN`, `te-IN`, `nl-NL`, `ko-KR`, `cmn-CN`, `pl-PL`, `ru-RU`, and `th-TH`.",
           "type": "string"
         },
         "multiSpeakerVoiceConfig": {
@@ -6490,7 +6492,7 @@
       "type": "object"
     },
     "Tool": {
-      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 14",
+      "description": "Tool details that the model may use to generate response. A `Tool` is a piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. Next ID: 15",
       "id": "Tool",
       "properties": {
         "codeExecution": {
