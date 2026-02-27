@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System.Collections.Generic;
 
 // *** AUTO-GENERATED FILE - DO NOT EDIT MANUALLY *** //
 
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// A set of tuning examples. Can be training or validation data.
+	/// Different types of search that can be enabled on the GoogleSearch tool.
 	/// </summary>
-	public partial class TuningExamples
+	public partial class SearchTypes
 	{
 		/// <summary>
-		/// The examples. Example input can be for text or discuss, but all examples in a set must be of the same type.
+		/// Optional. Setting this field enables image search. Image bytes are returned.
 		/// </summary>
-		public List<TuningExample>? Examples { get; set; }
+		public ImageSearch? ImageSearch { get; set; }
 		/// <summary>
-		/// Content examples. For multiturn conversations.
+		/// Optional. Setting this field enables web search. Only text results are returned.
 		/// </summary>
-		public List<TuningMultiturnExample>? MultiturnExamples { get; set; }
+		public WebSearch? WebSearch { get; set; }
     }
 }

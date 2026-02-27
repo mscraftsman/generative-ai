@@ -19,10 +19,14 @@
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
-	/// Grounding chunk.
+	/// A <c>GroundingChunk</c> represents a segment of supporting evidence that grounds the model&apos;s response. It can be a chunk from the web, a retrieved context from a file, or information from Google Maps.
 	/// </summary>
 	public partial class GroundingChunk
 	{
+		/// <summary>
+		/// Optional. Grounding chunk from image search.
+		/// </summary>
+		public Image? Image { get; set; }
 		/// <summary>
 		/// Optional. Grounding chunk from Google Maps.
 		/// </summary>

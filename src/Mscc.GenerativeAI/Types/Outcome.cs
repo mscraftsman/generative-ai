@@ -28,15 +28,15 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		OutcomeUnspecified,
 		/// <summary>
-		/// Code execution completed successfully.
+		/// Code execution completed successfully. `output` contains the stdout, if any.
 		/// </summary>
 		OutcomeOk,
 		/// <summary>
-		/// Code execution finished but with a failure. `stderr` should contain the reason.
+		/// Code execution failed. `output` contains the stderr and stdout, if any.
 		/// </summary>
 		OutcomeFailed,
 		/// <summary>
-		/// Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
+		/// Code execution ran for too long, and was cancelled. There may or may not be a partial `output` present.
 		/// </summary>
 		OutcomeDeadlineExceeded,
 	}

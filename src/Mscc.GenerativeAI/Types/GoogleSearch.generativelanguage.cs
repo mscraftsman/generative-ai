@@ -24,6 +24,10 @@ namespace Mscc.GenerativeAI.Types
 	public partial class GoogleSearch
 	{
 		/// <summary>
+		/// Optional. The set of search types to enable. If not set, web search is enabled by default.
+		/// </summary>
+		public SearchTypes? SearchTypes { get; set; }
+		/// <summary>
 		/// Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa).
 		/// </summary>
 		public Interval? TimeRangeFilter { get; set; }

@@ -24,11 +24,11 @@ namespace Mscc.GenerativeAI.Types
 	public partial class Web
 	{
 		/// <summary>
-		/// Title of the chunk.
+		/// Output only. Title of the chunk.
 		/// </summary>
 		public string? Title { get; set; }
 		/// <summary>
-		/// URI reference of the chunk.
+		/// Output only. URI reference of the chunk.
 		/// </summary>
 		public string? Uri { get; set; }
     }

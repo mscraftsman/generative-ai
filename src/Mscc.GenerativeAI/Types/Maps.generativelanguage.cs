@@ -28,7 +28,7 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public PlaceAnswerSources? PlaceAnswerSources { get; set; }
 		/// <summary>
-		/// This ID of the place, in <c>places/{place_id}</c> format. A user can use this ID to look up that place.
+		/// The ID of the place, in <c>places/{place_id}</c> format. A user can use this ID to look up that place.
 		/// </summary>
 		public string? PlaceId { get; set; }
 		/// <summary>

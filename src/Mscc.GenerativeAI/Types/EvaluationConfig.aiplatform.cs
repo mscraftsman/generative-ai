@@ -29,6 +29,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public AutoraterConfig? AutoraterConfig { get; set; }
 		/// <summary>
+		/// Optional. Configuration options for inference generation and outputs. If not set, default generation parameters are used.
+		/// </summary>
+		public GenerationConfig? InferenceGenerationConfig { get; set; }
+		/// <summary>
 		/// Required. The metrics used for evaluation.
 		/// </summary>
 		public List<Metric>? Metrics { get; set; }

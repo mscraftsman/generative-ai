@@ -36,6 +36,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public EvaluateDatasetResponse? EvaluateDatasetResponse { get; set; }
 		/// <summary>
+		/// Output only. The resource name of the evaluation run. Format: <c>projects/{project}/locations/{location}/evaluationRuns/{evaluation_run_id}</c>.
+		/// </summary>
+		public string? EvaluationRun { get; set; }
+		/// <summary>
 		/// Output only. The operation ID of the evaluation run. Format: <c>projects/{project}/locations/{location}/operations/{operation_id}</c>.
 		/// </summary>
 		public string? OperationName { get; set; }

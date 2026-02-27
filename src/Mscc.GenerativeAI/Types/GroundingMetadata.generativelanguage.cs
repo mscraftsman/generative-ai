@@ -37,6 +37,10 @@ namespace Mscc.GenerativeAI.Types
 		/// </summary>
 		public List<GroundingSupport>? GroundingSupports { get; set; }
 		/// <summary>
+		/// Image search queries used for grounding.
+		/// </summary>
+		public List<string>? ImageSearchQueries { get; set; }
+		/// <summary>
 		/// Metadata related to retrieval in the grounding flow.
 		/// </summary>
 		public RetrievalMetadata? RetrievalMetadata { get; set; }
