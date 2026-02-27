@@ -24,7 +24,7 @@ namespace Mscc.GenerativeAI.Types
 	public enum ThinkingLevel
 	{
 		/// <summary>
-		/// Default value.
+		/// Unspecified thinking level.
 		/// </summary>
 		ThinkingLevelUnspecified,
 		/// <summary>
