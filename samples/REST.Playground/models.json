@@ -128,25 +128,6 @@
       "version": "2.0"
     },
     {
-      "description": "Experimental release (March 25th, 2025) of Gemini 2.5 Pro",
-      "displayName": "Gemini Experimental 1206",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-exp-1206",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "2.5-exp-03-25"
-    },
-    {
       "description": "Gemini 2.5 Flash Preview TTS",
       "displayName": "Gemini 2.5 Flash Preview TTS",
       "inputTokenLimit": 8192,
@@ -357,25 +338,6 @@
       "version": "2.0"
     },
     {
-      "description": "Gemini 2.5 Flash Preview Sep 2025",
-      "displayName": "Gemini 2.5 Flash Preview Sep 2025",
-      "inputTokenLimit": 1048576,
-      "maxTemperature": 2,
-      "name": "models/gemini-2.5-flash-preview-09-2025",
-      "outputTokenLimit": 65536,
-      "supportedGenerationMethods": [
-        "generateContent",
-        "countTokens",
-        "createCachedContent",
-        "batchGenerateContent"
-      ],
-      "temperature": 1,
-      "thinking": true,
-      "topK": 64,
-      "topP": 0.95,
-      "version": "Gemini 2.5 Flash Preview 09-2025"
-    },
-    {
       "description": "Preview release (Septempber 25th, 2025) of Gemini 2.5 Flash-Lite",
       "displayName": "Gemini 2.5 Flash-Lite Preview Sep 2025",
       "inputTokenLimit": 1048576,
@@ -433,6 +395,44 @@
       "version": "3-flash-preview-12-2025"
     },
     {
+      "description": "Gemini 3.1 Pro Preview",
+      "displayName": "Gemini 3.1 Pro Preview",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-3.1-pro-preview",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3.1-pro-preview-01-2026"
+    },
+    {
+      "description": "Gemini 3.1 Pro Preview optimized for custom tool usage",
+      "displayName": "Gemini 3.1 Pro Preview Custom Tools",
+      "inputTokenLimit": 1048576,
+      "maxTemperature": 2,
+      "name": "models/gemini-3.1-pro-preview-customtools",
+      "outputTokenLimit": 65536,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "createCachedContent",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3.1-pro-preview-01-2026"
+    },
+    {
       "description": "Gemini 3 Pro Image Preview",
       "displayName": "Nano Banana Pro",
       "inputTokenLimit": 131072,
@@ -457,6 +457,24 @@
       "maxTemperature": 1,
       "name": "models/nano-banana-pro-preview",
       "outputTokenLimit": 32768,
+      "supportedGenerationMethods": [
+        "generateContent",
+        "countTokens",
+        "batchGenerateContent"
+      ],
+      "temperature": 1,
+      "thinking": true,
+      "topK": 64,
+      "topP": 0.95,
+      "version": "3.0"
+    },
+    {
+      "description": "Gemini 3.1 Flash Image Preview.",
+      "displayName": "Nano Banana 2",
+      "inputTokenLimit": 65536,
+      "maxTemperature": 1,
+      "name": "models/gemini-3.1-flash-image-preview",
+      "outputTokenLimit": 65536,
       "supportedGenerationMethods": [
         "generateContent",
         "countTokens",
@@ -546,28 +564,6 @@
       "topK": 40,
       "topP": 1,
       "version": "001"
-    },
-    {
-      "description": "Vertex served Imagen 4.0 model",
-      "displayName": "Imagen 4 (Preview)",
-      "inputTokenLimit": 480,
-      "name": "models/imagen-4.0-generate-preview-06-06",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "predict"
-      ],
-      "version": "01"
-    },
-    {
-      "description": "Vertex served Imagen 4.0 ultra model",
-      "displayName": "Imagen 4 Ultra (Preview)",
-      "inputTokenLimit": 480,
-      "name": "models/imagen-4.0-ultra-generate-preview-06-06",
-      "outputTokenLimit": 8192,
-      "supportedGenerationMethods": [
-        "predict"
-      ],
-      "version": "01"
     },
     {
       "description": "Vertex served Imagen 4.0 model",

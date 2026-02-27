@@ -28,11 +28,6 @@ namespace Mscc.GenerativeAI.Types
         // Gemini 1.5
         // Discontinuation date: September 9, 2025.
 
-        public const string GeminiExperimental = GeminiExperimental1206;
-        public const string GeminiExperimental1114 = GeminiExperimental1206;
-        public const string GeminiExperimental1121 = GeminiExperimental1206;
-        public const string GeminiExperimental1206 = "gemini-exp-1206";
-
         // Gemini 2.0
         public const string Gemini20Pro = Gemini25Pro;
         public const string Gemini20Flash = "gemini-2.0-flash";
@@ -54,8 +49,7 @@ namespace Mscc.GenerativeAI.Types
         public const string GeminiFlashLiteLatest = "gemini-flash-lite-latest";
         public const string GeminiProLatest = "gemini-pro-latest";
         public const string Gemini25Flash = "gemini-2.5-flash";
-        public const string Gemini25FlashPreview = Gemini25FlashPreview092025;
-        public const string Gemini25FlashPreview092025 = "gemini-2.5-flash-preview-09-2025";
+        public const string Gemini25FlashPreview = Gemini25Flash;
         public const string Gemini25FlashLite = "gemini-2.5-flash-lite";
         public const string Gemini25FlashLitePreview = Gemini25FlashLitePreview092025;
         public const string Gemini25FlashLitePreview092025 = "gemini-2.5-flash-lite-preview-09-2025";
@@ -92,11 +86,18 @@ namespace Mscc.GenerativeAI.Types
         public const string Gemini3ProImagePreview = "gemini-3-pro-image-preview";
         public const string Gemini3Flash = Gemini3FlashPreview;
         public const string Gemini3FlashPreview = "gemini-3-flash-preview"; 
+
+        // Gemini 3.1
+        public const string Gemini31Pro = Gemini31ProPreview;
+        public const string Gemini31ProPreview = "gemini-3.1-pro-preview";
+        public const string Gemini31ProPreviewCustomTools = "gemini-3.1-pro-preview-customtools";
+        public const string Gemini31FlashImagePreview = "gemini-3.1-flash-image-preview";
         
         // Nano Banana!
         public const string NanoBanana = Gemini25FlashImage;
         public const string NanoBananaPro = NanoBananaProPreview;
         public const string NanoBananaProPreview = "nano-banana-pro-preview";
+        public const string NanoBanana2 = Gemini31FlashImagePreview;
 
         public const string DeepResearch = DeepResearchPro;
         public const string DeepResearchPro = DeepResearchProPreview;
@@ -171,8 +172,7 @@ namespace Mscc.GenerativeAI.Types
         // Models for Imagen on Vertex AI - image generation and editing
         public const string Imagen4 = Imagen4Generate001;
         public const string Imagen4Generate001 = "imagen-4.0-generate-001";
-        public const string Imagen4Preview = Imagen4Preview0606;
-        public const string Imagen4Preview0606 = "imagen-4.0-generate-preview-06-06";
+        public const string Imagen4Preview = Imagen4Generate001;
         public const string Imagen4Fast = Imagen4FastGenerate001;
         public const string Imagen4FastGenerate001 = "imagen-4.0-fast-generate-001";
         public const string Imagen4Ultra = Imagen4UltraGenerate001;
