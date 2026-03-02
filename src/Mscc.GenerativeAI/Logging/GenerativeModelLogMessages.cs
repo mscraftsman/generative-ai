@@ -54,8 +54,6 @@ namespace Mscc.GenerativeAI.Types
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="methodName">Calling method</param>
-        /// <param name="url">URL of Gemini API endpoint</param>
-        /// <param name="payload">Data sent to the API endpoint</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "[{MethodName}]")]
         public static partial void LogMethodInvokingRequest(
             this ILogger logger,
@@ -148,6 +146,7 @@ namespace Mscc.GenerativeAI.Types
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="index">Nth attempt of request sent.</param>
+        /// <param name="message">Message to log.</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Request #{index} failed. Response received: {message}")]
         public static partial void LogRequestNotSuccessful(
             this ILogger logger,
@@ -159,6 +158,7 @@ namespace Mscc.GenerativeAI.Types
         /// </summary>
         /// <param name="logger">Optional. Logger instance used for logging</param>
         /// <param name="index">Nth attempt of request sent.</param>
+        /// <param name="message">Message to log.</param>
         [LoggerMessage(EventId = 0, Level = LogLevel.Error, Message = "Request #{index} failed. Exception caught: {message}")]
         public static partial void LogRequestException(
 	        this ILogger logger,
