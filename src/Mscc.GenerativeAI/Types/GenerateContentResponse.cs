@@ -64,6 +64,25 @@ namespace Mscc.GenerativeAI.Types
             .ToList();
 
         /// <summary>
+        /// A convenience property to get the responded audio information of first candidate.
+        /// </summary>
+        [JsonIgnore]
+        public byte[]? Audio
+        {
+            get
+            {
+                if (Candidates is null) return null;
+                if (Candidates?.Count == 0) return null;
+
+                var part = Candidates?.FirstOrDefault()?.Content?.Parts
+                    .FirstOrDefault(p => p.InlineData != null && p.InlineData.MimeType != null && p.InlineData.MimeType.StartsWith("audio/"));
+                if (part == null) return null;
+
+                return Convert.FromBase64String(part.InlineData.Data);
+            }
+        }
+
+        /// <summary>
         /// A convenience property to get the responded thinking information of first candidate.
         /// </summary>
         [JsonIgnore]
