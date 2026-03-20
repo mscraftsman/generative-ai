@@ -136,7 +136,7 @@ namespace Mscc.GenerativeAI
             }
 
             LiveConnectParameters parameters = new LiveConnectParameters { Model = transformedModel, Config = config, };
-            LiveConverters liveConverters = new LiveConverters(_httpClientFactory);
+            LiveConverters liveConverters = new LiveConverters();
             string jsonString = JsonSerializer.Serialize(parameters, JsonConfig.LiveSerializerOptions);
             JsonNode? parameterNode = JsonNode.Parse(jsonString);
             if (parameterNode == null)

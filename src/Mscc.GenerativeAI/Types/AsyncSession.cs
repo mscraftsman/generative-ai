@@ -131,7 +131,26 @@ namespace Mscc.GenerativeAI.Types
 
         private async Task Send(LiveClientMessage liveClientMessage, CancellationToken cancellationToken = default)
         {
-            byte[] buffer = JsonSerializer.SerializeToUtf8Bytes(liveClientMessage, JsonConfig.LiveSerializerOptions);
+            string jsonString = JsonSerializer.Serialize(liveClientMessage, JsonConfig.LiveSerializerOptions);
+            JsonNode? liveClientMessageNode = JsonNode.Parse(jsonString);
+            if (liveClientMessageNode == null)
+            {
+                throw new InvalidOperationException("Failed to parse liveClientMessage into a JsonNode.");
+            }
+
+            LiveConverters liveConverters = new LiveConverters();
+            JsonNode body;
+            if (_isVertexAI)
+            {
+                body = liveConverters.LiveClientMessageToVertex(liveClientMessageNode);
+            }
+            else
+            {
+                body = liveConverters.LiveClientMessageToMldev(liveClientMessageNode);
+            }
+
+            string jsonMessage = JsonSerializer.Serialize(body, JsonConfig.LiveSerializerOptions);
+            byte[] buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
             if (_webSocket.State != WebSocketState.Open)
             {
