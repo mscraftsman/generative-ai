@@ -47,6 +47,7 @@ namespace Mscc.GenerativeAI.Microsoft
 
 			request.Contents ??= [];
 			byte[]? thoughtSignature = null;
+			Dictionary<string, string>? functionNames = null;
 			foreach (var message in messages)
 			{
 				if (message.Role == mea.ChatRole.System)
@@ -59,9 +60,9 @@ namespace Mscc.GenerativeAI.Microsoft
 				c.Parts ??= [];
 				c.Parts.Clear();
 
-				c.Role = message.Role == mea.ChatRole.Assistant ? "model" : "user";
-
-				Dictionary<string, string>? functionNames = null;
+				c.Role = message.Role == mea.ChatRole.Assistant ? Role.Model :
+					message.Role == mea.ChatRole.Tool ? Role.Function :
+					Role.User;
 
 				foreach (var content in message.Contents)
 				{
@@ -161,7 +162,14 @@ namespace Mscc.GenerativeAI.Microsoft
 					if (part is not null)
 					{
 						thoughtSignature = ToGeminiThoughtSignature(content);
-						part.ThoughtSignature = thoughtSignature ?? s_skipThoughtValidation;
+						if (thoughtSignature is not null)
+						{
+							part.ThoughtSignature = thoughtSignature;
+						}
+						else if (c.Role == Role.Model)
+						{
+							part.ThoughtSignature = s_skipThoughtValidation;
+						}
 						// part.Thought = thoughtSignature is not null ? true : null;
 						c.Parts.Add(part);
 					}

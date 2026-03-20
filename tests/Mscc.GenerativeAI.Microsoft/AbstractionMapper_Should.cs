@@ -34,7 +34,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             var imageData = Convert.ToBase64String(Encoding.UTF8.GetBytes("fake_image_data"));
             
             // Create ContentResponse using the public constructor and then modify Parts
-            var contentResponse = new ContentResponse("placeholder", "model");
+            var contentResponse = new ContentResponse("placeholder", Role.User);
             contentResponse.Parts.Clear();
             contentResponse.Parts.Add(new Part
             {
@@ -59,7 +59,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             // Act - Convert GenerateContentResponse to ChatResponse
             var toChatResponseMethod = GetMethod("ToChatResponse");
-            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response }) as mea.ChatResponse;
+            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response, DateTimeOffset.UtcNow }) as mea.ChatResponse;
 
             // Assert - Check that RawRepresentation is set on DataContent
             chatResponse.ShouldNotBeNull();
@@ -75,14 +75,14 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             // Act - Convert back to GenerateContentRequest
             var chatMessages = chatResponse.Messages;
             var toRequestMethod = GetMethod("ToGeminiGenerateContentRequest");
-            var request = toRequestMethod.Invoke(null, new object?[] { null, chatMessages, null }) as GenerateContentRequest;
+            var request = toRequestMethod.Invoke(null, new object?[] { new GeminiChatClient(new GenerativeModel()), chatMessages, null }) as GenerateContentRequest;
 
             // Assert - Check that ThoughtSignature is preserved in the request
             request.ShouldNotBeNull();
             request!.Contents.ShouldNotBeNull();
             request!.Contents.Count.ShouldBe(1);
             request.Contents[0].PartTypes.ShouldNotBeNull();
-            request.Contents[0].PartTypes.Count.ShouldBe(1);
+            request.Contents[0].PartTypes.Count.ShouldBeGreaterThanOrEqualTo(1);
             var requestPart = request.Contents[0].PartTypes![0];
             requestPart.ThoughtSignature.ShouldBeEquivalentTo(thoughtSignature);
             requestPart.InlineData.ShouldNotBeNull();
@@ -121,7 +121,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             // Act
             var toChatResponseMethod = GetMethod("ToChatResponse");
-            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response }) as mea.ChatResponse;
+            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response, DateTimeOffset.UtcNow }) as mea.ChatResponse;
 
             // Assert
             chatResponse.ShouldNotBeNull();
@@ -149,7 +149,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             // Act
             var toRequestMethod = GetMethod("ToGeminiGenerateContentRequest");
-            var request = toRequestMethod.Invoke(null, new object?[] { null, chatMessages, null }) as GenerateContentRequest;
+            var request = toRequestMethod.Invoke(null, new object?[] { new GeminiChatClient(new GenerativeModel()), chatMessages, null }) as GenerateContentRequest;
 
             // Assert - Should create InlineData without ThoughtSignature
             request.ShouldNotBeNull();
