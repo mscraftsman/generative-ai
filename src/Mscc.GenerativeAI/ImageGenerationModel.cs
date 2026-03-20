@@ -26,7 +26,7 @@ namespace Mscc.GenerativeAI
         
         private string Method => GenerativeAI.Types.Method.Predict;
         
-        internal bool IsVertexAI => _useVertexAi;
+        internal override bool IsVertexAI => _useVertexAi;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageGenerationModel"/> class.
