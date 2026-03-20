@@ -1,17 +1,21 @@
 using Mscc.GenerativeAI.Types;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
 using System.Security.Authentication;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace Mscc.GenerativeAI
 {
@@ -383,7 +387,143 @@ namespace Mscc.GenerativeAI
                 throw new ArgumentException($"invalid characters in name `{value}`.");
             }
         }
-        
+
+        /// <summary>
+        /// Reads credentials from a specified JSON file.
+        /// </summary>
+        /// <remarks>This is typically used for reading service account credentials from Google Cloud Platform.</remarks>
+        /// <param name="credentialsFile">The path to the credentials file.</param>
+        /// <returns>A <see cref="Credentials"/> object if the file exists and is valid; otherwise, <c>null</c>.</returns>
+        internal static Credentials? GetCredentialsFromFile(string credentialsFile)
+        {
+            Credentials? credentials = null;
+            if (File.Exists(credentialsFile))
+            {
+                var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                    DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                    NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                    PropertyNameCaseInsensitive = true,
+                };
+                options.Converters.Add(new FlexibleEnumConverterFactory());
+                options.Converters.Add(new DateTimeFormatJsonConverter());
+
+                using var stream = new FileStream(credentialsFile, FileMode.Open, FileAccess.Read);
+                credentials = JsonSerializer.Deserialize<Credentials>(stream, options);
+            }
+
+            return credentials;
+        }
+
+        /// <summary>
+        /// Retrieves an access token from Application Default Credentials (ADC) using the gcloud command-line tool.
+        /// This method is specific to Google Cloud Platform.
+        /// </summary>
+        /// <returns>The access token as a string, or an empty string if it fails.</returns>
+        /// <seealso href="https://cloud.google.com/docs/authentication"/>
+        internal static string GetAccessTokenFromAdc(ILogger? logger = null)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return RunExternalExe("cmd.exe", "/c gcloud auth application-default print-access-token", logger).TrimEnd();
+            }
+            else
+            {
+                return RunExternalExe("gcloud", "auth application-default print-access-token", logger).TrimEnd();
+            }
+        }
+
+        /// <summary>
+        /// Executes an external command-line application.
+        /// </summary>
+        /// <param name="filename">The command or application to run.</param>
+        /// <param name="arguments">Optional arguments to pass to the application.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
+        /// <returns>The standard output from the application.</returns>
+        /// <exception cref="Exception">Thrown if the process exits with a non-zero code.</exception>
+        private static string RunExternalExe(string filename, string arguments, ILogger? logger = null)
+        {
+            var process = new Process();
+            var stdOutput = new StringBuilder();
+            var stdError = new StringBuilder();
+
+            process.StartInfo.FileName = filename;
+            if (!string.IsNullOrEmpty(arguments))
+            {
+                process.StartInfo.Arguments = arguments;
+            }
+
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.UseShellExecute = false;
+
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            // Use AppendLine rather than Append since args.Data is one line of output, not including the newline character.
+            process.OutputDataReceived += (sender, args) =>
+            {
+                if (args.Data != null) stdOutput.AppendLine(args.Data);
+            };
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                if (args.Data != null) stdError.AppendLine(args.Data);
+            };
+
+            try
+            {
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                process.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                logger?.LogWarning($"OS error while executing {Format(filename, arguments)}: {e.Message}");
+                return string.Empty;
+            }
+
+            if (process.ExitCode == 0)
+            {
+                return stdOutput.ToString();
+            }
+            else
+            {
+                var message = new StringBuilder();
+
+                if (stdError.Length > 0)
+                {
+                    message.AppendLine("Err output:");
+                    message.AppendLine(stdError.ToString());
+                }
+
+                if (stdOutput.Length != 0)
+                {
+                    message.AppendLine("Std output:");
+                    message.AppendLine(stdOutput.ToString());
+                }
+
+                var exceptionMessage = Format(filename, arguments) + " finished with exit code = " + process.ExitCode +
+                                    ": " + message;
+                logger?.LogWarning(exceptionMessage);
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Formats a command and its arguments for logging purposes.
+        /// </summary>
+        /// <param name="filename">The command or application that was run.</param>
+        /// <param name="arguments">The arguments passed to the application.</param>
+        /// <returns>A formatted string containing the command and arguments.</returns>
+        private static string Format(string filename, string? arguments)
+        {
+            return "'" + filename +
+                   ((string.IsNullOrEmpty(arguments)) ? string.Empty : " " + arguments) +
+                   "'";
+        }
+
         /// <summary>
         /// Sanitizes the model name by ensuring it starts with "models/" unless it is a tuned model.
         /// </summary>

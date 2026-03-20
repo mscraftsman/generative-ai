@@ -29,6 +29,25 @@ namespace Mscc.GenerativeAI.Microsoft
             _metadata = new(ProviderName, null, client.Model);
         }
 
+        /// <summary>
+        /// Creates an instance of the Gemini API client using specified credentials.
+        /// </summary>
+        /// <param name="apiKey">Optional. API key for Google AI Studio.</param>
+        /// <param name="projectId">Optional. Identifier of the Google Cloud project for Vertex AI.</param>
+        /// <param name="region">Optional. Region to use (default: "us-central1").</param>
+        /// <param name="accessToken">Optional. Access token for authentication.</param>
+        /// <param name="model">Optional. Model to use.</param>
+        public GeminiSpeechToTextClient(string? apiKey = null,
+            string? projectId = null,
+            string? region = null,
+            string? accessToken = null,
+            string? model = null)
+        {
+            var client = new GeminiClient(apiKey, projectId, region, accessToken);
+            _client = client.GetGenerativeModel(model);
+            _metadata = new(ProviderName, null, _client.Model);
+        }
+
         /// <inheritdoc/>
         public async Task<mea.SpeechToTextResponse> GetTextAsync(
             Stream audioSpeechStream,

@@ -34,34 +34,23 @@ namespace Mscc.GenerativeAI.Microsoft
         }
 
         /// <summary>
-        /// Creates an instance of the Gemini API client using Google AI.
+        /// Creates an instance of the Gemini API client using specified credentials.
         /// </summary>
-        /// <param name="apiKey">API key provided by Google AI Studio</param>
-        /// <param name="model">Model to use.</param>
-        public GeminiEmbeddingGenerator(string apiKey, 
-	        string? model,
-	        ILogger? logger = null)
-        {
-            var genAi = new GoogleAI(apiKey, logger: logger);
-            _client = genAi.GenerativeModel(model);
-            _model = model ?? _client.Model;
-        }
-
-        /// <summary>
-        /// Creates an instance of the Gemini API client using Vertex AI.
-        /// </summary>
-        /// <param name="projectId">Identifier of the Google Cloud project.</param>
+        /// <param name="apiKey">Optional. API key for Google AI Studio.</param>
+        /// <param name="projectId">Optional. Identifier of the Google Cloud project for Vertex AI.</param>
         /// <param name="region">Optional. Region to use (default: "us-central1").</param>
-        /// <param name="accessToken">Access token for the Google Cloud project.</param>
-        /// <param name="model">Model to use.</param>
-        public GeminiEmbeddingGenerator(string projectId, 
-	        string? region = null, 
+        /// <param name="accessToken">Optional. Access token for authentication.</param>
+        /// <param name="model">Optional. Model to use.</param>
+        /// <param name="logger">Optional. Logger instance used for logging.</param>
+        public GeminiEmbeddingGenerator(string? apiKey = null,
+            string? projectId = null,
+            string? region = null,
             string? accessToken = null,
-	        string? model = null,
-	        ILogger? logger = null)
+            string? model = null,
+            ILogger? logger = null)
         {
-            var genAi = new VertexAI(projectId: projectId, region: region, accessToken: accessToken, logger: logger);
-            _client = genAi.GenerativeModel(model);
+            var client = new GeminiClient(apiKey, projectId, region, accessToken);
+            _client = client.GetGenerativeModel(model);
             _model = model ?? _client.Model;
         }
 

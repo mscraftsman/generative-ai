@@ -161,7 +161,14 @@ namespace Mscc.GenerativeAI.Microsoft
 					if (part is not null)
 					{
 						thoughtSignature = ToGeminiThoughtSignature(content);
-						part.ThoughtSignature = thoughtSignature ?? s_skipThoughtValidation;
+						if (thoughtSignature is not null)
+						{
+							part.ThoughtSignature = thoughtSignature;
+						}
+						else if (part.ThoughtSignature is null && c.Role == "model")
+						{
+							part.ThoughtSignature = s_skipThoughtValidation;
+						}
 						// part.Thought = thoughtSignature is not null ? true : null;
 						c.Parts.Add(part);
 					}

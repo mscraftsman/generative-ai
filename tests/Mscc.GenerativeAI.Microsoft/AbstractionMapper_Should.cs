@@ -59,7 +59,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             // Act - Convert GenerateContentResponse to ChatResponse
             var toChatResponseMethod = GetMethod("ToChatResponse");
-            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response }) as mea.ChatResponse;
+            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response, DateTimeOffset.UtcNow }) as mea.ChatResponse;
 
             // Assert - Check that RawRepresentation is set on DataContent
             chatResponse.ShouldNotBeNull();
@@ -82,7 +82,8 @@ namespace Test.Mscc.GenerativeAI.Microsoft
             request!.Contents.ShouldNotBeNull();
             request!.Contents.Count.ShouldBe(1);
             request.Contents[0].PartTypes.ShouldNotBeNull();
-            request.Contents[0].PartTypes.Count.ShouldBe(1);
+            // We expect 2 parts because ToChatMessage splits the thought signature into a separate TextReasoningContent
+            request.Contents[0].PartTypes.Count.ShouldBe(2);
             var requestPart = request.Contents[0].PartTypes![0];
             requestPart.ThoughtSignature.ShouldBeEquivalentTo(thoughtSignature);
             requestPart.InlineData.ShouldNotBeNull();
@@ -121,7 +122,7 @@ namespace Test.Mscc.GenerativeAI.Microsoft
 
             // Act
             var toChatResponseMethod = GetMethod("ToChatResponse");
-            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response }) as mea.ChatResponse;
+            var chatResponse = toChatResponseMethod.Invoke(null, new object?[] { response, DateTimeOffset.UtcNow }) as mea.ChatResponse;
 
             // Assert
             chatResponse.ShouldNotBeNull();
