@@ -26,7 +26,42 @@ namespace Mscc.GenerativeAI.Types
 
         /// <summary>
         /// Sends non-realtime, turn-based content to the model.
+        /// <para>
+        /// There are two ways to send messages to the live API:
+        /// <c>SendClientContentAsync</c> and <c>SendRealtimeInputAsync</c>.
+        /// </para>
+        /// <para>
+        /// <c>SendClientContentAsync</c> messages are added to the model context
+        /// <b>in order</b>. Because <c>SendClientContentAsync</c> guarantees the order
+        /// of messages between the client and the server, the model cannot respond as
+        /// quickly as with <c>SendRealtimeInputAsync</c>. This is most noticeable when
+        /// sending objects that require significant preprocessing time (typically images).
+        /// </para>
+        /// <para>
+        /// <c>SendRealtimeInputAsync</c> sends a list of <see cref="Content"/> objects,
+        /// which offers more options than the <see cref="Blob"/> objects sent by
+        /// <c>SendClientContentAsync</c>.
+        /// </para>
+        /// <para>
+        /// The main use cases for <c>SendClientContentAsync</c> over
+        /// <c>SendRealtimeInputAsync</c> are:
+        /// <list type="number">
+        /// <item>
+        /// Prefilling a conversation context (including sending anything that can't be
+        /// represented as a realtime message) before starting a realtime conversation.
+        /// </item>
+        /// <item>
+        /// Conducting a non-realtime conversation with the live API.
+        /// </item>
+        /// </list>
+        /// <b>Caution:</b> Interleaving <c>SendClientContentAsync</c> and
+        /// <c>SendRealtimeInputAsync</c> in the same conversation is not recommended and
+        /// can lead to unexpected behavior.
+        /// </para>
         /// </summary>
+        /// <param name="clientContent">The client content to send to the model.</param>
+        /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
+        /// <returns></returns>
         public async Task SendClientContent(LiveSendClientContentParameters clientContent,
             CancellationToken cancellationToken = default)
         {
@@ -43,8 +78,15 @@ namespace Mscc.GenerativeAI.Types
         }
 
         /// <summary>
-        /// Sends realtime input to the model.
+        /// Sends realtime input to the model. With <c>SendRealtimeInputAsync</c>,
+        /// Google's GenAI Live API will respond to audio automatically based on voice
+        /// activity detection (VAD). <c>SendRealtimeInputAsync</c> is optimized for
+        /// responsiveness at the expense of deterministic ordering of the conversation
+        /// messages. Response tokens are added to the context as they become available.
         /// </summary>
+        /// <param name="realtimeInput">The realtime input to send to the model.</param>
+        /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
+        /// <returns></returns>
         public async Task SendRealtimeInput(LiveSendRealtimeInputParameters realtimeInput,
             CancellationToken cancellationToken = default)
         {
@@ -58,6 +100,8 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// Sends tool response to the model.
         /// </summary>
+        /// <param name="toolResponse">Tool response to send to the model.</param>
+        /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
         public async Task SendToolResponseAsync(LiveSendToolResponseParameters toolResponse,
             CancellationToken cancellationToken = default)
         {
@@ -74,6 +118,13 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// Receives model responses from the server.
         /// </summary>
+        /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
+        /// <returns>
+        /// A <see cref="LiveServerMessage"/> containing the model's response, or <c>null</c> if the
+        /// connection has been gracefully closed.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">Thrown if an empty or invalid message is received.</exception>
+        /// <exception cref="WebSocketException">Thrown for underlying WebSocket errors that are not a graceful close.</exception>
         public async Task<LiveServerMessage?> Receive(CancellationToken cancellationToken = default)
         {
             if (_isDisposed == 1)
@@ -166,6 +217,8 @@ namespace Mscc.GenerativeAI.Types
         /// </summary>
         public async Task Close()
         {
+	        // Atomically check and set the disposed flag to ensure this block runs only once.
+	        // Critical to avoid race conditions in multi-threaded scenarios.
             if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) != 0)
             {
                 return;
@@ -182,12 +235,14 @@ namespace Mscc.GenerativeAI.Types
                     await _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Acknowledging server close",
                         CancellationToken.None);
                 }
+                // For other states (None, CloseSent, Closed, Aborted), no action is needed.
             }
             catch (Exception ex) when (ex is ObjectDisposedException || ex is InvalidOperationException ||
                                        ex is WebSocketException || ex is OperationCanceledException ||
                                        ex is IOException)
             {
-                // Suppress exceptions during cleanup
+                // Suppress exceptions during cleanup as the primary goal is to release resources.
+                // Optionally, these exceptions can be logged for debugging purposes.
             }
             finally
             {

@@ -69,17 +69,19 @@ namespace Mscc.GenerativeAI.Types
         [JsonIgnore]
         public byte[]? Audio
         {
-            get
-            {
-                if (Candidates is null) return null;
-                if (Candidates?.Count == 0) return null;
+	        get
+	        {
+		        var part = Candidates?.FirstOrDefault()?
+			        .Content?.Parts?
+			        .FirstOrDefault(p => p.InlineData?.MimeType?.StartsWith("audio/") == true);
 
-                var part = Candidates?.FirstOrDefault()?.Content?.Parts
-                    .FirstOrDefault(p => p.InlineData != null && p.InlineData.MimeType != null && p.InlineData.MimeType.StartsWith("audio/"));
-                if (part == null) return null;
+		        if (part?.InlineData?.Data is { } data)
+		        {
+			        return Convert.FromBase64String(data);
+		        }
 
-                return Convert.FromBase64String(part.InlineData.Data);
-            }
+		        return null;
+	        }
         }
 
         /// <summary>

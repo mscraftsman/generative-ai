@@ -89,14 +89,15 @@ namespace Mscc.GenerativeAI.Types
         [JsonIgnore]
         public byte[]? Audio
         {
-            get
-            {
-                if (InlineData == null) return null;
-                if (string.IsNullOrEmpty(InlineData.Data)) return null;
-                if (InlineData.MimeType == null || !InlineData.MimeType.StartsWith("audio/")) return null;
-
-                return Convert.FromBase64String(InlineData.Data);
-            }
+	        get
+	        {
+		        if (InlineData?.MimeType?.StartsWith("audio/") == true 
+		            && !string.IsNullOrEmpty(InlineData.Data))
+		        {
+			        return Convert.FromBase64String(InlineData.Data);
+		        }
+		        return null;
+	        }
         }
 
         /// <summary>
