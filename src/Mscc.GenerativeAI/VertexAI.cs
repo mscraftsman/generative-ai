@@ -2,6 +2,7 @@
 using Mscc.GenerativeAI.Types;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,13 +62,21 @@ namespace Mscc.GenerativeAI
             ILogger? logger = null) : base(logger)
         {
             GenerativeAIExtensions.ReadDotEnv();
+            var credentialsFile =
+                Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS") ??
+                Environment.GetEnvironmentVariable("GOOGLE_WEB_CREDENTIALS") ??
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "gcloud",
+                    "application_default_credentials.json");
+            var credentials = GenerativeAIExtensions.GetCredentialsFromFile(credentialsFile);
             _projectId = Environment.GetEnvironmentVariable("GOOGLE_PROJECT_ID") ??
-                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+                         Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT") ??
+                         credentials?.ProjectId;
             _region = Environment.GetEnvironmentVariable("GOOGLE_REGION") ??
                       Environment.GetEnvironmentVariable("GOOGLE_CLOUD_LOCATION") ?? _region;
             _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ??
                       Environment.GetEnvironmentVariable("GEMINI_API_KEY");
-            _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN");
+            _accessToken = Environment.GetEnvironmentVariable("GOOGLE_ACCESS_TOKEN") ??
+                           GenerativeAIExtensions.GetAccessTokenFromAdc(Logger);
             _version = ApiVersion.V1;
             _httpClientFactory = httpClientFactory;
             _requestOptions = requestOptions;
