@@ -1930,23 +1930,26 @@ namespace Mscc.GenerativeAI
             var method = GenerativeAI.Types.Method.CountTokens;
             var url = ParseUrl(Url, method);
 
+            CountTokensRequest countTokensRequest;
             if (_useVertexAi)
             {
-                var countRequest = new CountTokensRequest()
-                {
-                    Instances = new List<object>(request.Contents),
-                    GenerationConfig = request.GenerationConfig,
-                    Tools = request.Tools,
-                    SystemInstruction = request.SystemInstruction
-                };
-                return await PostAsync<CountTokensRequest, CountTokensResponse>(countRequest, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+	            countTokensRequest = new CountTokensRequest()
+	            {
+		            Instances = request.Contents is null ? null : [..request.Contents],
+		            GenerationConfig = request.GenerationConfig,
+		            Tools = request.Tools,
+		            SystemInstruction = request.SystemInstruction
+	            };
             }
-
-            var countTokensRequest = new CountTokensRequest()
+            else
             {
-                GenerateContentRequest = request
-            };
+	            countTokensRequest = new CountTokensRequest()
+	            {
+		            GenerateContentRequest = request
+	            };
+            }
             return await PostAsync<CountTokensRequest, CountTokensResponse>(countTokensRequest, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+
         }
 
         /// <remarks/>
