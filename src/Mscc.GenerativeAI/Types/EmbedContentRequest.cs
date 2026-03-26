@@ -21,12 +21,17 @@ namespace Mscc.GenerativeAI.Types
 	/// <summary>
 	/// Request containing the <see cref="Content"/> for the model to embed.
 	/// </summary>
-	public partial class EmbedContentRequest
+	public partial class EmbedContentRequest : IVertexAware
 	{
 		/// <summary>
 		/// Required. The content to embed. Only the <see cref="parts.text"/> fields will be counted.
 		/// </summary>
 		public ContentResponse? Content { get; set; }
+
+		/// <summary>
+		/// Required. The content to embed. For Vertex AI.
+		/// </summary>
+		public object? Instance { get; set; }
 
 		/// <summary>
 		/// 
@@ -55,6 +60,29 @@ namespace Mscc.GenerativeAI.Types
 				{
 					Text = prompt
 				});
+			}
+		}
+
+		public void PrepareForSerialization(bool useVertexAi)
+		{
+			if (useVertexAi)
+			{
+				if (Content != null && Instance == null)
+				{
+					Instance = Content;
+					Content = null;
+				}
+			}
+			else
+			{
+				if (Instance != null && Content == null)
+				{
+					if (Instance is ContentResponse contentResponse)
+					{
+						Content = contentResponse;
+					}
+					Instance = null;
+				}
 			}
 		}
 	}

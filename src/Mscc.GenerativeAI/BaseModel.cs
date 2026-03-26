@@ -197,6 +197,11 @@ namespace Mscc.GenerativeAI
         }
 
         /// <summary>
+        /// Gets a value indicating whether the model is configured to use Vertex AI.
+        /// </summary>
+        internal virtual bool IsVertexAI => false;
+
+        /// <summary>
         /// A hook to verify if a specific request is supported by the current model configuration.
         /// Throws a <see cref="NotSupportedException"/> if the functionality is not supported.
         /// </summary>
@@ -358,6 +363,11 @@ namespace Mscc.GenerativeAI
         /// <returns>A JSON string representing the request.</returns>
         protected string Serialize<T>(T request)
         {
+            if (request is IVertexAware vertexAware)
+            {
+                vertexAware.PrepareForSerialization(IsVertexAI);
+            }
+
             var json = JsonSerializer.Serialize(request, WriteOptions);
 
             Logger.LogJsonRequest(TruncateJsonForLogging(json));

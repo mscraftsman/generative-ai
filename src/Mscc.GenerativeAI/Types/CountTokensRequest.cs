@@ -14,16 +14,45 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+
 namespace Mscc.GenerativeAI.Types
 {
 	/// <summary>
 	/// Request for counting tokens.
 	/// </summary>
-	public partial class CountTokensRequest
+	public partial class CountTokensRequest : IVertexAware
 	{
 		/// <summary>
 		/// Configuration for counting tokens.
 		/// </summary>
 		public CountTokensConfig? Config { get; set; }
+
+		public void PrepareForSerialization(bool useVertexAi)
+		{
+			if (useVertexAi)
+			{
+				if (Contents != null && Instances == null)
+				{
+					Instances = new List<object>(Contents);
+					Contents = null;
+				}
+			}
+			else
+			{
+				if (Instances != null && Contents == null)
+				{
+					Contents = new List<Content>();
+					foreach (var instance in Instances)
+					{
+						if (instance is Content content)
+						{
+							Contents.Add(content);
+						}
+					}
+					Instances = null;
+				}
+			}
+		}
 	}
 }

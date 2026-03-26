@@ -183,7 +183,7 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Gets a value indicating whether the model is configured to use Vertex AI.
         /// </summary>
-        internal bool IsVertexAI => _useVertexAi;
+        internal override bool IsVertexAI => _useVertexAi;
 
         /// <summary>
         /// You can enable Server Sent Events (SSE) for gemini-1.0-pro
@@ -1759,8 +1759,9 @@ namespace Mscc.GenerativeAI
             if (!string.IsNullOrEmpty(title) && taskType != TaskType.RetrievalDocument) throw new NotSupportedException("If a title is specified, the task must be a retrieval document type task.");
 
             var method = GenerativeAI.Types.Method.BatchEmbedContents;
+            var request = new BatchEmbedContentsRequest { Requests = requests };
             var url = ParseUrl(Url, method);
-            return await PostAsync<List<EmbedContentRequest>, EmbedContentResponse>(requests, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            return await PostAsync<BatchEmbedContentsRequest, EmbedContentResponse>(request, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
         /// <summary>
@@ -1928,14 +1929,27 @@ namespace Mscc.GenerativeAI
 
             var method = GenerativeAI.Types.Method.CountTokens;
             var url = ParseUrl(Url, method);
-            var json = Serialize(request);
-            var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
 
-            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            httpRequest.Content = payload;
-            var response = await SendAsync(httpRequest, requestOptions, cancellationToken);
-            await response.EnsureSuccessAsync(cancellationToken);
-            return await Deserialize<CountTokensResponse>(response);
+            CountTokensRequest countTokensRequest;
+            if (_useVertexAi)
+            {
+	            countTokensRequest = new CountTokensRequest()
+	            {
+		            Instances = request.Contents is null ? null : [..request.Contents],
+		            GenerationConfig = request.GenerationConfig,
+		            Tools = request.Tools,
+		            SystemInstruction = request.SystemInstruction
+	            };
+            }
+            else
+            {
+	            countTokensRequest = new CountTokensRequest()
+	            {
+		            GenerateContentRequest = request
+	            };
+            }
+            return await PostAsync<CountTokensRequest, CountTokensResponse>(countTokensRequest, url, method, requestOptions, HttpCompletionOption.ResponseContentRead, cancellationToken);
+
         }
 
         /// <remarks/>
@@ -2040,7 +2054,7 @@ namespace Mscc.GenerativeAI
             
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var method = GenerativeAI.Types.Method.CountTokens;
+            var method = GenerativeAI.Types.Method.ComputeTokens;
             var url = ParseUrl(Url, method);
             var json = Serialize(request);
             var payload = new StringContent(json, Encoding.UTF8, Constants.MediaType);
