@@ -84,6 +84,23 @@ namespace Mscc.GenerativeAI.Types
         public InlineData? InlineData { get; set; }     // Blob?
 
         /// <summary>
+        /// A convenience property to get the responded audio information.
+        /// </summary>
+        [JsonIgnore]
+        public byte[]? Audio
+        {
+	        get
+	        {
+		        if (InlineData?.MimeType?.StartsWith("audio/") == true 
+		            && !string.IsNullOrEmpty(InlineData.Data))
+		        {
+			        return Convert.FromBase64String(InlineData.Data);
+		        }
+		        return null;
+	        }
+        }
+
+        /// <summary>
         /// The ETag of the item.
         /// </summary>
         public virtual string? ETag { get; set; }

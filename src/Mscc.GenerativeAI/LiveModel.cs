@@ -22,7 +22,6 @@ namespace Mscc.GenerativeAI
 		    Logger.LogLiveModelInvoking();
 	    }
 
-#if false
         /// <summary>
         /// Establishes a websocket connection to the specified model with the given configuration.
         /// </summary>
@@ -42,6 +41,7 @@ namespace Mscc.GenerativeAI
             await SetRequestHeadersAsync(clientWebSocket, cancellationToken);
             Uri serverUri = GetServerUri();
             await clientWebSocket.ConnectAsync(serverUri, cancellationToken);
+
             string setupClientMessage = getSetupMessage(model, config);
             byte[] buffer = Encoding.UTF8.GetBytes(setupClientMessage);
             try
@@ -54,68 +54,64 @@ namespace Mscc.GenerativeAI
                 throw new InvalidOperationException($"Error sending setup message: {ex.Message}", ex);
             }
 
-            return new AsyncSession(clientWebSocket, httpClientFactory);
+            return new AsyncSession(clientWebSocket, _httpClientFactory, IsVertexAI);
         }
 
         private async Task SetRequestHeadersAsync(ClientWebSocket clientWebSocket,
             CancellationToken cancellationToken = default)
         {
-            if (apiClient.VertexAI)
+            if (IsVertexAI)
             {
-                if (apiClient.Credentials == null)
+                if (string.IsNullOrEmpty(_accessToken))
                 {
-                    throw new InvalidOperationException("GoogleAuth credentials are required for Vertex AI.");
+                    throw new InvalidOperationException("Access token is required for Vertex AI.");
                 }
 
-                string accessToken =
-                    await apiClient.Credentials.GetAccessTokenForRequestAsync(cancellationToken: cancellationToken);
-                if (string.IsNullOrEmpty(accessToken))
-                {
-                    throw new InvalidOperationException("Failed to retrieve access token from credentials.");
-                }
-
-                clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {accessToken}");
+                clientWebSocket.Options.SetRequestHeader("Authorization", $"Bearer {_accessToken}");
             }
             else
             {
-                if (string.IsNullOrEmpty(apiClient.ApiKey))
+                if (string.IsNullOrEmpty(_apiKey))
                 {
                     throw new InvalidOperationException("An API key is required for Gemini API connections.");
                 }
 
-                clientWebSocket.Options.SetRequestHeader("x-goog-api-key", apiClient.ApiKey);
+                clientWebSocket.Options.SetRequestHeader("x-goog-api-key", _apiKey);
             }
 
-            foreach (var header in apiClient?.HttpOptions?.Headers ?? new Dictionary<string, string>())
+            if (RequestOptions?.Headers != null)
             {
-                clientWebSocket.Options.SetRequestHeader(header.Key, header.Value);
+                foreach (var header in RequestOptions.Headers)
+                {
+                    clientWebSocket.Options.SetRequestHeader(header.Key, string.Join(", ", header.Value));
+                }
             }
         }
 
         private Uri GetServerUri()
         {
-            string baseUrl = apiClient.HttpOptions?.BaseUrl;
+            string baseUrl = RequestOptions?.BaseUrl ?? (IsVertexAI ? BaseUrlVertexAi : BaseUrlGoogleAi);
             if (string.IsNullOrEmpty(baseUrl))
             {
-                throw new InvalidOperationException("BaseUrl is not set in Client.");
+                throw new InvalidOperationException("BaseUrl is not set.");
             }
 
             try
             {
-                var baseUri = new Uri(baseUrl);
+                var baseUri = new Uri(ParseUrl(baseUrl));
                 var uriBuilder = new UriBuilder(baseUri) { Scheme = baseUri.Scheme == "http" ? "ws" : "wss" };
 
                 string wsBaseUrl = uriBuilder.Uri.ToString().TrimEnd('/');
 
-                if (apiClient.VertexAI)
+                if (IsVertexAI)
                 {
-                    string apiVersion = apiClient.HttpOptions?.ApiVersion ?? "v1beta1";
+                    string apiVersion = RequestOptions?.ApiVersion ?? "v1beta1";
                     return new Uri(
                         $"{wsBaseUrl}/ws/google.cloud.aiplatform.{apiVersion}.LlmBidiService/BidiGenerateContent");
                 }
                 else
                 {
-                    string apiVersion = apiClient.HttpOptions?.ApiVersion ?? "v1beta";
+                    string apiVersion = RequestOptions?.ApiVersion ?? "v1beta";
                     return new Uri(
                         $"{wsBaseUrl}/ws/google.ai.generativelanguage.{apiVersion}.GenerativeService.BidiGenerateContent");
                 }
@@ -128,20 +124,20 @@ namespace Mscc.GenerativeAI
 
         private string getSetupMessage(string model, LiveConnectConfig config)
         {
-            var transformedModel = Transformers.TModel(this.apiClient, model);
-            if (apiClient.VertexAI && transformedModel != null && transformedModel.StartsWith("publishers/"))
+            var transformedModel = Transformers.TModel(this, model);
+            if (IsVertexAI && transformedModel != null && transformedModel.StartsWith("publishers/"))
             {
                 transformedModel = string.Format(
                     "projects/{0}/locations/{1}/{2}",
-                    apiClient.Project,
-                    apiClient.Location,
+                    _projectId,
+                    _region,
                     transformedModel
                 );
             }
 
             LiveConnectParameters parameters = new LiveConnectParameters { Model = transformedModel, Config = config, };
-            LiveConverters liveConverters = new LiveConverters(apiClient);
-            string jsonString = JsonSerializer.Serialize(parameters);
+            LiveConverters liveConverters = new LiveConverters();
+            string jsonString = JsonSerializer.Serialize(parameters, JsonConfig.LiveSerializerOptions);
             JsonNode? parameterNode = JsonNode.Parse(jsonString);
             if (parameterNode == null)
             {
@@ -149,18 +145,23 @@ namespace Mscc.GenerativeAI
             }
 
             JsonNode body;
-            if (apiClient.VertexAI)
+            if (IsVertexAI)
             {
-                body = liveConverters.LiveConnectParametersToVertex(apiClient, parameterNode, new JsonObject());
+                body = liveConverters.LiveConnectParametersToVertex(parameterNode);
             }
             else
             {
-                body = liveConverters.LiveConnectParametersToMldev(apiClient, parameterNode, new JsonObject());
+                body = liveConverters.LiveConnectParametersToMldev(parameterNode);
             }
 
-            body?.AsObject().Remove("config");
-            return JsonSerializer.Serialize(body, JsonConfig.JsonSerializerOptions);
+            var finalMessage = new JsonObject
+            {
+                ["setup"] = body
+            };
+
+            return JsonSerializer.Serialize(finalMessage, JsonConfig.LiveSerializerOptions);
         }
-#endif
+
+        private bool IsVertexAI => _accessToken != null || (!string.IsNullOrEmpty(_projectId) && !string.IsNullOrEmpty(_region));
     }
 }

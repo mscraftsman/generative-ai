@@ -10,10 +10,20 @@ using System.Text.Json.Nodes;
 
 namespace Mscc.GenerativeAI.Types
 {
-    public partial class AsyncSession(WebSocket webSocket, IHttpClientFactory apiClient) : IAsyncDisposable
+    public partial class AsyncSession : IAsyncDisposable
     {
-    private int _isDisposed = 0; // 0 = false, 1 = true. Used with Interlocked.
-#if false        
+        private readonly WebSocket _webSocket;
+        private readonly IHttpClientFactory? _httpClientFactory;
+        private readonly bool _isVertexAI;
+        private int _isDisposed = 0; // 0 = false, 1 = true. Used with Interlocked.
+
+        public AsyncSession(WebSocket webSocket, IHttpClientFactory? httpClientFactory, bool isVertexAI)
+        {
+            _webSocket = webSocket ?? throw new ArgumentNullException(nameof(webSocket));
+            _httpClientFactory = httpClientFactory;
+            _isVertexAI = isVertexAI;
+        }
+
         /// <summary>
         /// Sends non-realtime, turn-based content to the model.
         /// <para>
@@ -49,18 +59,20 @@ namespace Mscc.GenerativeAI.Types
         /// can lead to unexpected behavior.
         /// </para>
         /// </summary>
-        /// <param name="clientContent">
-        /// The client content to send to the model.
-        /// </param>
+        /// <param name="clientContent">The client content to send to the model.</param>
         /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
         /// <returns></returns>
         public async Task SendClientContent(LiveSendClientContentParameters clientContent,
             CancellationToken cancellationToken = default)
         {
-            LiveClientMessage liveClientMessage = new LiveClientMessage();
-            liveClientMessage.ClientContent = new LiveClientContent();
-            liveClientMessage.ClientContent.Turns = clientContent.Turns;
-            liveClientMessage.ClientContent.TurnComplete = clientContent.TurnComplete;
+            LiveClientMessage liveClientMessage = new LiveClientMessage
+            {
+                ClientContent = new LiveClientContent
+                {
+                    Turns = clientContent.Turns,
+                    TurnComplete = clientContent.TurnComplete
+                }
+            };
 
             await Send(liveClientMessage, cancellationToken);
         }
@@ -72,26 +84,33 @@ namespace Mscc.GenerativeAI.Types
         /// responsiveness at the expense of deterministic ordering of the conversation
         /// messages. Response tokens are added to the context as they become available.
         /// </summary>
-        /// <param name="realtimeInput">
-        /// The realtime input to send to the model.
-        /// </param>
+        /// <param name="realtimeInput">The realtime input to send to the model.</param>
         /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
         /// <returns></returns>
         public async Task SendRealtimeInput(LiveSendRealtimeInputParameters realtimeInput,
             CancellationToken cancellationToken = default)
         {
-            LiveClientMessage liveClientMessage = new LiveClientMessage();
-            liveClientMessage.RealtimeInputParameters = realtimeInput;
+            LiveClientMessage liveClientMessage = new LiveClientMessage
+            {
+                RealtimeInput = realtimeInput
+            };
             await Send(liveClientMessage, cancellationToken);
         }
 
+        /// <summary>
+        /// Sends tool response to the model.
+        /// </summary>
+        /// <param name="toolResponse">Tool response to send to the model.</param>
+        /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
         public async Task SendToolResponseAsync(LiveSendToolResponseParameters toolResponse,
             CancellationToken cancellationToken = default)
         {
-            LiveClientMessage liveClientMessage = new LiveClientMessage();
-            liveClientMessage.ToolResponse = new LiveClientToolResponse
+            LiveClientMessage liveClientMessage = new LiveClientMessage
             {
-                FunctionResponses = toolResponse.FunctionResponses
+                ToolResponse = new LiveClientToolResponse
+                {
+                    FunctionResponses = toolResponse.FunctionResponses
+                }
             };
             await Send(liveClientMessage, cancellationToken);
         }
@@ -99,6 +118,7 @@ namespace Mscc.GenerativeAI.Types
         /// <summary>
         /// Receives model responses from the server.
         /// </summary>
+        /// <param name="cancellationToken">The cancellation token to use for the send operation.</param>
         /// <returns>
         /// A <see cref="LiveServerMessage"/> containing the model's response, or <c>null</c> if the
         /// connection has been gracefully closed.
@@ -112,7 +132,7 @@ namespace Mscc.GenerativeAI.Types
                 return null;
             }
 
-            switch (webSocket.State)
+            switch (_webSocket.State)
             {
                 case WebSocketState.Connecting:
                     throw new InvalidOperationException(
@@ -131,7 +151,7 @@ namespace Mscc.GenerativeAI.Types
             {
                 do
                 {
-                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
+                    result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
                         return null;
@@ -162,44 +182,43 @@ namespace Mscc.GenerativeAI.Types
 
         private async Task Send(LiveClientMessage liveClientMessage, CancellationToken cancellationToken = default)
         {
-            JsonNode? liveClientMessageNode =
-                JsonNode.Parse(JsonSerializer.Serialize(liveClientMessage, JsonConfig.JsonSerializerOptions));
+            string jsonString = JsonSerializer.Serialize(liveClientMessage, JsonConfig.LiveSerializerOptions);
+            JsonNode? liveClientMessageNode = JsonNode.Parse(jsonString);
             if (liveClientMessageNode == null)
             {
                 throw new InvalidOperationException("Failed to parse liveClientMessage into a JsonNode.");
             }
 
-            LiveConverters liveConverters = new LiveConverters(apiClient);
+            LiveConverters liveConverters = new LiveConverters();
             JsonNode body;
-            if (apiClient.VertexAI)
+            if (_isVertexAI)
             {
-                body = liveConverters.LiveClientMessageToVertex(liveClientMessageNode, new JsonObject());
+                body = liveConverters.LiveClientMessageToVertex(liveClientMessageNode);
             }
             else
             {
-                body = liveConverters.LiveClientMessageToMldev(liveClientMessageNode, new JsonObject());
+                body = liveConverters.LiveClientMessageToMldev(liveClientMessageNode);
             }
 
-            string jsonMessage = JsonSerializer.Serialize(body, JsonConfig.JsonSerializerOptions);
+            string jsonMessage = JsonSerializer.Serialize(body, JsonConfig.LiveSerializerOptions);
             byte[] buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
-            if (webSocket.State != WebSocketState.Open)
+            if (_webSocket.State != WebSocketState.Open)
             {
-                throw new InvalidOperationException($"WebSocket is not open. State: {webSocket.State}");
+                throw new InvalidOperationException($"WebSocket is not open. State: {_webSocket.State}");
             }
 
-            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true,
+            await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true,
                 cancellationToken);
         }
-#endif
 
         /// <summary>
         /// Closes the WebSocket connection gracefully. This method is thread-safe and idempotent.
         /// </summary>
         public async Task Close()
         {
-            // Atomically check and set the disposed flag to ensure this block runs only once.
-            // Critical to avoid race conditions in multi-threaded scenarios.
+	        // Atomically check and set the disposed flag to ensure this block runs only once.
+	        // Critical to avoid race conditions in multi-threaded scenarios.
             if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) != 0)
             {
                 return;
@@ -207,13 +226,13 @@ namespace Mscc.GenerativeAI.Types
 
             try
             {
-                if (webSocket.State == WebSocketState.Open || webSocket.State == WebSocketState.Connecting)
+                if (_webSocket.State == WebSocketState.Open || _webSocket.State == WebSocketState.Connecting)
                 {
-                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
                 }
-                else if (webSocket.State == WebSocketState.CloseReceived)
+                else if (_webSocket.State == WebSocketState.CloseReceived)
                 {
-                    await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Acknowledging server close",
+                    await _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Acknowledging server close",
                         CancellationToken.None);
                 }
                 // For other states (None, CloseSent, Closed, Aborted), no action is needed.
@@ -227,7 +246,7 @@ namespace Mscc.GenerativeAI.Types
             }
             finally
             {
-                webSocket.Dispose();
+                _webSocket.Dispose();
             }
         }
 
@@ -238,5 +257,5 @@ namespace Mscc.GenerativeAI.Types
         {
             await Close();
         }
-   }
+    }
 }
