@@ -42,9 +42,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: enable windows longpaths
-        run: |
-          git config --global core.longpaths true
+#      - name: enable windows longpaths
+#        run: |
+#          git config --global core.longpaths true
 
 #      - name: Install Cosign
 #        uses: sigstore/cosign-installer@v3.6.0
