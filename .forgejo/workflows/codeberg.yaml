@@ -63,6 +63,7 @@ jobs:
 #          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
           DOTNET_NOLOGO: true
           DOTNET_CLI_TELEMETRY_OPTOUT: true
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
       
       # NetFX testing on non-Windows requires mono
 #      - name: 🔧 Setup Mono
@@ -110,6 +111,7 @@ jobs:
 #          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
           DOTNET_NOLOGO: true
           DOTNET_CLI_TELEMETRY_OPTOUT: true
+          DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
         
         # NetFX testing on non-Windows requires mono
 #      - name: 🔧 Setup Mono
