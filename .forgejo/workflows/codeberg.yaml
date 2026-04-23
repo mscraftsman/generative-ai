@@ -78,10 +78,10 @@ jobs:
       - name: Set NuGet source
         run: mv ./nuget.codeberg ./nuget.config
 
-#      - name: Setup access to GitHub Package Registry (Codeberg)
+#      - name: Setup access to Codeberg Package Registry
 #        run: dotnet nuget add source --username ${{ vars.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name ghmain "https://nuget.pkg.github.com/mscraftsman/index.json"
 
-      - name: Push to GitHub Package Registry (Codeberg)
+      - name: Push to Codeberg Package Registry
         run: dotnet nuget push output/Mscc.GenerativeAI.*.nupkg --skip-duplicate -s codeberg -k ${{ secrets._NUGET_API_KEY }}
 
   build_and_push_dependents:
@@ -116,7 +116,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install -y mono-devel
 
-#      - name: 🔧 Setup access to GitHub Package Registry (Codeberg)
+#      - name: 🔧 Setup access to Codeberg Package Registry
 #        run: dotnet nuget add source --username ${{ vars.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/mscraftsman/index.json"
 
       - name: Set NuGet source
@@ -137,7 +137,7 @@ jobs:
       - name: 📦 Pack for Microsoft.Extension.AI and Microsoft Semantic Kernel
         run: dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Microsoft.csproj -o output/ --no-build
 
-      - name: Push to GitHub Package Registry (Codeberg)
+      - name: Push to Codeberg Package Registry
         run: |
           dotnet nuget push output/Mscc.GenerativeAI.Web.*.nupkg --skip-duplicate -s codeberg -k ${{ secrets._NUGET_API_KEY }}
           dotnet nuget push output/Mscc.GenerativeAI.Google.*.nupkg --skip-duplicate -s codeberg -k ${{ secrets._NUGET_API_KEY }}
