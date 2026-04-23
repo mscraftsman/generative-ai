@@ -29,6 +29,10 @@ on:
         description: 'Version number (e.g., 3.0.0)'
         required: true
         default: '3.0.0'
+        type: string
+
+permissions:
+  contents: read
 
 jobs:
   build_and_push_main:
@@ -51,15 +55,17 @@ jobs:
       run: cosign version
 
     - name: 📥 Check-out latest sources 
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: 🔧 Set up .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
         source-url: https://nuget.pkg.github.com/mscraftsman/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        DOTNET_NOLOGO: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: true
 
     # NetFX testing on non-Windows requires mono
     - name: 🔧 Setup Mono
@@ -93,15 +99,17 @@ jobs:
 #      run: sleep 300
     
     - name: 📥 Check-out latest sources 
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: 🔧 Set up .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
         source-url: https://nuget.pkg.github.com/mscraftsman/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        DOTNET_NOLOGO: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: true
       
       # NetFX testing on non-Windows requires mono
     - name: 🔧 Setup Mono
