@@ -6,7 +6,7 @@ on:
       - 'v*'
     paths:
       - '**'
-      - '.github/workflows/dotnetcore.yml'
+      - '.forgejo/workflows/codeberg.yaml'
       - '!**.md'
       - '!docs/**'
       - '!samples/**'
@@ -17,7 +17,7 @@ on:
       - main
     paths:
       - '**'
-      - '.github/workflows/dotnetcore.yml'
+      - '.forgejo/workflows/codeberg.yaml'
       - '!**.md'
       - '!docs/**'
       - '!samples/**'
