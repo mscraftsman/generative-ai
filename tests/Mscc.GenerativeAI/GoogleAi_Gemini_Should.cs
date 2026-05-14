@@ -45,7 +45,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             // Assert
             model.ShouldNotBeNull();
@@ -118,7 +118,7 @@ namespace Test.Mscc.GenerativeAI
 
             // Act
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             // Assert
             model.ShouldNotBeNull();
@@ -257,7 +257,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             // Act
             var response = await model.GenerateContent(prompt);
@@ -294,7 +294,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             string prompt = null;
 
             // Act & Assert
@@ -307,7 +307,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "WRONG_API_KEY");
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.ApiKey = _fixture.ApiKey;
 
             // Act
@@ -327,7 +327,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Tell me 4 things about Taipei. Be short.";
             var googleAi = new GoogleAI(apiKey: "AIzaTESTkJmQDe5tghndp6UvqPX0HAA9XpBNGWY");
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             await Assert.ThrowsAsync<HttpRequestException>(() => model.GenerateContent(prompt));
 
             // Act
@@ -348,7 +348,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
             // Act
@@ -368,7 +368,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini20Flash);
             var generationConfig = new GenerationConfig() { ResponseLogprobs = true };
 
             // Act
@@ -388,7 +388,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerationConfig() { MaxOutputTokens = 20 };
 
             // Act
@@ -414,7 +414,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var parts = new List<IPart>
             {
                 new TextData { Text = "What is x multiplied by 2?" }, new TextData { Text = "x = 42" }
@@ -437,7 +437,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -461,7 +461,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a short poem about koi fish.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt: prompt,
                 generationConfig: new GenerateContentConfig() { CandidateCount = 3 });
 
@@ -483,7 +483,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             GenerateContentRequest request = null;
 
             // Act & Assert
@@ -496,7 +496,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Role = Role.User;
 
@@ -517,7 +517,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
 
@@ -538,7 +538,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Write a story about a magic backpack.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseServerSentEventsFormat = true;
             var request = new GenerateContentRequest(prompt);
 
@@ -953,7 +953,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "How are you doing today?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             // Act
             var responseStream = model.GenerateContentStream(prompt);
@@ -980,7 +980,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "How are you doing today?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -1032,7 +1032,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             // Act
             var response = await model.CountTokens(prompt);
@@ -1052,7 +1052,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             request.Contents.Add(new Content
             {
@@ -1073,7 +1073,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -1093,7 +1093,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var history = new List<ContentResponse>
             {
                 new() { Role = Role.User, Text = "Hello" },
@@ -1122,7 +1122,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat();
 
             // Act
@@ -1153,7 +1153,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat();
 
             // Act
@@ -1177,7 +1177,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat();
             _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
             _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
@@ -1213,7 +1213,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat();
             _ = await chat.SendMessage("Hello, fancy brainstorming about IT?");
             _ = await chat.SendMessage("In one sentence, explain how a computer works to a young child.");
@@ -1265,7 +1265,7 @@ namespace Test.Mscc.GenerativeAI
         public async Task Start_Chat_with_Automatic_Function_Calling()
         {
 	        // Arrange
-	        var model = _googleAi.GenerativeModel(model: _model);
+	        var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 	        var tools = new Tools();
 	        tools.AddFunction(ToggleDarkMode);
 	        tools.AddFunction(GetCurrentWeather);
@@ -1290,7 +1290,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat();
             var prompt = "How can I learn more about C#?";
 
@@ -1397,7 +1397,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "What is the current Google (GOOG) stock price?";
             var genAi = new GoogleAI(_fixture.ApiKey, logger: Logger);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseGrounding = true;
 
             // Act
@@ -1549,7 +1549,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "When is the next total solar eclipse in Mauritius?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseGoogleSearch = true;
 
             // Act
@@ -1584,7 +1584,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "When is the next total solar eclipse in Mauritius?";
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseGoogleSearch = true;
 
             // Act
@@ -1619,7 +1619,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Give me a tutorial to create a landing page";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerationConfig()
             {
                 ThinkingConfig = new ThinkingConfig() { IncludeThoughts = true, ThinkingBudget = 8192 }
@@ -1644,7 +1644,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Which one is heavier, a pound of feathers or a kilogram of bricks";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerationConfig()
             {
                 ThinkingConfig = new ThinkingConfig()
@@ -1695,7 +1695,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             Tools tools =
             [
                 new Tool()
@@ -1815,7 +1815,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var tools = new Tools([ToggleDarkMode,GetCurrentWeather,SendEmailAsync]);
             
             // Act
@@ -1836,7 +1836,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var tools = new Tools();
             tools.AddFunction(ToggleDarkMode);
             tools.AddFunction(GetCurrentWeather);
@@ -1860,7 +1860,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var tools = new Tools();
             tools.AddFunction("ToggleDarkMode", (bool isOn) => $"Dark mode is set to: {isOn}");
             tools.AddFunction("GetCurrentWeather", (string location) => $"The weather in {location} is 72 degrees and sunny.");
@@ -1907,7 +1907,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var tools = new Tools();
             tools.AddFunction("ToggleDarkMode", (bool isOn) => $"Dark mode is set to: {isOn}");
             tools.AddFunction("GetCurrentWeather", (string location) => $"The weather in {location} is 72 degrees and sunny.");
@@ -1935,7 +1935,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var tools = new Tools();
             Action<bool> toggleDarkMode = (isOn) => Console.WriteLine($"Dark mode is set to: {isOn}");
             Func<string, string> getCurrentWeather = (location) => $"The weather in {location} is 72 degrees and sunny.";
@@ -1966,7 +1966,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var tools = new Tools([ToggleDarkMode,GetCurrentWeather,SendEmailAsync]);
             
             // Act
@@ -2043,7 +2043,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var prompt = "Is there an event when a player moves?";
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             Tools tools =
             [
                 new Tool()
@@ -2096,7 +2096,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             Tools tools =
             [
                 new Tool()
@@ -2248,7 +2248,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Which theaters in Mountain View show Barbie movie?";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             Tools tools =
             [
                 new Tool()
@@ -2419,7 +2419,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var chat = model.StartChat(tools: new Tools());
             var chatInput1 = "What is the weather in Boston?";
 
@@ -2442,7 +2442,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest { Contents = new List<Content>(), Tools = new Tools() };
             request.Contents.Add(new Content
             {
@@ -2608,7 +2608,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseJsonMode = true;
 
             // Act
@@ -2629,7 +2629,7 @@ namespace Test.Mscc.GenerativeAI
             var prompt =
                 "List a few popular cookie recipes using this JSON schema: {'type': 'object', 'properties': { 'recipe_name': {'type': 'string'}}}";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             model.UseJsonMode = true;
 
             // Act
@@ -2658,7 +2658,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", 
@@ -2707,7 +2707,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
@@ -2834,7 +2834,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             var generationConfig = new GenerateContentConfig
             {
@@ -2869,7 +2869,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             var generationConfig = new GenerateContentConfig
             {
@@ -2907,7 +2907,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json",
@@ -2936,7 +2936,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var schema = """
                          {
                            "type": "object",
@@ -3015,7 +3015,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular arny weapons with name and summary";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var options = new RequestOptions() { Timeout = TimeSpan.FromMinutes(3) };
             var generationConfig = new GenerateContentConfig()
             {
@@ -3041,7 +3041,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular arny weapons with name and summary";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerateContentConfig()
             {
                 ResponseSchema =
@@ -3080,7 +3080,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var generationConfig = new GenerateContentConfig()
             {
                 ResponseMimeType = "application/json", 
@@ -3107,7 +3107,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "List a few popular cookie recipes.";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             dynamic schema = new ExpandoObject();
             schema.Name = "";
             schema.Recipe = "";
@@ -3135,7 +3135,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest { Contents = new List<Content>() };
             var base64Image =
                 "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
@@ -3166,7 +3166,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             // Images
             var board = await TestExtensions.ReadImageFileBase64Async(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
@@ -3197,7 +3197,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var base64Image =
                 Convert.ToBase64String(
                     File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "payload", filename)));
@@ -3276,7 +3276,7 @@ namespace Test.Mscc.GenerativeAI
         {
             // Arrange
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey, apiVersion: ApiVersion.V1Alpha);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(uri);
 
@@ -3299,7 +3299,7 @@ namespace Test.Mscc.GenerativeAI
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png",
@@ -3926,7 +3926,7 @@ Use speaker A, speaker B, etc. to identify the speakers.
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
@@ -4097,7 +4097,7 @@ Answer:";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
 
             // Act
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             // Assert
             model.ShouldNotBeNull();
@@ -4111,7 +4111,7 @@ Answer:";
             var prompt =
                 "Parse the time and city from the airport board shown in this image into a list, in Markdown table";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
@@ -4135,7 +4135,7 @@ Answer:";
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in JSON";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             await request.AddMedia(
                 "https://raw.githubusercontent.com/mscraftsman/generative-ai/refs/heads/main/tests/Mscc.GenerativeAI/payload/timetable.png");
@@ -4159,7 +4159,7 @@ Answer:";
             // Arrange
             var prompt = "Parse the time and city from the airport board shown in this image into a list, in Markdown";
             var googleAi = new GoogleAI(apiKey: _fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             var request = new GenerateContentRequest(prompt);
             request.Contents[0].Parts.Add(new FileData
             {
@@ -4351,7 +4351,7 @@ Answer:";
         {
             // Arrange
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 
             Tools tools = [new Tool()
             {
@@ -4384,7 +4384,7 @@ Answer:";
         {
             // Arrange
             var genAi = new GoogleAI(_fixture.ApiKey);
-            var model = _googleAi.GenerativeModel(model: _model);
+            var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
             if (string.IsNullOrEmpty(storeName))
             {
 	            var fileSearchStoresModel = _googleAi.FileSearchStoresModel();
@@ -4424,7 +4424,7 @@ Answer:";
         public async Task Generate_Content_using_Fluent_Google_Search()
         {
 	        // Arrange
-	        var model = _googleAi.GenerativeModel(model: _model);
+	        var model = _googleAi.GenerativeModel(model: Model.Gemini25Flash);
 	        var request = new GenerateContentRequest("What is AI?");
 	        request
 		        .WithTools()
