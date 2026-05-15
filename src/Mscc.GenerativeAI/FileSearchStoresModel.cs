@@ -274,9 +274,11 @@ namespace Mscc.GenerativeAI
             
             var request = config ?? new UploadToFileSearchStoreRequest();
             request.DisplayName ??= displayName ?? Path.GetFileNameWithoutExtension(file);
-            request.MimeType ??= mimeType;
+			// The API will detect the MIME type from the file content. The `mimeType` property in the request is only for user reference and won't affect the actual MIME type detection and processing in the API.
+			// So we don't need to set it in the request.
+			//request.MimeType ??= mimeType;
 
-            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+			var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
@@ -341,9 +343,11 @@ namespace Mscc.GenerativeAI
             var totalBytes = stream.Length;
             var request = config ?? new UploadToFileSearchStoreRequest();
             request.DisplayName ??= displayName;
-            request.MimeType ??= mimeType;
+			// The API will detect the MIME type from the file content. The `mimeType` property in the request is only for user reference and won't affect the actual MIME type detection and processing in the API.
+			// So we don't need to set it in the request.
+			//request.MimeType ??= mimeType;
 
-            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+			var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
