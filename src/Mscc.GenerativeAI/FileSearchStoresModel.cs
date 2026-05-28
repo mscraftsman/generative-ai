@@ -270,13 +270,16 @@ namespace Mscc.GenerativeAI
             name = name.SanitizeFileSearchStoreName();
             
             var mimeType = GenerativeAIExtensions.GetMimeType(file);
-            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType);
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType, Logger);
             
             var request = config ?? new UploadToFileSearchStoreRequest();
             request.DisplayName ??= displayName ?? Path.GetFileNameWithoutExtension(file);
-            request.MimeType ??= mimeType;
+            if (config != null)
+            {
+                request.MimeType = config.MimeType;
+            }
 
-            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+			var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 
@@ -336,14 +339,17 @@ namespace Mscc.GenerativeAI
             if (stream.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(stream));
             if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
             if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
-            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType);
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType, Logger);
 
             var totalBytes = stream.Length;
             var request = config ?? new UploadToFileSearchStoreRequest();
             request.DisplayName ??= displayName;
-            request.MimeType ??= mimeType;
+            if (config != null)
+            {
+                request.MimeType = config.MimeType;
+            }
 
-            var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
+			var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
             if (resumable)
             { 

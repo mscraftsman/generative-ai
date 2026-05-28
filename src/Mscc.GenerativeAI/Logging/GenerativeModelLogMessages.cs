@@ -164,5 +164,15 @@ namespace Mscc.GenerativeAI.Types
 	        this ILogger logger,
 	        int index,
 	        string message);
+
+        /// <summary>
+        /// Logs a warning when a MIME type is not in the hardcoded list of verified MIME types.
+        /// </summary>
+        /// <param name="logger">Optional. Logger instance used for logging</param>
+        /// <param name="mimeType">The unverified MIME type.</param>
+        [LoggerMessage(EventId = 0, Level = LogLevel.Warning, Message = "The MIME type `{mimeType}` is not verified in the local SDK's supported list, but the upload will proceed to let the server infer/validate.")]
+        public static partial void LogMimeTypeNotVerified(
+            this ILogger logger,
+            string mimeType);
     }
 }

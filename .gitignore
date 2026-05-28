@@ -411,6 +411,7 @@ nCrunchTemp_*
 
 # Own exclusions
 .env
+.antigravitycli
 **/http-client.env.json
 **/appsettings.user.json
 **/appsettings.Development.json
