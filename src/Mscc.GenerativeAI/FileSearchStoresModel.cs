@@ -270,13 +270,14 @@ namespace Mscc.GenerativeAI
             name = name.SanitizeFileSearchStoreName();
             
             var mimeType = GenerativeAIExtensions.GetMimeType(file);
-            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType);
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType, Logger);
             
             var request = config ?? new UploadToFileSearchStoreRequest();
             request.DisplayName ??= displayName ?? Path.GetFileNameWithoutExtension(file);
-			// The API will detect the MIME type from the file content. The `mimeType` property in the request is only for user reference and won't affect the actual MIME type detection and processing in the API.
-			// So we don't need to set it in the request.
-			//request.MimeType ??= mimeType;
+            if (config != null)
+            {
+                request.MimeType = config.MimeType;
+            }
 
 			var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
@@ -338,14 +339,15 @@ namespace Mscc.GenerativeAI
             if (stream.Length > Constants.MaxUploadFileSizeFileSearchStore) throw new MaxUploadFileSizeException(nameof(stream));
             if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
             if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
-            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType);
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType, Logger);
 
             var totalBytes = stream.Length;
             var request = config ?? new UploadToFileSearchStoreRequest();
             request.DisplayName ??= displayName;
-			// The API will detect the MIME type from the file content. The `mimeType` property in the request is only for user reference and won't affect the actual MIME type detection and processing in the API.
-			// So we don't need to set it in the request.
-			//request.MimeType ??= mimeType;
+            if (config != null)
+            {
+                request.MimeType = config.MimeType;
+            }
 
 			var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{name}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}

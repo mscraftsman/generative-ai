@@ -30,10 +30,24 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Uploads data to a ragStore, preprocesses and chunks before storing it in a RagStore Document.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="uri">URI or path to the file to upload.</param>
+        /// <param name="ragStoreName">Name of the Rag Store.</param>
+        /// <param name="displayName">Optional. A name displayed for the uploaded file.</param>
+        /// <param name="config">Optional. Configuration settings for the uploaded file.</param>
+        /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
+        /// <param name="requestOptions">Options for the request.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>An operation of the uploaded file.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="uri"/> is null or empty.</exception>
+        /// <exception cref="FileNotFoundException">Thrown when the file <paramref name="uri"/> is not found.</exception>
+        /// <exception cref="MaxUploadFileSizeException">Thrown when the file size exceeds the maximum allowed size.</exception>
+        /// <exception cref="UploadFileException">Thrown when the file upload fails.</exception>
+        /// <exception cref="HttpRequestException">Thrown when the request fails to execute.</exception>
+        /// <exception cref="NotSupportedException">Thrown when the MIME type of the URI is not supported by the API.</exception>
         public async Task<CustomLongRunningOperation> UploadToRagStore(string uri,
             string ragStoreName,
             string? displayName = null,
+            UploadToRagStoreRequest? config = null,
             bool resumable = false,
             RequestOptions? requestOptions = null, 
             CancellationToken cancellationToken = default)
@@ -45,14 +59,15 @@ namespace Mscc.GenerativeAI
             if (string.IsNullOrEmpty(ragStoreName)) throw new ArgumentException(nameof(ragStoreName));
 
             var mimeType = GenerativeAIExtensions.GetMimeType(uri);
-            GenerativeAIExtensions.GuardMimeType(mimeType);
+            GenerativeAIExtensions.GuardMimeType(mimeType, Logger);
             
             var totalBytes = new FileInfo(uri).Length;
-            var request = new UploadToRagStoreRequest()
+            var request = config ?? new UploadToRagStoreRequest();
+            request.DisplayName ??= displayName ?? Path.GetFileNameWithoutExtension(uri);
+            if (config != null)
             {
-                DisplayName = displayName ?? Path.GetFileNameWithoutExtension(uri),
-                MimeType = mimeType
-            };
+                request.MimeType = config.MimeType;
+            }
 
             var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/ragStores:uploadToRagStore";   // v1beta3 // ?key={apiKey}
@@ -87,9 +102,10 @@ namespace Mscc.GenerativeAI
         /// <summary>
         /// Uploads data to a <see cref="FileSearchStore"/>, preprocesses and chunks before storing it in a <see cref="FileSearchStore"/> Document.
         /// </summary>
-        /// <param name="fileSearchStoreName">Name of the File Search Store.</param>
         /// <param name="file">URI or path to the file to upload.</param>
-        /// <param name="displayName">A name displayed for the uploaded file.</param>
+        /// <param name="fileSearchStoreName">Name of the File Search Store.</param>
+        /// <param name="displayName">Optional. A name displayed for the uploaded file.</param>
+        /// <param name="config">Optional. Configuration settings for the uploaded file.</param>
         /// <param name="resumable">Flag indicating whether to use resumable upload.</param>
         /// <param name="requestOptions">Options for the request.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -104,6 +120,7 @@ namespace Mscc.GenerativeAI
             string file,
             string fileSearchStoreName,
             string? displayName = null,
+            UploadToFileSearchStoreRequest? config = null,
             bool resumable = false,
             RequestOptions? requestOptions = null,
             CancellationToken cancellationToken = default)
@@ -116,13 +133,14 @@ namespace Mscc.GenerativeAI
             fileSearchStoreName = fileSearchStoreName.SanitizeFileSearchStoreName();
             
             var mimeType = GenerativeAIExtensions.GetMimeType(file);
-            GenerativeAIExtensions.GuardMimeType(mimeType);
+            GenerativeAIExtensions.GuardMimeTypeFileSearchStore(mimeType, Logger);
             
-            var request = new UploadToFileSearchStoreRequest()
+            var request = config ?? new UploadToFileSearchStoreRequest();
+            request.DisplayName ??= displayName ?? Path.GetFileNameWithoutExtension(file);
+            if (config != null)
             {
-                DisplayName = displayName ?? Path.GetFileNameWithoutExtension(file),
-                MimeType = mimeType
-            };
+                request.MimeType = config.MimeType;
+            }
 
             var baseUri = BaseUrlGoogleAi.ToLowerInvariant().Replace("/{version}", "");
             var url = $"{baseUri}/upload/{Version}/{fileSearchStoreName}:uploadToFileSearchStore";   // v1beta3 // ?key={apiKey}
@@ -181,7 +199,7 @@ namespace Mscc.GenerativeAI
             if (fileInfo.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(uri));
 
             var mimeType = GenerativeAIExtensions.GetMimeType(uri);
-            GenerativeAIExtensions.GuardMimeType(mimeType);
+            GenerativeAIExtensions.GuardMimeType(mimeType, Logger);
             
             var totalBytes = new FileInfo(uri).Length;
             var request = new UploadMediaRequest()
@@ -248,7 +266,7 @@ namespace Mscc.GenerativeAI
             if (stream.Length > Constants.MaxUploadFileSize) throw new MaxUploadFileSizeException(nameof(stream));
             if (string.IsNullOrEmpty(mimeType)) throw new ArgumentException(nameof(mimeType));
             if (string.IsNullOrEmpty(displayName)) throw new ArgumentException(nameof(displayName));
-            GenerativeAIExtensions.GuardMimeType(mimeType);
+            GenerativeAIExtensions.GuardMimeType(mimeType, Logger);
 
             var totalBytes = stream.Length;
             var request = new UploadMediaRequest()
