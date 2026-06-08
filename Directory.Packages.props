@@ -15,7 +15,7 @@
     <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.10" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="Google.Apis.Auth" Version="1.74.0" />
+    <PackageVersion Include="Google.Apis.Auth" Version="1.75.0" />
     <PackageVersion Include="Google.Protobuf" Version="3.35.0" />
     <PackageVersion Include="JsonSchema.Net.Generation" Version="[5.0.4]"  />
     <PackageVersion Include="JsonSchema.Net.Generation.DataAnnotations" Version="[1.2.0]" />
