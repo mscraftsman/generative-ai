@@ -2816,7 +2816,7 @@ namespace Test.Mscc.GenerativeAI
         /// A list of instruments played in an orchestra.
         /// </summary>
         [Description("A list of instruments played in an orchestra.")]
-        [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter<Instrument>))]
+        //[Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter<Instrument>))]
         public enum Instrument
         {
             [Description("Drums and cymbals")] Percussion,
