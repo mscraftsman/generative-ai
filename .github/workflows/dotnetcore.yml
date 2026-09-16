@@ -50,7 +50,7 @@ jobs:
         git config --global core.longpaths true
 
     - name: Install Cosign
-      uses: sigstore/cosign-installer@v3.6.0
+      uses: sigstore/cosign-installer@v4.1.2
     - name: Check Cosign install!
       run: cosign version
 
