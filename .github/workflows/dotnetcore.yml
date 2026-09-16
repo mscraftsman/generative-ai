@@ -55,7 +55,7 @@ jobs:
       run: cosign version
 
     - name: 📥 Check-out latest sources 
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: 🔧 Set up .NET
       uses: actions/setup-dotnet@v6
@@ -99,7 +99,7 @@ jobs:
 #      run: sleep 300
     
     - name: 📥 Check-out latest sources 
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: 🔧 Set up .NET
       uses: actions/setup-dotnet@v6
