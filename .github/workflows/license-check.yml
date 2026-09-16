@@ -49,7 +49,7 @@ jobs:
       # Option A: Commit the changes back automatically
       - name: Commit and Push Changes
         if: steps.git-check.outputs.changes_detected == 'true'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: Add missing license headers"
           branch: ${{ github.head_ref }}
