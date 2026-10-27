@@ -13,3 +13,4 @@ Choose one: (Bug fix | Feature request | Documentation | Other)
 - [ ] I have added detailed comments to my code where applicable.
 - [ ] I have verified that my change does not break existing code.
 - [ ] My PR is based on the latest changes of the main branch (if unsure, please run `git pull --rebase upstream main`).
+- [ ] All commits are signed off with `git commit -s` (`Signed-off-by:` DCO trailer present)

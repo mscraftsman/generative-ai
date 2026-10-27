@@ -77,3 +77,14 @@ dotnet pack -c Release ./src/Mscc.GenerativeAI.Microsoft/Mscc.GenerativeAI.Micro
 *   **CI/CD:** The project uses GitHub Actions and Codeberg (Forgejo) for continuous integration and deployment. Workflow files are located in `.github/workflows/` and `.forgejo/workflows/`.
 *   **Versioning:** The project version is managed in a `VERSION` file at the root of the repository.
 *   **Dependencies:** The project uses Central Package Management (CPM) via `Directory.Packages.props` at the root to manage dependency versions.
+
+---
+
+## Git & Branch Protection Rules
+
+1. **Protected Default Branch (`main` / `master`)**:
+   - Direct pushes and force-pushes to the default branch are blocked by repository rulesets.
+   - **Never** push directly to `main` or `master`. Always work on a feature/fix branch and open a Pull Request (`gh pr create`).
+2. **Mandatory Commit Sign-Off (`-s` / DCO)**:
+   - Every commit **must** be signed off using `git commit -s` so that it includes a `Signed-off-by: Name <email>` trailer. Commits without this trailer are rejected by the repository ruleset.
+

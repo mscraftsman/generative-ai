@@ -16,3 +16,9 @@ Thanks for contributing!
 <a href="https://github.com/mscraftsman/generative-ai/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=mscraftsman/generative-ai" />
 </a>
+
+## Branch Protection & Commit Sign-Off (DCO)
+
+- **Pull Requests Only**: Direct pushes and force-pushes to the default branch (`main` / `master`) are disabled. Always create a feature branch and open a Pull Request.
+- **Mandatory Commit Sign-Off (`-s`)**: Every commit must be signed off under the [Developer Certificate of Origin (DCO)](https://developercertificate.org/) using `git commit -s` (which adds a `Signed-off-by: Name <email>` trailer). You can enable this globally with `git config --global format.signoff true`.
+
